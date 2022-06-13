@@ -19,6 +19,11 @@ _backplateWidth = (_key1uWidth * _backplateRowCount);
 _backplateDepth = 4;
 _backplateRoundingRadius = 1.25;
 
+_housingLengthPadding = 7;
+_housingWidthPadding = 7;
+_housingBodyDepth = 15;
+_housingWallThickness = 5;
+
 /// MAIN START ///
 
 echo(str("_key1uLength = ", _key1uLength));
@@ -28,7 +33,8 @@ echo(str("_key2uWidth = ", _key2uWidth));
 
 //keyboard();
 //backplate();
-housing();
+//housing();
+arduinoMicroPunch();
 
 /// MAIN END ///
 
@@ -36,18 +42,42 @@ module keyboard()
 {
     union()
     {
-        backplate();
-
-        translate([0, 0, 0])
+        translate([_housingLengthPadding, _housingWidthPadding, -5])
         {
-            housing();
+            backplate();
+        }
+
+        translate([0, 0, -_housingBodyDepth])
+        {
+            //housing();
+            //Note: Comment this in to see the internal plate clearance
+            translate([_housingLengthPadding, _housingWidthPadding,0])
+                cube([_backplateLength, _backplateWidth, _housingWallThickness]);
         }
     }
 }
 
 module housing()
 {
+    difference()
+    {
+        housingBody();
 
+        translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
+        {
+            roundedCube(size=[_backplateLength, _backplateWidth, _housingBodyDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+        }
+    }
+}
+
+module housingBody()
+{
+    union()
+    {
+        bodyLength = _backplateLength + (_housingLengthPadding*2);
+        bodyWidth = _backplateWidth + (_housingWidthPadding*2);
+        roundedCube(size = [bodyLength, bodyWidth, _housingBodyDepth], radius=4, apply_to="all");
+    }
 }
 
 module backplate()
@@ -194,6 +224,30 @@ module switchPunch()
         scale([1,1,1])
         {
             import("../resources/stl/switch_mx.stl");
+        }
+    }
+}
+
+module arduinoMicroPunch()
+{
+    arduinoMicroBodyLength = 19.2;
+    arduinoMicroBodyWidth = 43;
+    arduinoMicroBodyDepth = 3.9;
+
+    miniUsbPortLength = 7.8;
+    miniUsbPortWidth = 9.5 + 0; //plus an extention for hole punching
+    miniUsbPortDepth = 4.5;
+    miniUsbDepthCutInToBody = 2;
+
+    miniUsbPortOverhang = 2;
+
+    union()
+    {
+        cube([arduinoMicroBodyLength, arduinoMicroBodyWidth, arduinoMicroBodyDepth]);
+
+        translate([(arduinoMicroBodyLength-miniUsbPortLength)/2, arduinoMicroBodyWidth-(miniUsbPortWidth-miniUsbPortOverhang), arduinoMicroBodyDepth-miniUsbDepthCutInToBody])
+        {
+            cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
         }
     }
 }
