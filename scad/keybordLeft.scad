@@ -1,3 +1,5 @@
+_m3BoltHoleDiameter = 3.2 + 0.2; // plus padding
+_m3BoltHoleRadius = _m3BoltHoleDiameter/2;
 
 _backplateRowCount = 6;
 _backplateColumnCount = 8;
@@ -5,24 +7,45 @@ _backplateColumnCount = 8;
 _switchLength = 15;
 _switchWidth = 15;
 
-_switchPaddingLength = 2.5;
-_switchPaddingWidth = 2.5;
+_switchPaddingLength = 2;
+_switchPaddingWidth = 2;
 
 _key1uLength = _switchLength+(_switchPaddingLength*2);
 _key1uWidth = _switchWidth+(_switchPaddingWidth*2);
 
+_keyCapSpacingOffset = 0.5;
+_keyCapDepth = 10;
+_keyCapWallThickness = 2;
+_keyCapRoundingRadius = 3;
+
+_keyCapShankOffsetRiserLength = 7.2;
+_keyCapShankOffsetRiserWidth = 4.8;
+_keyCapShankOffsetTowardSwitch = 3;
+
+_keyCap1uLength = _key1uLength - _keyCapSpacingOffset;
+_keyCap1uWidth = _key1uWidth - _keyCapSpacingOffset;
+
 _key2uLength = (_switchLength*2)+(_switchPaddingLength*4);
 _key2uWidth = _switchWidth+(_switchPaddingWidth*2);
+
+_keyCap2uLength = _key2uLength - _keyCapSpacingOffset;
+_keyCap2uWidth = _key2uWidth - _keyCapSpacingOffset;
 
 _backplateLength = (_key1uLength * _backplateColumnCount);
 _backplateWidth = (_key1uWidth * _backplateRowCount);
 _backplateDepth = 4;
 _backplateRoundingRadius = 1.25;
 
-_housingLengthPadding = 7;
-_housingWidthPadding = 7;
-_housingBodyDepth = 15;
+_housingLengthPadding = 5;
+_housingWidthPadding = 5;
+_housingBodyDepth = 18;
 _housingWallThickness = 5;
+_housingLength = _backplateLength + (_housingLengthPadding*2);
+_housingWidth = _backplateWidth + (_housingWidthPadding*2);
+
+_arduinoMicroBodyLength = 19.2;
+
+_riserBoltHeadCutoutDepth = 3;
 
 /// MAIN START ///
 
@@ -32,9 +55,12 @@ echo(str("_key2uLength = ", _key2uLength));
 echo(str("_key2uWidth = ", _key2uWidth));
 
 //keyboard();
-//backplate();
+//backplate(includeBoltHoles=true);
 //housing();
-arduinoMicroPunch();
+//arduinoMicroPunch();
+keyCap1u();
+//riserBoltPunch();
+//backplateTest();
 
 /// MAIN END ///
 
@@ -42,32 +68,53 @@ module keyboard()
 {
     union()
     {
-        translate([_housingLengthPadding, _housingWidthPadding, -5])
+        translate([_housingLengthPadding, _housingWidthPadding, -7])
         {
-            backplate();
+            backplate(includeBoltHoles=true);
         }
 
         translate([0, 0, -_housingBodyDepth])
         {
-            //housing();
+            // housing();
+
             //Note: Comment this in to see the internal plate clearance
             translate([_housingLengthPadding, _housingWidthPadding,0])
                 cube([_backplateLength, _backplateWidth, _housingWallThickness]);
+
+            arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
+            translate([arduinoCenteringLength, _backplateWidth-36, _housingWallThickness-3])
+            {
+                scale([1, 1, 1])
+                    arduinoMicroPunch();
+            }
         }
+
     }
 }
 
 module housing()
 {
     difference()
+    //union()
     {
-        housingBody();
-
-        translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
+        difference()
         {
-            roundedCube(size=[_backplateLength, _backplateWidth, _housingBodyDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+            housingBody();
+
+            translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
+            {
+                roundedCube(size=[_backplateLength, _backplateWidth, _housingBodyDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+            }
+        }
+
+        arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
+        translate([arduinoCenteringLength, _backplateWidth-36, _housingWallThickness-3])
+        {
+            scale([1, 1, 1])
+                arduinoMicroPunch();
         }
     }
+
 }
 
 module housingBody()
@@ -80,14 +127,17 @@ module housingBody()
     }
 }
 
-module backplate()
+module backplate(includeBoltHoles)
 {
     difference()
-    union()
+    //union()
     {
         plate();
 
-        //todo bolt recesses
+        if (includeBoltHoles)
+        {
+            riserBoltPunchSet();
+        }
     }
 }
 
@@ -190,7 +240,7 @@ module row5()
 module key1u()
 {
     difference()
-    union()
+    //union()
     {
         //cube([_key1uLength, _key1uWidth, _backplateDepth]);
         roundedCube(size = [_key1uLength, _key1uWidth, _backplateDepth], radius=1.25, apply_to="zmax");
@@ -205,7 +255,7 @@ module key1u()
 module key2u()
 {
     difference()
-    union()
+    //union()
     {
         //cube([_key2uLength, _key2uWidth, _backplateDepth]);
         roundedCube(size = [_key2uLength, _key2uWidth, _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
@@ -230,26 +280,132 @@ module switchPunch()
 
 module arduinoMicroPunch()
 {
-    arduinoMicroBodyLength = 19.2;
+    arduinoMicroBodyLength = _arduinoMicroBodyLength;//19.2;
     arduinoMicroBodyWidth = 43;
     arduinoMicroBodyDepth = 3.9;
 
     miniUsbPortLength = 7.8;
-    miniUsbPortWidth = 9.5 + 0; //plus an extention for hole punching
+    miniUsbPortWidth = 9.5 + 10; //plus an extention for hole punching
     miniUsbPortDepth = 4.5;
     miniUsbDepthCutInToBody = 2;
 
+    miniUsbOnBoardWidth = 7;
     miniUsbPortOverhang = 2;
 
     union()
     {
         cube([arduinoMicroBodyLength, arduinoMicroBodyWidth, arduinoMicroBodyDepth]);
 
-        translate([(arduinoMicroBodyLength-miniUsbPortLength)/2, arduinoMicroBodyWidth-(miniUsbPortWidth-miniUsbPortOverhang), arduinoMicroBodyDepth-miniUsbDepthCutInToBody])
+        translate([(arduinoMicroBodyLength-miniUsbPortLength)/2, arduinoMicroBodyWidth-(miniUsbOnBoardWidth), arduinoMicroBodyDepth-miniUsbDepthCutInToBody])
         {
             cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
         }
     }
+}
+
+module riserBoltPunchSet()
+{
+    // Center
+    translate([_backplateLength/2, _backplateWidth/2, ])
+        riserBoltPunch();
+
+    //SW
+    translate([(_key1uLength*2), (_key1uWidth*1), _riserBoltHeadCutoutDepth])
+        riserBoltPunch();
+
+    //SE
+    translate([(_key1uLength*6), (_key1uWidth*1), _riserBoltHeadCutoutDepth])
+        riserBoltPunch();
+
+    //NE
+    translate([(_key1uLength*6), (_key1uWidth*5), _riserBoltHeadCutoutDepth])
+        riserBoltPunch();
+
+    //NW
+    translate([(_key1uLength*2), (_key1uWidth*5), _riserBoltHeadCutoutDepth])
+        riserBoltPunch();
+}
+
+module riserBoltPunch()
+{
+    union()
+    {
+        //Traditional bolt punch
+        boltHeadCutoutRadius = 2;
+        boltHeadCutoutDepth = 3;
+
+        cylinder(r=boltHeadCutoutRadius, h=boltHeadCutoutDepth+1, $fn=100);
+
+        threadedInsertRadius = 2.1;
+        boltPunchDepth = _backplateDepth+1;
+        translate([0,0,-boltPunchDepth])
+                // Threaded insert "bolt" punch
+               cylinder(r=1.15, h=boltPunchDepth+2, $fn=100);
+        //     cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+1, $fn=100);
+
+        
+
+    }
+}
+
+module keyCap1u()
+{
+    union()
+    {
+        difference()
+        //union()
+        {
+            roundedCube(size=[_keyCap1uLength, _keyCap1uWidth, _keyCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
+
+            cutoutCubeSize = [_keyCap1uLength-(_keyCapWallThickness*2), _keyCap1uWidth-(_keyCapWallThickness*2), _keyCapDepth];
+            translate([_keyCapWallThickness, _keyCapWallThickness, _keyCapWallThickness])
+                roundedCube(size=cutoutCubeSize, radius = _keyCapRoundingRadius, apply_to="zmin");
+        }
+
+        //shank connector
+        translate([_keyCap1uLength/2, _keyCap1uWidth/2, _keyCapWallThickness])
+        {
+            union()
+            {
+                // translate([0,0,_keyCapShankOffsetTowardSwitch])
+                //     scale([1,1,1])
+                //         translate([0, 0, -1.5]) // Get to origin.
+                //             import("../resources/stl/cap-shank.stl");
+
+                // Shank
+                translate([-_keyCapShankOffsetRiserLength/2, -_keyCapShankOffsetRiserWidth/2, 0])
+                {
+                    translate([0,0,_keyCapShankOffsetTowardSwitch])
+                        difference()
+                        //union()
+                        {
+                            shankConnectorDepth = 3.8;
+                            roundedCube(size=[_keyCapShankOffsetRiserLength, _keyCapShankOffsetRiserWidth, shankConnectorDepth], radius=0.4, apply_to="none");
+
+                            //crossPunch
+                            crossPunchFinLength = 4.5;
+                            crossPunchFinWidth = 1.32;
+                            crossPunchFinAdditionalCut = 2;
+
+                            translate([_keyCapShankOffsetRiserLength/2, _keyCapShankOffsetRiserWidth/2, -1])
+                                union()
+                                {
+                                    translate([-crossPunchFinLength/2, -crossPunchFinWidth/2, 0])
+                                        roundedCube(size=[crossPunchFinLength, crossPunchFinWidth, shankConnectorDepth+2], radius=0.25, apply_to="none");
+                                    rotate([0,0,90])
+                                        translate([-(crossPunchFinLength+crossPunchFinAdditionalCut)/2, -crossPunchFinWidth/2, 0])
+                                            roundedCube(size=[crossPunchFinLength+crossPunchFinAdditionalCut, crossPunchFinWidth, shankConnectorDepth+2], radius=0.25, apply_to="none");
+                                }
+                        }
+
+                    roundedCube(size=[_keyCapShankOffsetRiserLength, _keyCapShankOffsetRiserWidth, _keyCapShankOffsetTowardSwitch], radius=0.4, apply_to="none");
+                }
+
+
+            }
+        }
+    }
+
 }
 
 /// Builds a cube with rounded corners
@@ -257,7 +413,8 @@ module arduinoMicroPunch()
 /// center - centered on xyz planes?
 /// radius - rounding radius
 /// apply_to - which sides to round
-module roundedCube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "all") {
+module roundedCube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "all")
+{
 	// If single value, convert to [x, y, z] vector
 	size = (size[0] == undef) ? [size, size, size] : size;
 
@@ -306,4 +463,28 @@ module roundedCube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "a
 			}
 		}
 	}
+}
+
+//Prototyping Methods
+module backplateTest()
+{
+    difference()
+    {
+        union()
+        {
+            translate([0, _key1uWidth, 0])
+            {
+                key1u();
+                translate([(_key1uLength*1), 0, 0])
+                    key1u();
+            }
+            key2u();
+
+            backplateGrooveDepth = 1;
+            roundedCube(size=[(_key1uLength*2), (_key1uWidth*2), _backplateDepth - backplateGrooveDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+        }
+
+        translate([_key1uLength, _key1uWidth, _riserBoltHeadCutoutDepth])
+            riserBoltPunch();
+    }
 }
