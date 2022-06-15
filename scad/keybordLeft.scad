@@ -18,8 +18,8 @@ _keyCapDepth = 10;
 _keyCapWallThickness = 2;
 _keyCapRoundingRadius = 3;
 
-_keyCapShankOffsetRiserLength = 7.2;
-_keyCapShankOffsetRiserWidth = 4.8;
+_keyCapShankOffsetRiserLength = 7.15; // Warning: Careful when modifying. This is a tuned value.
+_keyCapShankOffsetRiserWidth = 4.8; // Warning: Careful when modifying. This is a tuned value.
 _keyCapShankOffsetTowardSwitch = 3;
 
 _keyCap1uLength = _key1uLength - _keyCapSpacingOffset;
@@ -367,11 +367,6 @@ module keyCap1u()
         {
             union()
             {
-                // translate([0,0,_keyCapShankOffsetTowardSwitch])
-                //     scale([1,1,1])
-                //         translate([0, 0, -1.5]) // Get to origin.
-                //             import("../resources/stl/cap-shank.stl");
-
                 // Shank
                 translate([-_keyCapShankOffsetRiserLength/2, -_keyCapShankOffsetRiserWidth/2, 0])
                 {
@@ -383,8 +378,8 @@ module keyCap1u()
                             roundedCube(size=[_keyCapShankOffsetRiserLength, _keyCapShankOffsetRiserWidth, shankConnectorDepth], radius=0.4, apply_to="none");
 
                             //crossPunch
-                            crossPunchFinLength = 4.5;
-                            crossPunchFinWidth = 1.32;
+                            crossPunchFinLength = 4.3; // Warning: Careful when modifying. This is a tuned value.
+                            crossPunchFinWidth = 1.23; // Warning: Careful when modifying. This is a tuned value.
                             crossPunchFinAdditionalCut = 2;
 
                             translate([_keyCapShankOffsetRiserLength/2, _keyCapShankOffsetRiserWidth/2, -1])
