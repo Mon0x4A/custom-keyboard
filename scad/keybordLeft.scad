@@ -43,7 +43,17 @@ _housingWallThickness = 5;
 _housingLength = _backplateLength + (_housingLengthPadding*2);
 _housingWidth = _backplateWidth + (_housingWidthPadding*2);
 
+_housingBoltSetLengthOffset = 20;
+_housingBoltSetWidthOffset = 15;
+
 _arduinoMicroBodyLength = 19.2;
+_arduinoMicroBodyWidth = 43;
+
+_arduinoHolderTabInnerDiameter = 2.5;
+_arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
+_arduinoHolderTabDepth = 2;
+_arduinoHolderTabTabWidth = 4;
+_arduinoHolderTabTabLength = 5;
 
 _riserBoltHeadCutoutDepth = 3;
 
@@ -52,7 +62,7 @@ _riserTopRadius = _riserTopDiameter/2;
 _riserBottomDiameter = 8;
 _riserBottomRadius = _riserBottomDiameter/2;
 _riserHeight = 7;
-_riserCutoutDiameter = 4;
+_riserCutoutDiameter = 3.6;
 _riserCutoutRadius = _riserCutoutDiameter/2;
 _riserCutoutDepth = 4;
 
@@ -63,15 +73,16 @@ echo(str("_key1uWidth = ", _key1uWidth));
 echo(str("_key2uLength = ", _key2uLength));
 echo(str("_key2uWidth = ", _key2uWidth));
 
-keyboard();
+//keyboard();
 //backplate(includeBoltHoles=true);
-//housing();
+housing();
 //arduinoMicroPunch();
 //keyCap1u();
 //keyCap2u();
-//riserBoltPunch();
 //backplateTest();
-//mountingRiserSet();
+//arduinoHousingTest();
+//housingBottomBoltPunchSet();
+//arduinoHolderTab();
 
 /// MAIN END ///
 
@@ -86,7 +97,7 @@ module keyboard()
 
         translate([0, 0, -_housingBodyDepth])
         {
-            // housing();
+            //housing();
 
             //Note: Comment this in to see the internal plate clearance
             translate([_housingLengthPadding, _housingWidthPadding,0])
@@ -125,11 +136,34 @@ module housing()
             }
 
             arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
-            translate([arduinoCenteringLength, _backplateWidth-36, _housingWallThickness-3])
+            translate([arduinoCenteringLength, _backplateWidth-37.5, _housingWallThickness-3])
             {
                 scale([1, 1, 1])
                     arduinoMicroPunch();
+
+                archPortRadius = _arduinoMicroBodyLength/2.5;
+                archPortCenteringOffset = (_arduinoMicroBodyLength - (archPortRadius*2))/2;
+                translate([archPortCenteringOffset, _arduinoMicroBodyWidth-5, 2])
+                    scale([1, 1, 0.9])
+                        halfCylinder(height=10, radius=_arduinoMicroBodyLength/2.5);
+                //arduino holding bolt inserts
+                forwardOffsetFromArduinoRear = 2.5;
+                translate([-_riserCutoutDiameter, forwardOffsetFromArduinoRear, 0])
+                    cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
+                translate([_arduinoMicroBodyLength + _riserCutoutDiameter, forwardOffsetFromArduinoRear, 0])
+                    cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
+                rearOffsetFromArduinoRear = 35.5;
+                translate([-_riserCutoutDiameter, rearOffsetFromArduinoRear, 0])
+                    cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
+                translate([_arduinoMicroBodyLength + _riserCutoutDiameter, rearOffsetFromArduinoRear, 0])
+                    cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
             }
+
+            //housing floor bolt through holes
+            translate([_housingBoltSetLengthOffset, _housingBoltSetWidthOffset, _housingWallThickness-1])
+                housingBottomBoltPunchSet();
+            translate([_housingLength-_housingBoltSetLengthOffset, _housingBoltSetWidthOffset, _housingWallThickness-1])
+                housingBottomBoltPunchSet();
         }
 
         //backplate mounting risers
@@ -302,7 +336,7 @@ module switchPunch()
 module arduinoMicroPunch()
 {
     arduinoMicroBodyLength = _arduinoMicroBodyLength;//19.2;
-    arduinoMicroBodyWidth = 43;
+    arduinoMicroBodyWidth = _arduinoMicroBodyWidth; //43;
     arduinoMicroBodyDepth = 3.9;
 
     miniUsbPortLength = 7.8;
@@ -321,6 +355,8 @@ module arduinoMicroPunch()
         {
             cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
         }
+
+
     }
 }
 
@@ -403,6 +439,36 @@ module mountingRiser()
     }
 }
 
+module housingBottomBoltPunchSet()
+{
+    //close
+    translate([0,0,0])
+        housingBottomBoltPunch();
+
+    closeFarOffset = _housingWidth-(_housingBoltSetWidthOffset*2);
+    //far
+    translate([0, closeFarOffset, 0])
+        housingBottomBoltPunch();
+
+    farSlightlyFarOffset = 15;
+    //slightly back from far
+    translate([0, closeFarOffset - farSlightlyFarOffset, 0])
+        housingBottomBoltPunch();
+
+}
+
+module housingBottomBoltPunch()
+{
+        boltHeadCutoutRadius = 3.5;
+        boltHeadCutoutDepth = 3;
+        cylinder(r=boltHeadCutoutRadius, h=boltHeadCutoutDepth+1, $fn=100);
+
+        threadedInsertRadius = 2.1;
+        boltPunchDepth = _housingWallThickness+1;
+        translate([0,0,-boltPunchDepth])
+               cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
+}
+
 module keyCap1u()
 {
     union()
@@ -482,6 +548,27 @@ module keyCapShankConnector()
     }
 }
 
+module arduinoHolderTab()
+{
+    union()
+    {
+        _washerDepth = _arduinoHolderTabDepth;
+        _washerThickness = 1.5;
+        _washerInnerDiameter = _arduinoHolderTabInnerDiameter;
+        _washerInnerRadius = _washerInnerDiameter/2;
+        _washerOuterRadius = _washerInnerRadius + _washerThickness;
+        difference()
+        {
+            cylinder(r=_washerOuterRadius, h=_washerDepth, center=false, $fn=200);
+            translate([0, 0, -1])
+                cylinder(r=_washerInnerRadius, h=_washerDepth+2, center=false, $fn=200);
+        }
+
+        translate([_washerInnerRadius,-_arduinoHolderTabTabWidth/2,0])
+            cube([_arduinoHolderTabTabLength, _arduinoHolderTabTabWidth, _arduinoHolderTabDepth]);
+    }
+}
+
 /// Builds a cube with rounded corners
 /// size - dimension vector
 /// center - centered on xyz planes?
@@ -539,6 +626,23 @@ module roundedCube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "a
 	}
 }
 
+/// Builds a cylinder sliced in half along the diameter.
+/// height - height of the cylinder
+/// depth - radius of the cylinder
+module halfCylinder(height, radius)
+{
+    difference()
+    //union()
+    {
+        translate([radius, 0, 0])
+            rotate([-90, 0, 0])
+                cylinder(r=radius, h=height, $fn=100);
+
+        translate([-1, -1, -radius-1])
+            cube([(radius*2)+2, height+2, radius+1]);
+    }
+}
+
 //Prototyping Methods
 module backplateTest()
 {
@@ -560,5 +664,29 @@ module backplateTest()
 
         translate([_key1uLength, _key1uWidth, _riserBoltHeadCutoutDepth])
             riserBoltPunch();
+    }
+}
+
+module arduinoHousingTest()
+{
+    echo("ArduinoHousingTest");
+    difference()
+    {
+        housing();
+
+        cutoutCubeLength = _housingLength/2.5;
+        cutoutCubeWidth = _housingWidth+2;
+        cutoutCubeDepth = _housingBodyDepth+1;
+
+        //Side cut outs
+        translate([-1,-1,-1])
+            cube([cutoutCubeLength, cutoutCubeWidth, cutoutCubeDepth]);
+
+        translate([_housingLength-cutoutCubeLength+1,-1,-1])
+            cube([cutoutCubeLength, cutoutCubeWidth, cutoutCubeDepth]);
+
+        //Front cut out
+        translate([-1,-8,-1]) //-8 to include the center riser
+            cube([_housingLength+2, cutoutCubeWidth/2, cutoutCubeDepth]);
     }
 }
