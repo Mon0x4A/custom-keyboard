@@ -35,6 +35,9 @@ _backplateLength = (_key1uLength * _backplateColumnCount);
 _backplateWidth = (_key1uWidth * _backplateRowCount);
 _backplateDepth = 4;
 _backplateRoundingRadius = 1.25;
+_backplateGrooveDepth = 1;
+
+_backplateOffsetFromHousing = 7;
 
 _housingLengthPadding = 5;
 _housingWidthPadding = 5;
@@ -62,7 +65,7 @@ _riserTopDiameter = 6;
 _riserTopRadius = _riserTopDiameter/2;
 _riserBottomDiameter = 8;
 _riserBottomRadius = _riserBottomDiameter/2;
-_riserHeight = 7;
+_riserHeight = _backplateOffsetFromHousing;
 _riserCutoutDiameter = 3.6;
 _riserCutoutRadius = _riserCutoutDiameter/2;
 _riserCutoutDepth = 4;
@@ -74,8 +77,12 @@ echo(str("_key1uWidth = ", _key1uWidth));
 echo(str("_key2uLength = ", _key2uLength));
 echo(str("_key2uWidth = ", _key2uWidth));
 
-keyboardLeft();
-//backplate(includeBoltHoles=true);
+//keyboardLeft();
+//backplateLeft(includeBoltHoles=true);
+
+keyboardRight();
+//backplateRight(includeBoltHoles=true);
+
 //housing();
 //arduinoMicroPunch();
 //keyCap1u();
@@ -93,30 +100,41 @@ module keyboardLeft()
 {
     union()
     {
-        translate([_housingLengthPadding, _housingWidthPadding, -7])
+        translate([_housingLengthPadding, _housingWidthPadding, -_backplateOffsetFromHousing])
         {
-            backplate(includeBoltHoles=true);
+            backplateLeft(includeBoltHoles=true);
         }
 
         translate([0, 0, -_housingBodyDepth])
         {
-            //housing();
+            housing();
 
-            //Note: Comment this in to see the internal plate clearance
-            translate([_housingLengthPadding, _housingWidthPadding,0])
-                cube([_backplateLength, _backplateWidth, _housingWallThickness]);
-
-            arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
-            translate([arduinoCenteringLength, _backplateWidth-36, _housingWallThickness-3])
-            {
-                scale([1, 1, 1])
-                    arduinoMicroPunch();
-            }
-
-            translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
-                mountingRiserSet();
+            // //Note: Comment this in to see the internal plate clearance
+            // translate([_housingLengthPadding, _housingWidthPadding,0])
+            //     cube([_backplateLength, _backplateWidth, _housingWallThickness]);
+            // arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
+            // translate([arduinoCenteringLength, _backplateWidth-36, _housingWallThickness-3])
+            // {
+            //     scale([1, 1, 1])
+            //         arduinoMicroPunch();
+            // }
+            // translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
+            //     mountingRiserSet();
         }
 
+    }
+}
+
+module keyboardRight()
+{
+    translate([_housingLengthPadding, _housingWidthPadding, -_backplateOffsetFromHousing])
+    {
+        backplateRight(includeBoltHoles=true);
+    }
+
+    translate([0, 0, -_housingBodyDepth])
+    {
+        housing();
     }
 }
 
@@ -184,12 +202,12 @@ module housingBody()
     }
 }
 
-module backplate(includeBoltHoles)
+module backplateLeft(includeBoltHoles)
 {
     difference()
     //union()
     {
-        plate();
+        plateLeft();
 
         if (includeBoltHoles)
         {
@@ -198,18 +216,18 @@ module backplate(includeBoltHoles)
     }
 }
 
-module plate()
+module plateLeft()
 {
     union()
     {
-        backplateGrooveDepth = 1;
-        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth - backplateGrooveDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+        _backplateGrooveDepth = 1;
+        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth - _backplateGrooveDepth], radius=_backplateRoundingRadius, apply_to="zmax");
 
         //[0,0] is the upper left corner of the keyboard.
         translate([0, _key1uWidth*5, 0])
             row0L();
         translate([0, _key1uWidth*4, 0])
-            row1();
+            row1L();
         translate([0, _key1uWidth*3, 0])
             row2L();
         translate([0, _key1uWidth*2, 0])
@@ -243,7 +261,7 @@ module row0L()
     }
 }
 
-module row1()
+module row1L()
 {
     row0L();
 }
@@ -291,6 +309,150 @@ module row5L()
             key2u();
         translate([(_key2uLength*2+_key1uLength*2), 0, 0])
             key2u();
+    }
+}
+
+module backplateRight(includeBoltHoles)
+{
+    difference()
+    //union()
+    {
+        plateRight();
+
+        if (includeBoltHoles)
+        {
+            riserBoltPunchSet();
+        }
+    }
+}
+
+module plateRight()
+{
+    union()
+    {
+        _backplateGrooveDepth = 1;
+        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth - _backplateGrooveDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+
+        //[0,0] is the upper left corner of the keyboard.
+        translate([0, _key1uWidth*5, 0])
+            row0R();
+        translate([0, _key1uWidth*4, 0])
+            row1R();
+        translate([0, _key1uWidth*3, 0])
+            row2R();
+        translate([0, _key1uWidth*2, 0])
+            row3R();
+        translate([0, _key1uWidth*1, 0])
+            row4R();
+        translate([0, 0, 0])
+            row5R();
+    }
+}
+
+module row0R()
+{
+    union()
+    {
+        key1u();
+        translate([(_key1uLength*1), 0, 0])
+            key1u();
+        translate([(_key1uLength*2), 0, 0])
+            key1u();
+        translate([(_key1uLength*3), 0, 0])
+            key1u();
+        translate([(_key1uLength*4), 0, 0])
+            key1u();
+        translate([(_key1uLength*5), 0, 0])
+            key1u();
+        translate([(_key1uLength*6), 0, 0])
+            key1u();
+        translate([(_key1uLength*7), 0, 0])
+            key1u();
+    }
+}
+
+module row1R()
+{
+    union()
+    {
+        key1u();
+        translate([(_key1uLength*1), 0, 0])
+            key1u();
+        translate([(_key1uLength*2), 0, 0])
+            key1u();
+        translate([(_key1uLength*3), 0, 0])
+            key1u();
+        translate([(_key1uLength*4), 0, 0])
+            key1u();
+        translate([(_key1uLength*5), 0, 0])
+            key1u();
+        translate([(_key1uLength*6), 0, 0])
+            key2u();
+    }
+}
+
+module row2R()
+{
+    row0R();
+}
+
+module row3R()
+{
+    union()
+    {
+        key1u();
+        translate([(_key1uLength*1), 0, 0])
+            key1u();
+        translate([(_key1uLength*2), 0, 0])
+            key1u();
+        translate([(_key1uLength*3), 0, 0])
+            key1u();
+        translate([(_key1uLength*4), 0, 0])
+            key1u();
+        translate([(_key1uLength*5), 0, 0])
+            key2u();
+        translate([(_key2uLength*1+_key1uLength*5), 0, 0])
+            key1u();
+    }
+}
+
+module row4R()
+{
+    union()
+    {
+        key1u();
+        translate([(_key1uLength*1), 0, 0])
+            key1u();
+        translate([(_key1uLength*2), 0, 0])
+            key1u();
+        translate([(_key1uLength*3), 0, 0])
+            key1u();
+        translate([(_key1uLength*4), 0, 0])
+            key2u();
+        translate([(_key2uLength*1+_key1uLength*4), 0, 0])
+            key1u();
+        translate([(_key2uLength*1+_key1uLength*5), 0, 0])
+            key1u();
+    }
+}
+
+module row5R()
+{
+    union()
+    {
+        key2u();
+        translate([(_key2uLength*1+_key1uLength*0), 0, 0])
+            key1u();
+        translate([(_key2uLength*1+_key1uLength*1), 0, 0])
+            key1u();
+        translate([(_key2uLength*1+_key1uLength*2), 0, 0])
+            key1u();
+        translate([(_key2uLength*1+_key1uLength*3), 0, 0])
+            key1u();
+        translate([(_key2uLength*1+_key1uLength*4), 0, 0])
+            key1u();
+        translate([(_key2uLength*1+_key1uLength*5), 0, 0])
+            key1u();
     }
 }
 
