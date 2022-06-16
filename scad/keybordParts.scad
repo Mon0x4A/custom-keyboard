@@ -42,12 +42,13 @@ _housingBodyDepth = 18;
 _housingWallThickness = 5;
 _housingLength = _backplateLength + (_housingLengthPadding*2);
 _housingWidth = _backplateWidth + (_housingWidthPadding*2);
+_housingBackplateCutoutPadding = 0.5;
 
 _housingBoltSetLengthOffset = 20;
 _housingBoltSetWidthOffset = 15;
 
 _arduinoMicroBodyLength = 19.2;
-_arduinoMicroBodyWidth = 43;
+_arduinoMicroBodyWidth = 44;
 
 _arduinoHolderTabInnerDiameter = 2.5;
 _arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
@@ -73,20 +74,22 @@ echo(str("_key1uWidth = ", _key1uWidth));
 echo(str("_key2uLength = ", _key2uLength));
 echo(str("_key2uWidth = ", _key2uWidth));
 
-//keyboard();
+keyboardLeft();
 //backplate(includeBoltHoles=true);
-housing();
+//housing();
 //arduinoMicroPunch();
 //keyCap1u();
 //keyCap2u();
-//backplateTest();
 //arduinoHousingTest();
 //housingBottomBoltPunchSet();
 //arduinoHolderTab();
 
+//backplateTest();
+//miniHousingTest();
+
 /// MAIN END ///
 
-module keyboard()
+module keyboardLeft()
 {
     union()
     {
@@ -128,15 +131,14 @@ module housing()
             {
                 housingBody();
 
-                backplateCutoutPadding = 0.5;
-                translate([_housingLengthPadding-(backplateCutoutPadding), _housingWidthPadding-(backplateCutoutPadding), _housingWallThickness])
+                translate([_housingLengthPadding-(_housingBackplateCutoutPadding), _housingWidthPadding-(_housingBackplateCutoutPadding), _housingWallThickness])
                 {
-                    roundedCube(size=[_backplateLength+(backplateCutoutPadding*2), _backplateWidth+(backplateCutoutPadding*2), _housingBodyDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+                    roundedCube(size=[_backplateLength+(_housingBackplateCutoutPadding*2), _backplateWidth+(_housingBackplateCutoutPadding*2), _housingBodyDepth], radius=_backplateRoundingRadius, apply_to="zmax");
                 }
             }
 
             arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
-            translate([arduinoCenteringLength, _backplateWidth-37.5, _housingWallThickness-3])
+            translate([arduinoCenteringLength, _backplateWidth-38.5, _housingWallThickness-3])
             {
                 scale([1, 1, 1])
                     arduinoMicroPunch();
@@ -205,21 +207,21 @@ module plate()
 
         //[0,0] is the upper left corner of the keyboard.
         translate([0, _key1uWidth*5, 0])
-            row0();
+            row0L();
         translate([0, _key1uWidth*4, 0])
             row1();
         translate([0, _key1uWidth*3, 0])
-            row2();
+            row2L();
         translate([0, _key1uWidth*2, 0])
-            row3();
+            row3L();
         translate([0, _key1uWidth*1, 0])
-            row4();
+            row4L();
         translate([0, 0, 0])
-            row5();
+            row5L();
     }
 }
 
-module row0()
+module row0L()
 {
     union()
     {
@@ -243,10 +245,10 @@ module row0()
 
 module row1()
 {
-    row0();
+    row0L();
 }
 
-module row2()
+module row2L()
 {
     union()
     {
@@ -266,17 +268,17 @@ module row2()
     }
 }
 
-module row3()
+module row3L()
 {
-    row0();
+    row0L();
 }
 
-module row4()
+module row4L()
 {
-    row2();
+    row2L();
 }
 
-module row5()
+module row5L()
 {
     union()
     {
@@ -646,6 +648,7 @@ module halfCylinder(height, radius)
 //Prototyping Methods
 module backplateTest()
 {
+    //2x2 mini test backplate
     difference()
     {
         union()
@@ -665,6 +668,25 @@ module backplateTest()
         translate([_key1uLength, _key1uWidth, _riserBoltHeadCutoutDepth])
             riserBoltPunch();
     }
+}
+
+module miniHousingTest()
+{
+    //2x2 mini test housing
+    bodyLength = (_key1uLength*2) + (_housingLengthPadding*2);
+    bodyWidth = (_key1uWidth*2) + (_housingWidthPadding*2);
+    difference()
+    {
+        roundedCube(size = [bodyLength, bodyWidth, _housingBodyDepth], radius=4, apply_to="all");
+
+        translate([_housingLengthPadding-(_housingBackplateCutoutPadding), _housingWidthPadding-(_housingBackplateCutoutPadding), _housingWallThickness])
+        {
+            roundedCube(size=[(_key1uLength*2)+(_housingBackplateCutoutPadding*2), (_key1uWidth*2)+(_housingBackplateCutoutPadding*2), _housingBodyDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+        }
+    }
+
+    translate([bodyLength/2, bodyWidth/2, _housingWallThickness])
+        mountingRiser();
 }
 
 module arduinoHousingTest()
