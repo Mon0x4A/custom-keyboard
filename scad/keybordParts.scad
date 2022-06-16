@@ -1,6 +1,9 @@
 _m3BoltHoleDiameter = 3.2 + 0.2; // plus padding
 _m3BoltHoleRadius = _m3BoltHoleDiameter/2;
 
+_m2BoltHoleDiameter = 2.2 + 0.3; // plus padding
+_m2BoltHoleRadius = _m2BoltHoleDiameter/2;
+
 _backplateRowCount = 6;
 _backplateColumnCount = 8;
 
@@ -18,8 +21,8 @@ _keyCapDepth = 10;
 _keyCapWallThickness = 2;
 _keyCapRoundingRadius = 3;
 
-_keyCapShankOffsetRiserLength = 7.15; // Warning: Careful when modifying. This is a tuned value.
-_keyCapShankOffsetRiserWidth = 4.8; // Warning: Careful when modifying. This is a tuned value.
+_keyCapShankOffsetRiserLength = 7.01; // Warning: Careful when modifying. This is a tuned value.
+_keyCapShankOffsetRiserWidth = 4.55; // Warning: Careful when modifying. This is a tuned value.
 _keyCapShankOffsetTowardSwitch = 3;
 
 _keyCap1uLength = _key1uLength - _keyCapSpacingOffset;
@@ -31,9 +34,12 @@ _key2uWidth = _switchWidth+(_switchPaddingWidth*2);
 _keyCap2uLength = _key2uLength - _keyCapSpacingOffset;
 _keyCap2uWidth = _key2uWidth - _keyCapSpacingOffset;
 
+_keySwitchCutoutLength = 14.05; //14.25
+_keySwitchCutoutWidth = 14.05; //14.25
+
 _backplateLength = (_key1uLength * _backplateColumnCount);
 _backplateWidth = (_key1uWidth * _backplateRowCount);
-_backplateDepth = 4;
+_backplateDepth = 5;
 _backplateRoundingRadius = 1.25;
 _backplateGrooveDepth = 1;
 
@@ -41,7 +47,7 @@ _backplateOffsetFromHousing = 7;
 
 _housingLengthPadding = 5;
 _housingWidthPadding = 5;
-_housingBodyDepth = 18;
+_housingBodyDepth = 24;
 _housingWallThickness = 5;
 _housingLength = _backplateLength + (_housingLengthPadding*2);
 _housingWidth = _backplateWidth + (_housingWidthPadding*2);
@@ -93,6 +99,9 @@ keyboardRight();
 
 //backplateTest();
 //miniHousingTest();
+//key1u();
+//key2u();
+
 
 /// MAIN END ///
 
@@ -100,12 +109,12 @@ module keyboardLeft()
 {
     union()
     {
-        translate([_housingLengthPadding, _housingWidthPadding, -_backplateOffsetFromHousing])
+        translate([_housingLengthPadding, _housingWidthPadding, 0])
         {
             backplateLeft(includeBoltHoles=true);
         }
 
-        translate([0, 0, -_housingBodyDepth])
+        translate([0, 0, -_backplateOffsetFromHousing-_housingWallThickness])
         {
             housing();
 
@@ -127,12 +136,12 @@ module keyboardLeft()
 
 module keyboardRight()
 {
-    translate([_housingLengthPadding, _housingWidthPadding, -_backplateOffsetFromHousing])
+    translate([_housingLengthPadding, _housingWidthPadding, 0])
     {
         backplateRight(includeBoltHoles=true);
     }
 
-    translate([0, 0, -_housingBodyDepth])
+    translate([0, 0, -_backplateOffsetFromHousing-_housingWallThickness])
     {
         housing();
     }
@@ -218,24 +227,25 @@ module backplateLeft(includeBoltHoles)
 
 module plateLeft()
 {
-    union()
+    intersection()
     {
-        _backplateGrooveDepth = 1;
-        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth - _backplateGrooveDepth], radius=_backplateRoundingRadius, apply_to="zmax");
-
-        //[0,0] is the upper left corner of the keyboard.
-        translate([0, _key1uWidth*5, 0])
-            row0L();
-        translate([0, _key1uWidth*4, 0])
-            row1L();
-        translate([0, _key1uWidth*3, 0])
-            row2L();
-        translate([0, _key1uWidth*2, 0])
-            row3L();
-        translate([0, _key1uWidth*1, 0])
-            row4L();
-        translate([0, 0, 0])
-            row5L();
+        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+        union()
+        {
+            //[0,0] is the upper left corner of the keyboard.
+            translate([0, _key1uWidth*5, 0])
+                row0L();
+            translate([0, _key1uWidth*4, 0])
+                row1L();
+            translate([0, _key1uWidth*3, 0])
+                row2L();
+            translate([0, _key1uWidth*2, 0])
+                row3L();
+            translate([0, _key1uWidth*1, 0])
+                row4L();
+            translate([0, 0, 0])
+                row5L();
+        }
     }
 }
 
@@ -328,24 +338,25 @@ module backplateRight(includeBoltHoles)
 
 module plateRight()
 {
-    union()
+    intersection()
     {
-        _backplateGrooveDepth = 1;
-        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth - _backplateGrooveDepth], radius=_backplateRoundingRadius, apply_to="zmax");
-
-        //[0,0] is the upper left corner of the keyboard.
-        translate([0, _key1uWidth*5, 0])
-            row0R();
-        translate([0, _key1uWidth*4, 0])
-            row1R();
-        translate([0, _key1uWidth*3, 0])
-            row2R();
-        translate([0, _key1uWidth*2, 0])
-            row3R();
-        translate([0, _key1uWidth*1, 0])
-            row4R();
-        translate([0, 0, 0])
-            row5R();
+        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+        union()
+        {
+            //[0,0] is the upper left corner of the keyboard.
+            translate([0, _key1uWidth*5, 0])
+                row0R();
+            translate([0, _key1uWidth*4, 0])
+                row1R();
+            translate([0, _key1uWidth*3, 0])
+                row2R();
+            translate([0, _key1uWidth*2, 0])
+                row3R();
+            translate([0, _key1uWidth*1, 0])
+                row4R();
+            translate([0, 0, 0])
+                row5R();
+        }
     }
 }
 
@@ -459,30 +470,40 @@ module row5R()
 module key1u()
 {
     difference()
-    union()
+    //union()
     {
         //cube([_key1uLength, _key1uWidth, _backplateDepth]);
         roundedCube(size = [_key1uLength, _key1uWidth, _backplateDepth], radius=1.25, apply_to="zmax");
 
-        translate([_key1uLength/2, _key1uWidth/2, _backplateDepth])
-        {
-            switchPunch();
-        }
+        // //Note: Comment this in for switch model view
+        // translate([_key1uLength/2, _key1uWidth/2, _backplateDepth])
+        // {
+        //     switchPunch();
+        // }
+
+        translate([_key1uLength/2, _key1uWidth/2, -1]) //forward to final position
+            translate([-_keySwitchCutoutLength/2, -_keySwitchCutoutWidth/2, 0]) //back to origin
+                cube([_keySwitchCutoutLength, _keySwitchCutoutWidth, _backplateDepth+2]);
     }
 }
 
 module key2u()
 {
     difference()
-    union()
+    //union()
     {
         //cube([_key2uLength, _key2uWidth, _backplateDepth]);
         roundedCube(size = [_key2uLength, _key2uWidth, _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
 
-        translate([_key2uLength/2, _key2uWidth/2, _backplateDepth])
-        {
-            switchPunch();
-        }
+        // //Note: Comment this in for switch model view
+        // translate([_key2uLength/2, _key2uWidth/2, _backplateDepth])
+        // {
+        //     switchPunch();
+        // }
+
+        translate([_key2uLength/2, _key2uWidth/2, -1]) //forward to final position
+            translate([-_keySwitchCutoutLength/2, -_keySwitchCutoutWidth/2, 0]) //back to origin
+                cube([_keySwitchCutoutLength, _keySwitchCutoutWidth, _backplateDepth+2]);
     }
 }
 
@@ -557,11 +578,9 @@ module riserBoltPunch()
 
         cylinder(r=boltHeadCutoutRadius, h=boltHeadCutoutDepth+1, $fn=100);
 
-        threadedInsertRadius = 2.1;
         boltPunchDepth = _backplateDepth+1;
         translate([0,0,-boltPunchDepth])
-                // Threaded insert "bolt" punch
-               cylinder(r=1.15, h=boltPunchDepth+2, $fn=100);
+               cylinder(r=_m2BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
         //     cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+1, $fn=100);
 
         
@@ -813,18 +832,21 @@ module backplateTest()
     //2x2 mini test backplate
     difference()
     {
-        union()
+        intersection()
         {
-            translate([0, _key1uWidth, 0])
+            union()
             {
-                key1u();
-                translate([(_key1uLength*1), 0, 0])
+                translate([0, _key1uWidth, 0])
+                {
                     key1u();
+                    translate([(_key1uLength*1), 0, 0])
+                        key1u();
+                }
+                key2u();
             }
-            key2u();
 
             backplateGrooveDepth = 1;
-            roundedCube(size=[(_key1uLength*2), (_key1uWidth*2), _backplateDepth - backplateGrooveDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+            roundedCube(size=[(_key1uLength*2), (_key1uWidth*2), _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
         }
 
         translate([_key1uLength, _key1uWidth, _riserBoltHeadCutoutDepth])
@@ -849,6 +871,9 @@ module miniHousingTest()
 
     translate([bodyLength/2, bodyWidth/2, _housingWallThickness])
         mountingRiser();
+
+    // translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness+_backplateOffsetFromHousing])
+    //     backplateTest();
 }
 
 module arduinoHousingTest()
