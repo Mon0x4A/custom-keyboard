@@ -1,7 +1,7 @@
 _m3BoltHoleDiameter = 3.2 + 0.2; // plus padding
 _m3BoltHoleRadius = _m3BoltHoleDiameter/2;
 
-_m2BoltHoleDiameter = 2.2 + 0.3; // plus padding
+_m2BoltHoleDiameter = 2.2 + 0.45; // plus padding
 _m2BoltHoleRadius = _m2BoltHoleDiameter/2;
 
 _backplateRowCount = 6;
@@ -10,8 +10,8 @@ _backplateColumnCount = 8;
 _switchLength = 15;
 _switchWidth = 15;
 
-_switchPaddingLength = 2;
-_switchPaddingWidth = 2;
+_switchPaddingLength = 2.25;
+_switchPaddingWidth = 2.25;
 
 _key1uLength = _switchLength+(_switchPaddingLength*2);
 _key1uWidth = _switchWidth+(_switchPaddingWidth*2);
@@ -34,8 +34,8 @@ _key2uWidth = _switchWidth+(_switchPaddingWidth*2);
 _keyCap2uLength = _key2uLength - _keyCapSpacingOffset;
 _keyCap2uWidth = _key2uWidth - _keyCapSpacingOffset;
 
-_keySwitchCutoutLength = 14.05; //14.25
-_keySwitchCutoutWidth = 14.05; //14.25
+_keySwitchCutoutLength = 13.95; //14.05
+_keySwitchCutoutWidth = 13.95; //14.05
 
 _backplateLength = (_key1uLength * _backplateColumnCount);
 _backplateWidth = (_key1uWidth * _backplateRowCount);
@@ -51,7 +51,7 @@ _housingBodyDepth = 24;
 _housingWallThickness = 5;
 _housingLength = _backplateLength + (_housingLengthPadding*2);
 _housingWidth = _backplateWidth + (_housingWidthPadding*2);
-_housingBackplateCutoutPadding = 0.5;
+_housingBackplateCutoutPadding = 1.25;
 
 _housingBoltSetLengthOffset = 20;
 _housingBoltSetWidthOffset = 15;
@@ -86,8 +86,8 @@ echo(str("_key2uWidth = ", _key2uWidth));
 //keyboardLeft();
 //backplateLeft(includeBoltHoles=true);
 
-keyboardRight();
-//backplateRight(includeBoltHoles=true);
+//keyboardRight();
+backplateRight(includeBoltHoles=true);
 
 //housing();
 //arduinoMicroPunch();
@@ -101,7 +101,6 @@ keyboardRight();
 //miniHousingTest();
 //key1u();
 //key2u();
-
 
 /// MAIN END ///
 
@@ -573,7 +572,7 @@ module riserBoltPunch()
     union()
     {
         //Traditional bolt punch
-        boltHeadCutoutRadius = 2;
+        boltHeadCutoutRadius = 2.1;
         boltHeadCutoutDepth = 3;
 
         cylinder(r=boltHeadCutoutRadius, h=boltHeadCutoutDepth+1, $fn=100);
@@ -582,9 +581,6 @@ module riserBoltPunch()
         translate([0,0,-boltPunchDepth])
                cylinder(r=_m2BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
         //     cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+1, $fn=100);
-
-        
-
     }
 }
 
@@ -712,7 +708,7 @@ module keyCapShankConnector()
 
                     //crossPunch
                     crossPunchFinLength = 4.3; // Warning: Careful when modifying. This is a tuned value.
-                    crossPunchFinWidth = 1.23; // Warning: Careful when modifying. This is a tuned value.
+                    crossPunchFinWidth = 1.21; // Warning: Careful when modifying. This is a tuned value.
                     crossPunchFinAdditionalCut = 2;
 
                     translate([_keyCapShankOffsetRiserLength/2, _keyCapShankOffsetRiserWidth/2, -1])
