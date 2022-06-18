@@ -47,7 +47,7 @@ _backplateOffsetFromHousing = 7;
 
 _housingLengthPadding = 5;
 _housingWidthPadding = 5;
-_housingBodyDepth = 24;
+_housingBodyDepth = 18;
 _housingWallThickness = 5;
 _housingLength = _backplateLength + (_housingLengthPadding*2);
 _housingWidth = _backplateWidth + (_housingWidthPadding*2);
@@ -86,8 +86,8 @@ echo(str("_key2uWidth = ", _key2uWidth));
 //keyboardLeft();
 //backplateLeft(includeBoltHoles=true);
 
-//keyboardRight();
-backplateRight(includeBoltHoles=true);
+keyboardRight();
+//backplateRight(includeBoltHoles=true);
 
 //housing();
 //arduinoMicroPunch();
