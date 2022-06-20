@@ -57,7 +57,7 @@ _housingBoltSetLengthOffset = 20;
 _housingBoltSetWidthOffset = 15;
 
 _arduinoMicroBodyLength = 19.2;
-_arduinoMicroBodyWidth = 44;
+_arduinoMicroBodyWidth = 44.5;
 
 _arduinoHolderTabInnerDiameter = 2.5;
 _arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
@@ -86,10 +86,10 @@ echo(str("_key2uWidth = ", _key2uWidth));
 //keyboardLeft();
 //backplateLeft(includeBoltHoles=true);
 
-keyboardRight();
+//keyboardRight();
 //backplateRight(includeBoltHoles=true);
 
-//housing();
+housing();
 //arduinoMicroPunch();
 //keyCap1u();
 //keyCap2u();
@@ -164,7 +164,7 @@ module housing()
             }
 
             arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
-            translate([arduinoCenteringLength, _backplateWidth-38.5, _housingWallThickness-3])
+            translate([arduinoCenteringLength, _backplateWidth-38.25, _housingWallThickness-3])
             {
                 scale([1, 1, 1])
                     arduinoMicroPunch();
