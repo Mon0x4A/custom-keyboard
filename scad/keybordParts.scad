@@ -59,9 +59,9 @@ _housingBoltSetWidthOffset = 15;
 _arduinoMicroBodyLength = 19.2;
 _arduinoMicroBodyWidth = 44.5;
 
-_arduinoHolderTabInnerDiameter = 2.5;
+_arduinoHolderTabInnerDiameter = _m2BoltHoleDiameter;
 _arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
-_arduinoHolderTabDepth = 2;
+_arduinoHolderTabDepth = 3.5;
 _arduinoHolderTabTabWidth = 4;
 _arduinoHolderTabTabLength = 5;
 
@@ -89,13 +89,13 @@ echo(str("_key2uWidth = ", _key2uWidth));
 //keyboardRight();
 //backplateRight(includeBoltHoles=true);
 
-housing();
+//housing();
 //arduinoMicroPunch();
 //keyCap1u();
 //keyCap2u();
 //arduinoHousingTest();
 //housingBottomBoltPunchSet();
-//arduinoHolderTab();
+arduinoHolderTab();
 
 //backplateTest();
 //miniHousingTest();
@@ -732,7 +732,7 @@ module arduinoHolderTab()
     union()
     {
         _washerDepth = _arduinoHolderTabDepth;
-        _washerThickness = 1.5;
+        _washerThickness = 2;
         _washerInnerDiameter = _arduinoHolderTabInnerDiameter;
         _washerInnerRadius = _washerInnerDiameter/2;
         _washerOuterRadius = _washerInnerRadius + _washerThickness;
