@@ -61,9 +61,9 @@ _arduinoMicroBodyWidth = 44.5;
 
 _arduinoHolderTabInnerDiameter = _m2BoltHoleDiameter;
 _arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
-_arduinoHolderTabDepth = 3.5;
+_arduinoHolderTabDepth = 1.75;
 _arduinoHolderTabTabWidth = 4;
-_arduinoHolderTabTabLength = 5;
+_arduinoHolderTabTabLength = 9;
 
 _riserBoltHeadCutoutDepth = 3;
 

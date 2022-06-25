@@ -7,14 +7,14 @@ const int KEY_ROW_COUNT = 6;
 
 const byte ROW_0_PIN = 2;
 const byte ROW_1_PIN = 3;
-const byte ROW_2_PIN = 4;
+const byte ROW_2_PIN = 4;                                   
 const byte ROW_3_PIN = 5;
 const byte ROW_4_PIN = 6;
 const byte ROW_5_PIN = 7;
 
 const byte COL_0_PIN = 8;
-const byte COL_1_PIN = 10;
-const byte COL_2_PIN = 9;
+const byte COL_1_PIN = 9;
+const byte COL_2_PIN = 10;
 const byte COL_3_PIN = 16;
 const byte COL_4_PIN = 14;
 const byte COL_5_PIN = 15;
@@ -39,19 +39,19 @@ const char characterKeys[KEY_ROW_COUNT][KEY_COLUMN_COUNT] =
     // !- = spacer for 2u key
     // null = key without current function
 
-    //  {  esc, prS, f1,  f2,  f3, f4,  f5, f6 },
-    //  {  nul, til,  1,   2,   3,  4,   5,  6 },
-    //  {  tab,  !-,  q,   w,   e,  r,   t,  y },
-    //  {  nul, nul,  a,   s,   d,  f,   g,  h },
-    //  { lsft,  !-,  z,   x,   c,  v,   b,  n },
-    //  { ctrl,  !-, os, alt, spc, !-, spc, !- }
+    //  {  f7, f8,  f9,  f10,  f11,   f12,   vUp,  vDwn },
+    //  {   7,  8,   9,   0,     -,     =,  bspc,    !- },
+    //  {   u,  i,   o,   p,     [,     ],     \,   del },
+    //  {   j,  k,   l,   ;,     ',   ent,    !-,  home },
+    //  {   m,  ,,   .,   /,  shft,    !-,    up,   end },
+    //  { spc, !-, alt,  os,  ctrl,  left,  down,  rght }
 
-     {KEY_ESC,        KEY_PRINT_SCREEN,  KEY_F1,        KEY_F2,        KEY_F3,     KEY_F4,  KEY_F5,     KEY_F6  },
-     {KC_NULL,        '`',               '1',           '2',           '3',        '4',     '5',        '6'     },
-     {KEY_TAB,        KC_NULL,           'q',           'w',           'e',        'r',     't',        'y'     },
-     {KC_NULL,        KC_NULL,           'a',           's',           'd',        'f',     'g',        'h'     },
-     {KEY_LEFT_SHIFT, KC_NULL,           'z',           'x',           'c',        'v',     'b',        'n'     },
-     {KEY_LEFT_CTRL,  KC_NULL,           KEY_LEFT_GUI,  KEY_LEFT_ALT,  ' ',        KC_NULL, ' ',  KC_NULL }
+     { KEY_F7,   KEY_F8,          KEY_F9,         KEY_F10,           KEY_F11,          KEY_F12,          KC_NULL,           KC_NULL },
+     {    '7',      '8',             '9',             '0',               '-',              '=',    KEY_BACKSPACE,           KC_NULL },
+     {    'u',      'i',             'o',             'p',               '[',              ']',             '\\',        KEY_DELETE },
+     {    'j',      'k',             'l',             ';',              '\'',       KEY_RETURN,          KC_NULL,          KEY_HOME },
+     {    'm',      ',',             '.',             '/',   KEY_RIGHT_SHIFT,          KC_NULL,     KEY_UP_ARROW,           KEY_END },
+     {    ' ',  KC_NULL,   KEY_RIGHT_ALT,   KEY_RIGHT_GUI,    KEY_RIGHT_CTRL,   KEY_LEFT_ARROW,   KEY_DOWN_ARROW,   KEY_RIGHT_ARROW }
 };
 
 //Fields
