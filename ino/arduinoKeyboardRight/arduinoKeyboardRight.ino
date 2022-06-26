@@ -7,7 +7,7 @@ const int KEY_ROW_COUNT = 6;
 
 const byte ROW_0_PIN = 2;
 const byte ROW_1_PIN = 3;
-const byte ROW_2_PIN = 4;                                   
+const byte ROW_2_PIN = 4;
 const byte ROW_3_PIN = 5;
 const byte ROW_4_PIN = 6;
 const byte ROW_5_PIN = 7;
