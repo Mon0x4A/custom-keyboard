@@ -20,6 +20,9 @@ _keyCapSpacingOffset = 0.5;
 _keyCapDepth = 10;
 _keyCapWallThickness = 2;
 _keyCapRoundingRadius = 3;
+_keyCapLowTopThicknessPadding = 0;
+_keyCapMedTopThicknessPadding = 2;
+_keyCapHighTopThicknessPadding = 3.2;
 
 _keyCapShankOffsetRiserLength = 7.01; // Warning: Careful when modifying. This is a tuned value.
 _keyCapShankOffsetRiserWidth = 4.55; // Warning: Careful when modifying. This is a tuned value.
@@ -91,11 +94,11 @@ echo(str("_key2uWidth = ", _key2uWidth));
 
 //housing();
 //arduinoMicroPunch();
-//keyCap1u();
-//keyCap2u();
+//keyCap1u(_keyCapHighTopThicknessPadding);
+//keyCap2u(_keyCapLowTopThicknessPadding);
 //arduinoHousingTest();
 //housingBottomBoltPunchSet();
-arduinoHolderTab();
+//arduinoHolderTab();
 
 //backplateTest();
 //miniHousingTest();
@@ -648,44 +651,46 @@ module housingBottomBoltPunch()
                cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
 }
 
-module keyCap1u()
+module keyCap1u(topThicknessPadding)
 {
     union()
     {
+        cutoutZTranslation = _keyCapWallThickness + topThicknessPadding;
         difference()
         //union()
         {
-            roundedCube(size=[_keyCap1uLength, _keyCap1uWidth, _keyCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
+            roundedCube(size=[_keyCap1uLength, _keyCap1uWidth, _keyCapDepth + topThicknessPadding], radius = _keyCapRoundingRadius, apply_to="zmin");
 
             cutoutCubeSize = [_keyCap1uLength-(_keyCapWallThickness*2), _keyCap1uWidth-(_keyCapWallThickness*2), _keyCapDepth];
-            translate([_keyCapWallThickness, _keyCapWallThickness, _keyCapWallThickness])
+            translate([_keyCapWallThickness, _keyCapWallThickness, cutoutZTranslation])
                 roundedCube(size=cutoutCubeSize, radius = _keyCapRoundingRadius, apply_to="zmin");
         }
 
         //shank connector
-        translate([_keyCap1uLength/2, _keyCap1uWidth/2, _keyCapWallThickness])
+        translate([_keyCap1uLength/2, _keyCap1uWidth/2, cutoutZTranslation])
         {
             keyCapShankConnector();
         }
     }
 }
 
-module keyCap2u()
+module keyCap2u(topThicknessPadding)
 {
     union()
     {
+        cutoutZTranslation = _keyCapWallThickness + topThicknessPadding;
         difference()
         //union()
         {
-            roundedCube(size=[_keyCap2uLength, _key2uWidth, _keyCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
+            roundedCube(size=[_keyCap2uLength, _key2uWidth, _keyCapDepth + topThicknessPadding], radius = _keyCapRoundingRadius, apply_to="zmin");
 
             cutoutCubeSize = [_keyCap2uLength-(_keyCapWallThickness*2), _key2uWidth-(_keyCapWallThickness*2), _keyCapDepth];
-            translate([_keyCapWallThickness, _keyCapWallThickness, _keyCapWallThickness])
+            translate([_keyCapWallThickness, _keyCapWallThickness, cutoutZTranslation])
                 roundedCube(size=cutoutCubeSize, radius = _keyCapRoundingRadius, apply_to="zmin");
         }
 
         //shank connector
-        translate([_keyCap2uLength/2, _key2uWidth/2, _keyCapWallThickness])
+        translate([_keyCap2uLength/2, _key2uWidth/2, cutoutZTranslation])
         {
             keyCapShankConnector();
         }
