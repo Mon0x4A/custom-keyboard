@@ -21,8 +21,9 @@ _keyCapDepth = 10;
 _keyCapWallThickness = 2;
 _keyCapRoundingRadius = 3;
 _keyCapLowTopThicknessPadding = 0;
+_keyCapMedLowTopThickness = 1;
 _keyCapMedTopThicknessPadding = 2;
-_keyCapHighTopThicknessPadding = 3.2;
+_keyCapHighTopThicknessPadding = 3;
 
 _keyCapShankOffsetRiserLength = 7.01; // Warning: Careful when modifying. This is a tuned value.
 _keyCapShankOffsetRiserWidth = 4.55; // Warning: Careful when modifying. This is a tuned value.
@@ -94,8 +95,8 @@ echo(str("_key2uWidth = ", _key2uWidth));
 
 //housing();
 //arduinoMicroPunch();
-//keyCap1u(_keyCapHighTopThicknessPadding);
-//keyCap2u(_keyCapLowTopThicknessPadding);
+keyCap1u(_keyCapHighTopThicknessPadding);
+//keyCap2u(_keyCapHighTopThicknessPadding);
 //arduinoHousingTest();
 //housingBottomBoltPunchSet();
 //arduinoHolderTab();
