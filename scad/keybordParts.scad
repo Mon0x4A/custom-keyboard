@@ -56,6 +56,14 @@ _housingWallThickness = 5;
 _housingLength = _backplateLength + (_housingLengthPadding*2);
 _housingWidth = _backplateWidth + (_housingWidthPadding*2);
 _housingBackplateCutoutPadding = 1.25;
+_housingBodyRoundingRadius = 4;
+
+_housingCornerSupportLegLength = 10;
+_housingSupportDepth = _backplateOffsetFromHousing;
+_housingCornerSupportLegWidth = 5;
+_housingHalfWidthSupportLength = _housingCornerSupportLegWidth;
+_housingHalfWidthSupportWidth = _housingCornerSupportLegLength;
+_housingSupportExposureIntoHousing = 3;
 
 _housingBoltSetLengthOffset = 20;
 _housingBoltSetWidthOffset = 15;
@@ -93,9 +101,10 @@ echo(str("_key2uWidth = ", _key2uWidth));
 //keyboardRight();
 //backplateRight(includeBoltHoles=true);
 
-//housing();
+housing();
+//housingBackplateSupportSet();
 //arduinoMicroPunch();
-keyCap1u(_keyCapHighTopThicknessPadding);
+//keyCap1u(_keyCapHighTopThicknessPadding);
 //keyCap2u(_keyCapHighTopThicknessPadding);
 //arduinoHousingTest();
 //housingBottomBoltPunchSet();
@@ -201,6 +210,10 @@ module housing()
         //backplate mounting risers
         translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
             mountingRiserSet();
+
+        //corner support risers
+        translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
+            housingBackplateSupportSet();
     }
 }
 
@@ -210,7 +223,67 @@ module housingBody()
     {
         bodyLength = _backplateLength + (_housingLengthPadding*2);
         bodyWidth = _backplateWidth + (_housingWidthPadding*2);
-        roundedCube(size = [bodyLength, bodyWidth, _housingBodyDepth], radius=4, apply_to="all");
+        roundedCube(size = [bodyLength, bodyWidth, _housingBodyDepth], radius=_housingBodyRoundingRadius, apply_to="all");
+    }
+}
+
+module housingBackplateSupportSet()
+{
+    union()
+    {
+        //Corner backplate supports
+
+        cornerZeroingWithWallOffset = 3.75;
+
+        //SW (closest to origin)
+        translate([-cornerZeroingWithWallOffset + _housingSupportExposureIntoHousing, -cornerZeroingWithWallOffset + _housingSupportExposureIntoHousing, 0])
+            rotate([0, 0, 0])
+                housingCornerSupport();
+
+        //NW
+        backplateWidthZeroingSpace = _backplateWidth + _housingWidthPadding - 1.25;
+        translate([-cornerZeroingWithWallOffset + _housingSupportExposureIntoHousing, backplateWidthZeroingSpace - _housingSupportExposureIntoHousing, 0])
+            rotate([0, 0, -90])
+                housingCornerSupport();
+
+        //NE
+        backplateLengthZeroingSpace = _backplateLength + _housingLengthPadding - 1.25;
+        translate([backplateLengthZeroingSpace - _housingSupportExposureIntoHousing, backplateWidthZeroingSpace - _housingSupportExposureIntoHousing, 0])
+            rotate([0, 0, 180])
+                housingCornerSupport();
+
+        //SE
+        translate([backplateLengthZeroingSpace - _housingSupportExposureIntoHousing, -_housingWidthPadding + 1.25 + _housingSupportExposureIntoHousing, 0])
+            rotate([0, 0, 90])
+                housingCornerSupport();
+
+
+        //Mid backplate supports.
+        //"west"
+        midSupportZeroingLengthOffset = 6.25;
+        translate([-midSupportZeroingLengthOffset + _housingSupportExposureIntoHousing, (_backplateWidth)/2 - _housingHalfWidthSupportWidth + _housingWidthPadding, 0])
+            cube([_housingHalfWidthSupportLength, _housingHalfWidthSupportWidth, _housingSupportDepth]);
+
+        //"east"
+        translate([_backplateLength + _housingLengthPadding - 3.75 - _housingSupportExposureIntoHousing, (_backplateWidth)/2 - _housingHalfWidthSupportWidth + _housingWidthPadding, 0])
+            cube([_housingHalfWidthSupportLength, _housingHalfWidthSupportWidth, _housingSupportDepth]);
+    }
+}
+
+module housingCornerSupport()
+{
+    union()
+    {
+        // "core"
+        translate([-_housingCornerSupportLegWidth/2, -_housingCornerSupportLegWidth/2, 0])
+            cube([_housingCornerSupportLegWidth, _housingCornerSupportLegWidth, _housingSupportDepth]);
+
+        // "legs"
+        translate([_housingCornerSupportLegWidth/2, -_housingCornerSupportLegWidth/2, 0])
+            cube([_housingCornerSupportLegLength, _housingCornerSupportLegWidth, _housingSupportDepth]);
+
+        translate([-_housingCornerSupportLegWidth/2, _housingCornerSupportLegWidth/2, 0])
+            cube([_housingCornerSupportLegWidth, _housingCornerSupportLegLength, _housingSupportDepth]);
     }
 }
 
