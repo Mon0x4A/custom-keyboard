@@ -71,6 +71,9 @@ _housingBoltSetWidthOffset = 15;
 _arduinoMicroBodyLength = 19.2;
 _arduinoMicroBodyWidth = 44.5;
 
+_arduinoBackstopDepth = 2.5;
+_arduinoBackstopWidth = 8;
+
 _arduinoHolderTabInnerDiameter = _m2BoltHoleDiameter;
 _arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
 _arduinoHolderTabDepth = 1.75;
@@ -104,7 +107,7 @@ echo(str("_key2uWidth = ", _key2uWidth));
 housing();
 //housingBackplateSupportSet();
 //arduinoMicroPunch();
-//keyCap1u(_keyCapHighTopThicknessPadding);
+//keyCap1u(_keyCapLowTopThicknessPadding);
 //keyCap2u(_keyCapHighTopThicknessPadding);
 //arduinoHousingTest();
 //housingBottomBoltPunchSet();
@@ -163,6 +166,10 @@ module housing()
 {
     union()
     {
+        arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
+        arduinoPositioningWidth = _backplateWidth-38.25;
+        arduinoDepthOffset = _housingWallThickness - 1.25;
+
         difference()
         //union()
         {
@@ -170,24 +177,27 @@ module housing()
             {
                 housingBody();
 
+                // Housing body cut out.
                 translate([_housingLengthPadding-(_housingBackplateCutoutPadding), _housingWidthPadding-(_housingBackplateCutoutPadding), _housingWallThickness])
                 {
                     roundedCube(size=[_backplateLength+(_housingBackplateCutoutPadding*2), _backplateWidth+(_housingBackplateCutoutPadding*2), _housingBodyDepth], radius=_backplateRoundingRadius, apply_to="zmax");
                 }
             }
 
-            arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
-            translate([arduinoCenteringLength, _backplateWidth-38.25, _housingWallThickness-3])
-            {
+            translate([arduinoCenteringLength, arduinoPositioningWidth, arduinoDepthOffset])
                 scale([1, 1, 1])
                     arduinoMicroPunch();
 
-                archPortRadius = _arduinoMicroBodyLength/2.5;
-                archPortCenteringOffset = (_arduinoMicroBodyLength - (archPortRadius*2))/2;
-                translate([archPortCenteringOffset, _arduinoMicroBodyWidth-5, 2])
-                    scale([1, 1, 0.9])
-                        halfCylinder(height=10, radius=_arduinoMicroBodyLength/2.5);
-                //arduino holding bolt inserts
+            // Ardiuno connector wall cutout
+            archPortRadius = _arduinoMicroBodyLength/2.5;
+            archPortCenteringOffset = (_arduinoMicroBodyLength - (archPortRadius*2))/2;
+            translate([arduinoCenteringLength + archPortCenteringOffset, arduinoPositioningWidth + _arduinoMicroBodyWidth-5, _housingWallThickness + 1])
+                scale([1, 1, 0.9])
+                    halfCylinder(height=10, radius=_arduinoMicroBodyLength/2.5);
+
+            translate([arduinoCenteringLength, arduinoPositioningWidth, _housingWallThickness-3])
+            {
+                // Arduino holding bolt inserts
                 forwardOffsetFromArduinoRear = 2.5;
                 translate([-_riserCutoutDiameter, forwardOffsetFromArduinoRear, 0])
                     cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
@@ -200,18 +210,22 @@ module housing()
                     cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
             }
 
-            //housing floor bolt through holes
+            // Housing floor bolt through holes
             translate([_housingBoltSetLengthOffset, _housingBoltSetWidthOffset, _housingWallThickness-1])
                 housingBottomBoltPunchSet();
             translate([_housingLength-_housingBoltSetLengthOffset, _housingBoltSetWidthOffset, _housingWallThickness-1])
                 housingBottomBoltPunchSet();
         }
 
-        //backplate mounting risers
+        // Arduino backstop block
+        translate([arduinoCenteringLength, arduinoPositioningWidth, arduinoDepthOffset])
+            cube([_arduinoMicroBodyLength, _arduinoBackstopWidth, _arduinoBackstopDepth]);
+
+        // Backplate mounting risers
         translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
             mountingRiserSet();
 
-        //corner support risers
+        // Corner/wall backplate support risers
         translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
             housingBackplateSupportSet();
     }
