@@ -21,7 +21,7 @@ _keyCapDepth = 10;
 _keyCapWallThickness = 2;
 _keyCapRoundingRadius = 3;
 _keyCapLowTopThicknessPadding = 0;
-_keyCapMedLowTopThickness = 1;
+_keyCapMedLowTopThicknessPadding = 1;
 _keyCapMedTopThicknessPadding = 2;
 _keyCapHighTopThicknessPadding = 3;
 
@@ -72,7 +72,7 @@ _arduinoMicroBodyLength = 19.2;
 _arduinoMicroBodyWidth = 44.5;
 
 _arduinoBackstopDepth = 2.5;
-_arduinoBackstopWidth = 8;
+_arduinoBackstopWidth = 7.5;
 
 _arduinoHolderTabInnerDiameter = _m2BoltHoleDiameter;
 _arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
@@ -98,25 +98,26 @@ echo(str("_key1uWidth = ", _key1uWidth));
 echo(str("_key2uLength = ", _key2uLength));
 echo(str("_key2uWidth = ", _key2uWidth));
 
-//keyboardLeft();
+keyboardLeft();
 //backplateLeft(includeBoltHoles=true);
 
 //keyboardRight();
 //backplateRight(includeBoltHoles=true);
 
-housing();
+//housing();
 //housingBackplateSupportSet();
 //arduinoMicroPunch();
-//keyCap1u(_keyCapLowTopThicknessPadding);
-//keyCap2u(_keyCapHighTopThicknessPadding);
-//arduinoHousingTest();
+//keyCap1u(_keyCapMedLowTopThicknessPadding);
+//keyCap2u(_keyCapMedLowTopThicknessPadding);
 //housingBottomBoltPunchSet();
 //arduinoHolderTab();
-
-//backplateTest();
-//miniHousingTest();
 //key1u();
 //key2u();
+
+//arduinoHousingTest();
+//backplateSupportHousingTest();
+//backplateTest();
+//miniHousingTest();
 
 /// MAIN END ///
 
@@ -986,5 +987,23 @@ module arduinoHousingTest()
         //Front cut out
         translate([-1,-8,-1]) //-8 to include the center riser
             cube([_housingLength+2, cutoutCubeWidth/2, cutoutCubeDepth]);
+    }
+}
+
+module backplateSupportHousingTest()
+{
+    difference()
+    {
+        housing();
+
+        cutoutCubeLength = _housingLength;
+        cutoutCubeWidth = _housingWidth+2;
+        cutoutCubeDepth = _housingBodyDepth+1;
+
+        translate([17, -1, -1])
+            cube([cutoutCubeLength, cutoutCubeWidth, cutoutCubeDepth]);
+
+        translate([-1, -1, -1])
+            cube([cutoutCubeLength, cutoutCubeWidth/2.5, cutoutCubeDepth]);
     }
 }
