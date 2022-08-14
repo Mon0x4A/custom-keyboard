@@ -13,7 +13,7 @@ const byte ROW_4_PIN = 6;
 const byte ROW_5_PIN = 7;
 
 const byte COL_0_PIN = 8;
-const byte COL_1_PIN = 10;
+const byte COL_1_PIN = A2; //Previously "10", but the soldering was messed up.
 const byte COL_2_PIN = 9;
 const byte COL_3_PIN = 16;
 const byte COL_4_PIN = 14;
