@@ -77,8 +77,8 @@ _arduinoBackstopWidth = 7.5;
 _arduinoHolderTabInnerDiameter = _m2BoltHoleDiameter;
 _arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
 _arduinoHolderTabDepth = 1.75;
-_arduinoHolderTabTabWidth = 4;
-_arduinoHolderTabTabLength = 9;
+_arduinoHolderTabWidth = 4;
+_arduinoHolderTabLength = 9;
 
 _riserBoltHeadCutoutDepth = 3;
 
@@ -825,7 +825,11 @@ module arduinoHolderTab()
 {
     union()
     {
-        _washerDepth = _arduinoHolderTabDepth;
+        _tabLength = _arduinoHolderTabLength;
+        _tabWidth = _arduinoHolderTabWidth;
+        _tabDepth = _arduinoHolderTabDepth;
+
+        _washerDepth = _tabDepth;
         _washerThickness = 2;
         _washerInnerDiameter = _arduinoHolderTabInnerDiameter;
         _washerInnerRadius = _washerInnerDiameter/2;
@@ -837,8 +841,8 @@ module arduinoHolderTab()
                 cylinder(r=_washerInnerRadius, h=_washerDepth+2, center=false, $fn=200);
         }
 
-        translate([_washerInnerRadius,-_arduinoHolderTabTabWidth/2,0])
-            cube([_arduinoHolderTabTabLength, _arduinoHolderTabTabWidth, _arduinoHolderTabDepth]);
+        translate([_washerInnerRadius,-_tabWidth/2,0])
+            cube([_tabLength, _tabWidth, _tabDepth]);
     }
 }
 
