@@ -39,14 +39,14 @@ const char characterKeys[KEY_ROW_COUNT][KEY_COLUMN_COUNT] =
     // !- = spacer for 2u key
     // null = key without current function
 
-    //  {  f7, f8,  f9,  f10,  f11,   f12,   vUp,  vDwn },
+    //  {  f7, f8,  f9,  f10,  f11,   f12,   pUp,  pDwn },
     //  {   7,  8,   9,   0,     -,     =,  bspc,    !- },
     //  {   u,  i,   o,   p,     [,     ],     \,   del },
     //  {   j,  k,   l,   ;,     ',   ent,    !-,  home },
     //  {   m,  ,,   .,   /,  shft,    !-,    up,   end },
     //  { spc, !-, alt,  os,  ctrl,  left,  down,  rght }
 
-     { KEY_F7,   KEY_F8,          KEY_F9,         KEY_F10,           KEY_F11,          KEY_F12,          KC_NULL,           KC_NULL },
+    { KEY_F7,   KEY_F8,          KEY_F9,         KEY_F10,           KEY_F11,          KEY_F12,       KEY_PAGE_UP,     KEY_PAGE_DOWN },
      {    '7',      '8',             '9',             '0',               '-',              '=',    KEY_BACKSPACE,           KC_NULL },
      {    'u',      'i',             'o',             'p',               '[',              ']',             '\\',        KEY_DELETE },
      {    'j',      'k',             'l',             ';',              '\'',       KEY_RETURN,          KC_NULL,          KEY_HOME },
