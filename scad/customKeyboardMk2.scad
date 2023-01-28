@@ -4,8 +4,8 @@ _m3BoltHoleRadius = _m3BoltHoleDiameter/2;
 _m2BoltHoleDiameter = 2.2 + 0.45; // plus padding
 _m2BoltHoleRadius = _m2BoltHoleDiameter/2;
 
-_backplateRowCount = 6;
-_backplateColumnCount = 8;
+_backplateRowCount = 4;
+_backplateColumnCount = 6;
 
 _switchLength = 15;
 _switchWidth = 15;
@@ -32,14 +32,8 @@ _keyCapShankOffsetTowardSwitch = 3;
 _keyCap1uLength = _key1uLength - _keyCapSpacingOffset;
 _keyCap1uWidth = _key1uWidth - _keyCapSpacingOffset;
 
-_key2uLength = (_switchLength*2)+(_switchPaddingLength*4);
-_key2uWidth = _switchWidth+(_switchPaddingWidth*2);
-
-_keyCap2uLength = _key2uLength - _keyCapSpacingOffset;
-_keyCap2uWidth = _key2uWidth - _keyCapSpacingOffset;
-
-_keySwitchCutoutLength = 13.95; //14.05
-_keySwitchCutoutWidth = 13.95; //14.05
+_keySwitchCutoutLength = 13.90; //14.05
+_keySwitchCutoutWidth = 13.90; //14.05
 
 _backplateLength = (_key1uLength * _backplateColumnCount);
 _backplateWidth = (_key1uWidth * _backplateRowCount);
@@ -95,74 +89,52 @@ _riserCutoutDepth = 4;
 
 echo(str("_key1uLength = ", _key1uLength));
 echo(str("_key1uWidth = ", _key1uWidth));
-echo(str("_key2uLength = ", _key2uLength));
-echo(str("_key2uWidth = ", _key2uWidth));
 
-keyboardLeft();
-//backplateLeft(includeBoltHoles=true);
-
-//keyboardRight();
-//backplateRight(includeBoltHoles=true);
-
+keyboard();
+//backplate(true);
 //housing();
-//housingBackplateSupportSet();
+
+//housingBackplateEdgeSupportSet();
 //arduinoMicroPunch();
 //keyCap1u(_keyCapMedLowTopThicknessPadding);
-//keyCap2u(_keyCapMedLowTopThicknessPadding);
-//housingBottomBoltPunchSet();
 //arduinoHolderTab();
 //key1u();
-//key2u();
 
 //arduinoHousingTest();
 //backplateSupportHousingTest();
-//backplateTest();
-//miniHousingTest();
 
 /// MAIN END ///
 
-module keyboardLeft()
+module keyboard()
 {
     union()
     {
         translate([_housingLengthPadding, _housingWidthPadding, 0])
         {
-            backplateLeft(includeBoltHoles=true);
+            //backplate(includeBoltHoles=true);
         }
 
         translate([0, 0, -_backplateOffsetFromHousing-_housingWallThickness])
         {
             housing();
 
-            // //Note: Comment this in to see the internal plate clearance
-            // translate([_housingLengthPadding, _housingWidthPadding,0])
-            //     cube([_backplateLength, _backplateWidth, _housingWallThickness]);
-            // arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
-            // translate([arduinoCenteringLength, _backplateWidth-36, _housingWallThickness-3])
-            // {
-            //     scale([1, 1, 1])
-            //         arduinoMicroPunch();
-            // }
-            // translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
-            //     mountingRiserSet();
+             ////Note: Comment this in to see the internal plate clearance
+             //translate([_housingLengthPadding, _housingWidthPadding,0])
+             //    cube([_backplateLength, _backplateWidth, _housingWallThickness]);
+             //arduinoCenteringLength = (_housingLength - _arduinoMicroBodyLength)/2;
+             //translate([arduinoCenteringLength, _backplateWidth-36, _housingWallThickness-3])
+             //{
+             //    scale([1, 1, 1])
+             //        arduinoMicroPunch();
+             //}
+             translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
+                 mountingRiserSet();
         }
 
     }
 }
 
-module keyboardRight()
-{
-    translate([_housingLengthPadding, _housingWidthPadding, 0])
-    {
-        backplateRight(includeBoltHoles=true);
-    }
-
-    translate([0, 0, -_backplateOffsetFromHousing-_housingWallThickness])
-    {
-        housing();
-    }
-}
-
+//Bodies
 module housing()
 {
     union()
@@ -199,7 +171,7 @@ module housing()
             translate([arduinoCenteringLength, arduinoPositioningWidth, _housingWallThickness-3])
             {
                 // Arduino holding bolt inserts
-                forwardOffsetFromArduinoRear = 2.5;
+                forwardOffsetFromArduinoRear = 11.5;
                 translate([-_riserCutoutDiameter, forwardOffsetFromArduinoRear, 0])
                     cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
                 translate([_arduinoMicroBodyLength + _riserCutoutDiameter, forwardOffsetFromArduinoRear, 0])
@@ -210,17 +182,19 @@ module housing()
                 translate([_arduinoMicroBodyLength + _riserCutoutDiameter, rearOffsetFromArduinoRear, 0])
                     cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
             }
-
-            // Housing floor bolt through holes
-            translate([_housingBoltSetLengthOffset, _housingBoltSetWidthOffset, _housingWallThickness-1])
-                housingBottomBoltPunchSet();
-            translate([_housingLength-_housingBoltSetLengthOffset, _housingBoltSetWidthOffset, _housingWallThickness-1])
-                housingBottomBoltPunchSet();
         }
 
         // Arduino backstop block
         translate([arduinoCenteringLength, arduinoPositioningWidth, arduinoDepthOffset])
-            cube([_arduinoMicroBodyLength, _arduinoBackstopWidth, _arduinoBackstopDepth]);
+        {
+            difference()
+            {
+                cube([_arduinoMicroBodyLength, _arduinoBackstopWidth, _arduinoBackstopDepth]);
+                // Rear nut insert.
+                translate([_arduinoMicroBodyLength/2, _arduinoBackstopWidth/2, 0])
+                    cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
+            }
+        }
 
         // Backplate mounting risers
         translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
@@ -228,7 +202,7 @@ module housing()
 
         // Corner/wall backplate support risers
         translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness])
-            housingBackplateSupportSet();
+            housingBackplateEdgeSupportSet();
     }
 }
 
@@ -242,12 +216,11 @@ module housingBody()
     }
 }
 
-module housingBackplateSupportSet()
+module housingBackplateEdgeSupportSet()
 {
     union()
     {
         //Corner backplate supports
-
         cornerZeroingWithWallOffset = 3.75;
 
         //SW (closest to origin)
@@ -302,259 +275,30 @@ module housingCornerSupport()
     }
 }
 
-module backplateLeft(includeBoltHoles)
+module backplate(includeBoltHoles)
 {
     difference()
-    //union()
     {
-        plateLeft();
+        intersection()
+        {
+            roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+            union()
+            {
+                for(i=[0:_backplateRowCount])
+                {
+                    for(j=[0:_backplateColumnCount])
+                    {
+                        translate([_key1uLength*j,_key1uWidth*i, 0])
+                            key1u();
+                    }
+                }
+            }
+        }
 
         if (includeBoltHoles)
         {
             riserBoltPunchSet();
         }
-    }
-}
-
-module plateLeft()
-{
-    intersection()
-    {
-        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
-        union()
-        {
-            //[0,0] is the upper left corner of the keyboard.
-            translate([0, _key1uWidth*5, 0])
-                row0L();
-            translate([0, _key1uWidth*4, 0])
-                row1L();
-            translate([0, _key1uWidth*3, 0])
-                row2L();
-            translate([0, _key1uWidth*2, 0])
-                row3L();
-            translate([0, _key1uWidth*1, 0])
-                row4L();
-            translate([0, 0, 0])
-                row5L();
-        }
-    }
-}
-
-module row0L()
-{
-    union()
-    {
-        key1u();
-        translate([(_key1uLength*1), 0, 0])
-            key1u();
-        translate([(_key1uLength*2), 0, 0])
-            key1u();
-        translate([(_key1uLength*3), 0, 0])
-            key1u();
-        translate([(_key1uLength*4), 0, 0])
-            key1u();
-        translate([(_key1uLength*5), 0, 0])
-            key1u();
-        translate([(_key1uLength*6), 0, 0])
-            key1u();
-        translate([(_key1uLength*7), 0, 0])
-            key1u();
-    }
-}
-
-module row1L()
-{
-    row0L();
-}
-
-module row2L()
-{
-    union()
-    {
-        key2u();
-        translate([(_key2uLength), 0, 0])
-            key1u();
-        translate([(_key2uLength+_key1uLength*1), 0, 0])
-            key1u();
-        translate([(_key2uLength+_key1uLength*2), 0, 0])
-            key1u();
-        translate([(_key2uLength+_key1uLength*3), 0, 0])
-            key1u();
-        translate([(_key2uLength+_key1uLength*4), 0, 0])
-            key1u();
-        translate([(_key2uLength+_key1uLength*5), 0, 0])
-            key1u();
-    }
-}
-
-module row3L()
-{
-    row0L();
-}
-
-module row4L()
-{
-    row2L();
-}
-
-module row5L()
-{
-    union()
-    {
-        key2u();
-        translate([(_key2uLength*1), 0, 0])
-            key1u();
-        translate([(_key2uLength*1+_key1uLength*1), 0, 0])
-            key1u();
-        translate([(_key2uLength*1+_key1uLength*2), 0, 0])
-            key2u();
-        translate([(_key2uLength*2+_key1uLength*2), 0, 0])
-            key2u();
-    }
-}
-
-module backplateRight(includeBoltHoles)
-{
-    difference()
-    //union()
-    {
-        plateRight();
-
-        if (includeBoltHoles)
-        {
-            riserBoltPunchSet();
-        }
-    }
-}
-
-module plateRight()
-{
-    intersection()
-    {
-        roundedCube(size=[_backplateLength, _backplateWidth, _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
-        union()
-        {
-            //[0,0] is the upper left corner of the keyboard.
-            translate([0, _key1uWidth*5, 0])
-                row0R();
-            translate([0, _key1uWidth*4, 0])
-                row1R();
-            translate([0, _key1uWidth*3, 0])
-                row2R();
-            translate([0, _key1uWidth*2, 0])
-                row3R();
-            translate([0, _key1uWidth*1, 0])
-                row4R();
-            translate([0, 0, 0])
-                row5R();
-        }
-    }
-}
-
-module row0R()
-{
-    union()
-    {
-        key1u();
-        translate([(_key1uLength*1), 0, 0])
-            key1u();
-        translate([(_key1uLength*2), 0, 0])
-            key1u();
-        translate([(_key1uLength*3), 0, 0])
-            key1u();
-        translate([(_key1uLength*4), 0, 0])
-            key1u();
-        translate([(_key1uLength*5), 0, 0])
-            key1u();
-        translate([(_key1uLength*6), 0, 0])
-            key1u();
-        translate([(_key1uLength*7), 0, 0])
-            key1u();
-    }
-}
-
-module row1R()
-{
-    union()
-    {
-        key1u();
-        translate([(_key1uLength*1), 0, 0])
-            key1u();
-        translate([(_key1uLength*2), 0, 0])
-            key1u();
-        translate([(_key1uLength*3), 0, 0])
-            key1u();
-        translate([(_key1uLength*4), 0, 0])
-            key1u();
-        translate([(_key1uLength*5), 0, 0])
-            key1u();
-        translate([(_key1uLength*6), 0, 0])
-            key2u();
-    }
-}
-
-module row2R()
-{
-    row0R();
-}
-
-module row3R()
-{
-    union()
-    {
-        key1u();
-        translate([(_key1uLength*1), 0, 0])
-            key1u();
-        translate([(_key1uLength*2), 0, 0])
-            key1u();
-        translate([(_key1uLength*3), 0, 0])
-            key1u();
-        translate([(_key1uLength*4), 0, 0])
-            key1u();
-        translate([(_key1uLength*5), 0, 0])
-            key2u();
-        translate([(_key2uLength*1+_key1uLength*5), 0, 0])
-            key1u();
-    }
-}
-
-module row4R()
-{
-    union()
-    {
-        key1u();
-        translate([(_key1uLength*1), 0, 0])
-            key1u();
-        translate([(_key1uLength*2), 0, 0])
-            key1u();
-        translate([(_key1uLength*3), 0, 0])
-            key1u();
-        translate([(_key1uLength*4), 0, 0])
-            key2u();
-        translate([(_key2uLength*1+_key1uLength*4), 0, 0])
-            key1u();
-        translate([(_key2uLength*1+_key1uLength*5), 0, 0])
-            key1u();
-    }
-}
-
-module row5R()
-{
-    union()
-    {
-        key2u();
-        translate([(_key2uLength*1+_key1uLength*0), 0, 0])
-            key1u();
-        translate([(_key2uLength*1+_key1uLength*1), 0, 0])
-            key1u();
-        translate([(_key2uLength*1+_key1uLength*2), 0, 0])
-            key1u();
-        translate([(_key2uLength*1+_key1uLength*3), 0, 0])
-            key1u();
-        translate([(_key2uLength*1+_key1uLength*4), 0, 0])
-            key1u();
-        translate([(_key2uLength*1+_key1uLength*5), 0, 0])
-            key1u();
     }
 }
 
@@ -578,124 +322,26 @@ module key1u()
     }
 }
 
-module key2u()
-{
-    difference()
-    //union()
-    {
-        //cube([_key2uLength, _key2uWidth, _backplateDepth]);
-        roundedCube(size = [_key2uLength, _key2uWidth, _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
-
-        // //Note: Comment this in for switch model view
-        // translate([_key2uLength/2, _key2uWidth/2, _backplateDepth])
-        // {
-        //     switchPunch();
-        // }
-
-        translate([_key2uLength/2, _key2uWidth/2, -1]) //forward to final position
-            translate([-_keySwitchCutoutLength/2, -_keySwitchCutoutWidth/2, 0]) //back to origin
-                cube([_keySwitchCutoutLength, _keySwitchCutoutWidth, _backplateDepth+2]);
-    }
-}
-
-module switchPunch()
-{
-    translate([0,0,13.15])
-    {
-        scale([1,1,1])
-        {
-            import("../resources/stl/switch_mx.stl");
-        }
-    }
-}
-
-module arduinoMicroPunch()
-{
-    arduinoMicroBodyLength = _arduinoMicroBodyLength;//19.2;
-    arduinoMicroBodyWidth = _arduinoMicroBodyWidth; //43;
-    arduinoMicroBodyDepth = 3.9;
-
-    miniUsbPortLength = 7.8;
-    miniUsbPortWidth = 9.5 + 10; //plus an extention for hole punching
-    miniUsbPortDepth = 4.5;
-    miniUsbDepthCutInToBody = 2;
-
-    miniUsbOnBoardWidth = 7;
-    miniUsbPortOverhang = 2;
-
-    union()
-    {
-        cube([arduinoMicroBodyLength, arduinoMicroBodyWidth, arduinoMicroBodyDepth]);
-
-        translate([(arduinoMicroBodyLength-miniUsbPortLength)/2, arduinoMicroBodyWidth-(miniUsbOnBoardWidth), arduinoMicroBodyDepth-miniUsbDepthCutInToBody])
-        {
-            cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
-        }
-
-
-    }
-}
-
-module riserBoltPunchSet()
-{
-    // Center
-    translate([_backplateLength/2, _backplateWidth/2, _riserBoltHeadCutoutDepth])
-        riserBoltPunch();
-
-    //SW
-    translate([(_key1uLength*2), (_key1uWidth*1), _riserBoltHeadCutoutDepth])
-        riserBoltPunch();
-
-    //SE
-    translate([(_key1uLength*6), (_key1uWidth*1), _riserBoltHeadCutoutDepth])
-        riserBoltPunch();
-
-    //NE
-    translate([(_key1uLength*6), (_key1uWidth*5), _riserBoltHeadCutoutDepth])
-        riserBoltPunch();
-
-    //NW
-    translate([(_key1uLength*2), (_key1uWidth*5), _riserBoltHeadCutoutDepth])
-        riserBoltPunch();
-}
-
-module riserBoltPunch()
-{
-    union()
-    {
-        //Traditional bolt punch
-        boltHeadCutoutRadius = 2.1;
-        boltHeadCutoutDepth = 3;
-
-        cylinder(r=boltHeadCutoutRadius, h=boltHeadCutoutDepth+1, $fn=100);
-
-        boltPunchDepth = _backplateDepth+1;
-        translate([0,0,-boltPunchDepth])
-               cylinder(r=_m2BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
-        //     cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+1, $fn=100);
-    }
-}
-
 module mountingRiserSet()
 {
-    // Center
-    translate([_backplateLength/2, _backplateWidth/2, 0])
-        mountingRiser();
+    //// Center
+    //translate([_backplateLength/2, _backplateWidth/2, 0])
+    //    mountingRiser();
 
     //SW
     translate([(_key1uLength*2), (_key1uWidth*1), 0])
         mountingRiser();
 
     //SE
-    translate([(_key1uLength*6), (_key1uWidth*1), 0])
+    translate([(_key1uLength*4), (_key1uWidth*1), 0])
         mountingRiser();
 
     //NE
-    translate([(_key1uLength*6), (_key1uWidth*5), 0])
+    translate([(_key1uLength*4), (_key1uWidth*3), 0])
         mountingRiser();
 
     //NW
-    translate([(_key1uLength*2), (_key1uWidth*5), 0])
+    translate([(_key1uLength*2), (_key1uWidth*3), 0])
         mountingRiser();
 }
 
@@ -708,35 +354,6 @@ module mountingRiser()
         translate([0,0,_riserHeight-_riserCutoutDepth])
             cylinder(r=_riserCutoutRadius, h=_riserHeight, $fn=100);
     }
-}
-
-module housingBottomBoltPunchSet()
-{
-    //close
-    translate([0,0,0])
-        housingBottomBoltPunch();
-
-    closeFarOffset = _housingWidth-(_housingBoltSetWidthOffset*2);
-    //far
-    translate([0, closeFarOffset, 0])
-        housingBottomBoltPunch();
-
-    farSlightlyFarOffset = 15;
-    //slightly back from far
-    translate([0, closeFarOffset - farSlightlyFarOffset, 0])
-        housingBottomBoltPunch();
-}
-
-module housingBottomBoltPunch()
-{
-        boltHeadCutoutRadius = 3.5;
-        boltHeadCutoutDepth = 3;
-        cylinder(r=boltHeadCutoutRadius, h=boltHeadCutoutDepth+1, $fn=100);
-
-        threadedInsertRadius = 2.1;
-        boltPunchDepth = _housingWallThickness+1;
-        translate([0,0,-boltPunchDepth])
-               cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
 }
 
 module keyCap1u(topThicknessPadding)
@@ -756,29 +373,6 @@ module keyCap1u(topThicknessPadding)
 
         //shank connector
         translate([_keyCap1uLength/2, _keyCap1uWidth/2, cutoutZTranslation])
-        {
-            keyCapShankConnector();
-        }
-    }
-}
-
-module keyCap2u(topThicknessPadding)
-{
-    union()
-    {
-        cutoutZTranslation = _keyCapWallThickness + topThicknessPadding;
-        difference()
-        //union()
-        {
-            roundedCube(size=[_keyCap2uLength, _key2uWidth, _keyCapDepth + topThicknessPadding], radius = _keyCapRoundingRadius, apply_to="zmin");
-
-            cutoutCubeSize = [_keyCap2uLength-(_keyCapWallThickness*2), _key2uWidth-(_keyCapWallThickness*2), _keyCapDepth];
-            translate([_keyCapWallThickness, _keyCapWallThickness, cutoutZTranslation])
-                roundedCube(size=cutoutCubeSize, radius = _keyCapRoundingRadius, apply_to="zmin");
-        }
-
-        //shank connector
-        translate([_keyCap2uLength/2, _key2uWidth/2, cutoutZTranslation])
         {
             keyCapShankConnector();
         }
@@ -842,6 +436,85 @@ module arduinoHolderTab()
 
         translate([_washerInnerRadius,-_tabWidth/2,0])
             cube([_tabLength, _tabWidth, _tabDepth]);
+    }
+}
+
+//Punches
+module switchPunch()
+{
+    translate([0,0,13.15])
+    {
+        scale([1,1,1])
+        {
+            import("../resources/stl/switch_mx.stl");
+        }
+    }
+}
+
+module arduinoMicroPunch()
+{
+    arduinoMicroBodyLength = _arduinoMicroBodyLength;//19.2;
+    arduinoMicroBodyWidth = _arduinoMicroBodyWidth; //43;
+    arduinoMicroBodyDepth = 3.9;
+
+    miniUsbPortLength = 7.8;
+    miniUsbPortWidth = 9.5 + 10; //plus an extention for hole punching
+    miniUsbPortDepth = 4.5;
+    miniUsbDepthCutInToBody = 2;
+
+    miniUsbOnBoardWidth = 7;
+    miniUsbPortOverhang = 2;
+
+    union()
+    {
+        cube([arduinoMicroBodyLength, arduinoMicroBodyWidth, arduinoMicroBodyDepth]);
+
+        translate([(arduinoMicroBodyLength-miniUsbPortLength)/2, arduinoMicroBodyWidth-(miniUsbOnBoardWidth), arduinoMicroBodyDepth-miniUsbDepthCutInToBody])
+        {
+            cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
+        }
+
+
+    }
+}
+
+module riserBoltPunchSet()
+{
+    //// Center
+    //translate([_backplateLength/2, _backplateWidth/2, _riserBoltHeadCutoutDepth])
+    //    riserBoltPunch();
+
+    //SW
+    translate([(_key1uLength*2), (_key1uWidth*1), _riserBoltHeadCutoutDepth])
+        riserBoltPunch();
+
+    //SE
+    translate([(_key1uLength*4), (_key1uWidth*1), _riserBoltHeadCutoutDepth])
+        riserBoltPunch();
+
+    //NE
+    translate([(_key1uLength*4), (_key1uWidth*3), _riserBoltHeadCutoutDepth])
+        riserBoltPunch();
+
+    //NW
+    translate([(_key1uLength*2), (_key1uWidth*3), _riserBoltHeadCutoutDepth])
+        riserBoltPunch();
+}
+
+module riserBoltPunch()
+{
+    union()
+    {
+        //Traditional bolt punch
+        boltHeadCutoutRadius = 2.1;
+        boltHeadCutoutDepth = 3;
+
+        cylinder(r=boltHeadCutoutRadius, h=boltHeadCutoutDepth+1, $fn=100);
+
+        boltPunchDepth = _backplateDepth+1;
+        translate([0,0,-boltPunchDepth])
+               cylinder(r=_m2BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
+        //     cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+1, $fn=100);
     }
 }
 
@@ -920,55 +593,6 @@ module halfCylinder(height, radius)
 }
 
 //Prototyping Methods
-module backplateTest()
-{
-    //2x2 mini test backplate
-    difference()
-    {
-        intersection()
-        {
-            union()
-            {
-                translate([0, _key1uWidth, 0])
-                {
-                    key1u();
-                    translate([(_key1uLength*1), 0, 0])
-                        key1u();
-                }
-                key2u();
-            }
-
-            backplateGrooveDepth = 1;
-            roundedCube(size=[(_key1uLength*2), (_key1uWidth*2), _backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
-        }
-
-        translate([_key1uLength, _key1uWidth, _riserBoltHeadCutoutDepth])
-            riserBoltPunch();
-    }
-}
-
-module miniHousingTest()
-{
-    //2x2 mini test housing
-    bodyLength = (_key1uLength*2) + (_housingLengthPadding*2);
-    bodyWidth = (_key1uWidth*2) + (_housingWidthPadding*2);
-    difference()
-    {
-        roundedCube(size = [bodyLength, bodyWidth, _housingBodyDepth], radius=4, apply_to="all");
-
-        translate([_housingLengthPadding-(_housingBackplateCutoutPadding), _housingWidthPadding-(_housingBackplateCutoutPadding), _housingWallThickness])
-        {
-            roundedCube(size=[(_key1uLength*2)+(_housingBackplateCutoutPadding*2), (_key1uWidth*2)+(_housingBackplateCutoutPadding*2), _housingBodyDepth], radius=_backplateRoundingRadius, apply_to="zmax");
-        }
-    }
-
-    translate([bodyLength/2, bodyWidth/2, _housingWallThickness])
-        mountingRiser();
-
-    // translate([_housingLengthPadding, _housingWidthPadding, _housingWallThickness+_backplateOffsetFromHousing])
-    //     backplateTest();
-}
-
 module arduinoHousingTest()
 {
     echo("ArduinoHousingTest");
