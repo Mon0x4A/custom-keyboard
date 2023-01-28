@@ -111,7 +111,7 @@ module keyboard()
     {
         translate([_housingLengthPadding, _housingWidthPadding, 0])
         {
-            //backplate(includeBoltHoles=true);
+            backplate(includeBoltHoles=true);
         }
 
         translate([0, 0, -_backplateOffsetFromHousing-_housingWallThickness])
@@ -172,14 +172,16 @@ module housing()
             {
                 // Arduino holding bolt inserts
                 forwardOffsetFromArduinoRear = 11.5;
-                translate([-_riserCutoutDiameter, forwardOffsetFromArduinoRear, 0])
+                forwardOffsetFromArduinoSides = 8;
+                translate([-forwardOffsetFromArduinoSides, forwardOffsetFromArduinoRear, 0])
                     cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
-                translate([_arduinoMicroBodyLength + _riserCutoutDiameter, forwardOffsetFromArduinoRear, 0])
+                translate([_arduinoMicroBodyLength + forwardOffsetFromArduinoSides, forwardOffsetFromArduinoRear, 0])
                     cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
                 rearOffsetFromArduinoRear = 35.5;
-                translate([-_riserCutoutDiameter, rearOffsetFromArduinoRear, 0])
+                rearOffsetFromArduinoSides = 5;
+                translate([-rearOffsetFromArduinoSides, rearOffsetFromArduinoRear, 0])
                     cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
-                translate([_arduinoMicroBodyLength + _riserCutoutDiameter, rearOffsetFromArduinoRear, 0])
+                translate([_arduinoMicroBodyLength + rearOffsetFromArduinoSides, rearOffsetFromArduinoRear, 0])
                     cylinder(r=_riserCutoutRadius, h=_housingWallThickness, $fn=100);
             }
         }
@@ -255,6 +257,16 @@ module housingBackplateEdgeSupportSet()
         //"east"
         translate([_backplateLength + _housingLengthPadding - 3.75 - _housingSupportExposureIntoHousing, (_backplateWidth)/2 - _housingHalfWidthSupportWidth + _housingWidthPadding, 0])
             cube([_housingHalfWidthSupportLength, _housingHalfWidthSupportWidth, _housingSupportDepth]);
+
+        //"south"
+        translate([_backplateLength/2 - _housingHalfWidthSupportWidth/2, -3.25, 0])
+            cube([_housingHalfWidthSupportWidth, _housingHalfWidthSupportLength, _housingSupportDepth]);
+
+        //"north" - mini supports around arduino
+        translate([_backplateLength*(1/3) - _housingHalfWidthSupportWidth/4, _backplateWidth - 1.75, 0])
+            cube([_housingHalfWidthSupportWidth/2, _housingHalfWidthSupportLength, _housingSupportDepth]);
+        translate([_backplateLength*(2/3) - _housingHalfWidthSupportWidth/4, _backplateWidth - 1.75, 0])
+            cube([_housingHalfWidthSupportWidth/2, _housingHalfWidthSupportLength, _housingSupportDepth]);
     }
 }
 
@@ -324,10 +336,6 @@ module key1u()
 
 module mountingRiserSet()
 {
-    //// Center
-    //translate([_backplateLength/2, _backplateWidth/2, 0])
-    //    mountingRiser();
-
     //SW
     translate([(_key1uLength*2), (_key1uWidth*1), 0])
         mountingRiser();
@@ -480,10 +488,6 @@ module arduinoMicroPunch()
 
 module riserBoltPunchSet()
 {
-    //// Center
-    //translate([_backplateLength/2, _backplateWidth/2, _riserBoltHeadCutoutDepth])
-    //    riserBoltPunch();
-
     //SW
     translate([(_key1uLength*2), (_key1uWidth*1), _riserBoltHeadCutoutDepth])
         riserBoltPunch();
@@ -514,7 +518,6 @@ module riserBoltPunch()
         boltPunchDepth = _backplateDepth+1;
         translate([0,0,-boltPunchDepth])
                cylinder(r=_m2BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
-        //     cylinder(r=_m3BoltHoleRadius, h=boltPunchDepth+1, $fn=100);
     }
 }
 
