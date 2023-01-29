@@ -62,7 +62,7 @@ class LeftKeymap: public LayeredKeycodeProvider, public LayerSwapKeyLocationProv
         const int _layer2keymap[ROW_COUNT][COLUMN_COUNT] =
             {
                 { '1', '2', '3', '4', '5', '6' },
-                { '`', KC_NULL, KC_NULL, KEY_HOME, KEY_END, KEY_LEFT_ARROW },
+                { '`', KEY_HOME, KEY_END, KC_NULL, KC_NULL, KEY_LEFT_ARROW },
                 { KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6 },
                 { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KEY_ESC, KC_LAYER_TOGGLE, ' ' }
             }
@@ -101,17 +101,17 @@ class RightKeymap: public LayeredKeycodeProvider, public LayerSwapKeyLocationPro
         //todo fix these keymaps
         const int _layer1keymap[ROW_COUNT][COLUMN_COUNT] =
             {
-                { 'q', 'w', 'e', 'r', 't', 'y' },
-                { 'a', 's', 'd', 'f', 'g', 'h' },
-                { 'z', 'x', 'c', 'v', 'b', 'n' },
-                { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KEY_ESC, KC_LAYER_TOGGLE , ' ' }
+                { 'u', 'i', 'o', 'p', '[', ']' },
+                { 'j', 'k', 'l', ';', '\'', KEY_RETURN },
+                { 'm', ',', '.', '/', KEY_TAB, KEY_BACKSPACE },
+                { ' ', KC_LAYER_TOGGLE, KC_NULL, '(', ')', KEY_DELETE }
             }
         const int _layer2keymap[ROW_COUNT][COLUMN_COUNT] =
             {
-                { '1', '2', '3', '4', '5', '6' },
-                { '`', KC_NULL, KC_NULL, KEY_HOME, KEY_END, KEY_LEFT_ARROW },
-                { KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6 },
-                { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KEY_ESC, KC_LAYER_TOGGLE, ' ' }
+                { '7', '8', '9', '0', '-', '=' },
+                { KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, KC_NULL, '\\', KEY_RETURN },
+                { KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12 },
+                { KEY_RIGHT_SHIFT, KC_LAYER_TOGGLE, KC_NULL, KEY_PAGE_UP, KEY_PAGE_DOWN, KEY_PRINT_SCREEN}
             }
 }
 
@@ -161,6 +161,8 @@ void loop()
 }
 
 //Methods
+//todo try calling release on all keys at a row/col during the matrix change.
+// want to head off any bugs that might crop up from changing layer when key is held.
 
 //Utility Methods
 
