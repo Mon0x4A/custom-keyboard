@@ -23,7 +23,7 @@ _keyCapRoundingRadius = 3;
 _keyCapLowTopThicknessPadding = 0;
 _keyCapMedLowTopThicknessPadding = 1;
 _keyCapMedTopThicknessPadding = 2;
-_keyCapHighTopThicknessPadding = 3;
+_keyCapMedHighTopThicknessPadding = 3;
 
 _keyCapShankOffsetRiserLength = 7.01; // Warning: Careful when modifying. This is a tuned value.
 _keyCapShankOffsetRiserWidth = 4.55; // Warning: Careful when modifying. This is a tuned value.
@@ -96,7 +96,7 @@ keyboard();
 
 //housingBackplateEdgeSupportSet();
 //arduinoMicroPunch();
-//keyCap1u(_keyCapMedLowTopThicknessPadding);
+//keyCap1u(_keyCapMedHighTopThicknessPadding);
 //arduinoHolderTab();
 //key1u();
 
