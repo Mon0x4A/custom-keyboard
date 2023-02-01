@@ -22,7 +22,8 @@ const byte ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN, ROW_3_PIN };
 const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN };
 
 #define KC_NULL 0x00
-#define KC_LAYER_TOGGLE 0x00
+#define KC_LAYER_SWAP 0x00
+#define KC_LAYER_MODIFIER 0x00
 #define KEY_PRINT_SCREEN 0xCE
 
 // Program params
@@ -34,11 +35,13 @@ const bool SWITCH_TESTING_MODE = false;
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 //Classes
-class LayerSwapKeyLocationProvider
+class LayerKeyLocationProvider
 {
     public:
         virtual int getlayerswapkeyrow() = 0;
         virtual int getlayerswapkeycol() = 0;
+        virtual int getlayermodifierkeyrow() = 0;
+        virtual int getlayermodifierkeycol() = 0;
 }
 
 class LayeredKeycodeProvider
@@ -47,25 +50,27 @@ class LayeredKeycodeProvider
         virtual char getlayerkeycode(int layerindex, int row, int col) = 0;
 }
 
-class LeftKeymap: public LayeredKeycodeProvider, public LayerSwapKeyLocationProvider
+class LeftKeymap: public LayeredKeycodeProvider, public LayerKeyLocationProvider
 {
     private:
-        const int LAYER_KEY_ROW_INDEX = 3;
-        const int LAYER_KEY_COL_INDEX = 4;
+        const int LAYER_SWAP_KEY_ROW_INDEX = 3;
+        const int LAYER_SWAP_KEY_COL_INDEX = 3;
+        const int LAYER_MODIFIER_KEY_ROW_INDEX = 3;
+        const int LAYER_MODIFIER_KEY_COL_INDEX = 4;
 
         const int _layer0keymap[ROW_COUNT][COLUMN_COUNT] =
             {
                 { 'q', 'w', 'e', 'r', 't', 'y' },
                 { 'a', 's', 'd', 'f', 'g', 'h' },
                 { 'z', 'x', 'c', 'v', 'b', 'n' },
-                { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KEY_ESC, KC_LAYER_TOGGLE , ' ' }
+                { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_SWAP, KC_LAYER_MODIFIER, ' ' }
             }
         const int _layer1keymap[ROW_COUNT][COLUMN_COUNT] =
             {
                 { '1', '2', '3', '4', '5', '6' },
-                { '`', KEY_HOME, KEY_END, KC_NULL, KC_NULL, KEY_LEFT_ARROW },
+                { '`', KEY_PRINT_SCREEN, KEY_HOME, KEY_END, 'ñ', KEY_LEFT_ARROW },
                 { KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6 },
-                { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KEY_ESC, KC_LAYER_TOGGLE, ' ' }
+                { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_SWAP, KC_LAYER_MODIFIER, ' ' }
             }
     public:
         char getlayerkeycode(int layerindex, int row, int col)
@@ -84,34 +89,46 @@ class LeftKeymap: public LayeredKeycodeProvider, public LayerSwapKeyLocationProv
 
         int getlayerswapkeyrow()
         {
-            return LAYER_KEY_ROW_INDEX;
+            return LAYER_SWAP_KEY_ROW_INDEX;
         }
 
         int getlayerswapkeycol()
         {
-            return LAYER_KEY_COL_INDEX;
+            return LAYER_SWAP_KEY_COL_INDEX;
+        }
+
+        int getlayermodifierkeyrow()
+        {
+            return LAYER_MODIFIER_KEY_ROW_INDEX;
+        }
+
+        int getlayermodifierkeycol()
+        {
+            return LAYER_MODIFIER_KEY_COL_INDEX;
         }
 }
 
-class RightKeymap: public LayeredKeycodeProvider, public LayerSwapKeyLocationProvider
+class RightKeymap: public LayeredKeycodeProvider, public LayerKeyLocationProvider
 {
     private:
-        const int LAYER_KEY_ROW_INDEX = 3;
-        const int LAYER_KEY_COL_INDEX = 1;
+        const int LAYER_SWAP_KEY_ROW_INDEX = 3;
+        const int LAYER_SWAP_KEY_COL_INDEX = 2;
+        const int LAYER_MODIFIER_KEY_ROW_INDEX = 3;
+        const int LAYER_MODIFIER_KEY_COL_INDEX = 1;
 
         const int _layer0keymap[ROW_COUNT][COLUMN_COUNT] =
             {
                 { 'u', 'i', 'o', 'p', '[', ']' },
                 { 'j', 'k', 'l', ';', '\'', KEY_RETURN },
                 { 'm', ',', '.', '/', KEY_TAB, KEY_BACKSPACE },
-                { ' ', KC_LAYER_TOGGLE, KC_NULL, '(', ')', KEY_DELETE }
+                { KEY_RIGHT_SHIFT, KC_LAYER_MODIFIER, KC_LAYER_SWAP, '(', ')', KEY_ESC }
             }
         const int _layer1keymap[ROW_COUNT][COLUMN_COUNT] =
             {
                 { '7', '8', '9', '0', '-', '=' },
-                { KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, KC_NULL, '\\', KEY_RETURN },
+                { KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, '\\', KEY_DELETE, KEY_RETURN },
                 { KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12 },
-                { KEY_RIGHT_SHIFT, KC_LAYER_TOGGLE, KC_NULL, KEY_PAGE_UP, KEY_PAGE_DOWN, KEY_PRINT_SCREEN}
+                { KEY_RIGHT_SHIFT, KC_LAYER_MODIFIER, KC_LAYER_SWAP, KEY_PAGE_UP, KEY_PAGE_DOWN, KEY_ESC }
             }
 
     public:
@@ -131,21 +148,32 @@ class RightKeymap: public LayeredKeycodeProvider, public LayerSwapKeyLocationPro
 
         int getlayerswapkeyrow()
         {
-            return LAYER_KEY_ROW_INDEX;
+            return LAYER_SWAP_KEY_ROW_INDEX;
         }
 
         int getlayerswapkeycol()
         {
-            return LAYER_KEY_COL_INDEX;
+            return LAYER_SWAP_KEY_COL_INDEX;
+        }
+
+        int getlayermodifierkeyrow()
+        {
+            return LAYER_MODIFIER_KEY_ROW_INDEX;
+        }
+
+        int getlayermodifierkeycol()
+        {
+            return LAYER_MODIFIER_KEY_COL_INDEX;
         }
 }
 
 //Variables
 byte _switchMatrix[KEY_ROW_COUNT][KEY_COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[KEY_ROW_COUNT][KEY_COLUMN_COUNT] = {0};
-LayerSwapKeyLocationProvider* _layerKeyProvider;
+LayerKeyLocationProvider* _layerKeyProvider;
 LayeredKeycodeProvider* _keycodeProvider;
 int _currentlayer = 0;
+bool _isLayerModifierKeyPressed = false;
 
 //Init
 void setup()
@@ -233,11 +261,18 @@ void set_key_states()
             {
                 if (_switchMatrix[i][j] == 0 && _switchMatrixPrev[i][j] == 1)
                 {
+                    // We started pressing a key.
                     if (_layerKeyProvider.getlayerswapkeyrow() == i
-                        && _layerKeyProvider.getlayerswapkeycol == j)
+                        && _layerKeyProvider.getlayerswapkeycol() == j)
                     {
-                        // The layer key was pressed.
+                        // The layer swap key was pressed, so change layer and bail.
                         swap_layer();
+                    }
+                    else if (_layerKeyProvider.getlayermodifierkeyrow() == i
+                        && _layerKeyProvider.getlayermodifierkeycol() == j)
+                    {
+                        // We've started holding down the layer modifier key.
+                        _isLayerModifierKeyPressed = true;
                     }
                     else
                     {
@@ -247,13 +282,23 @@ void set_key_states()
                 }
                 else
                 {
-                    // A non-layer key has been released.
-                    for (int k = 0; k < LAYER_COUNT; k++)
+                    // We released a key.
+                    if (_layerKeyProvider.getlayermodifierkeyrow() == i
+                        && _layerKeyProvider.getlayermodifierkeycol() == j)
                     {
-                        // Attempt to release all keys across all layers at this location.
-                        // This is to prevent bugs when swapping layers with another key held.
-                        // TODO this may need to be revised to only the current layer.
-                        Keyboard.release(_keycodeProvider.getlayerkeycode(k, i, j));
+                        // The layer modifier key is no longer held.
+                        _isLayerModifierKeyPressed = false;
+                    }
+                    else
+                    {
+                        // A non-layer related key has been released.
+                        for (int k = 0; k < LAYER_COUNT; k++)
+                        {
+                            // Attempt to release all keys across all layers at this location.
+                            // This is to prevent bugs when swapping layers with another key held.
+                            // TODO this may need to be revised to only the current layer.
+                            Keyboard.release(_keycodeProvider.getlayerkeycode(k, i, j));
+                        }
                     }
                 }
             }
@@ -263,14 +308,17 @@ void set_key_states()
 
 void swap_layer()
 {
+    _currentlayer = get_swapped_layer();
+}
+
+int get_swapped_layer()
+{
     switch (_currentlayer)
     {
         case 0:
-            _currentlayer = 1;
-            break;
+            return 1;
         case 1:
-            _currentlayer = 0;
-            break;
+            return 0;
     }
 }
 
