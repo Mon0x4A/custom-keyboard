@@ -72,7 +72,7 @@ _arduinoHolderTabInnerDiameter = _m2BoltHoleDiameter;
 _arduinoHolderTabInnerRadius = _arduinoHolderTabInnerDiameter/2;
 _arduinoHolderTabDepth = 1.75;
 _arduinoHolderTabWidth = 4;
-_arduinoHolderTabLength = 9;
+_arduinoHolderTabLength = 16;
 
 _riserBoltHeadCutoutDepth = 3;
 
@@ -90,14 +90,14 @@ _riserCutoutDepth = 4;
 echo(str("_key1uLength = ", _key1uLength));
 echo(str("_key1uWidth = ", _key1uWidth));
 
-keyboard();
+//keyboard();
 //backplate(true);
 //housing();
 
 //housingBackplateEdgeSupportSet();
 //arduinoMicroPunch();
 //keyCap1u(_keyCapMedHighTopThicknessPadding);
-//arduinoHolderTab();
+arduinoHolderTab(false);
 //key1u();
 
 //arduinoHousingTest();
@@ -422,7 +422,7 @@ module keyCapShankConnector()
     }
 }
 
-module arduinoHolderTab()
+module arduinoHolderTab(includePressureTab)
 {
     union()
     {
@@ -444,6 +444,14 @@ module arduinoHolderTab()
 
         translate([_washerInnerRadius,-_tabWidth/2,0])
             cube([_tabLength, _tabWidth, _tabDepth]);
+
+        if (includePressureTab)
+        {
+            pressureTabLength = 4;
+            pressureTabDepth = 2;
+            translate([_tabLength-pressureTabLength+_washerInnerRadius, -_tabWidth/2, _tabDepth])
+                cube([pressureTabLength, _tabWidth, pressureTabDepth]);
+        }
     }
 }
 
