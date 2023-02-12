@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
@@ -49,7 +49,7 @@ const char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { '1', '2', '3', '4', '5', '6' },
         { '`', KEY_PRINT_SCREEN, KEY_HOME, KEY_END, KC_NULL, KEY_LEFT_ARROW },
-        { KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6 },
+        { KEY_LEFT_SHIFT, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
         { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, ' ' }
     };
 const bool LEFT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
@@ -66,9 +66,9 @@ const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 3;
 
 const char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_ESC, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
-        { KEY_TAB, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
-        { KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+        { KEY_ESC, KC_NULL, KEY_F1, KEY_F2, KEY_F3, KEY_F4 },
+        { KEY_TAB, KC_NULL, KEY_F5, KEY_F6, KEY_F7, KEY_F8 },
+        { KEY_LEFT_SHIFT, KC_NULL, KEY_F9, KEY_F10, KEY_F11, KEY_F12 },
         { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, ' ' }
     };
 const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
@@ -84,8 +84,8 @@ const char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { 'u', 'i', 'o', 'p', '[', ']' },
         { 'j', 'k', 'l', ';', '\'', KEY_RETURN },
-        { 'm', ',', '.', '/', KC_NULL, KC_NULL },
-        { KEY_RIGHT_SHIFT, KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
+        { 'm', ',', '.', '/', KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
+        { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
     };
 
 //Right Layer 1
@@ -95,15 +95,15 @@ const int RIGHT_LAYER1_MODIFIER_KEY_COL_INDEX = 1;
 const char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { '7', '8', '9', '0', '-', '=' },
-        { KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, '\\', KC_NULL, KEY_RETURN },
-        { KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12 },
-        { KEY_RIGHT_SHIFT, KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
+        { KC_NULL, KC_NULL, KC_NULL, '\\', KC_NULL, KEY_RETURN },
+        { KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
+        { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
     };
 const bool RIGHT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 0, 0 },
         { 0, 0, 0, 0, 0, 0 },
     };
 
@@ -114,14 +114,14 @@ const int RIGHT_LAYER2_MODIFIER_KEY_COL_INDEX = 0;
 const char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_DELETE, KEY_BACKSPACE },
-        { KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+        { KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, KC_NULL, KC_NULL, KEY_RETURN },
         { KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
         { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
     };
 const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 0 },
         { 1, 1, 1, 1, 0, 0 },
         { 0, 0, 0, 0, 0, 0 },
     };
