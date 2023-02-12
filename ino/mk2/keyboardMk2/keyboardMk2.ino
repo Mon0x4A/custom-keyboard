@@ -42,7 +42,7 @@ const char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { 'z', 'x', 'c', 'v', 'b', 'n' },
         { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_SWAP, KC_LAYER_MODIFIER, ' ' }
     };
-const bool LEFT_LAYER0_KEYMAP_IS_PRINTING_CHARACTER[ROW_COUNT][COLUMN_COUNT] =
+const bool LEFT_LAYER0_KEYMAP_IS_LAYER_SHIFT_CHARACTER[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
@@ -57,12 +57,12 @@ const char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KEY_F1, KEY_F2, KEY_F3, KEY_F4, KEY_F5, KEY_F6 },
         { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_SWAP, KC_LAYER_MODIFIER, ' ' }
     };
-const bool LEFT_LAYER1_KEYMAP_IS_PRINTING_CHARACTER[ROW_COUNT][COLUMN_COUNT] =
+const bool LEFT_LAYER1_KEYMAP_IS_LAYER_SHIFT_CHARACTER[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
-        { 1, 0, 0, 0, 0, 0 },
+        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 1 },
         { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 1 },
     };
 
 //const char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
@@ -83,10 +83,10 @@ const char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { 'm', ',', '.', '/', KEY_TAB, KC_NULL },
         { KEY_RIGHT_SHIFT, KC_LAYER_MODIFIER, KC_LAYER_SWAP, '(', ')', KEY_ESC }
     };
-const bool RIGHT_LAYER0_KEYMAP_IS_PRINTING_CHARACTER[ROW_COUNT][COLUMN_COUNT] =
+const bool RIGHT_LAYER0_KEYMAP_IS_LAYER_SHIFT_CHARACTER[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 0 },
+        { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 0 },
         { 0, 0, 0, 1, 1, 0 },
     };
@@ -98,12 +98,12 @@ const char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KEY_F7, KEY_F8, KEY_F9, KEY_F10, KEY_F11, KEY_F12 },
         { KEY_RIGHT_SHIFT, KC_LAYER_MODIFIER, KC_LAYER_SWAP, KEY_PAGE_UP, KEY_PAGE_DOWN, KEY_ESC }
     };
-const bool RIGHT_LAYER1_KEYMAP_IS_PRINTING_CHARACTER[ROW_COUNT][COLUMN_COUNT] =
+const bool RIGHT_LAYER1_KEYMAP_IS_LAYER_SHIFT_CHARACTER[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
-        { 0, 0, 0, 1, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
+        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 1 },
+        { 0, 0, 0, 1, 1, 0 },
     };
 
 // Program params
@@ -140,16 +140,17 @@ class KeymapProvider
             return KC_NULL;
         }
 
-        static bool is_printable_keycode(int sidedesignator, int layerindex, int row, int col)
+        static bool is_layer_shift_keycode(int sidedesignator, int layerindex, int row, int col)
         {
             if (LEFT_SIDE_DESIGNATOR == sidedesignator)
             {
                 switch(layerindex)
                 {
                     case 0:
-                        return LEFT_LAYER0_KEYMAP_IS_PRINTING_CHARACTER[row][col];
+                        //return LEFT_LAYER0_KEYMAP_IS_LAYER_SHIFT_CHARACTER[row][col];
+                        return false;
                     case 1:
-                        return LEFT_LAYER1_KEYMAP_IS_PRINTING_CHARACTER[row][col];
+                        return LEFT_LAYER1_KEYMAP_IS_LAYER_SHIFT_CHARACTER[row][col];
                 }
             }
             else if (RIGHT_SIDE_DESIGNATOR == sidedesignator)
@@ -157,9 +158,10 @@ class KeymapProvider
                 switch(layerindex)
                 {
                     case 0:
-                        return RIGHT_LAYER0_KEYMAP_IS_PRINTING_CHARACTER[row][col];
+                        //return RIGHT_LAYER0_KEYMAP_IS_LAYER_SHIFT_CHARACTER[row][col];
+                        return false;
                     case 1:
-                        return RIGHT_LAYER1_KEYMAP_IS_PRINTING_CHARACTER[row][col];
+                        return RIGHT_LAYER1_KEYMAP_IS_LAYER_SHIFT_CHARACTER[row][col];
                 }
             }
 
@@ -309,10 +311,11 @@ void set_key_states()
                             i,
                             j));
 
-                        if (KeymapProvider::is_printable_keycode(_sideDesignator,
+                        if (KeymapProvider::is_layer_shift_keycode(_sideDesignator,
                             get_current_layer_based_on_modifier_state(), i, j))
                         {
-                            // If we've printed a charcter, then we've satisfied our queued action if it exists
+                            // If we've pressed a layer shift code, then we've satisfied
+                            // our queued action if it exists
                             _isLayerModifierQueued = false;
                         }
                     }
