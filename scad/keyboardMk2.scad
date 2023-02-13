@@ -90,14 +90,14 @@ _riserCutoutDepth = 4;
 echo(str("_key1uLength = ", _key1uLength));
 echo(str("_key1uWidth = ", _key1uWidth));
 
-//keyboard();
+keyboard();
 //backplate(true);
 //housing();
 
 //housingBackplateEdgeSupportSet();
 //arduinoMicroPunch();
 //keyCap1u(_keyCapMedHighTopThicknessPadding);
-arduinoHolderTab(false);
+//arduinoHolderTab(false);
 //key1u();
 
 //arduinoHousingTest();
