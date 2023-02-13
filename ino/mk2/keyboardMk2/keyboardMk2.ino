@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
@@ -365,11 +365,14 @@ void set_key_states()
                     else
                     {
                         // A non-layer key has been pressed.
-                        Keyboard.press(KeymapProvider::get_keycode_at(
+                        char keycode = KeymapProvider::get_keycode_at(
                             _sideDesignator,
                             get_current_layer_based_on_modifier_state(),
                             i,
-                            j));
+                            j);
+
+                        if (keycode != KC_NULL)
+                            Keyboard.press(keycode);
 
                         if (KeymapProvider::is_unstick_key(_sideDesignator,
                             get_current_layer_based_on_modifier_state(), i, j))
@@ -403,7 +406,9 @@ void set_key_states()
                         {
                             // Attempt to release all keys across all layers at this location.
                             // This is to prevent bugs when swapping layers with another key held.
-                            Keyboard.release(KeymapProvider::get_keycode_at(_sideDesignator, k, i, j));
+                            char keycode = KeymapProvider::get_keycode_at(_sideDesignator, k, i, j);
+                            if (keycode != KC_NULL)
+                                Keyboard.release(keycode);
                         }
                     }
                 }
