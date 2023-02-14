@@ -5,6 +5,8 @@
 const bool SWITCH_TESTING_MODE = false;
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
+const unsigned long MODIFIER_HOLD_DELAY = 200;
+
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
 const int LAYER_COUNT = 3;
@@ -61,7 +63,7 @@ const bool LEFT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
 
 //Left Layer 2
 const int LEFT_LAYER2_MODIFIER_KEY_ROW_INDEX = 3;
-const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 3;
+const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 5;
 
 const char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
@@ -256,6 +258,7 @@ int _currentlayer = 0;
 bool _isLayer1ModifierKeyHeld = false;
 bool _isLayer1ModifierActionQueued = false;
 bool _isLayer2ModifierKeyHeld = false;
+unsigned long _layer2HoldStart = 0;
 //bool _isLayer2ModifierActionQueued = false;
 
 //Init
@@ -360,7 +363,7 @@ void set_key_states()
                         // We've started pressing down the layer 2 modifier key.
                         _isLayer2ModifierKeyHeld = true;
                         //_isLayer2ModifierActionQueued = true;
-                        _isLayer1ModifierActionQueued = false;
+                        _layer2HoldStart = millis();
                     }
                     else
                     {
@@ -398,6 +401,11 @@ void set_key_states()
                     {
                         // The layer 2 key is no longer held.
                         _isLayer2ModifierKeyHeld = false;
+                        if ((millis()-_layer2HoldStart)<=MODIFIER_HOLD_DELAY)
+                            Keyboard.write(KeymapProvider::get_keycode_at(_sideDesignator,
+                              0,
+                              KeymapProvider::get_layer2_modifier_key_row(_sideDesignator),
+                              KeymapProvider::get_layer2_modifier_key_col(_sideDesignator)));
                     }
                     else
                     {
