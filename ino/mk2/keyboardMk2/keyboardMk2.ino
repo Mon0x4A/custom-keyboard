@@ -262,7 +262,6 @@ bool _isLayer1ModifierActionQueued = false;
 bool _isLayer2ModifierKeyHeld = false;
 bool _hasLayer2ActionBeenPerformed = false;
 unsigned long _layer2HoldStart = 0;
-//bool _isLayer2ModifierActionQueued = false;
 
 //Init
 void setup()
@@ -358,7 +357,6 @@ void set_key_states()
                         // We've started pressing down the layer 1 modifier key.
                         _isLayer1ModifierKeyHeld = true;
                         _isLayer1ModifierActionQueued = true;
-                        //_isLayer2ModifierActionQueued = false;
                     }
                     else if (KeymapProvider::get_layer2_modifier_key_row(_sideDesignator) == i
                         && KeymapProvider::get_layer2_modifier_key_col(_sideDesignator) == j)
@@ -366,7 +364,6 @@ void set_key_states()
                         // We've started pressing down the layer 2 modifier key.
                         _isLayer2ModifierKeyHeld = true;
                         _hasLayer2ActionBeenPerformed = false;
-                        //_isLayer2ModifierActionQueued = true;
                         _layer2HoldStart = millis();
                     }
                     else
@@ -390,7 +387,6 @@ void set_key_states()
                             // If we've pressed a layer unstick key, then we've satisfied
                             // our queued action if it exists
                             _isLayer1ModifierActionQueued = false;
-                            //_isLayer2ModifierActionQueued = false;
                         }
                     }
                 }
@@ -440,7 +436,6 @@ bool has_reached_mod_tap_timeout()
 
 int get_current_layer_based_on_modifier_state()
 {
-    //if (_isLayer2ModifierKeyHeld || _isLayer2ModifierActionQueued)
     if (_isLayer2ModifierKeyHeld && has_reached_mod_tap_timeout())
         return 2;
     if (_isLayer1ModifierKeyHeld || _isLayer1ModifierActionQueued)
