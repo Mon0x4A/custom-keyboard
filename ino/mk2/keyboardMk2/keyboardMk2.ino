@@ -3,7 +3,10 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
+
+const int TESTING_SERIAL_BAUD_RATE = 115200;
+const int LOOP_DELAY_TIME = 20;
 
 const unsigned long MODIFIER_HOLD_DELAY = 200;
 
@@ -74,6 +77,14 @@ const char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KEY_LEFT_GUI, KC_NULL, KC_NULL, KC_NULL, KC_LAYER_MODIFIER, ' ' }
     };
 
+const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
+    {
+        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 1 },
+        { 0, 0, 0, 0, 0, 0 },
+    };
+
 //Right Layer 0
 const char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
@@ -114,9 +125,14 @@ const char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_GUI }
     };
 
-// Program params
-const int TESTING_SERIAL_BAUD_RATE = 115200;
-const int LOOP_DELAY_TIME = 20;
+const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
+    {
+        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 0, 0 },
+        { 0, 0, 0, 0, 0, 0 },
+    };
+
 
 //Classes
 class KeymapProvider
@@ -163,7 +179,7 @@ class KeymapProvider
                     case 1:
                         return LEFT_LAYER1_IS_UNSTICK_KEY[row][col];
                     case 2:
-                        return true;
+                        return LEFT_LAYER2_IS_UNSTICK_KEY[row][col];
                 }
             }
             else if (RIGHT_SIDE_DESIGNATOR == sidedesignator)
@@ -175,7 +191,7 @@ class KeymapProvider
                     case 1:
                         return RIGHT_LAYER1_IS_UNSTICK_KEY[row][col];
                     case 2:
-                        return true;
+                        return RIGHT_LAYER2_IS_UNSTICK_KEY[row][col];
                 }
             }
 
