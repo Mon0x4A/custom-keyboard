@@ -3,12 +3,13 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = true;
+const bool IS_LEFT_KEYBOARD_SIDE = false;
 
-const unsigned long MODIFIER_HOLD_DELAY = 300;
+const unsigned long MODIFIER_HOLD_DELAY = 200;
 
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
+
 const int LAYER_COUNT = 3;
 
 const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 9;
@@ -39,7 +40,7 @@ const char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { 'q', 'w', 'e', 'r', 't', 'y' },
         { 'a', 's', 'd', 'f', 'g', 'h' },
         { 'z', 'x', 'c', 'v', 'b', 'n' },
-        { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, ' ' }
+        { KEY_LEFT_CTRL, KC_NULL, KC_NULL, KC_NULL, KC_LAYER_MODIFIER, ' ' }
     };
 
 //Left Layer 1
@@ -51,7 +52,7 @@ const char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { '1', '2', '3', '4', '5', '6' },
         { KEY_TAB, '`', KEY_HOME, KEY_END, KC_NULL, KC_NULL },
         { KEY_LEFT_SHIFT, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
-        { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, ' ' }
+        { KEY_LEFT_ALT, KC_NULL, KC_NULL, KC_NULL, KC_LAYER_MODIFIER, ' ' }
     };
 const bool LEFT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
@@ -70,14 +71,7 @@ const char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KEY_ESC, KEY_PRINT_SCREEN, KEY_F1, KEY_F2, KEY_F3, KEY_F4 },
         { KEY_TAB, KC_NULL, KEY_F5, KEY_F6, KEY_F7, KEY_F8 },
         { KEY_LEFT_SHIFT, KC_NULL, KEY_F9, KEY_F10, KEY_F11, KEY_F12 },
-        { KEY_LEFT_CTRL, KEY_LEFT_GUI, KEY_LEFT_ALT, KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, ' ' }
-    };
-const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
-    {
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 0, 0, 0, 0, 0, 0 },
+        { KEY_LEFT_GUI, KC_NULL, KC_NULL, KC_NULL, KC_LAYER_MODIFIER, ' ' }
     };
 
 //Right Layer 0
@@ -86,8 +80,7 @@ const char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { 'u', 'i', 'o', 'p', '[', ']' },
         { 'j', 'k', 'l', ';', '\'', KEY_RETURN },
         { 'm', ',', '.', '/', KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
-        //todo replace l2 mod with return?
-        { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
+        { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_CTRL }
     };
 
 //Right Layer 1
@@ -97,10 +90,9 @@ const int RIGHT_LAYER1_MODIFIER_KEY_COL_INDEX = 1;
 const char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { '7', '8', '9', '0', '-', '=' },
-        { '_', '+', '{', '}', '\\', KEY_RETURN },
-        //todo swap underscore and plus
+        { '+', '_', '\\', '{', '}', KEY_RETURN },
         { KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
-        { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
+        { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_ALT }
     };
 const bool RIGHT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
@@ -119,14 +111,7 @@ const char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KEY_ESC, KEY_UP_ARROW, KC_NULL, KC_NULL, KEY_DELETE, KEY_BACKSPACE },
         { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_RIGHT_ARROW, '(', ')', KEY_RETURN },
         { KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
-        { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
-    };
-const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
-    {
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 0 },
-        { 1, 1, 1, 1, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
+        { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_GUI }
     };
 
 // Program params
@@ -178,7 +163,7 @@ class KeymapProvider
                     case 1:
                         return LEFT_LAYER1_IS_UNSTICK_KEY[row][col];
                     case 2:
-                        return LEFT_LAYER2_IS_UNSTICK_KEY[row][col];
+                        return true;
                 }
             }
             else if (RIGHT_SIDE_DESIGNATOR == sidedesignator)
@@ -190,7 +175,7 @@ class KeymapProvider
                     case 1:
                         return RIGHT_LAYER1_IS_UNSTICK_KEY[row][col];
                     case 2:
-                        return RIGHT_LAYER2_IS_UNSTICK_KEY[row][col];
+                        return true;
                 }
             }
 
@@ -404,12 +389,15 @@ void set_key_states()
                     {
                         // The layer 2 key is no longer held.
                         _isLayer2ModifierKeyHeld = false;
+
                         // Perform our tap action if we meet the requirements.
-                        if (has_reached_mod_tap_timeout() && !_hasLayer2ActionBeenPerformed)
-                            Keyboard.write(KeymapProvider::get_keycode_at(_sideDesignator,
-                              0,
-                              KeymapProvider::get_layer2_modifier_key_row(_sideDesignator),
-                              KeymapProvider::get_layer2_modifier_key_col(_sideDesignator)));
+                        if (_sideDesignator == LEFT_SIDE_DESIGNATOR
+                            && !has_reached_mod_tap_timeout()
+                            && !_hasLayer2ActionBeenPerformed)
+                                Keyboard.write(KeymapProvider::get_keycode_at(_sideDesignator,
+                                  0,
+                                  KeymapProvider::get_layer2_modifier_key_row(_sideDesignator),
+                                  KeymapProvider::get_layer2_modifier_key_col(_sideDesignator)));
                     }
                     else
                     {
@@ -431,12 +419,12 @@ void set_key_states()
 
 bool has_reached_mod_tap_timeout()
 {
-    return (millis()-_layer2HoldStart) <= MODIFIER_HOLD_DELAY;
+    return ((millis()-_layer2HoldStart) >= MODIFIER_HOLD_DELAY);
 }
 
 int get_current_layer_based_on_modifier_state()
 {
-    if (_isLayer2ModifierKeyHeld && has_reached_mod_tap_timeout())
+    if (_isLayer2ModifierKeyHeld)
         return 2;
     if (_isLayer1ModifierKeyHeld || _isLayer1ModifierActionQueued)
         return 1;
