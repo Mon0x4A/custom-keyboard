@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = true;
+const bool IS_LEFT_KEYBOARD_SIDE = false;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -62,7 +62,7 @@ const bool LEFT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
-        { 0, 0, 0, 0, 0, 0 },
+        { 1, 0, 0, 0, 0, 0 },
     };
 
 //Left Layer 2
@@ -82,7 +82,7 @@ const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
-        { 0, 0, 0, 0, 0, 0 },
+        { 1, 0, 0, 0, 0, 0 },
     };
 
 //Right Layer 0
@@ -110,7 +110,7 @@ const bool RIGHT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 1 },
     };
 
 //Right Layer 2
@@ -130,7 +130,7 @@ const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 0, 0 },
-        { 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 1 },
     };
 
 
