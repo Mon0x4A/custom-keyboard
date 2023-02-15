@@ -5,7 +5,7 @@
 const bool SWITCH_TESTING_MODE = false;
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
-const unsigned long MODIFIER_HOLD_DELAY = 200;
+const unsigned long MODIFIER_HOLD_DELAY = 300;
 
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
@@ -86,6 +86,7 @@ const char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { 'u', 'i', 'o', 'p', '[', ']' },
         { 'j', 'k', 'l', ';', '\'', KEY_RETURN },
         { 'm', ',', '.', '/', KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
+        //todo replace l2 mod with return?
         { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
     };
 
@@ -97,6 +98,7 @@ const char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { '7', '8', '9', '0', '-', '=' },
         { '_', '+', '{', '}', '\\', KEY_RETURN },
+        //todo swap underscore and plus
         { KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
         { KC_LAYER_MODIFIER, KC_LAYER_MODIFIER, KC_NULL, KEY_RIGHT_ALT, KEY_RIGHT_GUI, KEY_RIGHT_CTRL }
     };
@@ -258,6 +260,7 @@ int _currentlayer = 0;
 bool _isLayer1ModifierKeyHeld = false;
 bool _isLayer1ModifierActionQueued = false;
 bool _isLayer2ModifierKeyHeld = false;
+bool _hasLayer2ActionBeenPerformed = false;
 unsigned long _layer2HoldStart = 0;
 //bool _isLayer2ModifierActionQueued = false;
 
@@ -362,6 +365,7 @@ void set_key_states()
                     {
                         // We've started pressing down the layer 2 modifier key.
                         _isLayer2ModifierKeyHeld = true;
+                        _hasLayer2ActionBeenPerformed = false;
                         //_isLayer2ModifierActionQueued = true;
                         _layer2HoldStart = millis();
                     }
@@ -373,6 +377,9 @@ void set_key_states()
                             get_current_layer_based_on_modifier_state(),
                             i,
                             j);
+
+                        if (_isLayer2ModifierKeyHeld)
+                            _hasLayer2ActionBeenPerformed = true;
 
                         if (keycode != KC_NULL)
                             Keyboard.press(keycode);
@@ -401,7 +408,8 @@ void set_key_states()
                     {
                         // The layer 2 key is no longer held.
                         _isLayer2ModifierKeyHeld = false;
-                        if ((millis()-_layer2HoldStart)<=MODIFIER_HOLD_DELAY)
+                        // Perform our tap action if we meet the requirements.
+                        if (has_reached_mod_tap_timeout() && !_hasLayer2ActionBeenPerformed)
                             Keyboard.write(KeymapProvider::get_keycode_at(_sideDesignator,
                               0,
                               KeymapProvider::get_layer2_modifier_key_row(_sideDesignator),
@@ -425,10 +433,15 @@ void set_key_states()
     }
 }
 
+bool has_reached_mod_tap_timeout()
+{
+    return (millis()-_layer2HoldStart) <= MODIFIER_HOLD_DELAY;
+}
+
 int get_current_layer_based_on_modifier_state()
 {
     //if (_isLayer2ModifierKeyHeld || _isLayer2ModifierActionQueued)
-    if (_isLayer2ModifierKeyHeld)
+    if (_isLayer2ModifierKeyHeld && has_reached_mod_tap_timeout())
         return 2;
     if (_isLayer1ModifierKeyHeld || _isLayer1ModifierActionQueued)
         return 1;
