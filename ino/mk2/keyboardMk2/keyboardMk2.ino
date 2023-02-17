@@ -71,10 +71,10 @@ const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 5;
 
 const char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_ESC,        '~',     '0',      '1',     '2',     '3' },
-        { KEY_TAB,        '`',     KC_NULL,  '4',     '5',     '6' },
-        { KEY_LEFT_SHIFT, KC_NULL, KC_NULL,  '7',     '8',     '9' },
-        { KEY_LEFT_GUI,   KC_NULL, KC_NULL,  KC_NULL, KC_LM,   ' ' }
+        { KEY_ESC,        '0',      '1',     '2',     '3',   '~'     },
+        { KEY_TAB,        '`',      '4',     '5',     '6',   '$'     },
+        { KEY_LEFT_SHIFT, KC_NULL,  '7',     '8',     '9',   KC_NULL },
+        { KEY_LEFT_GUI,   KC_NULL, KC_NULL,  KC_NULL, KC_LM, ' '     }
     };
 
 const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
@@ -257,7 +257,7 @@ int _sideDesignator = -1;
 byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 
-int _currentlayer = 0;
+// Layer Variables
 bool _isLayer1ModifierKeyHeld = false;
 bool _isLayer1ModifierActionQueued = false;
 bool _isLayer2ModifierKeyHeld = false;
