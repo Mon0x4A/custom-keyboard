@@ -73,7 +73,7 @@ const char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KEY_ESC,        '0',      '1',     '2',     '3',   '~'     },
         { KEY_TAB,        '`',      '4',     '5',     '6',   '$'     },
-        { KEY_LEFT_SHIFT, KC_NULL,  '7',     '8',     '9',   KC_NULL },
+        { KEY_LEFT_SHIFT, ':',      '7',     '8',     '9',   KC_NULL },
         { KEY_LEFT_GUI,   KC_NULL, KC_NULL,  KC_NULL, KC_LM, ' '     }
     };
 
