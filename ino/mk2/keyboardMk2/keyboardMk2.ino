@@ -38,7 +38,7 @@ const int LEFT_SIDE_DESIGNATOR = 420;
 const int RIGHT_SIDE_DESIGNATOR = 69;
 
 //Left Layer 0
-const char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
+const unsigned char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { 'q',           'w',     'e',     'r',     't',   'y' },
         { 'a',           's',     'd',     'f',     'g',   'h' },
@@ -50,7 +50,7 @@ const char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
 const int LEFT_LAYER1_MODIFIER_KEY_ROW_INDEX = 3;
 const int LEFT_LAYER1_MODIFIER_KEY_COL_INDEX = 4;
 
-const char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
+const unsigned char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KEY_ESC,        KEY_PRINT_SCREEN, KEY_F1,  KEY_F2,  KEY_F3,  KEY_F4 },
         { KEY_TAB,        KC_NULL,          KEY_F5,  KEY_F6,  KEY_F7,  KEY_F8 },
@@ -69,7 +69,7 @@ const bool LEFT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
 const int LEFT_LAYER2_MODIFIER_KEY_ROW_INDEX = 3;
 const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 5;
 
-const char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
+const unsigned char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KEY_ESC,        '0',      '1',     '2',     '3',   '~'     },
         { KEY_TAB,        '`',      '4',     '5',     '6',   '$'     },
@@ -86,7 +86,7 @@ const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     };
 
 //Right Layer 0
-const char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
+const unsigned char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { 'u',   'i',   'o',     'p',     '(',             ')' },
         { 'j',   'k',   'l',     ';',     '\'',            KEY_RETURN },
@@ -98,7 +98,7 @@ const char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
 const int RIGHT_LAYER1_MODIFIER_KEY_ROW_INDEX = 3;
 const int RIGHT_LAYER1_MODIFIER_KEY_COL_INDEX = 1;
 
-const char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
+const unsigned char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { '&',     '*',     '[',     ']',     '-',             '=' },
         { '+',     '_',     '|',     '{',     '}',             KEY_RETURN },
@@ -117,7 +117,7 @@ const bool RIGHT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
 const int RIGHT_LAYER2_MODIFIER_KEY_ROW_INDEX = 3;
 const int RIGHT_LAYER2_MODIFIER_KEY_COL_INDEX = 0;
 
-const char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
+const unsigned char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KC_NULL,        KEY_UP_ARROW,   KC_NULL,         KC_NULL,  KEY_DELETE,      KEY_BACKSPACE },
         { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_RIGHT_ARROW, KC_NULL,  KC_NULL,         KEY_RETURN },
@@ -138,7 +138,7 @@ const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
 class KeymapProvider
 {
     public:
-        static char get_keycode_at(int sidedesignator, int layerindex, int row, int col)
+        static unsigned char get_keycode_at(int sidedesignator, int layerindex, int row, int col)
         {
             if (LEFT_SIDE_DESIGNATOR == sidedesignator)
             {
@@ -372,7 +372,7 @@ void set_key_states()
                     else
                     {
                         // A non-layer key has been pressed.
-                        char keycode = KeymapProvider::get_keycode_at(
+                        unsigned char keycode = KeymapProvider::get_keycode_at(
                             _sideDesignator,
                             get_current_layer_based_on_modifier_state(),
                             i,
@@ -428,7 +428,7 @@ void set_key_states()
                         {
                             // Attempt to release all keys across all layers at this location.
                             // This is to prevent bugs when swapping layers with another key held.
-                            char keycode = KeymapProvider::get_keycode_at(_sideDesignator, k, i, j);
+                            unsigned char keycode = KeymapProvider::get_keycode_at(_sideDesignator, k, i, j);
                             if (keycode != KC_NULL)
                                 Keyboard.release(keycode);
                         }
