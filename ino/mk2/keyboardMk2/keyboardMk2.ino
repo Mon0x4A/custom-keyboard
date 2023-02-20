@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = true;
+const bool IS_LEFT_KEYBOARD_SIDE = false;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -103,7 +103,7 @@ const unsigned char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KC_NULL,        KEY_UP_ARROW,   KC_NULL,         KC_NULL,  KEY_DELETE,      KEY_BACKSPACE },
         { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_RIGHT_ARROW, KC_NULL,  '\\',            KEY_RETURN },
         { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,  KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
-        { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,  KC_NULL,         KEY_RIGHT_GUI }
+        { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,  KC_NULL,         KEY_RIGHT_ALT }
     };
 const bool RIGHT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
@@ -122,7 +122,7 @@ const unsigned char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { '&',     '*',     '[',     ']',     '-',             KEY_BACKSPACE },
         { '+',     '_',     '|',     '{',     '}',             KEY_RETURN },
         { '<',     '>',     '!',     '=',     KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
-        { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KC_NULL,         KEY_RIGHT_ALT }
+        { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KC_NULL,         KEY_RIGHT_GUI }
     };
 
 const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
