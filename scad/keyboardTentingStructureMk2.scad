@@ -6,7 +6,7 @@ _mk2HousingLength = 127;
 _mk2HousingWidth = 88;
 _mk2HousingDepth = 18;
 
-_carraigeThickness = 3.5;
+_carraigeThickness = 4.1;
 _carraigeLengthSidePadding = 0.2;
 _carraigeWidthSidePadding = _carraigeLengthSidePadding;
 _carraigeLength = _mk2HousingLength + ((_carraigeThickness + _carraigeLengthSidePadding)*2);
@@ -15,11 +15,12 @@ _carraigeDepth = _carraigeThickness + 14;
 
 _carraigeBeamWidth = 20;
 _carraigeRoundingRadius = 1;
-_carraigeBeamBoltChannelWidth = _m3BoltHoleDiameter + 0.5; //plus padding
+_carraigeBeamBoltChannelWidth = _m3BoltHoleDiameter + 0.2; //plus padding
 _carraigeBeamBoltChannelCountersinkWidth = _carraigeBeamBoltChannelWidth  + 2;
 _carraigeBeamBoltChannelCountersinkDepth = 3;
+_carraigeBeamCutoutRadius = 5;
 
-_tentBeamThickness = 5;
+_tentBeamThickness = 4.5;
 _tentBeamWidth = 20;
 _tentRoundingRadius = 1;
 
@@ -27,15 +28,15 @@ _tentHeight = 121;
 _tentMountingBeamLength = 140;
 _tentAngle = 60;
 
-_tentBaseThickness = 4;
+_tentBaseThickness = 5.5;
 _tentBaseLength = 130;
 _tentBaseWidth = 90;
-
+_frameBaseBeamCutoutOffset = 10;
 /// MAIN START ///
 //tentingAssembly();
-//tentingStructure();
+tentingStructure();
 //boltChannelPunch(50, _tentBeamThickness+1, _carraigeBeamBoltChannelWidth/2, _carraigeBeamBoltChannelCountersinkWidth/2, _carraigeBeamBoltChannelCountersinkDepth);
-carraigeBeam(50);
+//carraigeBeam(50);
 //carraige();
 /// MAIN END ///
 
@@ -67,12 +68,12 @@ module tentingStructure()
         {
             // Parallel to keyboard beam.
             translate([0, (_tentBaseWidth-_tentBeamWidth)/2, 0])
-                roundedCube(size=[_tentBaseLength, _tentBeamWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
+                baseConnectingBeam();
 
             translate([0, 0, 0])
-                roundedCube(size=[_tentBeamWidth, _tentBaseWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
+                baseBeam();
             translate([_tentBaseLength-_tentBeamWidth, 0, 0])
-                roundedCube(size=[_tentBeamWidth, _tentBaseWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
+                baseBeam();
 
             translate([0,0, _tentBaseThickness])
                 mountingFrame();
@@ -81,11 +82,20 @@ module tentingStructure()
         //Cutout for carraige
         carraigeCutoutSidePadding = 1;
         carraigeCutoutWidth = _carraigeBeamWidth + (carraigeCutoutSidePadding*2);
-        translate([8.25, (_tentBaseWidth-carraigeCutoutWidth)/2, 1])
+        translate([7.4, (_tentBaseWidth-carraigeCutoutWidth)/2, 1])
             rotate([0,-_tentAngle,0])
                 cube([50, carraigeCutoutWidth, 10]);
-        //Cutout for bolt channel
     }
+}
+
+module baseBeam()
+{
+    roundedCube(size=[_tentBeamWidth, _tentBaseWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
+}
+
+module baseConnectingBeam()
+{
+    roundedCube(size=[_tentBaseLength, _tentBeamWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
 }
 
 module mountingFrame()
@@ -93,17 +103,36 @@ module mountingFrame()
     union()
     {
         translate([80,(_tentBaseWidth-_tentBeamWidth)/2,0])
-            roundedCube(size=[_tentBeamThickness, _tentBeamWidth, _tentHeight], radius=_tentRoundingRadius, apply_to="zmax");
+            decorativeFrameBeam(_tentHeight);
 
         // Carraige attachment beam
         translate([10,(_tentBaseWidth-_tentBeamWidth)/2,0])
             rotate([0,90-_tentAngle,0])
-                roundedCube(size=[_tentBeamThickness, _tentBeamWidth, _tentMountingBeamLength], radius=_tentRoundingRadius, apply_to="zmax");
+                attachmentFrameBeam(_tentMountingBeamLength, _frameBaseBeamCutoutOffset);
         // Secondary angled support beam
         translate([120,(_tentBaseWidth-_tentBeamWidth)/2,-_tentBaseThickness])
             rotate([0,-90+_tentAngle,0])
-                roundedCube(size=[_tentBeamThickness , _tentBeamWidth, _tentMountingBeamLength*(2.85/5)], radius=_tentRoundingRadius, apply_to="zmax");
+                decorativeFrameBeam(_tentMountingBeamLength*(2.85/5));
     }
+}
+
+module attachmentFrameBeam(length, cutoutSideOffset)
+{
+    difference()
+    //union()
+    {
+        roundedCube(size=[_tentBeamThickness, _tentBeamWidth, length], radius=_tentRoundingRadius, apply_to="zmax");
+        cutoutLength = length-(cutoutSideOffset*2);
+        translate([-1,_tentBeamWidth/2,cutoutSideOffset+_carraigeBeamBoltChannelWidth/2])
+            rotate([90,0,0])
+                rotate([0,90,0])
+                    boltChannel(cutoutLength, _tentBeamThickness+2, _carraigeBeamBoltChannelWidth/2);
+    }
+}
+
+module decorativeFrameBeam(length)
+{
+    roundedCube(size=[_tentBeamThickness, _tentBeamWidth, length], radius=_tentRoundingRadius, apply_to="zmax");
 }
 
 module carraige()
@@ -168,7 +197,9 @@ module carraigeBeam(length)
                 boltChannelPunch(boltChannelLength+radiusDifference, _carraigeDepth+1, _carraigeBeamBoltChannelWidth/2, _carraigeBeamBoltChannelCountersinkWidth/2, _carraigeBeamBoltChannelCountersinkDepth);
 
         //Holding tab cutouts
-        //todo here
+        translate([-1,_carraigeBeamWidth/2,_carraigeDepth/2])
+            rotate([0,90,0])
+                cylinder(r=_carraigeBeamCutoutRadius, h=length+2, center=false, $fn=100);
     }
 }
 
