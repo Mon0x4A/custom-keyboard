@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -359,6 +359,10 @@ void set_key_states()
                         // We've started pressing down the layer 1 modifier key.
                         _isLayer1ModifierKeyHeld = true;
                         _isLayer1ModifierActionQueued = true;
+
+                        // Cancel our Layer2 action.
+                        if (!_isLayer2ModifierKeyHeld)
+                            _isLayer2ModifierActionQueued = false;
                     }
                     else if (KeymapProvider::get_layer2_modifier_key_row(_sideDesignator) == i
                         && KeymapProvider::get_layer2_modifier_key_col(_sideDesignator) == j)
@@ -368,6 +372,10 @@ void set_key_states()
                         _isLayer2ModifierActionQueued = true;
                         _hasLayer2ActionBeenPerformed = false;
                         _layer2HoldStart = millis();
+
+                        // Cancel our Layer1 action.
+                        if (!_isLayer1ModifierKeyHeld)
+                            _isLayer1ModifierActionQueued = false;
                     }
                     else
                     {
