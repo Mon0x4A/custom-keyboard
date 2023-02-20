@@ -11,10 +11,13 @@ _carraigeLengthSidePadding = 0.2;
 _carraigeWidthSidePadding = _carraigeLengthSidePadding;
 _carraigeLength = _mk2HousingLength + ((_carraigeThickness + _carraigeLengthSidePadding)*2);
 _carraigeWidth = _mk2HousingWidth + ((_carraigeThickness + _carraigeWidthSidePadding)*2);
-//todo plus some kind of offset here for the bolt heads.
 _carraigeDepth = _carraigeThickness + 14;
+
 _carraigeBeamWidth = 20;
 _carraigeRoundingRadius = 1;
+_carraigeBeamBoltChannelWidth = _m3BoltHoleDiameter + 0.5; //plus padding
+_carraigeBeamBoltChannelCountersinkWidth = _carraigeBeamBoltChannelWidth  + 2;
+_carraigeBeamBoltChannelCountersinkDepth = 3;
 
 _tentBeamThickness = 5;
 _tentBeamWidth = 20;
@@ -28,10 +31,12 @@ _tentBaseThickness = 4;
 _tentBaseLength = 130;
 _tentBaseWidth = 90;
 
-
 /// MAIN START ///
-tentingAssembly();
+//tentingAssembly();
 //tentingStructure();
+//boltChannelPunch(50, _tentBeamThickness+1, _carraigeBeamBoltChannelWidth/2, _carraigeBeamBoltChannelCountersinkWidth/2, _carraigeBeamBoltChannelCountersinkDepth);
+carraigeBeam(50);
+//carraige();
 /// MAIN END ///
 
 module tentingAssembly()
@@ -79,7 +84,6 @@ module tentingStructure()
         translate([8.25, (_tentBaseWidth-carraigeCutoutWidth)/2, 1])
             rotate([0,-_tentAngle,0])
                 cube([50, carraigeCutoutWidth, 10]);
-        
         //Cutout for bolt channel
     }
 }
@@ -107,7 +111,6 @@ module carraige()
     union()
     {
         carraigeBody();
-        //todo bolt holes, risers.
     }
 }
 
@@ -115,10 +118,10 @@ module carraigeBody()
 {
     union()
     {
-        // Keyboard stand-in
-        translate([_carraigeLengthSidePadding + _carraigeThickness, _carraigeWidthSidePadding + _carraigeThickness, _carraigeThickness])
-            translate([0,0,12]) // Center at Z=0
-                import("../resources/stl/keyboardMk2.stl");
+        //// Keyboard stand-in
+        //translate([_carraigeLengthSidePadding + _carraigeThickness, _carraigeWidthSidePadding + _carraigeThickness, _carraigeThickness])
+        //    translate([0,0,12]) // Center at Z=0
+        //        import("../resources/stl/keyboardMk2.stl");
 
         // Length-wise beam.
         translate([0, (_carraigeWidth-_carraigeBeamWidth)/2, 0])
@@ -139,16 +142,61 @@ module carraigeBody()
 
 module carraigeBeam(length)
 {
+    difference()
+    //union()
+    {
+        union()
+        {
+            cube([length, _carraigeBeamWidth, _carraigeThickness]);
+
+            translate([_carraigeThickness, 0, 0])
+                rotate([0,-90,0])
+                    roundedCube(size=[_carraigeDepth, _carraigeBeamWidth, _carraigeThickness], radius=_carraigeRoundingRadius, apply_to="z");
+            translate([length, 0, 0])
+                rotate([0,-90,0])
+                    roundedCube(size=[_carraigeDepth, _carraigeBeamWidth, _carraigeThickness], radius=_carraigeRoundingRadius, apply_to="z");
+        }
+
+        //Bolt channel cutout
+        boltChannelSidePadding = 13;
+        totalLength = length + _carraigeThickness*2;
+        boltChannelLength =  totalLength - (boltChannelSidePadding*2);
+        radiusDifference = (_carraigeBeamBoltChannelCountersinkWidth - _carraigeBeamBoltChannelWidth);
+        channelCounterSinkTotalLength = boltChannelLength + radiusDifference*2;
+        translate([(totalLength-channelCounterSinkTotalLength)/2, _carraigeBeamWidth/2, -2])
+            rotate([0,0,-90])
+                boltChannelPunch(boltChannelLength+radiusDifference, _carraigeDepth+1, _carraigeBeamBoltChannelWidth/2, _carraigeBeamBoltChannelCountersinkWidth/2, _carraigeBeamBoltChannelCountersinkDepth);
+
+        //Holding tab cutouts
+        //todo here
+    }
+}
+
+//Punches
+module boltChannelPunch(length, depth, radius, countersinkRadius, countersinkDepth)
+{
     union()
     {
-        cube([length, _carraigeBeamWidth, _carraigeThickness]);
+        // Punch portion
+        boltChannel(length, depth, radius);
+        // Countersink portion
+        translate([0,0,countersinkDepth])
+            boltChannel(length+(countersinkRadius-radius)*2, depth, countersinkRadius);
 
-        translate([_carraigeThickness, 0, 0])
-            rotate([0,-90,0])
-                roundedCube(size=[_carraigeDepth, _carraigeBeamWidth, _carraigeThickness], radius=_carraigeRoundingRadius, apply_to="z");
-        translate([length, 0, 0])
-            rotate([0,-90,0])
-                roundedCube(size=[_carraigeDepth, _carraigeBeamWidth, _carraigeThickness], radius=_carraigeRoundingRadius, apply_to="z");
+    }
+}
+
+module boltChannel(length, depth, radius)
+{
+    union()
+    {
+        cylinder(r=radius, h=depth, $fn=100);
+
+        translate([-radius,0,0])
+            cube([radius*2, length-radius*2, depth]);
+
+        translate([0,length-radius*2,0])
+            cylinder(r=radius, h=depth, $fn=100);
     }
 }
 
