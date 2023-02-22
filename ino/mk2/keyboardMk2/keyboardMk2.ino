@@ -8,7 +8,8 @@ const bool IS_LEFT_KEYBOARD_SIDE = false;
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
 
-const unsigned long MODIFIER_HOLD_DELAY = 200;
+const unsigned long TAP_ACTION_TIMEOUT = 200;
+const unsigned long MODIFIER_APPLY_DELAY = 50;
 
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
@@ -88,10 +89,10 @@ const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
 //Right Layer 0
 const unsigned char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { 'u',   'i',   'o',     'p',     '(',             ')' },
-        { 'j',   'k',   'l',     ';',     '\'',            KEY_RETURN },
-        { 'm',   ',',   '.',     '/',     KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
-        { KC_LM, KC_LM, KC_NULL, KC_NULL, KC_NULL,         KEY_RIGHT_CTRL }
+        { 'u',           'i',   'o',     'p',     '(',             ')' },
+        { 'j',           'k',   'l',     ';',     '\'',            KEY_RETURN },
+        { 'm',           ',',   '.',     '/',     KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
+        { KEY_BACKSPACE, KC_LM, KC_NULL, KC_NULL, KC_NULL,         KEY_RIGHT_CTRL }
     };
 
 //Right Layer 1
@@ -100,7 +101,7 @@ const int RIGHT_LAYER1_MODIFIER_KEY_COL_INDEX = 1;
 
 const unsigned char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KC_NULL,        KEY_UP_ARROW,   KC_NULL,         KC_NULL,  KEY_DELETE,      KEY_BACKSPACE },
+        { KC_NULL,        KEY_UP_ARROW,   KC_NULL,         KC_NULL,  KEY_DELETE,      KC_NULL },
         { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_RIGHT_ARROW, KC_NULL,  '\\',            KEY_RETURN },
         { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,  KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
         { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,  KC_NULL,         KEY_RIGHT_ALT }
@@ -119,7 +120,7 @@ const int RIGHT_LAYER2_MODIFIER_KEY_COL_INDEX = 0;
 
 const unsigned char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { '&',     '*',     '[',     ']',     '-',             KEY_BACKSPACE },
+        { '&',     '*',     '[',     ']',     '-',             KC_NULL },
         { '+',     '_',     '|',     '{',     '}',             KEY_RETURN },
         { '<',     '>',     '!',     '=',     KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
         { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KC_NULL,         KEY_RIGHT_GUI }
@@ -418,8 +419,7 @@ void set_key_states()
                         _isLayer2ModifierKeyHeld = false;
 
                         // Perform our tap action if we meet the requirements.
-                        if (_sideDesignator == LEFT_SIDE_DESIGNATOR
-                            && !has_reached_mod_tap_timeout()
+                        if (!has_reached_mod_tap_timeout()
                             && !_hasLayer2ActionBeenPerformed)
                         {
                             _isLayer2ModifierActionQueued = false;
@@ -449,12 +449,18 @@ void set_key_states()
 
 bool has_reached_mod_tap_timeout()
 {
-    return ((millis()-_layer2HoldStart) >= MODIFIER_HOLD_DELAY);
+    return ((millis()-_layer2HoldStart) >= TAP_ACTION_TIMEOUT);
+}
+
+bool has_reached_mod_application_delay()
+{
+    return ((millis()-_layer2HoldStart) >= MODIFIER_APPLY_DELAY);
 }
 
 int get_current_layer_based_on_modifier_state()
 {
-    if (_isLayer2ModifierKeyHeld || _isLayer2ModifierActionQueued)
+    if ((_isLayer2ModifierKeyHeld || _isLayer2ModifierActionQueued)
+        && has_reached_mod_application_delay())
         return 2;
     if (_isLayer1ModifierKeyHeld || _isLayer1ModifierActionQueued)
         return 1;
