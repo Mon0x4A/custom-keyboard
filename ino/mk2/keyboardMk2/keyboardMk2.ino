@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -73,7 +73,7 @@ const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 5;
 const unsigned char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KEY_ESC,        '0',      '1',     '2',     '3',   '~'     },
-        { KEY_TAB,        '`',      '4',     '5',     '6',   '$'     },
+        { KC_NULL,        '`',      '4',     '5',     '6',   '$'     },
         { KEY_LEFT_SHIFT, ':',      '7',     '8',     '9',   KC_NULL },
         { KEY_LEFT_GUI,   KC_NULL, KC_NULL,  KC_NULL, KC_LM, ' '     }
     };
