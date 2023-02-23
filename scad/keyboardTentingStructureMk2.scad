@@ -16,12 +16,12 @@ _carraigeDepth = _carraigeThickness + 14;
 _carraigeBeamWidth = 20;
 _carraigeRoundingRadius = 1;
 _carraigeBeamBoltChannelWidth = _m3BoltHoleDiameter + 0.2; //plus padding
-_carraigeBeamBoltChannelCountersinkWidth = _carraigeBeamBoltChannelWidth  + 2;
+_carraigeBeamBoltChannelCountersinkWidth = _carraigeBeamBoltChannelWidth + 2.5;
 _carraigeBeamBoltChannelCountersinkDepth = 3;
 _carraigeBeamCutoutRadius = 5;
 
 _tentBeamThickness = 4.5;
-_tentBeamWidth = 20;
+_tentBeamWidth = 30;
 _tentRoundingRadius = 1;
 
 _tentHeight = 121;
@@ -32,7 +32,18 @@ _tentBaseThickness = 5.5;
 _tentBaseLength = 130;
 _tentBaseWidth = 90;
 _frameBaseBeamCutoutOffset = 10;
+
+_baseBeamTriangleCutoutSideLength = _tentBeamWidth*(1/3);
+_baseBeamTriangleStrutPadding = 3;
+_totalSinglePunchSideLength = _baseBeamTriangleCutoutSideLength + _baseBeamTriangleStrutPadding;
+_baseBeamTriangleCutoutEdgePadding = 3.5;
+_baseBeamTriangleCutoutLengthOffset = 2.5;
+_baseBeamTriangleCutoutWidthOffset = 5;
+_baseBeamTriangleWidthQuatity = 6;
+_baseBeamTriangleLengthQuatity = 2;
+
 /// MAIN START ///
+//baseBeam();
 //tentingAssembly();
 tentingStructure();
 //boltChannelPunch(50, _tentBeamThickness+1, _carraigeBeamBoltChannelWidth/2, _carraigeBeamBoltChannelCountersinkWidth/2, _carraigeBeamBoltChannelCountersinkDepth);
@@ -90,7 +101,18 @@ module tentingStructure()
 
 module baseBeam()
 {
-    roundedCube(size=[_tentBeamWidth, _tentBaseWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
+    difference()
+    {
+        roundedCube(size=[_tentBeamWidth, _tentBaseWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
+
+        lengthSpaceUnit = _baseBeamTriangleCutoutEdgePadding + _baseBeamTriangleCutoutSideLength;
+        widthSpaceUnit = _baseBeamTriangleCutoutEdgePadding + _baseBeamTriangleCutoutSideLength;
+        translate([_baseBeamTriangleCutoutLengthOffset, _baseBeamTriangleCutoutWidthOffset,-1])
+            for(i=[0:_baseBeamTriangleLengthQuatity-1])
+                for(j=[0:_baseBeamTriangleWidthQuatity-1])
+                    translate([lengthSpaceUnit*i,widthSpaceUnit*j,-1])
+                        boxTrianglePunch(_baseBeamTriangleCutoutSideLength, _baseBeamTriangleStrutPadding, _tentBaseThickness+2);
+    }
 }
 
 module baseConnectingBeam()
@@ -228,6 +250,27 @@ module boltChannel(length, depth, radius)
 
         translate([0,length-radius*2,0])
             cylinder(r=radius, h=depth, $fn=100);
+    }
+}
+
+module boxTrianglePunch(triSideLength, triStrutPadding, punchDepth)
+{
+    union()
+    {
+        translate([triSideLength+(triStrutPadding/2), triSideLength+(triStrutPadding/2), 0])
+            rotate([0, 0, 180])
+                triangle(triSideLength, triSideLength, punchDepth);
+
+        triangle(triSideLength, triSideLength, punchDepth);
+    }
+}
+
+module triangle(o_len, a_len, depth, center=false)
+{
+    centroid = center ? [-a_len/3, -o_len/3, -depth/2] : [0, 0, 0];
+    translate(centroid) linear_extrude(height=depth)
+    {
+        polygon(points=[[0,0],[a_len,0],[0,o_len]], paths=[[0,1,2]]);
     }
 }
 
