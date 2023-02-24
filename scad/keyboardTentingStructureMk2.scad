@@ -42,6 +42,8 @@ _baseBeamTriangleCutoutWidthOffset = 5;
 _baseBeamTriangleWidthQuatity = 6;
 _baseBeamTriangleLengthQuatity = 2;
 
+//todo base connecting beam parameters
+
 /// MAIN START ///
 //baseBeam();
 //tentingAssembly();

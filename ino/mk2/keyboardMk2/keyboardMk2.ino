@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = true;
+const bool IS_LEFT_KEYBOARD_SIDE = false;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -41,10 +41,10 @@ const int RIGHT_SIDE_DESIGNATOR = 69;
 //Left Layer 0
 const unsigned char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { 'q',           'w',     'e',     'r',     't',   'y' },
-        { 'a',           's',     'd',     'f',     'g',   'h' },
-        { 'z',           'x',     'c',     'v',     'b',   'n' },
-        { KEY_LEFT_CTRL, KC_NULL, KC_NULL, KC_NULL, KC_LM, ' ' }
+        { 'q',           'w',     'e',     'r',     't',        'y' },
+        { 'a',           's',     'd',     'f',     'g',        'h' },
+        { 'z',           'x',     'c',     'v',     'b',        'n' },
+        { KEY_LEFT_CTRL, KC_NULL, KC_NULL, KC_NULL, KEY_RETURN, ' ' }
     };
 
 //Left Layer 1
@@ -90,7 +90,7 @@ const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
 const unsigned char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { 'u',           'i',   'o',     'p',     '(',             ')' },
-        { 'j',           'k',   'l',     ';',     '\'',            KEY_RETURN },
+        { 'j',           'k',   'l',     ';',     '\'',            KC_NULL },
         { 'm',           ',',   '.',     '/',     KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
         { KEY_BACKSPACE, KC_LM, KC_NULL, KC_NULL, KC_NULL,         KEY_RIGHT_CTRL }
     };
@@ -102,7 +102,7 @@ const int RIGHT_LAYER1_MODIFIER_KEY_COL_INDEX = 1;
 const unsigned char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KC_NULL,        KEY_UP_ARROW,   KC_NULL,         KC_NULL,  KEY_DELETE,      KC_NULL },
-        { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_RIGHT_ARROW, KC_NULL,  '\\',            KEY_RETURN },
+        { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_RIGHT_ARROW, KC_NULL,  '\\',            KC_NULL },
         { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,  KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
         { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,  KC_NULL,         KEY_RIGHT_ALT }
     };
@@ -121,7 +121,7 @@ const int RIGHT_LAYER2_MODIFIER_KEY_COL_INDEX = 0;
 const unsigned char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { '&',     '*',     '[',     ']',     '-',             KC_NULL },
-        { '+',     '_',     '|',     '{',     '}',             KEY_RETURN },
+        { '+',     '_',     '|',     '{',     '}',             KC_NULL },
         { '<',     '>',     '!',     '=',     KEY_RIGHT_SHIFT, KEY_RIGHT_SHIFT },
         { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KC_NULL,         KEY_RIGHT_GUI }
     };
@@ -261,6 +261,8 @@ byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 // Layer Variables
 bool _isLayer1ModifierKeyHeld = false;
 bool _isLayer1ModifierActionQueued = false;
+bool _hasLayer1ActionBeenPerformed = false;
+unsigned long _layer1HoldStart = 0;
 bool _isLayer2ModifierKeyHeld = false;
 bool _isLayer2ModifierActionQueued = false;
 bool _hasLayer2ActionBeenPerformed = false;
@@ -360,6 +362,8 @@ void set_key_states()
                         // We've started pressing down the layer 1 modifier key.
                         _isLayer1ModifierKeyHeld = true;
                         _isLayer1ModifierActionQueued = true;
+                        _hasLayer1ActionBeenPerformed = false;
+                        _layer1HoldStart = millis();
 
                         // Cancel our Layer2 action.
                         if (!_isLayer2ModifierKeyHeld)
@@ -389,6 +393,8 @@ void set_key_states()
 
                         if (_isLayer2ModifierKeyHeld)
                             _hasLayer2ActionBeenPerformed = true;
+                        if (_isLayer1ModifierKeyHeld)
+                            _hasLayer1ActionBeenPerformed = true;
 
                         if (keycode != KC_NULL)
                             Keyboard.press(keycode);
@@ -411,6 +417,17 @@ void set_key_states()
                     {
                         // The layer 1 modifier key is no longer held.
                         _isLayer1ModifierKeyHeld = false;
+
+                        // Perform our tap action if we meet the requirements.
+                        if (!has_reached_mod_tap_timeout(_layer1HoldStart)
+                            && !_hasLayer1ActionBeenPerformed)
+                        {
+                            _isLayer1ModifierActionQueued = false;
+                            Keyboard.write(KeymapProvider::get_keycode_at(_sideDesignator,
+                              0,
+                              KeymapProvider::get_layer1_modifier_key_row(_sideDesignator),
+                              KeymapProvider::get_layer1_modifier_key_col(_sideDesignator)));
+                        }
                     }
                     else if (KeymapProvider::get_layer2_modifier_key_row(_sideDesignator) == i
                         && KeymapProvider::get_layer2_modifier_key_col(_sideDesignator) == j)
@@ -419,7 +436,7 @@ void set_key_states()
                         _isLayer2ModifierKeyHeld = false;
 
                         // Perform our tap action if we meet the requirements.
-                        if (!has_reached_mod_tap_timeout()
+                        if (!has_reached_mod_tap_timeout(_layer2HoldStart)
                             && !_hasLayer2ActionBeenPerformed)
                         {
                             _isLayer2ModifierActionQueued = false;
@@ -447,22 +464,23 @@ void set_key_states()
     }
 }
 
-bool has_reached_mod_tap_timeout()
+bool has_reached_mod_tap_timeout(unsigned long holdStart)
 {
-    return ((millis()-_layer2HoldStart) >= TAP_ACTION_TIMEOUT);
+    return ((millis()-holdStart) >= TAP_ACTION_TIMEOUT);
 }
 
-bool has_reached_mod_application_delay()
+bool has_reached_mod_application_delay(unsigned long holdStart)
 {
-    return ((millis()-_layer2HoldStart) >= MODIFIER_APPLY_DELAY);
+    return ((millis()-holdStart) >= MODIFIER_APPLY_DELAY);
 }
 
 int get_current_layer_based_on_modifier_state()
 {
     if ((_isLayer2ModifierKeyHeld || _isLayer2ModifierActionQueued)
-        && has_reached_mod_application_delay())
+        && has_reached_mod_application_delay(_layer2HoldStart))
         return 2;
-    if (_isLayer1ModifierKeyHeld || _isLayer1ModifierActionQueued)
+    if ((_isLayer1ModifierKeyHeld || _isLayer1ModifierActionQueued)
+        && has_reached_mod_application_delay(_layer1HoldStart))
         return 1;
     return 0;
 }
