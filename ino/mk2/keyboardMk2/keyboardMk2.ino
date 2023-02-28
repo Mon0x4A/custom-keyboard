@@ -3,13 +3,14 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
 
 const unsigned long TAP_ACTION_TIMEOUT = 200;
 const unsigned long MODIFIER_APPLY_DELAY = 50;
+const unsigned long DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT = 200;
 
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
@@ -39,12 +40,14 @@ const int LEFT_SIDE_DESIGNATOR = 420;
 const int RIGHT_SIDE_DESIGNATOR = 69;
 
 //Left Layer 0
+const int LEFT_MODIFIER_KEY_ROW_INDEX = 0;
+const int LEFT_MODIFIER_KEY_COL_INDEX = 0;
 const unsigned char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_ESC,        'q',           'w',     'e',     'r',        't'    },
+        { KEY_LEFT_CTRL,  'q',           'w',     'e',     'r',        't'    },
         { KC_NULL,        'a',           's',     'd',     'f',        'g'    },
         { KEY_LEFT_SHIFT, 'z',           'x',     'c',     'v',        'b'    },
-        { KC_NULL,        KEY_LEFT_CTRL, KC_NULL, KC_NULL, KEY_RETURN, ' '    }
+        { KC_NULL,        KC_NULL,       KC_NULL, KC_NULL, KEY_RETURN, ' '    }
     };
 
 //Left Layer 1
@@ -53,10 +56,10 @@ const int LEFT_LAYER1_MODIFIER_KEY_COL_INDEX = 4;
 
 const unsigned char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_ESC,         KEY_F1,       KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5           },
+        { KEY_LEFT_ALT,    KEY_F1,       KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5           },
         { KEY_TAB,         KEY_F6,       KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10          },
         { KEY_LEFT_SHIFT,  KEY_F11,      KEY_F12, KC_NULL, KC_NULL, KEY_PRINT_SCREEN },
-        { KC_NULL,         KEY_LEFT_ALT, KC_NULL, KC_NULL, KC_LM,   ' '              }
+        { KC_NULL,         KC_NULL,      KC_NULL, KC_NULL, KC_LM,   ' '              }
     };
 const bool LEFT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
@@ -72,10 +75,10 @@ const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 5;
 
 const unsigned char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_ESC,        '`',          '0',      '1',     '2',     '3'   },
+        { KEY_LEFT_GUI,   '`',          '0',      '1',     '2',     '3'   },
         { KEY_TAB,        KC_NULL,      '$',      '4',     '5',     '6'   },
         { KEY_LEFT_SHIFT, KC_NULL,      KC_NULL,  '7',     '8',     '9'   },
-        { KC_NULL,        KEY_LEFT_GUI, KC_NULL,  KC_NULL, KC_LM,   ' '   }
+        { KC_NULL,        KC_NULL,      KC_NULL,  KC_NULL, KC_LM,   ' '   }
     };
 
 const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
@@ -87,12 +90,14 @@ const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     };
 
 //Right Layer 0
+const int RIGHT_MODIFIER_KEY_ROW_INDEX = 0;
+const int RIGHT_MODIFIER_KEY_COL_INDEX = 5;
 const unsigned char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { 'y',           'u',     'i',     'o',     'p',            KC_NULL         },
-        { 'h',           'j',     'k',     'l',     ';',            KC_NULL         },
-        { 'n',           'm',     ',',     '.',     '/',            KEY_RIGHT_SHIFT },
-        { KEY_BACKSPACE, KEY_TAB, KC_NULL, KC_NULL, KEY_RIGHT_CTRL, KC_NULL         }
+        { 'y',           'u',     'i',     'o',     'p',     KEY_RIGHT_CTRL  },
+        { 'h',           'j',     'k',     'l',     ';',     KC_NULL         },
+        { 'n',           'm',     ',',     '.',     '/',     KEY_RIGHT_SHIFT },
+        { KEY_BACKSPACE, KEY_TAB, KC_NULL, KC_NULL, KC_NULL, KC_NULL         }
     };
 
 //Right Layer 1
@@ -101,10 +106,10 @@ const int RIGHT_LAYER1_MODIFIER_KEY_COL_INDEX = 1;
 
 const unsigned char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KC_NULL,        KC_NULL,        KC_NULL,         KEY_DELETE,      KC_NULL },
+        { KC_NULL,        KC_NULL,        KC_NULL,         KEY_DELETE,      KEY_RIGHT_ALT },
         { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW,    KEY_RIGHT_ARROW, KC_NULL },
         { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,         KEY_RIGHT_SHIFT },
-        { KC_LM,          KC_LM,          KC_NULL,         KEY_RIGHT_ALT,   KC_NULL }
+        { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,         KC_NULL }
     };
 const bool RIGHT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
@@ -120,10 +125,10 @@ const int RIGHT_LAYER2_MODIFIER_KEY_COL_INDEX = 0;
 
 const unsigned char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { '&',     '*',     '(',     ')',     '=',           KC_NULL },
-        { '-',     '_',     '{',     '}',     '\'',          KC_NULL },
-        { '+',     '!',     '[',     ']',     '\\',          KEY_RIGHT_SHIFT },
-        { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KEY_RIGHT_GUI, KC_NULL }
+        { '&',     '*',     '(',     ')',     '=',     KEY_RIGHT_GUI },
+        { '-',     '_',     '{',     '}',     '\'',    KC_NULL },
+        { '+',     '!',     '[',     ']',     '\\',    KEY_RIGHT_SHIFT },
+        { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KC_NULL, KC_NULL }
     };
 
 const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
@@ -248,6 +253,28 @@ class KeymapProvider
             return -1;
         }
 
+        static int get_modifier_key_row(int sidedesignator)
+        {
+            switch(sidedesignator)
+            {
+                case LEFT_SIDE_DESIGNATOR:
+                    return LEFT_MODIFIER_KEY_ROW_INDEX;
+                case RIGHT_SIDE_DESIGNATOR:
+                    return RIGHT_MODIFIER_KEY_ROW_INDEX;
+            }
+        }
+
+        static int get_modifier_key_col(int sidedesignator)
+        {
+            switch(sidedesignator)
+            {
+                case LEFT_SIDE_DESIGNATOR:
+                    return LEFT_MODIFIER_KEY_COL_INDEX;
+                case RIGHT_SIDE_DESIGNATOR:
+                    return RIGHT_MODIFIER_KEY_COL_INDEX;
+            }
+        }
+
     private:
         KeymapProvider() { }
 };
@@ -267,6 +294,11 @@ bool _isLayer2ModifierKeyHeld = false;
 bool _isLayer2ModifierActionQueued = false;
 bool _hasLayer2ActionBeenPerformed = false;
 unsigned long _layer2HoldStart = 0;
+
+// Default Modifier Variables
+bool _isModiferKeyHeld = false;
+unsigned int _modifierLayerAtHoldStart = 0;
+unsigned long _modifierHoldStart = 0;
 
 //Init
 void setup()
@@ -350,6 +382,16 @@ void set_key_states()
     {
         for (int j = 0; j < COLUMN_COUNT; j++)
         {
+            if (_isModiferKeyHeld && has_reached_mod_application_delay(
+                _modifierHoldStart, MODIFIER_APPLY_DELAY))
+            {
+                Keyboard.press(KeymapProvider::get_keycode_at(
+                            _sideDesignator,
+                            _modifierLayerAtHoldStart,
+                            KeymapProvider::get_modifier_key_row(_sideDesignator),
+                            KeymapProvider::get_modifier_key_col(_sideDesignator)));
+            }
+
             // If the swich changed state..
             if (_switchMatrix[i][j] != _switchMatrixPrev[i][j])
             {
@@ -381,6 +423,14 @@ void set_key_states()
                         // Cancel our Layer1 action.
                         if (!_isLayer1ModifierKeyHeld)
                             _isLayer1ModifierActionQueued = false;
+                    }
+                    else if (KeymapProvider::get_modifier_key_row(_sideDesignator) == i
+                        && KeymapProvider::get_modifier_key_col(_sideDesignator) == j)
+                    {
+                        // We've started pressing down the default modifier key for this layer.
+                        _isModiferKeyHeld = true;
+                        _modifierLayerAtHoldStart = get_current_layer_based_on_modifier_state();
+                        _modifierHoldStart = millis();
                     }
                     else
                     {
@@ -419,7 +469,7 @@ void set_key_states()
                         _isLayer1ModifierKeyHeld = false;
 
                         // Perform our tap action if we meet the requirements.
-                        if (!has_reached_mod_tap_timeout(_layer1HoldStart)
+                        if (!has_reached_mod_tap_timeout(_layer1HoldStart, TAP_ACTION_TIMEOUT)
                             && !_hasLayer1ActionBeenPerformed)
                         {
                             _isLayer1ModifierActionQueued = false;
@@ -436,7 +486,7 @@ void set_key_states()
                         _isLayer2ModifierKeyHeld = false;
 
                         // Perform our tap action if we meet the requirements.
-                        if (!has_reached_mod_tap_timeout(_layer2HoldStart)
+                        if (!has_reached_mod_tap_timeout(_layer2HoldStart, TAP_ACTION_TIMEOUT)
                             && !_hasLayer2ActionBeenPerformed)
                         {
                             _isLayer2ModifierActionQueued = false;
@@ -445,6 +495,33 @@ void set_key_states()
                               KeymapProvider::get_layer2_modifier_key_row(_sideDesignator),
                               KeymapProvider::get_layer2_modifier_key_col(_sideDesignator)));
                         }
+                    }
+                    else if (KeymapProvider::get_modifier_key_row(_sideDesignator) == i
+                        && KeymapProvider::get_modifier_key_col(_sideDesignator) == j)
+                    {
+                        // The modifier key is no longer held.
+                        _isModiferKeyHeld = false;
+
+                        // Perform our tap action if we meet the requirements.
+                        if (!has_reached_mod_tap_timeout(
+                            _modifierHoldStart, DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT))
+                        {
+                            switch(_sideDesignator)
+                            {
+                                case LEFT_SIDE_DESIGNATOR:
+                                    Keyboard.write(KEY_ESC);
+                                    break;
+                                case RIGHT_SIDE_DESIGNATOR:
+                                    // currently no tap action for right side.
+                                    break;
+                            }
+                        }
+
+                        Keyboard.release(KeymapProvider::get_keycode_at(
+                                    _sideDesignator,
+                                    _modifierLayerAtHoldStart,
+                                    KeymapProvider::get_modifier_key_row(_sideDesignator),
+                                    KeymapProvider::get_modifier_key_col(_sideDesignator)));
                     }
                     else
                     {
@@ -464,23 +541,23 @@ void set_key_states()
     }
 }
 
-bool has_reached_mod_tap_timeout(unsigned long holdStart)
+bool has_reached_mod_tap_timeout(unsigned long holdStart, unsigned long timeout)
 {
-    return ((millis()-holdStart) >= TAP_ACTION_TIMEOUT);
+    return ((millis()-holdStart) >= timeout);
 }
 
-bool has_reached_mod_application_delay(unsigned long holdStart)
+bool has_reached_mod_application_delay(unsigned long holdStart, unsigned long timeout)
 {
-    return ((millis()-holdStart) >= MODIFIER_APPLY_DELAY);
+    return ((millis()-holdStart) >= timeout);
 }
 
 int get_current_layer_based_on_modifier_state()
 {
     if ((_isLayer2ModifierKeyHeld || _isLayer2ModifierActionQueued)
-        && has_reached_mod_application_delay(_layer2HoldStart))
+        && has_reached_mod_application_delay(_layer2HoldStart, MODIFIER_APPLY_DELAY))
         return 2;
     if ((_isLayer1ModifierKeyHeld || _isLayer1ModifierActionQueued)
-        && has_reached_mod_application_delay(_layer1HoldStart))
+        && has_reached_mod_application_delay(_layer1HoldStart, MODIFIER_APPLY_DELAY))
         return 1;
     return 0;
 }
