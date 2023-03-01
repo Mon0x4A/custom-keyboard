@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = true;
+const bool IS_LEFT_KEYBOARD_SIDE = false;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -65,7 +65,7 @@ const bool LEFT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
+        { 0, 1, 1, 1, 1, 1 },
         { 1, 1, 0, 0, 0, 0 },
     };
 
@@ -85,7 +85,7 @@ const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
+        { 0, 1, 1, 1, 1, 1 },
         { 1, 1, 0, 0, 0, 0 },
     };
 
@@ -115,7 +115,7 @@ const bool RIGHT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 0 },
         { 0, 0, 0, 0, 1, 1 },
     };
 
@@ -135,7 +135,7 @@ const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
     {
         { 1, 1, 1, 1, 1, 1 },
         { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
+        { 1, 1, 1, 1, 1, 0 },
         { 0, 0, 0, 0, 1, 1 },
     };
 
@@ -448,15 +448,15 @@ void set_key_states()
 
                         if (keycode != KC_NULL)
                             Keyboard.press(keycode);
+                    }
 
-                        if (KeymapProvider::is_unstick_key(_sideDesignator,
-                            get_current_layer_based_on_modifier_state(), i, j))
-                        {
-                            // If we've pressed a layer unstick key, then we've satisfied
-                            // our queued action if it exists
-                            _isLayer1ModifierActionQueued = false;
-                            _isLayer2ModifierActionQueued = false;
-                        }
+                    if (KeymapProvider::is_unstick_key(_sideDesignator,
+                        get_current_layer_based_on_modifier_state(), i, j))
+                    {
+                        // If we've pressed a layer unstick key, then we've satisfied
+                        // our queued action if it exists
+                        _isLayer1ModifierActionQueued = false;
+                        _isLayer2ModifierActionQueued = false;
                     }
                 }
                 else
