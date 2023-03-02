@@ -61,13 +61,6 @@ const unsigned char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KEY_LEFT_SHIFT,  KEY_F11,      KEY_F12, KC_NULL, KC_NULL, KEY_PRINT_SCREEN },
         { KC_NULL,         KC_NULL,      KC_NULL, KC_NULL, KC_LM,   ' '              }
     };
-const bool LEFT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
-    {
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1 },
-        { 1, 1, 0, 0, 0, 0 },
-    };
 
 //Left Layer 2
 const int LEFT_LAYER2_MODIFIER_KEY_ROW_INDEX = 3;
@@ -79,14 +72,6 @@ const unsigned char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KEY_TAB,        KC_NULL,      '$',      '4',     '5',     '6'   },
         { KEY_LEFT_SHIFT, KC_NULL,      KC_NULL,  '7',     '8',     '9'   },
         { KC_NULL,        KC_NULL,      KC_NULL,  KC_NULL, KC_LM,   ' '   }
-    };
-
-const bool LEFT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
-    {
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 1, 1, 1, 1 },
-        { 1, 1, 0, 0, 0, 0 },
     };
 
 //Right Layer 0
@@ -111,13 +96,6 @@ const unsigned char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,         KEY_RIGHT_SHIFT },
         { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,         KC_NULL }
     };
-const bool RIGHT_LAYER1_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
-    {
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 0 },
-        { 0, 0, 0, 0, 1, 1 },
-    };
 
 //Right Layer 2
 const int RIGHT_LAYER2_MODIFIER_KEY_ROW_INDEX = 3;
@@ -130,15 +108,6 @@ const unsigned char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { '+',     '!',     '[',     ']',     '\\',    KEY_RIGHT_SHIFT },
         { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KC_NULL, KC_NULL }
     };
-
-const bool RIGHT_LAYER2_IS_UNSTICK_KEY[ROW_COUNT][COLUMN_COUNT] =
-    {
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 1, 1, 1, 1, 1, 0 },
-        { 0, 0, 0, 0, 1, 1 },
-    };
-
 
 //Classes
 class KeymapProvider
@@ -172,36 +141,6 @@ class KeymapProvider
             }
 
             return KC_NULL;
-        }
-
-        static bool is_unstick_key(int sidedesignator, int layerindex, int row, int col)
-        {
-            if (LEFT_SIDE_DESIGNATOR == sidedesignator)
-            {
-                switch(layerindex)
-                {
-                    case 0:
-                        return true;
-                    case 1:
-                        return LEFT_LAYER1_IS_UNSTICK_KEY[row][col];
-                    case 2:
-                        return LEFT_LAYER2_IS_UNSTICK_KEY[row][col];
-                }
-            }
-            else if (RIGHT_SIDE_DESIGNATOR == sidedesignator)
-            {
-                switch(layerindex)
-                {
-                    case 0:
-                        return true;
-                    case 1:
-                        return RIGHT_LAYER1_IS_UNSTICK_KEY[row][col];
-                    case 2:
-                        return RIGHT_LAYER2_IS_UNSTICK_KEY[row][col];
-                }
-            }
-
-            return false;
         }
 
         static int get_layer1_modifier_key_row(int sidedesignator)
@@ -286,14 +225,11 @@ byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 
 // Layer Variables
-//TODO remove all the sticky code
 //TODO fix "de-shift" issue
 bool _isLayer1ModifierKeyHeld = false;
-bool _isLayer1ModifierActionQueued = false;
 bool _hasLayer1ActionBeenPerformed = false;
 unsigned long _layer1HoldStart = 0;
 bool _isLayer2ModifierKeyHeld = false;
-bool _isLayer2ModifierActionQueued = false;
 bool _hasLayer2ActionBeenPerformed = false;
 unsigned long _layer2HoldStart = 0;
 
@@ -385,7 +321,7 @@ void set_key_states()
     {
         for (int j = 0; j < COLUMN_COUNT; j++)
         {
-            if (!_hasModBeenApplied && _isModiferKeyHeld && has_reached_mod_application_delay(
+            if (!_hasModBeenApplied && _isModiferKeyHeld && has_reached_time_threshold(
                 _modifierHoldStart, DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT))
             {
                 _hasModBeenApplied = true;
@@ -407,26 +343,16 @@ void set_key_states()
                     {
                         // We've started pressing down the layer 1 modifier key.
                         _isLayer1ModifierKeyHeld = true;
-                        _isLayer1ModifierActionQueued = true;
                         _hasLayer1ActionBeenPerformed = false;
                         _layer1HoldStart = millis();
-
-                        // Cancel our Layer2 action.
-                        if (!_isLayer2ModifierKeyHeld)
-                            _isLayer2ModifierActionQueued = false;
                     }
                     else if (KeymapProvider::get_layer2_modifier_key_row(_sideDesignator) == i
                         && KeymapProvider::get_layer2_modifier_key_col(_sideDesignator) == j)
                     {
                         // We've started pressing down the layer 2 modifier key.
                         _isLayer2ModifierKeyHeld = true;
-                        _isLayer2ModifierActionQueued = true;
                         _hasLayer2ActionBeenPerformed = false;
                         _layer2HoldStart = millis();
-
-                        // Cancel our Layer1 action.
-                        if (!_isLayer1ModifierKeyHeld)
-                            _isLayer1ModifierActionQueued = false;
                     }
                     else if (KeymapProvider::get_modifier_key_row(_sideDesignator) == i
                         && KeymapProvider::get_modifier_key_col(_sideDesignator) == j)
@@ -436,15 +362,6 @@ void set_key_states()
                         _hasModBeenApplied = false;
                         _modifierLayerAtHoldStart = get_current_layer_based_on_modifier_state();
                         _modifierHoldStart = millis();
-
-                        if (KeymapProvider::is_unstick_key(_sideDesignator,
-                            get_current_layer_based_on_modifier_state(), i, j))
-                        {
-                            // If we've pressed a layer unstick key, then we've satisfied
-                            // our queued action if it exists
-                            _isLayer1ModifierActionQueued = false;
-                            _isLayer2ModifierActionQueued = false;
-                        }
                     }
                     else
                     {
@@ -462,15 +379,6 @@ void set_key_states()
 
                         if (keycode != KC_NULL)
                             Keyboard.press(keycode);
-
-                        if (KeymapProvider::is_unstick_key(_sideDesignator,
-                            get_current_layer_based_on_modifier_state(), i, j))
-                        {
-                            // If we've pressed a layer unstick key, then we've satisfied
-                            // our queued action if it exists
-                            _isLayer1ModifierActionQueued = false;
-                            _isLayer2ModifierActionQueued = false;
-                        }
                     }
 
                 }
@@ -484,10 +392,9 @@ void set_key_states()
                         _isLayer1ModifierKeyHeld = false;
 
                         // Perform our tap action if we meet the requirements.
-                        if (!has_reached_mod_tap_timeout(_layer1HoldStart, TAP_ACTION_TIMEOUT)
+                        if (!has_reached_time_threshold(_layer1HoldStart, TAP_ACTION_TIMEOUT)
                             && !_hasLayer1ActionBeenPerformed)
                         {
-                            _isLayer1ModifierActionQueued = false;
                             Keyboard.write(KeymapProvider::get_keycode_at(_sideDesignator,
                               0,
                               KeymapProvider::get_layer1_modifier_key_row(_sideDesignator),
@@ -501,10 +408,9 @@ void set_key_states()
                         _isLayer2ModifierKeyHeld = false;
 
                         // Perform our tap action if we meet the requirements.
-                        if (!has_reached_mod_tap_timeout(_layer2HoldStart, TAP_ACTION_TIMEOUT)
+                        if (!has_reached_time_threshold(_layer2HoldStart, TAP_ACTION_TIMEOUT)
                             && !_hasLayer2ActionBeenPerformed)
                         {
-                            _isLayer2ModifierActionQueued = false;
                             Keyboard.write(KeymapProvider::get_keycode_at(_sideDesignator,
                               0,
                               KeymapProvider::get_layer2_modifier_key_row(_sideDesignator),
@@ -518,7 +424,7 @@ void set_key_states()
                         _isModiferKeyHeld = false;
 
                         // Perform our tap action if we meet the requirements.
-                        if (!has_reached_mod_tap_timeout(
+                        if (!has_reached_time_threshold(
                             _modifierHoldStart, DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT))
                         {
                             switch(_sideDesignator)
@@ -556,23 +462,18 @@ void set_key_states()
     }
 }
 
-bool has_reached_mod_tap_timeout(unsigned long holdStart, unsigned long timeout)
-{
-    return ((millis()-holdStart) >= timeout);
-}
-
-bool has_reached_mod_application_delay(unsigned long holdStart, unsigned long timeout)
+bool has_reached_time_threshold(unsigned long holdStart, unsigned long timeout)
 {
     return ((millis()-holdStart) >= timeout);
 }
 
 int get_current_layer_based_on_modifier_state()
 {
-    if ((_isLayer2ModifierKeyHeld || _isLayer2ModifierActionQueued)
-        && has_reached_mod_application_delay(_layer2HoldStart, MODIFIER_APPLY_DELAY))
+    if (_isLayer2ModifierKeyHeld
+            && has_reached_time_threshold(_layer2HoldStart, MODIFIER_APPLY_DELAY))
         return 2;
-    if ((_isLayer1ModifierKeyHeld || _isLayer1ModifierActionQueued)
-        && has_reached_mod_application_delay(_layer1HoldStart, MODIFIER_APPLY_DELAY))
+    if (_isLayer1ModifierKeyHeld
+            && has_reached_time_threshold(_layer1HoldStart, MODIFIER_APPLY_DELAY))
         return 1;
     return 0;
 }
