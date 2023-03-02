@@ -91,10 +91,11 @@ const int RIGHT_LAYER1_MODIFIER_KEY_COL_INDEX = 1;
 
 const unsigned char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KC_NULL,        KC_NULL,        KC_NULL,         KEY_DELETE,      KEY_RIGHT_ALT },
-        { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW,    KEY_RIGHT_ARROW, KC_NULL },
-        { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,         KEY_RIGHT_SHIFT },
-        { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,         KC_NULL }
+        { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,         KEY_DELETE, KEY_RIGHT_ALT },
+        { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW,    KEY_RIGHT_ARROW, KC_NULL,    KC_NULL },
+        { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,         KC_NULL,    KEY_RIGHT_SHIFT },
+        { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,         KC_NULL,    KC_NULL }
+
     };
 
 //Right Layer 2
