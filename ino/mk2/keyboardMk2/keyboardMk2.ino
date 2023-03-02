@@ -10,7 +10,7 @@ const int LOOP_DELAY_TIME = 20;
 
 const unsigned long TAP_ACTION_TIMEOUT = 200;
 const unsigned long MODIFIER_APPLY_DELAY = 50;
-const unsigned long DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT = 200;
+const unsigned long DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT = 100;
 
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
@@ -286,6 +286,8 @@ byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 
 // Layer Variables
+//TODO remove all the sticky code
+//TODO fix "de-shift" issue
 bool _isLayer1ModifierKeyHeld = false;
 bool _isLayer1ModifierActionQueued = false;
 bool _hasLayer1ActionBeenPerformed = false;
@@ -297,7 +299,8 @@ unsigned long _layer2HoldStart = 0;
 
 // Default Modifier Variables
 bool _isModiferKeyHeld = false;
-unsigned int _modifierLayerAtHoldStart = 0;
+bool _hasModBeenApplied = false;
+int _modifierLayerAtHoldStart = 0;
 unsigned long _modifierHoldStart = 0;
 
 //Init
@@ -382,9 +385,10 @@ void set_key_states()
     {
         for (int j = 0; j < COLUMN_COUNT; j++)
         {
-            if (_isModiferKeyHeld && has_reached_mod_application_delay(
-                _modifierHoldStart, MODIFIER_APPLY_DELAY))
+            if (!_hasModBeenApplied && _isModiferKeyHeld && has_reached_mod_application_delay(
+                _modifierHoldStart, DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT))
             {
+                _hasModBeenApplied = true;
                 Keyboard.press(KeymapProvider::get_keycode_at(
                             _sideDesignator,
                             _modifierLayerAtHoldStart,
@@ -429,8 +433,18 @@ void set_key_states()
                     {
                         // We've started pressing down the default modifier key for this layer.
                         _isModiferKeyHeld = true;
+                        _hasModBeenApplied = false;
                         _modifierLayerAtHoldStart = get_current_layer_based_on_modifier_state();
                         _modifierHoldStart = millis();
+
+                        if (KeymapProvider::is_unstick_key(_sideDesignator,
+                            get_current_layer_based_on_modifier_state(), i, j))
+                        {
+                            // If we've pressed a layer unstick key, then we've satisfied
+                            // our queued action if it exists
+                            _isLayer1ModifierActionQueued = false;
+                            _isLayer2ModifierActionQueued = false;
+                        }
                     }
                     else
                     {
@@ -448,16 +462,17 @@ void set_key_states()
 
                         if (keycode != KC_NULL)
                             Keyboard.press(keycode);
+
+                        if (KeymapProvider::is_unstick_key(_sideDesignator,
+                            get_current_layer_based_on_modifier_state(), i, j))
+                        {
+                            // If we've pressed a layer unstick key, then we've satisfied
+                            // our queued action if it exists
+                            _isLayer1ModifierActionQueued = false;
+                            _isLayer2ModifierActionQueued = false;
+                        }
                     }
 
-                    if (KeymapProvider::is_unstick_key(_sideDesignator,
-                        get_current_layer_based_on_modifier_state(), i, j))
-                    {
-                        // If we've pressed a layer unstick key, then we've satisfied
-                        // our queued action if it exists
-                        _isLayer1ModifierActionQueued = false;
-                        _isLayer2ModifierActionQueued = false;
-                    }
                 }
                 else
                 {
