@@ -3,14 +3,14 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
 
 const unsigned long TAP_ACTION_TIMEOUT = 200;
 const unsigned long MODIFIER_APPLY_DELAY = 50;
-const unsigned long DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT = 100;
+const unsigned long DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT = 150;
 
 const int COLUMN_COUNT = 6;
 const int ROW_COUNT = 4;
