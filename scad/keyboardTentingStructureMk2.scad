@@ -36,18 +36,29 @@ _frameBaseBeamCutoutOffset = 10;
 _baseBeamTriangleCutoutSideLength = _tentBeamWidth*(1/3);
 _baseBeamTriangleStrutPadding = 3;
 _totalSinglePunchSideLength = _baseBeamTriangleCutoutSideLength + _baseBeamTriangleStrutPadding;
+
 _baseBeamTriangleCutoutEdgePadding = 3.5;
 _baseBeamTriangleCutoutLengthOffset = 2.5;
 _baseBeamTriangleCutoutWidthOffset = 5;
-_baseBeamTriangleWidthQuatity = 6;
-_baseBeamTriangleLengthQuatity = 2;
+_baseBeamTriangleWidthQuantity = 6;
+_baseBeamTriangleLengthQuantity = 2;
 
-//todo base connecting beam parameters
+_baseConnectingBeamTriangleCutoutEdgePadding = 3.5;
+_baseConnectingBeamTriangleCutoutLengthOffset = 32;
+_baseConnectingBeamTriangleCutoutWidthOffset = 2.5;
+_baseConnectingBeamTriangleWidthQuantity = 2;
+_baseConnectingBeamTriangleLengthQuantity = 5;
+
+_decorativeFrameBeamCutoutRadius = 5;
+_decorativeFrameBeamCutoutPadding = 5;
+_decorativeFrameBeamCutoutQuantity = 3;
+_decorativeFrameBeamCutoutEdgePadding = 10;
 
 /// MAIN START ///
-//baseBeam();
+//baseConnectingBeam();
 //tentingAssembly();
-tentingStructure();
+decorativeFrameBeam(_tentHeight);
+//tentingStructure();
 //boltChannelPunch(50, _tentBeamThickness+1, _carraigeBeamBoltChannelWidth/2, _carraigeBeamBoltChannelCountersinkWidth/2, _carraigeBeamBoltChannelCountersinkDepth);
 //carraigeBeam(50);
 //carraige();
@@ -110,8 +121,8 @@ module baseBeam()
         lengthSpaceUnit = _baseBeamTriangleCutoutEdgePadding + _baseBeamTriangleCutoutSideLength;
         widthSpaceUnit = _baseBeamTriangleCutoutEdgePadding + _baseBeamTriangleCutoutSideLength;
         translate([_baseBeamTriangleCutoutLengthOffset, _baseBeamTriangleCutoutWidthOffset,-1])
-            for(i=[0:_baseBeamTriangleLengthQuatity-1])
-                for(j=[0:_baseBeamTriangleWidthQuatity-1])
+            for(i=[0:_baseBeamTriangleLengthQuantity-1])
+                for(j=[0:_baseBeamTriangleWidthQuantity-1])
                     translate([lengthSpaceUnit*i,widthSpaceUnit*j,-1])
                         boxTrianglePunch(_baseBeamTriangleCutoutSideLength, _baseBeamTriangleStrutPadding, _tentBaseThickness+2);
     }
@@ -119,15 +130,26 @@ module baseBeam()
 
 module baseConnectingBeam()
 {
-    roundedCube(size=[_tentBaseLength, _tentBeamWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
+    difference()
+    {
+        roundedCube(size=[_tentBaseLength, _tentBeamWidth, _tentBaseThickness], radius=_tentRoundingRadius, apply_to="zmax");
+
+        lengthSpaceUnit = _baseBeamTriangleCutoutEdgePadding + _baseBeamTriangleCutoutSideLength;
+        widthSpaceUnit = _baseBeamTriangleCutoutEdgePadding + _baseBeamTriangleCutoutSideLength;
+        translate([_baseConnectingBeamTriangleCutoutLengthOffset, _baseConnectingBeamTriangleCutoutWidthOffset,-1])
+            for(i=[0:_baseConnectingBeamTriangleLengthQuantity-1])
+                for(j=[0:_baseConnectingBeamTriangleWidthQuantity-1])
+                    translate([lengthSpaceUnit*i,widthSpaceUnit*j,-1])
+                        boxTrianglePunch(_baseBeamTriangleCutoutSideLength, _baseBeamTriangleStrutPadding, _tentBaseThickness+2);
+    }
 }
 
 module mountingFrame()
 {
     union()
     {
-        translate([80,(_tentBaseWidth-_tentBeamWidth)/2,0])
-            decorativeFrameBeam(_tentHeight);
+        translate([80,(_tentBaseWidth-_tentBeamWidth)/2, -_tentBaseThickness])
+            decorativeFrameBeam(_tentHeight+_tentBaseThickness);
 
         // Carraige attachment beam
         translate([10,(_tentBaseWidth-_tentBeamWidth)/2,0])
