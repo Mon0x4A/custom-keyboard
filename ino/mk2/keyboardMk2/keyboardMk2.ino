@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = true;
+const bool IS_LEFT_KEYBOARD_SIDE = false;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -236,7 +236,7 @@ unsigned long _layer2HoldStart = 0;
 
 // Default Modifier Variables
 bool _isModiferKeyHeld = false;
-bool _hasModBeenApplied = false;
+bool _hasModiferActionBeenPerformedOnThisSide = false;
 int _modifierLayerAtHoldStart = 0;
 unsigned long _modifierHoldStart = 0;
 
@@ -322,17 +322,6 @@ void set_key_states()
     {
         for (int j = 0; j < COLUMN_COUNT; j++)
         {
-            if (!_hasModBeenApplied && _isModiferKeyHeld && has_reached_time_threshold(
-                _modifierHoldStart, DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT))
-            {
-                _hasModBeenApplied = true;
-                Keyboard.press(KeymapProvider::get_keycode_at(
-                            _sideDesignator,
-                            _modifierLayerAtHoldStart,
-                            KeymapProvider::get_modifier_key_row(_sideDesignator),
-                            KeymapProvider::get_modifier_key_col(_sideDesignator)));
-            }
-
             // If the swich changed state..
             if (_switchMatrix[i][j] != _switchMatrixPrev[i][j])
             {
@@ -360,9 +349,14 @@ void set_key_states()
                     {
                         // We've started pressing down the default modifier key for this layer.
                         _isModiferKeyHeld = true;
-                        _hasModBeenApplied = false;
+                        _hasModiferActionBeenPerformedOnThisSide = false;
                         _modifierLayerAtHoldStart = get_current_layer_based_on_modifier_state();
                         _modifierHoldStart = millis();
+                        Keyboard.press(KeymapProvider::get_keycode_at(
+                                    _sideDesignator,
+                                    _modifierLayerAtHoldStart,
+                                    KeymapProvider::get_modifier_key_row(_sideDesignator),
+                                    KeymapProvider::get_modifier_key_col(_sideDesignator)));
                     }
                     else
                     {
@@ -377,6 +371,8 @@ void set_key_states()
                             _hasLayer2ActionBeenPerformed = true;
                         if (_isLayer1ModifierKeyHeld)
                             _hasLayer1ActionBeenPerformed = true;
+                        if (_isModiferKeyHeld)
+                            _hasModiferActionBeenPerformedOnThisSide = true;
 
                         if (keycode != KC_NULL)
                             Keyboard.press(keycode);
@@ -424,9 +420,16 @@ void set_key_states()
                         // The modifier key is no longer held.
                         _isModiferKeyHeld = false;
 
+                        Keyboard.release(KeymapProvider::get_keycode_at(
+                                    _sideDesignator,
+                                    _modifierLayerAtHoldStart,
+                                    KeymapProvider::get_modifier_key_row(_sideDesignator),
+                                    KeymapProvider::get_modifier_key_col(_sideDesignator)));
+
                         // Perform our tap action if we meet the requirements.
                         if (!has_reached_time_threshold(
-                            _modifierHoldStart, DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT))
+                            _modifierHoldStart, DEFAULT_MODIFIER_TAP_ACTION_TIMEOUT)
+                            && !_hasModiferActionBeenPerformedOnThisSide)
                         {
                             switch(_sideDesignator)
                             {
@@ -438,12 +441,6 @@ void set_key_states()
                                     break;
                             }
                         }
-
-                        Keyboard.release(KeymapProvider::get_keycode_at(
-                                    _sideDesignator,
-                                    _modifierLayerAtHoldStart,
-                                    KeymapProvider::get_modifier_key_row(_sideDesignator),
-                                    KeymapProvider::get_modifier_key_col(_sideDesignator)));
                     }
                     else
                     {
