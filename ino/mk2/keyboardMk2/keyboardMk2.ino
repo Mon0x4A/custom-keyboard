@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -47,7 +47,7 @@ const unsigned char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { KEY_LEFT_CTRL,  'q',           'w',     'e',     'r',        't'    },
         { KC_NULL,        'a',           's',     'd',     'f',        'g'    },
         { KEY_LEFT_SHIFT, 'z',           'x',     'c',     'v',        'b'    },
-        { KC_NULL,        KC_NULL,       KC_NULL, KC_NULL, KEY_RETURN, ' '    }
+        { KC_NULL,        KC_NULL,       KC_NULL, KC_NULL, KEY_TAB,    ' '    }
     };
 
 //Left Layer 1
@@ -57,7 +57,7 @@ const int LEFT_LAYER1_MODIFIER_KEY_COL_INDEX = 4;
 const unsigned char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KEY_LEFT_ALT,    KEY_F1,       KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5           },
-        { KEY_TAB,         KEY_F6,       KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10          },
+        { KC_NULL,         KEY_F6,       KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10          },
         { KEY_LEFT_SHIFT,  KEY_F11,      KEY_F12, KC_NULL, KC_NULL, KEY_PRINT_SCREEN },
         { KC_NULL,         KC_NULL,      KC_NULL, KC_NULL, KC_LM,   ' '              }
     };
@@ -69,7 +69,7 @@ const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 5;
 const unsigned char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KEY_LEFT_GUI,   '`',          '0',      '1',     '2',     '3'   },
-        { KEY_TAB,        KC_NULL,      '$',      '4',     '5',     '6'   },
+        { KC_NULL,        KC_NULL,      '$',      '4',     '5',     '6'   },
         { KEY_LEFT_SHIFT, KC_NULL,      KC_NULL,  '7',     '8',     '9'   },
         { KC_NULL,        KC_NULL,      KC_NULL,  KC_NULL, KC_LM,   ' '   }
     };
@@ -79,10 +79,10 @@ const int RIGHT_MODIFIER_KEY_ROW_INDEX = 0;
 const int RIGHT_MODIFIER_KEY_COL_INDEX = 5;
 const unsigned char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { 'y',           'u',     'i',     'o',     'p',     KEY_RIGHT_CTRL  },
-        { 'h',           'j',     'k',     'l',     ';',     KC_NULL         },
-        { 'n',           'm',     ',',     '.',     '/',     KEY_RIGHT_SHIFT },
-        { KEY_BACKSPACE, KEY_TAB, KC_NULL, KC_NULL, KC_NULL, KC_NULL         }
+        { 'y',           'u',        'i',     'o',     'p',     KEY_RIGHT_CTRL  },
+        { 'h',           'j',        'k',     'l',     ';',     KC_NULL         },
+        { 'n',           'm',        ',',     '.',     '/',     KEY_RIGHT_SHIFT },
+        { KEY_BACKSPACE, KEY_RETURN, KC_NULL, KC_NULL, KC_NULL, KC_NULL         }
     };
 
 //Right Layer 1
