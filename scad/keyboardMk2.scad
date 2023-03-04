@@ -32,8 +32,8 @@ _keyCapShankOffsetTowardSwitch = 3;
 _keyCap1uLength = _key1uLength - _keyCapSpacingOffset;
 _keyCap1uWidth = _key1uWidth - _keyCapSpacingOffset;
 
-_keySwitchCutoutLength = 13.90; //14.05
-_keySwitchCutoutWidth = 13.90; //14.05
+_keySwitchCutoutLength = 13.90;
+_keySwitchCutoutWidth = 13.90;
 
 _backplateLength = (_key1uLength * _backplateColumnCount);
 _backplateWidth = (_key1uWidth * _backplateRowCount);
