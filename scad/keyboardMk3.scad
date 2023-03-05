@@ -38,6 +38,16 @@ _mxPinkyBackplateWidth = (_mxKey1uWidth * _pinkyBackplateRowCount);
 _mxThumbBackplateLength = (_mxKey1uLength * _thumbBackplateColumnCount);
 _mxThumbBackplateWidth = (_mxKey1uWidth * _thumbBackplateRowCount);
 
+_mxHousingLengthPadding = 5;
+_mxHousingWidthPadding = 5;
+_mxHousingBodyDepth = 18;
+_mxHousingWallThickness = 5;
+_mxHousingBaseThickness = 5;
+_mxHousingBackplateCutoutPadding = 1.25;
+_mxHousingBodyRoundingRadius = 4;
+
+_mxBackplateOffsetFromHousing = _mxHousingBaseThickness + 0;
+
 // Kailh Switch Variables
 _kailhSwitchLength = 15;
 _kailhSwitchWidth = 15;
@@ -64,7 +74,7 @@ module keyboard(switchType, isLeftSide)
         union()
         {
             mxHousing(isLeftSide);
-            translate([0,0,0])
+            translate([0,0,_mxBackplateOffsetFromHousing])
                 mxBackplate(isLeftSide);
         }
     }
@@ -77,10 +87,42 @@ module keyboard(switchType, isLeftSide)
 //Bodies
 module mxHousing(isLeftSide)
 {
+    difference()
+    {
+        union()
+        {
+            translate([0,_mxKey1uWidth*(3),0])
+                translate([-_mxHousingWallThickness,-_mxHousingWallThickness,0]) // Zero on origin
+                    housingSubModule(MX_SWITCH_TYPE, _mxPinkyBackplateLength, _mxPinkyBackplateWidth);
+            translate([_mxKey1uLength*(1),_mxKey1uWidth*(1),0])
+                translate([-_mxHousingWallThickness,-_mxHousingWallThickness,0]) // Zero on origin
+                    housingSubModule(MX_SWITCH_TYPE, _mxMainBackplateLength, _mxMainBackplateWidth);
+            translate([_mxKey1uLength*(4),0,0])
+                translate([-_mxHousingWallThickness,-_mxHousingWallThickness,0]) // Zero on origin
+                    housingSubModule(MX_SWITCH_TYPE, _mxThumbBackplateLength, _mxThumbBackplateWidth);
+        }
+        //todo cut out excess
+    }
 }
 
-module housingSubModule(switchType, rowCount, columnCount)
+module housingSubModule(switchType, backplateLength, backplateWidth)
 {
+    if (switchType == MX_SWITCH_TYPE)
+    {
+        difference()
+        {
+            mxHousingLength = backplateLength + (_mxHousingWallThickness*2);
+            mxHousingWidth = backplateWidth + (_mxHousingWallThickness*2);
+            roundedCube(size = [mxHousingLength, mxHousingWidth, _mxHousingBodyDepth], radius=_mxHousingBodyRoundingRadius, apply_to="all");
+
+            // Housing body cut out.
+            wallThicknessLessToleranceGap = _mxHousingWallThickness-(_mxHousingBackplateCutoutPadding);
+            translate([wallThicknessLessToleranceGap, wallThicknessLessToleranceGap, _mxHousingBaseThickness])
+            {
+                roundedCube(size=[backplateLength+(_mxHousingBackplateCutoutPadding*2), backplateWidth+(_mxHousingBackplateCutoutPadding*2), _mxHousingBodyDepth], radius=_mxBackplateRoundingRadius, apply_to="zmax");
+            }
+        }
+    }
 }
 
 module mxBackplate(isLeftSide)
