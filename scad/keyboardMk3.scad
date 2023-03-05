@@ -7,6 +7,9 @@ _m2BoltHoleRadius = _m2BoltHoleDiameter/2;
 MX_SWITCH_TYPE = "mx";
 KAILH_SWITCH_TYPE = "kailh";
 
+KEY_1U_MODIFIER = 1;
+KEY_1_25U_MODIFIER = 1.25;
+
 _mainBackplateRowCount = 3;
 _mainBackplateColumnCount = 5;
 _pinkyBackplateRowCount = 1;
@@ -21,8 +24,10 @@ _mxSwitchWidth = 15;
 _mxSwitchPaddingLength = 2.25;
 _mxSwitchPaddingWidth = 2.25;
 
-_mxKey1uLength = _mxSwitchLength+(_mxSwitchPaddingLength*2);
-_mxKey1uWidth = _mxSwitchWidth+(_mxSwitchPaddingWidth*2);
+_mxKey1uLength = (_mxSwitchLength*KEY_1U_MODIFIER)+(_mxSwitchPaddingLength*2);
+_mxKey1uWidth = (_mxSwitchWidth*KEY_1U_MODIFIER)+(_mxSwitchPaddingWidth*2);
+_mxKey1_25uLength = (_mxSwitchLength*KEY_1U_MODIFIER)+(_mxSwitchPaddingLength*2);
+_mxKey1_25uWidth = (_mxSwitchWidth*KEY_1_25U_MODIFIER)+(_mxSwitchPaddingWidth*2);
 
 _mxKeySwitchCutoutLength = 13.90;
 _mxKeySwitchCutoutWidth = 13.90;
@@ -33,10 +38,10 @@ _mxBackplateGrooveDepth = 1;
 
 _mxMainBackplateLength = (_mxKey1uLength * _mainBackplateColumnCount);
 _mxMainBackplateWidth = (_mxKey1uWidth * _mainBackplateRowCount);
-_mxPinkyBackplateLength = (_mxKey1uLength * _pinkyBackplateColumnCount);
-_mxPinkyBackplateWidth = (_mxKey1uWidth * _pinkyBackplateRowCount);
-_mxThumbBackplateLength = (_mxKey1uLength * _thumbBackplateColumnCount);
-_mxThumbBackplateWidth = (_mxKey1uWidth * _thumbBackplateRowCount);
+_mxPinkyBackplateLength = (_mxKey1_25uLength * _pinkyBackplateColumnCount);
+_mxPinkyBackplateWidth = (_mxKey1_25uWidth * _pinkyBackplateRowCount);
+_mxThumbBackplateLength = (_mxKey1_25uLength * _thumbBackplateColumnCount);
+_mxThumbBackplateWidth = (_mxKey1_25uWidth * _thumbBackplateRowCount);
 
 _mxHousingLengthPadding = 5;
 _mxHousingWidthPadding = 5;
@@ -94,7 +99,7 @@ module mxHousing(isLeftSide)
             translate([0,_mxKey1uWidth*(3),0])
                 translate([-_mxHousingWallThickness,-_mxHousingWallThickness,0]) // Zero on origin
                     housingSubModule(MX_SWITCH_TYPE, _mxPinkyBackplateLength, _mxPinkyBackplateWidth);
-            translate([_mxKey1uLength*(1),_mxKey1uWidth*(1),0])
+            translate([_mxKey1_25uLength*(1),_mxKey1_25uWidth*(1),0])
                 translate([-_mxHousingWallThickness,-_mxHousingWallThickness,0]) // Zero on origin
                     housingSubModule(MX_SWITCH_TYPE, _mxMainBackplateLength, _mxMainBackplateWidth);
             translate([_mxKey1uLength*(4),0,0])
@@ -132,24 +137,24 @@ module mxBackplate(isLeftSide)
         union()
         {
             translate([0,_mxKey1uWidth*(3),0])
-                backplateSubModule(MX_SWITCH_TYPE, _pinkyBackplateRowCount, _pinkyBackplateColumnCount);
-            translate([_mxKey1uLength*(1),_mxKey1uWidth*(1),0])
-                backplateSubModule(MX_SWITCH_TYPE, _mainBackplateRowCount, _mainBackplateColumnCount);
+                backplateSubModule(MX_SWITCH_TYPE, _pinkyBackplateRowCount, _pinkyBackplateColumnCount, _mxKey1_25uLength, _mxKey1_25uWidth);
+            translate([_mxKey1_25uLength*(1),_mxKey1_25uWidth*(1),0])
+                backplateSubModule(MX_SWITCH_TYPE, _mainBackplateRowCount, _mainBackplateColumnCount, _mxKey1uLength, _mxKey1uWidth);
             translate([_mxKey1uLength*(4),0,0])
-                backplateSubModule(MX_SWITCH_TYPE, _thumbBackplateRowCount, _thumbBackplateColumnCount);
+                backplateSubModule(MX_SWITCH_TYPE, _thumbBackplateRowCount, _thumbBackplateColumnCount, _mxKey1_25uLength, _mxKey1_25uWidth);
         }
     }
 }
 
-module backplateSubModule(switchType, rowCount, columnCount)
+module backplateSubModule(switchType, rowCount, columnCount, keyLength, keyWidth)
 {
     for (i=[0:rowCount-1])
         for (j=[0:columnCount-1])
         {
             if (switchType == MX_SWITCH_TYPE)
             {
-                translate([_mxKey1uLength*j,_mxKey1uWidth*i, 0])
-                    mxKey1u();
+                translate([keyLength*j,keyWidth*i, 0])
+                    mxKey(keyLength, keyWidth);
             }
             else if (switchType == KAILH_SWITCH_TYPE)
             {
@@ -158,13 +163,13 @@ module backplateSubModule(switchType, rowCount, columnCount)
         }
 }
 
-module mxKey1u()
+module mxKey(length, width)
 {
     difference()
     {
-        roundedCube(size = [_mxKey1uLength, _mxKey1uWidth, _mxBackplateDepth], radius=1.25, apply_to="zmax");
+        roundedCube(size = [length, width, _mxBackplateDepth], radius=1.25, apply_to="zmax");
 
-        translate([_mxKey1uLength/2, _mxKey1uWidth/2, -1]) //forward to final position
+        translate([length/2, width/2, -1]) //forward to final position
             translate([-_mxKeySwitchCutoutLength/2, -_mxKeySwitchCutoutWidth/2, 0]) //back to origin
                 cube([_mxKeySwitchCutoutLength, _mxKeySwitchCutoutWidth, _mxBackplateDepth+2]);
     }
