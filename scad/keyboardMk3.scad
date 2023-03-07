@@ -43,20 +43,21 @@ _pinkyBackplateWidth = (_key1_25uWidth * _pinkyBackplateRowCount);
 _thumbBackplateLength = (_key1_25uLength * _thumbBackplateColumnCount);
 _thumbBackplateWidth = (_key1_25uWidth * _thumbBackplateRowCount);
 
-_housingWallThickness = 5;
-_housingBaseThickness = 5;
+_housingWallThickness = 3.5;
+_housingBaseThickness = 3;
 _housingBackplateCutoutPadding = 1.25;
 _housingBodyRoundingRadius = 4;
 
 // MX Switch Variables
 _mxBackplateDepth = 5;
-_mxHousingBodyDepth = 10;
+_mxHousingBodyDepth = 18;
 _mxBackplateOffsetFromHousing = _housingBaseThickness + 0;
 
 // Kailh Switch Variables
-_kailhBackplateDepth = 5;
-_kailhHousingBodyDepth = 18;
-_kailhBackplateOffsetFromHousing = _housingBaseThickness + 0;
+_kailhBackplateDepth = 3;
+_kailhHousingBodyDepth = 10;
+_kailhBackplateRiserHeight = 3;
+_kailhBackplateOffsetFromHousing = _housingBaseThickness + _kailhBackplateRiserHeight;
 
 // Ardiuno Variables
 _arduinoMicroBodyLength = 19.2;
@@ -68,12 +69,12 @@ _arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdge
 _arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
 _arduinoHousingBaseDepth = 3;
 
-_arduinoLengthPlacment = _key1uWidth*(6);
-_arduinoWidthPlacment = 24;
+_arduinoLengthPlacment = _key1uWidth*(6)+1.3;
+_arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-keyboard(MX_SWITCH_TYPE, isLeftSide=true);
+keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //arduinoHousing();
 
 /// MAIN END ///
@@ -82,18 +83,19 @@ module keyboard(switchType, isLeftSide)
 {
     backplateDepth = (switchType == MX_SWITCH_TYPE) ? _mxBackplateDepth : _kailhBackplateDepth;
     backplateOffsetFromHousing = (switchType == MX_SWITCH_TYPE) ? _mxBackplateOffsetFromHousing : _kailhBackplateOffsetFromHousing;
+    housingDepth = (switchType == MX_SWITCH_TYPE) ? _mxHousingBodyDepth : _kailhHousingBodyDepth;
     union()
     {
-        housing(isLeftSide);
+        housing(housingDepth);
         translate([0,0,backplateOffsetFromHousing])
-            backplate(isLeftSide, backplateDepth);
+            backplate(backplateDepth);
         translate([_arduinoLengthPlacment,_arduinoWidthPlacment,0])
             arduinoHousing();
     }
 }
 
 //Bodies
-module housing(isLeftSide)
+module housing(housingDepth)
 {
     difference()
     {
@@ -101,13 +103,13 @@ module housing(isLeftSide)
         {
             translate([0,_key1uWidth*(3),0])
                 translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
-                    housingSubModule(_pinkyBackplateLength, _pinkyBackplateWidth, _mxHousingBodyDepth);
+                    housingSubModule(_pinkyBackplateLength, _pinkyBackplateWidth, housingDepth);
             translate([_key1_25uLength*(1),_key1_25uWidth*(1),0])
                 translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
-                    housingSubModule(_mainBackplateLength, _mainBackplateWidth, _mxHousingBodyDepth);
+                    housingSubModule(_mainBackplateLength, _mainBackplateWidth, housingDepth);
             translate([_key1uLength*(4),0,0])
                 translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
-                    housingSubModule(_thumbBackplateLength, _thumbBackplateWidth, _mxHousingBodyDepth);
+                    housingSubModule(_thumbBackplateLength, _thumbBackplateWidth, housingDepth);
         }
         //todo cut out excess
     }
@@ -130,19 +132,16 @@ module housingSubModule(backplateLength, backplateWidth, housingDepth)
     }
 }
 
-module backplate(isLeftSide, backplateDepth)
+module backplate(backplateDepth)
 {
-    if (isLeftSide)
+    union()
     {
-        union()
-        {
-            translate([0,_key1uWidth*(3),0])
-                backplateSubModule(_pinkyBackplateRowCount, _pinkyBackplateColumnCount, _key1_25uLength, _key1_25uWidth, backplateDepth);
-            translate([_key1_25uLength*(1),_key1_25uWidth*(1),0])
-                backplateSubModule(_mainBackplateRowCount, _mainBackplateColumnCount, _key1uLength, _key1uWidth, backplateDepth);
-            translate([_key1uLength*(4),0,0])
-                backplateSubModule(_thumbBackplateRowCount, _thumbBackplateColumnCount, _key1_25uLength, _key1_25uWidth, backplateDepth);
-        }
+        translate([0,_key1uWidth*(3),0])
+            backplateSubModule(_pinkyBackplateRowCount, _pinkyBackplateColumnCount, _key1_25uLength, _key1_25uWidth, backplateDepth);
+        translate([_key1_25uLength*(1),_key1_25uWidth*(1),0])
+            backplateSubModule(_mainBackplateRowCount, _mainBackplateColumnCount, _key1uLength, _key1uWidth, backplateDepth);
+        translate([_key1uLength*(4),0,0])
+            backplateSubModule(_thumbBackplateRowCount, _thumbBackplateColumnCount, _key1_25uLength, _key1_25uWidth, backplateDepth);
     }
 }
 
@@ -172,7 +171,13 @@ module arduinoHousing()
 {
     union()
     {
-        roundedCube(size = [_arduinoHousingBaseLength, _arduinoHousingBaseWidth, _arduinoHousingBaseDepth], radius=1.5, apply_to="z");
+        difference()
+        {
+            arbitraryDepth = 10;
+            housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth, arbitraryDepth);
+            //translate([0,0,_arduinoHousingBaseDepth])
+            //    cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth, arbitraryDepth]);
+        }
         
         translate([_arduinoHousingLengthEdgePadding, _arduinoHousingWidthEdgePadding, 0])
             arduinoMicroPunch();
