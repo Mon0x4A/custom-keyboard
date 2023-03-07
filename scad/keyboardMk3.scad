@@ -50,7 +50,7 @@ _housingBodyRoundingRadius = 4;
 
 // MX Switch Variables
 _mxBackplateDepth = 5;
-_mxHousingBodyDepth = 18;
+_mxHousingBodyDepth = 10;
 _mxBackplateOffsetFromHousing = _housingBaseThickness + 0;
 
 // Kailh Switch Variables
@@ -58,9 +58,23 @@ _kailhBackplateDepth = 5;
 _kailhHousingBodyDepth = 18;
 _kailhBackplateOffsetFromHousing = _housingBaseThickness + 0;
 
+// Ardiuno Variables
+_arduinoMicroBodyLength = 19.2;
+_arduinoMicroBodyWidth = 36.2;
+
+_arduinoHousingLengthEdgePadding = 4;
+_arduinoHousingWidthEdgePadding = 4;
+_arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdgePadding*2);
+_arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
+_arduinoHousingBaseDepth = 3;
+
+_arduinoLengthPlacment = _key1uWidth*(6);
+_arduinoWidthPlacment = 24;
+
 /// MAIN START ///
 
 keyboard(MX_SWITCH_TYPE, isLeftSide=true);
+//arduinoHousing();
 
 /// MAIN END ///
 
@@ -73,6 +87,8 @@ module keyboard(switchType, isLeftSide)
         housing(isLeftSide);
         translate([0,0,backplateOffsetFromHousing])
             backplate(isLeftSide, backplateDepth);
+        translate([_arduinoLengthPlacment,_arduinoWidthPlacment,0])
+            arduinoHousing();
     }
 }
 
@@ -152,9 +168,41 @@ module keyUnit(length, width, depth)
     }
 }
 
-module arudinoHousing()
+module arduinoHousing()
 {
-    //todo here
+    union()
+    {
+        roundedCube(size = [_arduinoHousingBaseLength, _arduinoHousingBaseWidth, _arduinoHousingBaseDepth], radius=1.5, apply_to="z");
+        
+        translate([_arduinoHousingLengthEdgePadding, _arduinoHousingWidthEdgePadding, 0])
+            arduinoMicroPunch();
+    }
+}
+
+//Punches
+module arduinoMicroPunch()
+{
+    arduinoMicroBodyLength = _arduinoMicroBodyLength;
+    arduinoMicroBodyWidth = _arduinoMicroBodyWidth;
+    arduinoMicroBodyDepth = 3.9;
+
+    miniUsbPortLength = 7.8;
+    miniUsbPortWidth = 9.5 + 10; //plus an extention for hole punching
+    miniUsbPortDepth = 4.5;
+    miniUsbDepthCutInToBody = 2;
+
+    miniUsbOnBoardWidth = 7;
+    miniUsbPortOverhang = 2;
+
+    union()
+    {
+        cube([arduinoMicroBodyLength, arduinoMicroBodyWidth, arduinoMicroBodyDepth]);
+
+        translate([(arduinoMicroBodyLength-miniUsbPortLength)/2, arduinoMicroBodyWidth-(miniUsbOnBoardWidth), arduinoMicroBodyDepth-miniUsbDepthCutInToBody])
+        {
+            cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
+        }
+    }
 }
 
 //Utility

@@ -490,8 +490,6 @@ module arduinoMicroPunch()
         {
             cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
         }
-
-
     }
 }
 
