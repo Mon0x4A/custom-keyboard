@@ -63,8 +63,8 @@ _kailhBackplateOffsetFromHousing = _housingBaseThickness + _kailhBackplateRiserH
 _arduinoMicroBodyLength = 19.2;
 _arduinoMicroBodyWidth = 36.2;
 
-_arduinoHousingLengthEdgePadding = 4;
-_arduinoHousingWidthEdgePadding = 4;
+_arduinoHousingLengthEdgePadding = 6;
+_arduinoHousingWidthEdgePadding = 6;
 _arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdgePadding*2);
 _arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
 _arduinoHousingBaseDepth = 3;
@@ -74,8 +74,9 @@ _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //arduinoHousing();
+kailhKeycapShank();
 
 /// MAIN END ///
 
@@ -174,13 +175,58 @@ module arduinoHousing()
         difference()
         {
             arbitraryDepth = 10;
-            housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth, arbitraryDepth);
+            housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), arbitraryDepth);
             //translate([0,0,_arduinoHousingBaseDepth])
             //    cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth, arbitraryDepth]);
         }
-        
-        translate([_arduinoHousingLengthEdgePadding, _arduinoHousingWidthEdgePadding, 0])
+
+        paddingOffsetAdjustment = 0.25;
+        translate([_arduinoHousingLengthEdgePadding-paddingOffsetAdjustment, _arduinoHousingWidthEdgePadding-paddingOffsetAdjustment, 0])
             arduinoMicroPunch();
+    }
+}
+
+module kailhKeycapTop(length, width)
+{
+}
+
+module kailhKeycapShank()
+{
+    printingTolerance = 0.05;
+    switchInterfaceShankLength = 4.25;
+    switchInterfaceShankWidth = 1.20 - printingTolerance;
+    switchInterfaceShankDepth = 3 - printingTolerance;
+    switchInterfaceShankCenterToCenter = 5.70;
+    capInterfaceShankLength = 2;
+    capInterfaceShankWidth = 1.5-printingTolerance;
+    capInterfaceShankDepth = switchInterfaceShankDepth-printingTolerance;
+    capInterfaceShankCenterToCenter = switchInterfaceShankCenterToCenter;
+    shankInterfaceConnectorLength = 1;
+    shankInterfaceConnectorWidth = 8;
+    shankInterfaceConnectorDepth = switchInterfaceShankDepth;
+
+    union()
+    {
+        //Cap interface
+        translate([0,0,0])
+            cube([capInterfaceShankLength, capInterfaceShankWidth, capInterfaceShankDepth]);
+        translate([0,capInterfaceShankCenterToCenter,0])
+            cube([capInterfaceShankLength, capInterfaceShankWidth, capInterfaceShankDepth]);
+
+        //Interface connector
+        shankInterfaceCenteringWidth = ((capInterfaceShankCenterToCenter+capInterfaceShankWidth)-shankInterfaceConnectorWidth)/2;
+        translate([capInterfaceShankLength,shankInterfaceCenteringWidth,0])
+            cube([shankInterfaceConnectorLength, shankInterfaceConnectorWidth, shankInterfaceConnectorDepth]);
+
+        //Switch interface
+        centeringWidth = ((shankInterfaceConnectorWidth-(switchInterfaceShankCenterToCenter+switchInterfaceShankWidth))/2)+shankInterfaceCenteringWidth;
+        translate([0,centeringWidth,0])
+        {
+            translate([capInterfaceShankLength+shankInterfaceConnectorLength,0,0])
+                cube([switchInterfaceShankLength, switchInterfaceShankWidth, switchInterfaceShankDepth]);
+            translate([capInterfaceShankLength+shankInterfaceConnectorLength, switchInterfaceShankCenterToCenter,0])
+                cube([switchInterfaceShankLength, switchInterfaceShankWidth, switchInterfaceShankDepth]);
+        }
     }
 }
 
