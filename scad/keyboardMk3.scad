@@ -58,6 +58,17 @@ _kailhBackplateDepth = 3;
 _kailhHousingBodyDepth = 10;
 _kailhBackplateRiserHeight = 3;
 _kailhBackplateOffsetFromHousing = _housingBaseThickness + _kailhBackplateRiserHeight;
+_kailhKeyCapDepth = 2.5;
+
+//Keycap Variables
+_keyCapSpacingOffset = 0.5;
+_keyCapWallThickness = 2;
+_keyCapRoundingRadius = 3;
+
+_keyCap1uLength = _key1uLength - _keyCapSpacingOffset;
+_keyCap1uWidth = _key1uWidth - _keyCapSpacingOffset;
+_keyCap1_25uLength = _key1_25uLength - _keyCapSpacingOffset;
+_keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 
 // Ardiuno Variables
 _arduinoMicroBodyLength = 19.2;
@@ -76,7 +87,8 @@ _arduinoWidthPlacment = 24.5;
 
 //keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //arduinoHousing();
-kailhKeycapShank();
+kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
+//kailhKeycapShank();
 
 /// MAIN END ///
 
@@ -186,8 +198,34 @@ module arduinoHousing()
     }
 }
 
-module kailhKeycapTop(length, width)
+module kailhKeyCapTop(length, width, depth)
 {
+    capInterfaceShankCenterToCenter = 5.70;
+    capInterfaceShankWidth = 3.3;
+    capInterfaceShankDepth = 2;
+    capInterfaceShankLength = 1.9;
+    totalCapInterfaceLength = capInterfaceShankCenterToCenter+capInterfaceShankLength;
+
+    difference()
+    {
+        difference()
+        {
+            baseCapDepth = 20;
+            // form the base cap
+            roundedCube(size=[length, width, baseCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
+            //cut to the desired depth
+            translate([-1,-1,depth])
+                cube([length+2,width+2,baseCapDepth]);
+        }
+
+        translate([(length-totalCapInterfaceLength)/2,(width-capInterfaceShankWidth)/2,1])
+            union()
+            {
+                cube([capInterfaceShankLength,capInterfaceShankWidth,capInterfaceShankDepth+1]);
+                translate([capInterfaceShankCenterToCenter,0,0])
+                    cube([capInterfaceShankLength,capInterfaceShankWidth,capInterfaceShankDepth+1]);
+            }
+    }
 }
 
 module kailhKeycapShank()
