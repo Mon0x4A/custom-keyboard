@@ -42,12 +42,15 @@ const int RIGHT_SIDE_DESIGNATOR = 69;
 //Left Layer 0
 const int LEFT_MODIFIER_KEY_ROW_INDEX = 0;
 const int LEFT_MODIFIER_KEY_COL_INDEX = 0;
+// NOTE: The left layer maps use the right shift because left shift is what is
+// pressed and released during the 'Keyboard.write()' calls. Thus firing unwanted
+// release events if the physical left shift key is held during that.
 const unsigned char LEFT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_LEFT_CTRL,  'q',           'w',     'e',     'r',        't'    },
-        { KC_NULL,        'a',           's',     'd',     'f',        'g'    },
-        { KEY_LEFT_SHIFT, 'z',           'x',     'c',     'v',        'b'    },
-        { KC_NULL,        KC_NULL,       KC_NULL, KC_NULL, KEY_TAB,    ' '    }
+        { KEY_LEFT_CTRL,   'q',           'w',     'e',     'r',        't'    },
+        { KC_NULL,         'a',           's',     'd',     'f',        'g'    },
+        { KEY_RIGHT_SHIFT, 'z',           'x',     'c',     'v',        'b'    },
+        { KC_NULL,         KC_NULL,       KC_NULL, KC_NULL, KEY_TAB,    ' '    }
     };
 
 //Left Layer 1
@@ -58,7 +61,7 @@ const unsigned char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
         { KEY_LEFT_ALT,    KEY_F1,   KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5   },
         { KC_NULL,         KEY_F6,   KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10  },
-        { KEY_LEFT_SHIFT,  KEY_F11,  KEY_F12, KEY_F13, KEY_F14, KEY_F15  },
+        { KEY_RIGHT_SHIFT, KEY_F11,  KEY_F12, KEY_F13, KEY_F14, KEY_F15  },
         { KC_NULL,         KC_NULL,  KC_NULL, KC_NULL, KC_LM,   ' '      }
     };
 
@@ -68,10 +71,10 @@ const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 5;
 
 const unsigned char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_LEFT_GUI,   '`',       '0',      '1',     '2',     '3'   },
-        { KC_NULL,        '@',       '$',      '4',     '5',     '6'   },
-        { KEY_LEFT_SHIFT, '<',       '>',      '7',     '8',     '9'   },
-        { KC_NULL,        KC_NULL,   KC_NULL,  KC_NULL, KC_LM,   ' '   }
+        { KEY_LEFT_GUI,    '`',       '0',      '1',     '2',     '3'   },
+        { KC_NULL,         '@',       '$',      '4',     '5',     '6'   },
+        { KEY_RIGHT_SHIFT, '<',       '>',      '7',     '8',     '9'   },
+        { KC_NULL,         KC_NULL,   KC_NULL,  KC_NULL, KC_LM,   ' '   }
     };
 
 //Right Layer 0
@@ -226,7 +229,6 @@ byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 
 // Layer Variables
-//TODO fix "de-shift" issue
 bool _isLayer1ModifierKeyHeld = false;
 bool _hasLayer1ActionBeenPerformed = false;
 unsigned long _layer1HoldStart = 0;
