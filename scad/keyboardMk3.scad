@@ -78,16 +78,16 @@ _arduinoHousingLengthEdgePadding = 6;
 _arduinoHousingWidthEdgePadding = 6;
 _arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdgePadding*2);
 _arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
-_arduinoHousingBaseDepth = 3;
+_arduinoHousingBaseDepth = 4;
 
 _arduinoLengthPlacment = _key1uWidth*(6)+1.3;
 _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //arduinoHousing();
-kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
+//kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
 //kailhKeycapShank();
 
 /// MAIN END ///
@@ -111,6 +111,7 @@ module keyboard(switchType, isLeftSide)
 module housing(housingDepth)
 {
     difference()
+    //union()
     {
         union()
         {
@@ -124,7 +125,34 @@ module housing(housingDepth)
                 translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
                     housingSubModule(_thumbBackplateLength, _thumbBackplateWidth, housingDepth);
         }
-        //todo cut out excess
+
+        // Housing submodule overlay cutouts
+        union()
+        {
+            cutoutOverhang = 5;
+            pinkyWallCutoutLength = _pinkyBackplateLength+(_housingBackplateCutoutPadding*2)+cutoutOverhang;
+            pinkyWallCutoutWidth = _pinkyBackplateWidth+(_housingBackplateCutoutPadding*2);
+            translate([-_housingBackplateCutoutPadding,_key1uWidth*(3)-_housingBackplateCutoutPadding,_housingBaseThickness])
+                roundedCube(size = [pinkyWallCutoutLength, pinkyWallCutoutWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="zmax");
+
+            mainWallCutoutLength = _mainBackplateLength+(_housingBackplateCutoutPadding*2);
+            mainWallCutoutWidth = _mainBackplateWidth+(_housingBackplateCutoutPadding*2);
+            translate([_key1_25uLength*(1)-_housingBackplateCutoutPadding,_key1_25uWidth*(1)-_housingBackplateCutoutPadding,_housingBaseThickness])
+                roundedCube(size = [mainWallCutoutLength, mainWallCutoutWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="zmax");
+
+            thumbWallCutoutLength = _thumbBackplateLength+(_housingBackplateCutoutPadding*2);
+            thumbWallCutoutWidth = _thumbBackplateWidth+(_housingBackplateCutoutPadding*2);
+            translate([_key1uLength*(4)-_housingBackplateCutoutPadding,-_housingBackplateCutoutPadding,_housingBaseThickness])
+                roundedCube(size = [thumbWallCutoutLength, thumbWallCutoutWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="zmax");
+        }
+
+        // Arduino-adjacent wall cutouts
+        arduinoHousingCutoutWidthOffset = -0.1;
+        arduinoHousingCutoutLengthOffset = -0.6;
+        arduinoHousingCutoutDifferenceFromRoundedMeasure = -1.1;
+        arduinoHousingCutoutExtraLength = 2;
+        translate([_arduinoLengthPlacment+arduinoHousingCutoutLengthOffset,_arduinoWidthPlacment+arduinoHousingCutoutWidthOffset,_housingBaseThickness])
+            cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth+arduinoHousingCutoutDifferenceFromRoundedMeasure, housingDepth]);
     }
 }
 
@@ -188,8 +216,8 @@ module arduinoHousing()
         {
             arbitraryDepth = 10;
             housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), arbitraryDepth);
-            //translate([0,0,_arduinoHousingBaseDepth])
-            //    cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth, arbitraryDepth]);
+            translate([0,0,_arduinoHousingBaseDepth])
+                cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth, arbitraryDepth]);
         }
 
         paddingOffsetAdjustment = 0.25;
