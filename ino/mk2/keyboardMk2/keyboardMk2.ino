@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -56,10 +56,10 @@ const int LEFT_LAYER1_MODIFIER_KEY_COL_INDEX = 4;
 
 const unsigned char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_LEFT_ALT,    KEY_F1,       KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5           },
-        { KC_NULL,         KEY_F6,       KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10          },
-        { KEY_LEFT_SHIFT,  KEY_F11,      KEY_F12, KC_NULL, KC_NULL, KEY_PRINT_SCREEN },
-        { KC_NULL,         KC_NULL,      KC_NULL, KC_NULL, KC_LM,   ' '              }
+        { KEY_LEFT_ALT,    KEY_F1,   KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5   },
+        { KC_NULL,         KEY_F6,   KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10  },
+        { KEY_LEFT_SHIFT,  KEY_F11,  KEY_F12, KEY_F13, KEY_F14, KEY_F15  },
+        { KC_NULL,         KC_NULL,  KC_NULL, KC_NULL, KC_LM,   ' '      }
     };
 
 //Left Layer 2
@@ -68,10 +68,10 @@ const int LEFT_LAYER2_MODIFIER_KEY_COL_INDEX = 5;
 
 const unsigned char LEFT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_LEFT_GUI,   '`',          '0',      '1',     '2',     '3'   },
-        { KC_NULL,        KC_NULL,      '$',      '4',     '5',     '6'   },
-        { KEY_LEFT_SHIFT, KC_NULL,      KC_NULL,  '7',     '8',     '9'   },
-        { KC_NULL,        KC_NULL,      KC_NULL,  KC_NULL, KC_LM,   ' '   }
+        { KEY_LEFT_GUI,   '`',       '0',      '1',     '2',     '3'   },
+        { KC_NULL,        '@',       '$',      '4',     '5',     '6'   },
+        { KEY_LEFT_SHIFT, '<',       '>',      '7',     '8',     '9'   },
+        { KC_NULL,        KC_NULL,   KC_NULL,  KC_NULL, KC_LM,   ' '   }
     };
 
 //Right Layer 0
@@ -91,10 +91,10 @@ const int RIGHT_LAYER1_MODIFIER_KEY_COL_INDEX = 1;
 
 const unsigned char RIGHT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_HOME,       KEY_PAGE_DOWN,  KEY_PAGE_UP,     KEY_END,         KEY_DELETE, KEY_RIGHT_ALT },
-        { KEY_LEFT_ARROW, KEY_DOWN_ARROW, KEY_UP_ARROW,    KEY_RIGHT_ARROW, KC_NULL,    KC_NULL },
-        { KC_NULL,        KC_NULL,        KC_NULL,         KC_NULL,         KC_NULL,    KEY_RIGHT_SHIFT },
-        { KC_LM,          KC_LM,          KC_NULL,         KC_NULL,         KC_NULL,    KC_NULL }
+        { KEY_HOME,         KEY_PAGE_DOWN,  KEY_PAGE_UP,     KEY_END,         KEY_DELETE, KEY_RIGHT_ALT },
+        { KEY_LEFT_ARROW,   KEY_DOWN_ARROW, KEY_UP_ARROW,    KEY_RIGHT_ARROW, KC_NULL,    KC_NULL },
+        { KEY_PRINT_SCREEN, KC_NULL,        KC_NULL,         KC_NULL,         KC_NULL,    KEY_RIGHT_SHIFT },
+        { KC_LM,            KC_LM,          KC_NULL,         KC_NULL,         KC_NULL,    KC_NULL }
 
     };
 
@@ -104,7 +104,7 @@ const int RIGHT_LAYER2_MODIFIER_KEY_COL_INDEX = 0;
 
 const unsigned char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { '&',     '*',     '(',     ')',     '=',     KEY_RIGHT_GUI },
+        { '&',     '*',     '(',     ')',     '|',     KEY_RIGHT_GUI },
         { '-',     '_',     '{',     '}',     '\'',    KC_NULL },
         { '+',     '!',     '[',     ']',     '\\',    KEY_RIGHT_SHIFT },
         { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KC_NULL, KC_NULL }
@@ -437,7 +437,12 @@ void set_key_states()
                                     Keyboard.write(KEY_ESC);
                                     break;
                                 case RIGHT_SIDE_DESIGNATOR:
-                                    // currently no tap action for right side.
+                                    switch(get_current_layer_based_on_modifier_state())
+                                    {
+                                        case 2:
+                                            Keyboard.write('=');
+                                            break;
+                                    }
                                     break;
                             }
                         }
