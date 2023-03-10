@@ -91,8 +91,20 @@ keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //kailhKeycapShank();
 
 /// MAIN END ///
-
 module keyboard(switchType, isLeftSide)
+{
+    if (isLeftSide)
+    {
+        keyboardAssembly(switchType);
+    }
+    else
+    {
+        mirror([1,0,0])
+            keyboardAssembly(switchType);
+    }
+}
+
+module keyboardAssembly(switchType)
 {
     backplateDepth = (switchType == MX_SWITCH_TYPE) ? _mxBackplateDepth : _kailhBackplateDepth;
     backplateOffsetFromHousing = (switchType == MX_SWITCH_TYPE) ? _mxBackplateOffsetFromHousing : _kailhBackplateOffsetFromHousing;
