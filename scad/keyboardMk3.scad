@@ -48,6 +48,12 @@ _housingBaseThickness = 3;
 _housingBackplateCutoutPadding = 1.25;
 _housingBodyRoundingRadius = 4;
 
+_insetNutCutoutDiameter = 3.6;
+_insetNutCutoutRadius = _insetNutCutoutDiameter/2;
+_arduinoInsetNutCutoutDepth = 3;
+_arduinoNutInsertLengthCenterToCenter = 22;
+_arduinoNutInsertWidthCenterToCenter = 40;
+
 // MX Switch Variables
 _mxBackplateDepth = 5;
 _mxHousingBodyDepth = 18;
@@ -226,10 +232,20 @@ module arduinoHousing()
     {
         difference()
         {
-            arbitraryDepth = 10;
-            housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), arbitraryDepth);
-            translate([0,0,_arduinoHousingBaseDepth])
-                cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth, arbitraryDepth]);
+            difference()
+            {
+                arbitraryDepth = 10;
+                housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), arbitraryDepth);
+                translate([0,0,_arduinoHousingBaseDepth])
+                    cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth, arbitraryDepth]);
+            }
+
+            //todo make these calculated values (or risers)
+            nutSetOffsetAdjustment = -0.5;
+            arduinoInsetNutSetLengthOffset = ((_arduinoHousingBaseLength-_arduinoNutInsertLengthCenterToCenter)/2)+nutSetOffsetAdjustment;
+            arduinoInsetNutSetWidthOffset = ((_arduinoHousingBaseWidth-_arduinoNutInsertWidthCenterToCenter)/2)+nutSetOffsetAdjustment;
+            translate([arduinoInsetNutSetLengthOffset,arduinoInsetNutSetWidthOffset,_arduinoHousingBaseDepth-_arduinoInsetNutCutoutDepth])
+                arduinoInsetNutPunchSet();
         }
 
         paddingOffsetAdjustment = 0.25;
@@ -331,6 +347,26 @@ module arduinoMicroPunch()
         {
             cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
         }
+    }
+}
+
+module arduinoInsetNutPunchSet()
+{
+    translate([0,0,0])
+        arduinoInsetNutPunch();
+    translate([_arduinoNutInsertLengthCenterToCenter,0,0])
+        arduinoInsetNutPunch();
+    translate([0,_arduinoNutInsertWidthCenterToCenter,0])
+        arduinoInsetNutPunch();
+    translate([_arduinoNutInsertLengthCenterToCenter,_arduinoNutInsertWidthCenterToCenter,0])
+        arduinoInsetNutPunch();
+}
+
+module arduinoInsetNutPunch()
+{
+    union()
+    {
+        cylinder(r=_insetNutCutoutRadius,h=_arduinoInsetNutCutoutDepth+1,$fn=100);
     }
 }
 
