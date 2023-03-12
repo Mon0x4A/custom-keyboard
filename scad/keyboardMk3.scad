@@ -48,6 +48,12 @@ _housingBaseThickness = 3;
 _housingBackplateCutoutPadding = 1.25;
 _housingBodyRoundingRadius = 4;
 
+_housingCornerSupportLegLength = 8.5;
+_housingCornerSupportLegWidth = 3;
+_housingHalfWidthSupportLength = _housingCornerSupportLegWidth;
+_housingHalfWidthSupportWidth = _housingCornerSupportLegLength;
+_housingSupportExposureIntoHousing = 3;
+
 _insetNutCutoutDiameter = 3.6;
 _insetNutCutoutRadius = _insetNutCutoutDiameter/2;
 _arduinoInsetNutCutoutDepth = 3;
@@ -130,10 +136,18 @@ module keyboardAssembly(switchType)
         housing(housingDepth);
         translate([0,0,backplateOffsetFromHousing])
             backplate(backplateDepth);
+        //Arduino enclosure
         translate([_arduinoLengthPlacment,_arduinoWidthPlacment,0])
             arduinoHousing();
+        //Backplate mounting risers
         translate([0,0,_housingBaseThickness])
             backplateMountingRiserSet(backplateDepth);
+        //Housing backplate supports
+        union()
+        {
+            //todo ultimately this depth will be backplateOffsetFromHousing-_housingBaseThickness
+            housingBackplateEdgeSupportSet(backplateOffsetFromHousing+1);
+        }
     }
 }
 
@@ -203,6 +217,87 @@ module housingSubModule(backplateLength, backplateWidth, housingDepth)
         {
             roundedCube(size=[backplateLength+(_housingBackplateCutoutPadding*2), backplateWidth+(_housingBackplateCutoutPadding*2), housingDepth], radius=_backplateRoundingRadius, apply_to="zmax");
         }
+    }
+}
+
+//todo port over housing supports for backplate into submodule space?
+//need to avoid larger cutouts, so maybe it goes in the housing itself...
+module housingBackplateEdgeSupportSet(supportDepth)
+{
+    union()
+    {
+        riserInwardsLengthAdjustment = 0.25;
+        riserInwardsWidthAdjustment = 0.25;
+        //Corner backplate supports
+        //Pinky Corners
+        translate([riserInwardsLengthAdjustment,_key1uWidth*(3)+_pinkyBackplateWidth-riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, -90])
+                housingCornerSupport(supportDepth);
+        translate([riserInwardsLengthAdjustment,_key1uWidth*(3)+riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, 0])
+                housingCornerSupport(supportDepth);
+        translate([_key1_25uLength*(1)+riserInwardsLengthAdjustment,_key1uWidth*(3)+riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, 180])
+                housingCornerSupport(supportDepth);
+
+        //Main Corners
+        translate([_key1_25uLength*(1)+riserInwardsLengthAdjustment,_key1_25uWidth*(1)+riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, 0])
+                housingCornerSupport(supportDepth);
+        translate([_key1_25uLength*(1)+_key1uWidth*(3)+riserInwardsLengthAdjustment,_key1_25uWidth*(1)+riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, 180])
+                housingCornerSupport(supportDepth);
+        translate([_key1_25uLength*(1)+_key1uWidth*(5)-riserInwardsLengthAdjustment,_key1_25uWidth*(1)+_key1uWidth*(3)-riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, 180])
+                housingCornerSupport(supportDepth);
+        translate([_key1_25uLength*(1)+_key1uWidth*(5)-riserInwardsLengthAdjustment,_key1_25uWidth*(1)-riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, 90])
+                housingCornerSupport(supportDepth);
+
+        //Thumb Corners
+        translate([_key1_25uLength*(1)+_key1uWidth*(3)+riserInwardsLengthAdjustment,riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, 0])
+                housingCornerSupport(supportDepth);
+        translate([_key1_25uLength*(4)+_key1uWidth*(3)-riserInwardsLengthAdjustment,riserInwardsWidthAdjustment,_housingBaseThickness])
+            rotate([0, 0, 90])
+                housingCornerSupport(supportDepth);
+
+        ////Mid backplate supports.
+        ////"west"
+        //midSupportZeroingLengthOffset = 6.25;
+        //translate([-midSupportZeroingLengthOffset + _housingSupportExposureIntoHousing, (backplateWidth)/2 - _housingHalfWidthSupportWidth + housingWallThickness, 0])
+        //    cube([_housingHalfWidthSupportLength, _housingHalfWidthSupportWidth, supportDepth]);
+
+        ////"east"
+        //translate([backplateLength + housingWallThickness - 3.75 - _housingSupportExposureIntoHousing, (backplateWidth)/2 - _housingHalfWidthSupportWidth + housingWallThickness, 0])
+        //    cube([_housingHalfWidthSupportLength, _housingHalfWidthSupportWidth, supportDepth]);
+
+        ////"south"
+        //translate([backplateLength/2 - _housingHalfWidthSupportWidth/2, -3.25, 0])
+        //    cube([_housingHalfWidthSupportWidth, _housingHalfWidthSupportLength, supportDepth]);
+
+        ////"north" - mini supports around arduino
+        //translate([backplateLength*(1/3) - _housingHalfWidthSupportWidth/4, backplateWidth - 1.75, 0])
+        //    cube([_housingHalfWidthSupportWidth/2, _housingHalfWidthSupportLength, supportDepth]);
+        //translate([backplateLength*(2/3) - _housingHalfWidthSupportWidth/4, backplateWidth - 1.75, 0])
+        //    cube([_housingHalfWidthSupportWidth/2, _housingHalfWidthSupportLength, supportDepth]);
+    }
+}
+
+module housingCornerSupport(depth)
+{
+    union()
+    {
+        // "core"
+        translate([-_housingCornerSupportLegWidth/2, -_housingCornerSupportLegWidth/2, 0])
+            cube([_housingCornerSupportLegWidth, _housingCornerSupportLegWidth, depth]);
+
+        // "legs"
+        translate([_housingCornerSupportLegWidth/2, -_housingCornerSupportLegWidth/2, 0])
+            cube([_housingCornerSupportLegLength, _housingCornerSupportLegWidth, depth]);
+
+        translate([-_housingCornerSupportLegWidth/2, _housingCornerSupportLegWidth/2, 0])
+            cube([_housingCornerSupportLegWidth, _housingCornerSupportLegLength, depth]);
     }
 }
 
