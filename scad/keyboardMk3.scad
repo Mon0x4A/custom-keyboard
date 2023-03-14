@@ -90,8 +90,8 @@ _keyCap1_25uLength = _key1_25uLength - _keyCapSpacingOffset;
 _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 
 // Ardiuno Variables
-_arduinoMicroBodyLength = 19.2;
-_arduinoMicroBodyWidth = 36.2;
+_arduinoMicroBodyLength = 18.5;
+_arduinoMicroBodyWidth = 36.45;
 
 _arduinoHousingLengthEdgePadding = 6;
 _arduinoHousingWidthEdgePadding = 9;
@@ -116,11 +116,13 @@ _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //arduinoHousing();
-//arduinoHousingBase();
+arduinoHousingBase();
 //arduinoHousingTop();
+//arduinoMicroPunch();
 //kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
+//kailhKeyCapTop(_key1_25uWidth, _key1uWidth, _kailhKeyCapDepth);
 //kailhKeycapShank();
 
 /// MAIN END ///
@@ -210,8 +212,11 @@ module housing(housingDepth)
                 //include the housing itself for scuplted top cutout
                 arduinoHousing();
             }
-        }
 
+            //todo add 'smoothing' to bottom arduino housing joints
+            //todo Add cutout to access the arduino USB-C connection
+            //todo bottom mounting threaded nut holes?
+        }
     }
 }
 
@@ -398,9 +403,23 @@ module keyUnit(length, width, depth)
 
 module arduinoHousing()
 {
-    arduinoHousingBase();
-    translate([0, 0, _arduinoHousingBaseDepth])
-        arduinoHousingTop();
+    difference()
+    {
+        union()
+        {
+            //arduinoHousingBase();
+            translate([0, 0, _arduinoHousingBaseDepth])
+                arduinoHousingTop();
+        }
+        usbcCutoutLength = 12;
+        usbcCutoutWidth = 20;
+        usbcCutoutHeight = 6;
+        usbcCutoutHeightOffset = 3;
+        usbcCutoutDepth = 7;
+        //Cutout for usbc connection
+        translate([(_arduinoHousingBaseLength-usbcCutoutLength)/2, _arduinoHousingBaseWidth-usbcCutoutDepth, usbcCutoutHeightOffset])
+            cube([usbcCutoutLength, usbcCutoutWidth, usbcCutoutHeight]);
+    }
 }
 
 module arduinoHousingBase()
@@ -421,16 +440,24 @@ module arduinoHousingBase()
                     cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth, arbitraryDepth]);
             }
 
+            // Lid attachement nut set
             translate([_arduinoInsetNutSetLengthOffset,_arduinoInsetNutSetWidthOffset,_arduinoHousingBaseDepth-_arduinoInsetNutCutoutDepth])
                 arduinoInsetNutPunchSet();
+            // Arduino cutout
             translate([arduinoLengthOffset, arduinoWidthOffset, _arduinoHousingBaseDepth-arduinoInsetIntoHousing])
                 arduinoMicroPunch();
+            // Cable ramp cutout
             arduinoCableRampAngle = 42;
             translate([-_arduinoHousingBaseDepth*1.5, _arduinoHousingCableCutoutOffset, 0])
                 rotate([0, arduinoCableRampAngle, 0])
                     cube([_arduinoHousingBaseDepth, _arduinoHousingCableCutoutWidth, _arduinoHousingBaseDepth*3]);
+            translate([_arduinoHousingBaseLength/2, _arduinoInsetNutSetWidthOffset, _arduinoHousingBaseDepth-_arduinoInsetNutCutoutDepth])
+                arduinoInsetNutPunch();
         }
 
+        arduinoCenterSupportBeamLength = 8;
+        translate([(_arduinoHousingBaseLength-arduinoCenterSupportBeamLength)/2, arduinoWidthOffset-1, 0.1])
+            cube([arduinoCenterSupportBeamLength, _arduinoMicroBodyWidth+2, _arduinoHousingBaseDepth-1.6]);
         //translate([arduinoLengthOffset, arduinoWidthOffset, _arduinoHousingBaseDepth-arduinoInsetIntoHousing])
         //    arduinoMicroPunch();
     }
@@ -464,9 +491,9 @@ module arduinoHousingTop()
 
 module kailhKeyCapTop(length, width, depth)
 {
-    capInterfaceShankCenterToCenter = 5.70;
+    capInterfaceShankCenterToCenter = 6.25;
     capInterfaceShankWidth = 3.3;
-    capInterfaceShankDepth = 2;
+    capInterfaceShankDepth = 1.5;
     capInterfaceShankLength = 1.9;
     totalCapInterfaceLength = capInterfaceShankCenterToCenter+capInterfaceShankLength;
 
@@ -476,13 +503,19 @@ module kailhKeyCapTop(length, width, depth)
         {
             baseCapDepth = 20;
             // form the base cap
-            roundedCube(size=[length, width, baseCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
+            difference()
+            {
+                roundedCube(size=[length, width, baseCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
+                cutoutCubeSize = [length-(_keyCapWallThickness*2), width-(_keyCapWallThickness*2), baseCapDepth];
+                translate([_keyCapWallThickness, _keyCapWallThickness, _keyCapWallThickness])
+                    roundedCube(size=cutoutCubeSize, radius = _keyCapRoundingRadius, apply_to="zmin");
+            }
             //cut to the desired depth
             translate([-1,-1,depth])
                 cube([length+2,width+2,baseCapDepth]);
         }
 
-        translate([(length-totalCapInterfaceLength)/2,(width-capInterfaceShankWidth)/2,1])
+        translate([(length-totalCapInterfaceLength)/2,(width-capInterfaceShankWidth)/2, _keyCapWallThickness-capInterfaceShankDepth])
             union()
             {
                 cube([capInterfaceShankLength,capInterfaceShankWidth,capInterfaceShankDepth+1]);
@@ -499,12 +532,12 @@ module kailhKeycapShank()
     switchInterfaceShankWidth = 1.20 - printingTolerance;
     switchInterfaceShankDepth = 3 - printingTolerance;
     switchInterfaceShankCenterToCenter = 5.70;
-    capInterfaceShankLength = 2;
+    capInterfaceShankLength = 1.5;
     capInterfaceShankWidth = 1.5-printingTolerance;
     capInterfaceShankDepth = switchInterfaceShankDepth-printingTolerance;
-    capInterfaceShankCenterToCenter = switchInterfaceShankCenterToCenter;
+    capInterfaceShankCenterToCenter = 6.25;
     shankInterfaceConnectorLength = 1;
-    shankInterfaceConnectorWidth = 8;
+    shankInterfaceConnectorWidth = 9;
     shankInterfaceConnectorDepth = switchInterfaceShankDepth;
 
     union()
@@ -537,23 +570,23 @@ module arduinoMicroPunch()
 {
     arduinoMicroBodyLength = _arduinoMicroBodyLength;
     arduinoMicroBodyWidth = _arduinoMicroBodyWidth;
-    arduinoMicroBodyDepth = 3.9;
+    arduinoMicroBodyDepth = 2.6;
 
-    miniUsbPortLength = 7.8;
-    miniUsbPortWidth = 9.5 + 10; //plus an extention for hole punching
-    miniUsbPortDepth = 4.5;
-    miniUsbDepthCutInToBody = 2;
+    usbCPortLength = 9.1;
+    usbCPortWidth = 7.5 + 10; //plus an extention for hole punching
+    usbCPortDepth = 3.2;
+    usbCDepthCutInToBody = 0.4;
 
-    miniUsbOnBoardWidth = 7;
-    miniUsbPortOverhang = 2;
+    usbCOnBoardWidth = 5.5;
+    usbCPortOverhang = 2;
 
     union()
     {
         cube([arduinoMicroBodyLength, arduinoMicroBodyWidth, arduinoMicroBodyDepth]);
 
-        translate([(arduinoMicroBodyLength-miniUsbPortLength)/2, arduinoMicroBodyWidth-(miniUsbOnBoardWidth), arduinoMicroBodyDepth-miniUsbDepthCutInToBody])
+        translate([(arduinoMicroBodyLength-usbCPortLength)/2, arduinoMicroBodyWidth-(usbCOnBoardWidth), arduinoMicroBodyDepth-usbCDepthCutInToBody])
         {
-            cube([miniUsbPortLength, miniUsbPortWidth, miniUsbPortDepth]);
+            cube([usbCPortLength, usbCPortWidth, usbCPortDepth]);
         }
     }
 }
