@@ -116,9 +116,9 @@ _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //arduinoHousing();
-arduinoHousingBase();
+//arduinoHousingBase();
 //arduinoHousingTop();
 //arduinoMicroPunch();
 //kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
@@ -151,7 +151,25 @@ module keyboardAssembly(switchType)
             backplate(backplateDepth);
         //Arduino enclosure
         translate([_arduinoLengthPlacment,_arduinoWidthPlacment,0])
-            arduinoHousing();
+            union()
+            {
+                arduinoHousing();
+                //these values will have to be dialed in again once the housing
+                //size changes for the screen and trrs
+                arduinoHousingBodyJointWidth = 60.45;
+                arduinoHousingBodyJointLength = 28.70;
+                jointLengthOffset = -7;
+                jointWidthOffset = -7;
+                translate([jointLengthOffset, jointWidthOffset, 0])
+                    difference()
+                    {
+                        roundedCube(size=[arduinoHousingBodyJointLength, arduinoHousingBodyJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
+                        cutoutEdgePadding = 5;
+                        translate([-cutoutEdgePadding,-cutoutEdgePadding, _housingBaseThickness])
+                            cube([arduinoHousingBodyJointLength+(cutoutEdgePadding*2), arduinoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
+                    }
+
+            }
         //Backplate mounting risers
         translate([0,0,_housingBaseThickness])
             backplateMountingRiserSet(backplateDepth);
@@ -214,8 +232,9 @@ module housing(housingDepth)
             }
 
             //todo add 'smoothing' to bottom arduino housing joints
-            //todo Add cutout to access the arduino USB-C connection
             //todo bottom mounting threaded nut holes?
+            //todo shank riser on keycap bottom
+            //todo print backplate
         }
     }
 }
@@ -407,7 +426,7 @@ module arduinoHousing()
     {
         union()
         {
-            //arduinoHousingBase();
+            arduinoHousingBase();
             translate([0, 0, _arduinoHousingBaseDepth])
                 arduinoHousingTop();
         }
