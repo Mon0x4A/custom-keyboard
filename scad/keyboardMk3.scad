@@ -57,6 +57,17 @@ _housingSupportExposureIntoHousing = 3;
 _insetNutCutoutDiameter = 3.6;
 _insetNutCutoutRadius = _insetNutCutoutDiameter/2;
 
+_oledBodyLength = 27.8;
+_oledBodyWidth = 27.8;
+_oledBodyDepth = 3.8;
+_oledAttachmentHolesCentertoCenter = 23.5;
+_oledScreenLength = 23.75;
+_oledScreenWidth = 12.9;
+_oledScreenLengthOffsetFromTop = 5.4;
+_oledScreenWidthOffsetFromLeft = 2;
+_oledBoltAttachmentLengthOffset = 2;
+_oledBoltAttachmentWidthOffset = 2;
+
 _riserBoltHeadCutoutDepth = 3;
 
 _riserTopDiameter = 6;
@@ -93,14 +104,14 @@ _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 _arduinoMicroBodyLength = 18.5;
 _arduinoMicroBodyWidth = 36.45;
 
-_arduinoHousingLengthEdgePadding = 6;
+_arduinoHousingLengthEdgePadding = 9;
 _arduinoHousingWidthEdgePadding = 9;
 _arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdgePadding*2);
 _arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
 _arduinoHousingBaseDepth = 5;
 _arduinoHousingLidHeight = 8;
-_arduinoHousingLidBoltCounterSink = 2;
-_arduinoHousingLidBaseThickness = 3;
+_arduinoHousingLidBoltCounterSink = 1;
+_arduinoHousingLidBaseThickness = 2;
 _arduinoHousingCableCutoutWidth = _arduinoHousingBaseWidth*(3/5);
 _arduinoHousingCableCutoutOffset = _arduinoHousingBaseWidth*(1/5);
 
@@ -117,6 +128,7 @@ _arduinoWidthPlacment = 24.5;
 /// MAIN START ///
 
 keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//oledScreenPunch(_arduinoHousingLidBaseThickness+2);
 //arduinoHousing();
 //arduinoHousingBase();
 //arduinoHousingTop();
@@ -505,6 +517,13 @@ module arduinoHousingTop()
         arduinoCableCutoutDepth = 1.5;
         translate([-1, _arduinoHousingCableCutoutOffset, -1])
             cube([_housingWallThickness+2, _arduinoHousingCableCutoutWidth, arduinoCableCutoutDepth+1]);
+
+        //Screen cutout
+        oledWidthOffsetFromTop = _oledBodyWidth + 10;
+        oledLengthOffset = ((_arduinoHousingBaseLength - _oledBodyLength)/2)-0.25;
+        translate([oledLengthOffset, _arduinoHousingBaseWidth-oledWidthOffsetFromTop, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-1])
+            oledScreenPunch(_arduinoHousingLidBaseThickness+2);
+
     }
 }
 
@@ -670,6 +689,29 @@ module riserBackplateBoltPunch(backplateDepth)
         boltPunchDepth = backplateDepth+1;
         translate([0,0,-boltPunchDepth])
                cylinder(r=_m2BoltHoleRadius, h=boltPunchDepth+2, $fn=100);
+    }
+}
+
+module oledScreenPunch(depth)
+{
+    union()
+    {
+        //bolt cutouts
+        translate([_oledBoltAttachmentLengthOffset, _oledBoltAttachmentWidthOffset, 0])
+        {
+            translate([0, 0, 0])
+                cylinder(r=_m2BoltHoleRadius, h=depth, $fn=100);
+            translate([0, _oledAttachmentHolesCentertoCenter, 0])
+                cylinder(r=_m2BoltHoleRadius, h=depth, $fn=100);
+            translate([_oledAttachmentHolesCentertoCenter, 0, 0])
+                cylinder(r=_m2BoltHoleRadius, h=depth, $fn=100);
+            translate([_oledAttachmentHolesCentertoCenter, _oledAttachmentHolesCentertoCenter, 0])
+                cylinder(r=_m2BoltHoleRadius, h=depth, $fn=100);
+        }
+
+        //screen cutout
+        translate([_oledScreenWidthOffsetFromLeft, _oledScreenWidth-_oledScreenLengthOffsetFromTop, 0])
+            cube([_oledScreenLength, _oledScreenWidth, depth]);
     }
 }
 
