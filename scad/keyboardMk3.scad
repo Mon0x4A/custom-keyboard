@@ -120,6 +120,7 @@ keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //arduinoHousing();
 //arduinoHousingBase();
 //arduinoHousingTop();
+//backplate(_kailhBackplateDepth);
 //arduinoMicroPunch();
 //kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
 //kailhKeyCapTop(_key1_25uWidth, _key1uWidth, _kailhKeyCapDepth);
@@ -231,7 +232,6 @@ module housing(housingDepth)
                 arduinoHousing();
             }
 
-            //todo add 'smoothing' to bottom arduino housing joints
             //todo bottom mounting threaded nut holes?
             //todo shank riser on keycap bottom
             //todo print backplate
@@ -518,23 +518,35 @@ module kailhKeyCapTop(length, width, depth)
 
     difference()
     {
-        difference()
+        union()
         {
-            baseCapDepth = 20;
-            // form the base cap
             difference()
             {
-                roundedCube(size=[length, width, baseCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
-                cutoutCubeSize = [length-(_keyCapWallThickness*2), width-(_keyCapWallThickness*2), baseCapDepth];
-                translate([_keyCapWallThickness, _keyCapWallThickness, _keyCapWallThickness])
-                    roundedCube(size=cutoutCubeSize, radius = _keyCapRoundingRadius, apply_to="zmin");
+                baseCapDepth = 20;
+                // form the base cap
+                difference()
+                {
+                    roundedCube(size=[length, width, baseCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
+                    cutoutCubeSize = [length-(_keyCapWallThickness*2), width-(_keyCapWallThickness*2), baseCapDepth];
+                    translate([_keyCapWallThickness, _keyCapWallThickness, _keyCapWallThickness])
+                        roundedCube(size=cutoutCubeSize, radius = _keyCapRoundingRadius, apply_to="zmin");
+                }
+                //cut to the desired depth
+                translate([-1,-1,depth])
+                    cube([length+2,width+2, baseCapDepth]);
             }
-            //cut to the desired depth
-            translate([-1,-1,depth])
-                cube([length+2,width+2,baseCapDepth]);
+
+            // bar to thicken shank interface area
+            thickeningBarLengthPadding = 3;
+            thickeningBarWidthPadding = 6;
+            thickeningBarLength = length-thickeningBarLengthPadding*2;
+            thickeningBarWidth = width-thickeningBarWidthPadding*2;
+            translate([(length-thickeningBarLength)/2, (width-thickeningBarWidth)/2, 0])
+                cube([thickeningBarLength, thickeningBarWidth, depth]);
         }
 
-        translate([(length-totalCapInterfaceLength)/2,(width-capInterfaceShankWidth)/2, _keyCapWallThickness-capInterfaceShankDepth])
+        //cut out the interface for the shank
+        translate([(length-totalCapInterfaceLength)/2,(width-capInterfaceShankWidth)/2, depth-capInterfaceShankDepth])
             union()
             {
                 cube([capInterfaceShankLength,capInterfaceShankWidth,capInterfaceShankDepth+1]);
@@ -555,8 +567,8 @@ module kailhKeycapShank()
     capInterfaceShankWidth = 1.5-printingTolerance;
     capInterfaceShankDepth = switchInterfaceShankDepth-printingTolerance;
     capInterfaceShankCenterToCenter = 6.25;
-    shankInterfaceConnectorLength = 1;
-    shankInterfaceConnectorWidth = 9;
+    shankInterfaceConnectorLength = 1.25;
+    shankInterfaceConnectorWidth = 12;
     shankInterfaceConnectorDepth = switchInterfaceShankDepth;
 
     union()
