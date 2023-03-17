@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = true;
+const bool IS_LEFT_KEYBOARD_SIDE = false;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -107,7 +107,7 @@ const int RIGHT_LAYER2_MODIFIER_KEY_COL_INDEX = 0;
 
 const unsigned char RIGHT_LAYER2_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { '&',     '*',     '(',     ')',     '|',     KEY_RIGHT_GUI },
+        { '&',     '*',     '(',     ')',     '=',     KEY_RIGHT_GUI },
         { '-',     '_',     '{',     '}',     '\'',    KC_NULL },
         { '+',     '!',     '[',     ']',     '\\',    KEY_RIGHT_SHIFT },
         { KC_LM,   KC_LM,   KC_NULL, KC_NULL, KC_NULL, KC_NULL }
@@ -436,13 +436,25 @@ void set_key_states()
                             switch(_sideDesignator)
                             {
                                 case LEFT_SIDE_DESIGNATOR:
-                                    Keyboard.write(KEY_ESC);
+                                    switch(get_current_layer_based_on_modifier_state())
+                                    {
+                                        case 0:
+                                            Keyboard.write(KEY_ESC);
+                                            break;
+                                        case 1:
+                                            break;
+                                        case 2:
+                                            break;
+                                    }
                                     break;
                                 case RIGHT_SIDE_DESIGNATOR:
                                     switch(get_current_layer_based_on_modifier_state())
                                     {
+                                        case 0:
+                                            break;
+                                        case 1:
+                                            break;
                                         case 2:
-                                            Keyboard.write('=');
                                             break;
                                     }
                                     break;
