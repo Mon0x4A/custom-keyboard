@@ -63,10 +63,15 @@ _oledBodyDepth = 3.8;
 _oledAttachmentHolesCentertoCenter = 23.5;
 _oledScreenLength = 23.75;
 _oledScreenWidth = 12.9;
-_oledScreenLengthOffsetFromTop = 5.4;
+_oledScreenLengthOffsetFromTop = 4.4;
 _oledScreenWidthOffsetFromLeft = 2;
 _oledBoltAttachmentLengthOffset = 2;
 _oledBoltAttachmentWidthOffset = 2;
+
+_trrsBodyLength = 12.1;
+_trrsBodyWidth = 6.1;
+_trrsBodyDepth = 5.1;
+_trrsWallThickness = 2;
 
 _riserBoltHeadCutoutDepth = 3;
 
@@ -104,19 +109,19 @@ _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 _arduinoMicroBodyLength = 18.5;
 _arduinoMicroBodyWidth = 36.45;
 
-_arduinoHousingLengthEdgePadding = 9;
+_arduinoHousingLengthEdgePadding = 8;
 _arduinoHousingWidthEdgePadding = 9;
 _arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdgePadding*2);
 _arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
 _arduinoHousingBaseDepth = 5;
-_arduinoHousingLidHeight = 8;
+_arduinoHousingLidHeight = 10;
 _arduinoHousingLidBoltCounterSink = 1;
 _arduinoHousingLidBaseThickness = 2;
 _arduinoHousingCableCutoutWidth = _arduinoHousingBaseWidth*(3/5);
 _arduinoHousingCableCutoutOffset = _arduinoHousingBaseWidth*(1/5);
 
 _arduinoInsetNutCutoutDepth = 3;
-_arduinoNutInsertLengthCenterToCenter = 22;
+_arduinoNutInsertLengthCenterToCenter = 25;
 _arduinoNutInsertWidthCenterToCenter = 45;
 _arduinoNutSetOffsetAdjustment = -0.5;
 _arduinoInsetNutSetLengthOffset = ((_arduinoHousingBaseLength-_arduinoNutInsertLengthCenterToCenter)/2)+_arduinoNutSetOffsetAdjustment;
@@ -127,11 +132,12 @@ _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //oledScreenPunch(_arduinoHousingLidBaseThickness+2);
+//trrsBodyPunch();
 //arduinoHousing();
 //arduinoHousingBase();
-//arduinoHousingTop();
+arduinoHousingTop();
 //backplate(_kailhBackplateDepth);
 //arduinoMicroPunch();
 //kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
@@ -167,8 +173,6 @@ module keyboardAssembly(switchType)
             union()
             {
                 arduinoHousing();
-                //these values will have to be dialed in again once the housing
-                //size changes for the screen and trrs
                 arduinoHousingBodyJointWidth = 60.45;
                 arduinoHousingBodyJointLength = 28.70;
                 jointLengthOffset = -7;
@@ -496,34 +500,70 @@ module arduinoHousingBase()
 
 module arduinoHousingTop()
 {
+    trrsPortOffsetFromBottom = 6;
+    trrsPortOffsetFromRight = _housingWallThickness-0.25;
+    trrsPortTotalLengthOffset = _arduinoHousingBaseLength-(_trrsBodyLength)-trrsPortOffsetFromRight;
+    trrsPortTotalWidthOffset = trrsPortOffsetFromBottom;
+
     difference()
     {
-        translate([_arduinoHousingBaseLength-1, 0, _arduinoHousingLidHeight])
-            rotate([0, 180, 0])
-                housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), _arduinoHousingLidHeight, _arduinoHousingLidBaseThickness, apply_to="z");
-
-        translate([_arduinoInsetNutSetLengthOffset, _arduinoInsetNutSetWidthOffset, _arduinoHousingLidHeight-_arduinoHousingLidBoltCounterSink])
+        union()
         {
-            translate([0, 0, 0])
-                riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
-            translate([_arduinoNutInsertLengthCenterToCenter, 0, 0])
-                riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
-            translate([0, _arduinoNutInsertWidthCenterToCenter, 0])
-                riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
-            translate([_arduinoNutInsertLengthCenterToCenter, _arduinoNutInsertWidthCenterToCenter, 0])
-                riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
+            difference()
+            {
+                translate([_arduinoHousingBaseLength-1, 0, _arduinoHousingLidHeight])
+                    rotate([0, 180, 0])
+                        housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), _arduinoHousingLidHeight, _arduinoHousingLidBaseThickness, apply_to="z");
+
+                translate([_arduinoInsetNutSetLengthOffset, _arduinoInsetNutSetWidthOffset, _arduinoHousingLidHeight-_arduinoHousingLidBoltCounterSink])
+                {
+                    translate([0, 0, 0])
+                        riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
+                    translate([_arduinoNutInsertLengthCenterToCenter, 0, 0])
+                        riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
+                    translate([0, _arduinoNutInsertWidthCenterToCenter, 0])
+                        riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
+                    translate([_arduinoNutInsertLengthCenterToCenter, _arduinoNutInsertWidthCenterToCenter, 0])
+                        riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
+                }
+
+                arduinoCableCutoutDepth = 1.5;
+                translate([-1, _arduinoHousingCableCutoutOffset, -1])
+                    cube([_housingWallThickness+2, _arduinoHousingCableCutoutWidth, arduinoCableCutoutDepth+1]);
+
+                //Screen cutout
+                oledWidthOffsetFromTop = _oledBodyWidth + 10;
+                oledLengthOffset = ((_arduinoHousingBaseLength - _oledBodyLength)/2)-0.25;
+                translate([oledLengthOffset, _arduinoHousingBaseWidth-oledWidthOffsetFromTop, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-1])
+                    oledScreenPunch(_arduinoHousingLidBaseThickness+2);
+            }
+
+            //TRRS port holder
+            union()
+            {
+                trrsPortWallHeight = _trrsBodyDepth;
+                trrsCutoutTolerance = 0.1;
+                trrsShimThickness = 2;
+                translate([trrsPortTotalLengthOffset-_trrsWallThickness-trrsShimThickness, trrsPortTotalWidthOffset, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-trrsPortWallHeight])
+                    difference()
+                    {
+                        cube([_trrsBodyLength+(_trrsWallThickness*2)+trrsShimThickness, _trrsBodyWidth+(_trrsWallThickness*2), trrsPortWallHeight]);
+                        translate([_trrsWallThickness-trrsCutoutTolerance, _trrsWallThickness-trrsCutoutTolerance, -1])
+                            cube([_trrsBodyLength+trrsCutoutTolerance+trrsShimThickness, _trrsBodyWidth+trrsCutoutTolerance, trrsPortWallHeight+2]);
+                    }
+            }
         }
 
-        arduinoCableCutoutDepth = 1.5;
-        translate([-1, _arduinoHousingCableCutoutOffset, -1])
-            cube([_housingWallThickness+2, _arduinoHousingCableCutoutWidth, arduinoCableCutoutDepth+1]);
-
-        //Screen cutout
-        oledWidthOffsetFromTop = _oledBodyWidth + 10;
-        oledLengthOffset = ((_arduinoHousingBaseLength - _oledBodyLength)/2)-0.25;
-        translate([oledLengthOffset, _arduinoHousingBaseWidth-oledWidthOffsetFromTop, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-1])
-            oledScreenPunch(_arduinoHousingLidBaseThickness+2);
-
+        //TRRS port hole punch
+        trrsPortCountsinkDepth = 1.5;
+        translate([trrsPortTotalLengthOffset-0.1, trrsPortTotalWidthOffset+_trrsWallThickness, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-_trrsBodyDepth])
+        {
+            trrsBodyPunch();
+            //TRRS countersink punch
+            translate([_trrsBodyLength+trrsPortCountsinkDepth, _trrsBodyWidth/2, _trrsBodyDepth/2])
+                rotate([0, 90, 0])
+                    cylinder(r=4, h=trrsPortCountsinkDepth+2, $fn=100);
+        }
     }
 }
 
@@ -712,6 +752,18 @@ module oledScreenPunch(depth)
         //screen cutout
         translate([_oledScreenWidthOffsetFromLeft, _oledScreenWidth-_oledScreenLengthOffsetFromTop, 0])
             cube([_oledScreenLength, _oledScreenWidth, depth]);
+    }
+}
+
+module trrsBodyPunch()
+{
+    union()
+    {
+        trrsConnectorDepth = 2 + 6; //plus punch length
+        cube([_trrsBodyLength, _trrsBodyWidth, _trrsBodyDepth]);
+        translate([_trrsBodyLength, _trrsBodyWidth/2, _trrsBodyDepth/2])
+            rotate([0, 90, 0])
+                cylinder(r=_trrsBodyDepth/2,h=trrsConnectorDepth, $fn=100);
     }
 }
 
