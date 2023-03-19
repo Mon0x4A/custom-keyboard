@@ -63,7 +63,7 @@ _oledBodyDepth = 3.8;
 _oledAttachmentHolesCentertoCenter = 23.5;
 _oledScreenLength = 23.75;
 _oledScreenWidth = 12.9;
-_oledScreenLengthOffsetFromTop = 4.4;
+_oledScreenLengthOffsetFromTop = 3.9;
 _oledScreenWidthOffsetFromLeft = 2;
 _oledBoltAttachmentLengthOffset = 2;
 _oledBoltAttachmentWidthOffset = 2;
@@ -114,7 +114,7 @@ _arduinoHousingWidthEdgePadding = 9;
 _arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdgePadding*2);
 _arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
 _arduinoHousingBaseDepth = 5;
-_arduinoHousingLidHeight = 10;
+_arduinoHousingLidHeight = 12;
 _arduinoHousingLidBoltCounterSink = 1;
 _arduinoHousingLidBaseThickness = 2;
 _arduinoHousingCableCutoutWidth = _arduinoHousingBaseWidth*(3/5);
@@ -132,13 +132,14 @@ _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//housing(_kailhHousingBodyDepth);
+//backplate(_kailhBackplateDepth);
 //oledScreenPunch(_arduinoHousingLidBaseThickness+2);
 //trrsBodyPunch();
 //arduinoHousing();
 //arduinoHousingBase();
-arduinoHousingTop();
-//backplate(_kailhBackplateDepth);
+//arduinoHousingTop();
 //arduinoMicroPunch();
 //kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
 //kailhKeyCapTop(_key1_25uWidth, _key1uWidth, _kailhKeyCapDepth);
@@ -247,10 +248,6 @@ module housing(housingDepth)
                 //include the housing itself for scuplted top cutout
                 arduinoHousing();
             }
-
-            //todo bottom mounting threaded nut holes?
-            //todo shank riser on keycap bottom
-            //todo print backplate
         }
     }
 }
@@ -448,8 +445,8 @@ module arduinoHousing()
         }
         usbcCutoutLength = 12;
         usbcCutoutWidth = 20;
-        usbcCutoutHeight = 6;
-        usbcCutoutHeightOffset = 3;
+        usbcCutoutHeight = 7.5;
+        usbcCutoutHeightOffset = 2.75;
         usbcCutoutDepth = 7;
         //Cutout for usbc connection
         translate([(_arduinoHousingBaseLength-usbcCutoutLength)/2, _arduinoHousingBaseWidth-usbcCutoutDepth, usbcCutoutHeightOffset])
@@ -759,11 +756,12 @@ module trrsBodyPunch()
 {
     union()
     {
+        trrsConnectorTolerance = 0.1;
         trrsConnectorDepth = 2 + 6; //plus punch length
         cube([_trrsBodyLength, _trrsBodyWidth, _trrsBodyDepth]);
         translate([_trrsBodyLength, _trrsBodyWidth/2, _trrsBodyDepth/2])
             rotate([0, 90, 0])
-                cylinder(r=_trrsBodyDepth/2,h=trrsConnectorDepth, $fn=100);
+                cylinder(r=(_trrsBodyDepth/2)+trrsConnectorTolerance,h=trrsConnectorDepth, $fn=100);
     }
 }
 
@@ -775,7 +773,7 @@ module trrsBodyPunch()
 /// apply_to - which sides to round
 module roundedCube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "all")
 {
-	// If single value, convert to [x, y, z] vector
+  // If single value, convert to [x, y, z] vector
 	size = (size[0] == undef) ? [size, size, size] : size;
 
 	translate_min = radius;
