@@ -91,7 +91,7 @@ _mxBackplateOffsetFromHousing = _housingBaseThickness + 0;
 // Kailh Switch Variables
 _kailhBackplateDepth = 3;
 _kailhHousingBodyDepth = 10;
-_kailhBackplateRiserHeight = 3;
+_kailhBackplateRiserHeight = 2;
 _kailhBackplateOffsetFromHousing = _housingBaseThickness + _kailhBackplateRiserHeight;
 _kailhKeyCapDepth = 2.5;
 
@@ -137,7 +137,7 @@ keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //backplate(_kailhBackplateDepth);
 //oledScreenPunch(_arduinoHousingLidBaseThickness+2);
 //trrsBodyPunch();
-//arduinoHousing();
+//arduinoHousing(renderLid=false);
 //arduinoHousingBase();
 //arduinoHousingTop();
 //arduinoMicroPunch();
@@ -164,44 +164,58 @@ module keyboardAssembly(switchType)
     backplateDepth = (switchType == MX_SWITCH_TYPE) ? _mxBackplateDepth : _kailhBackplateDepth;
     backplateOffsetFromHousing = (switchType == MX_SWITCH_TYPE) ? _mxBackplateOffsetFromHousing : _kailhBackplateOffsetFromHousing;
     housingDepth = (switchType == MX_SWITCH_TYPE) ? _mxHousingBodyDepth : _kailhHousingBodyDepth;
+    backplateSupportHeight = backplateOffsetFromHousing-_housingBaseThickness;
     union()
     {
         difference()
         {
-            housing(housingDepth);
-            //Trim off the top edge of the housing to avoid sharper corners
-            housingTopTrimBlockLength = _mainBackplateLength+_pinkyBackplateLength+_thumbBackplateLength;
-            housingTopTrimBlockWidth = _mainBackplateWidth+_pinkyBackplateWidth+_thumbBackplateWidth;
-            housingTopTrimAmount = 1.0;
-            translate([-_housingWallThickness*3, -_housingWallThickness*3, housingDepth-housingTopTrimAmount])
-                cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
-        }
-        translate([0,0,backplateOffsetFromHousing])
-            backplate(backplateDepth);
-        //Arduino enclosure
-        translate([_arduinoLengthPlacment,_arduinoWidthPlacment,0])
             union()
             {
-                arduinoHousing();
-                arduinoHousingBodyJointWidth = 60.45;
-                arduinoHousingBodyJointLength = 28.70;
-                jointLengthOffset = -7;
-                jointWidthOffset = -7;
-                translate([jointLengthOffset, jointWidthOffset, 0])
-                    difference()
+                difference()
+                {
+                    housing(housingDepth);
+                    //Trim off the top edge of the housing to avoid sharper corners
+                    housingTopTrimBlockLength = _mainBackplateLength+_pinkyBackplateLength+_thumbBackplateLength;
+                    housingTopTrimBlockWidth = _mainBackplateWidth+_pinkyBackplateWidth+_thumbBackplateWidth;
+                    housingTopTrimAmount = 1.0;
+                    translate([-_housingWallThickness*3, -_housingWallThickness*3, housingDepth-housingTopTrimAmount])
+                        cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
+                }
+                translate([0,0,backplateOffsetFromHousing])
+                    backplate(backplateDepth);
+                //Arduino enclosure
+                translate([_arduinoLengthPlacment,_arduinoWidthPlacment,0])
+                    union()
                     {
-                        roundedCube(size=[arduinoHousingBodyJointLength, arduinoHousingBodyJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
-                        cutoutEdgePadding = 5;
-                        translate([-cutoutEdgePadding,-cutoutEdgePadding, _housingBaseThickness])
-                            cube([arduinoHousingBodyJointLength+(cutoutEdgePadding*2), arduinoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
-                    }
+                        arduinoHousing(renderLid=true);
+                        arduinoHousingBodyJointWidth = 60.45;
+                        arduinoHousingBodyJointLength = 28.70;
+                        arduinoHousingBodyJointDepth = 2;
+                        jointLengthOffset = -7;
+                        jointWidthOffset = -7;
+                        translate([jointLengthOffset, jointWidthOffset, 0])
+                            difference()
+                            {
+                                roundedCube(size=[arduinoHousingBodyJointLength, arduinoHousingBodyJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
+                                cutoutEdgePadding = 5;
+                                translate([-cutoutEdgePadding,-cutoutEdgePadding, arduinoHousingBodyJointDepth])
+                                    cube([arduinoHousingBodyJointLength+(cutoutEdgePadding*2), arduinoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
+                            }
 
+                    }
             }
+            if (backplateSupportHeight < _riserCutoutDepth)
+            {
+                riserCounterSinkAmount = _riserCutoutDepth - backplateSupportHeight;
+                translate([0, 0, riserCounterSinkAmount])
+                    backplateMountingRiserSet(backplateSupportHeight, renderNutHoles=false);
+            }
+        }
         //Backplate mounting risers
-        translate([0,0,_housingBaseThickness])
-            backplateMountingRiserSet(backplateDepth);
+        translate([0,0,_housingBaseThickness - (_riserCutoutDepth-backplateSupportHeight)])
+            backplateMountingRiserSet(max(_riserCutoutDepth, backplateSupportHeight), renderNutHoles=true);
         //Housing backplate supports
-        housingBackplateEdgeSupportSet(backplateOffsetFromHousing-_housingBaseThickness);
+        housingBackplateEdgeSupportSet(backplateSupportHeight);
     }
 }
 
@@ -214,9 +228,10 @@ module housing(housingDepth)
         {
             union()
             {
+                additionPinkyHousingLengthToHideRearSeam = 1;
                 translate([0,_key1uWidth*(3),0])
                     translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
-                        housingSubModule(_pinkyBackplateLength, _pinkyBackplateWidth, housingDepth, _housingBaseThickness);
+                        housingSubModule(_pinkyBackplateLength+additionPinkyHousingLengthToHideRearSeam, _pinkyBackplateWidth, housingDepth, _housingBaseThickness);
                 translate([_key1_25uLength*(1),_key1_25uWidth*(1),0])
                     translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
                         housingSubModule(_mainBackplateLength, _mainBackplateWidth, housingDepth, _housingBaseThickness);
@@ -253,11 +268,22 @@ module housing(housingDepth)
             arduinoHousingCutoutExtraLength = 2;
             translate([_arduinoLengthPlacment+arduinoHousingCutoutLengthOffset,_arduinoWidthPlacment+arduinoHousingCutoutWidthOffset,_housingBaseThickness])
             {
-                cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth+arduinoHousingCutoutDifferenceFromRoundedMeasure, housingDepth]);
-                //include the housing itself for scuplted top cutout
-                arduinoHousing();
+                cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth+arduinoHousingCutoutDifferenceFromRoundedMeasure, housingDepth*2]);
+                //include the housing lid shape itself for scuplted top cutout
+                housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), housingDepth*2, _arduinoHousingLidBaseThickness, apply_to="z");
             }
         }
+
+        //Arduino/Thumb Wall corner patch
+        arduinoCornerWallPatchLength = 1.5;
+        arduinoCornerWallPatchWidth = 3;
+        arduinoCornerWallPatchDepth = 3;
+        arduinoCornerWallPatchLengthPlacement = _arduinoLengthPlacment + arduinoCornerWallPatchLength + 18.1;
+        arduinoCornerWallPatchWidthPlacement = _arduinoWidthPlacment - 2;
+        arduinoCornerWallPatchDepthPlacement = 2;
+        translate([arduinoCornerWallPatchLengthPlacement, arduinoCornerWallPatchWidthPlacement , arduinoCornerWallPatchDepthPlacement])
+            cube([arduinoCornerWallPatchLength, arduinoCornerWallPatchWidth, arduinoCornerWallPatchDepth]);
+
     }
 }
 
@@ -405,28 +431,29 @@ module backplateSubModule(rowCount, columnCount, keyLength, keyWidth, backplateD
         }
 }
 
-module backplateMountingRiserSet(riserHeight)
+module backplateMountingRiserSet(riserHeight, renderNutHoles)
 {
     translate([(_key1uLength*1)+(_key1_25uLength*1), (_key1uWidth*2)+(_key1_25uWidth*1), 0])
-        backplateMountingRiser(riserHeight);
+        backplateMountingRiser(riserHeight, renderNutHoles);
 
     translate([(_key1uLength*2)+(_key1_25uLength*1), (_key1uWidth*1)+(_key1_25uWidth*1), 0])
-        backplateMountingRiser(riserHeight);
+        backplateMountingRiser(riserHeight, renderNutHoles);
 
     translate([(_key1uLength*4)+(_key1_25uLength*1), (_key1uWidth*2)+(_key1_25uWidth*1), 0])
-        backplateMountingRiser(riserHeight);
+        backplateMountingRiser(riserHeight, renderNutHoles);
 
     translate([(_key1uLength*4)+(_key1_25uLength*1), (_key1uWidth*0)+(_key1_25uWidth*1), 0])
-        backplateMountingRiser(riserHeight);
+        backplateMountingRiser(riserHeight, renderNutHoles);
 }
 
-module backplateMountingRiser(riserHeight)
+module backplateMountingRiser(riserHeight, renderNutHole)
 {
     difference()
     {
         cylinder(r2=_riserTopRadius, r1=_riserBottomRadius, h=riserHeight, $fn=100);
-        translate([0,0,riserHeight-_riserCutoutDepth])
-            cylinder(r=_riserCutoutRadius, h=_riserCutoutDepth+1, $fn=100);
+        if (renderNutHole)
+            translate([0,0,riserHeight-_riserCutoutDepth])
+                cylinder(r=_riserCutoutRadius, h=_riserCutoutDepth+1, $fn=100);
     }
 }
 
@@ -442,20 +469,21 @@ module keyUnit(length, width, depth)
     }
 }
 
-module arduinoHousing()
+module arduinoHousing(renderLid)
 {
     difference()
     {
         union()
         {
             arduinoHousingBase();
-            translate([0, 0, _arduinoHousingBaseDepth])
-                arduinoHousingTop();
+            if (renderLid)
+                translate([0, 0, _arduinoHousingBaseDepth])
+                    arduinoHousingTop();
         }
         usbcCutoutLength = 12;
         usbcCutoutWidth = 20;
-        usbcCutoutHeight = 7.5;
-        usbcCutoutHeightOffset = 2.75;
+        usbcCutoutHeight = 7.25;
+        usbcCutoutHeightOffset = 3.0;
         usbcCutoutDepth = 7;
         //Cutout for usbc connection
         translate([(_arduinoHousingBaseLength-usbcCutoutLength)/2, _arduinoHousingBaseWidth-usbcCutoutDepth, usbcCutoutHeightOffset])
@@ -470,7 +498,7 @@ module arduinoHousingBase()
         paddingOffsetAdjustment = 0.25;
         arduinoLengthOffset = _arduinoHousingLengthEdgePadding-paddingOffsetAdjustment;
         arduinoWidthOffset = _arduinoHousingWidthEdgePadding-paddingOffsetAdjustment;
-        arduinoInsetIntoHousing = 2.5;
+        arduinoInsetIntoHousing = 2;
         difference()
         {
             difference()
@@ -497,7 +525,7 @@ module arduinoHousingBase()
         }
 
         arduinoCenterSupportBeamLength = 8;
-        translate([(_arduinoHousingBaseLength-arduinoCenterSupportBeamLength)/2, arduinoWidthOffset-1, 0.1])
+        translate([((_arduinoHousingBaseLength-arduinoCenterSupportBeamLength)/2)-0.25, arduinoWidthOffset-1, 0.1])
             cube([arduinoCenterSupportBeamLength, _arduinoMicroBodyWidth+2, _arduinoHousingBaseDepth-1.6]);
         //translate([arduinoLengthOffset, arduinoWidthOffset, _arduinoHousingBaseDepth-arduinoInsetIntoHousing])
         //    arduinoMicroPunch();
