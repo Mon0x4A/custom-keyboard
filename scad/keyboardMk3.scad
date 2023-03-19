@@ -166,7 +166,16 @@ module keyboardAssembly(switchType)
     housingDepth = (switchType == MX_SWITCH_TYPE) ? _mxHousingBodyDepth : _kailhHousingBodyDepth;
     union()
     {
-        housing(housingDepth);
+        difference()
+        {
+            housing(housingDepth);
+            //Trim off the top edge of the housing to avoid sharper corners
+            housingTopTrimBlockLength = _mainBackplateLength+_pinkyBackplateLength+_thumbBackplateLength;
+            housingTopTrimBlockWidth = _mainBackplateWidth+_pinkyBackplateWidth+_thumbBackplateWidth;
+            housingTopTrimAmount = 1.0;
+            translate([-_housingWallThickness*3, -_housingWallThickness*3, housingDepth-housingTopTrimAmount])
+                cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
+        }
         translate([0,0,backplateOffsetFromHousing])
             backplate(backplateDepth);
         //Arduino enclosure
