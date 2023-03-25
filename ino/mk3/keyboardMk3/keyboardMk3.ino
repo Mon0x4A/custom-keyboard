@@ -18,16 +18,16 @@ const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 9;
 const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 7 : 8;
 const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 6 : 7;
 
-const byte COL_0_PIN = A1;
-const byte COL_1_PIN = A0;
-const byte COL_2_PIN = 15;
-const byte COL_3_PIN = 14;
-const byte COL_4_PIN = 16;
-const byte COL_5_PIN = 10;
-const byte COL_6_PIN = 11;
+const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 0 : 10;
+const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 0 : 16;
+const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 0 : 15;
+const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 0 : 14;
+const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 0 : A0;
+const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 0 : A1;
+const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? 0 : A2;
 
 const byte ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
-const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN};
+const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN };
 
 #define KC_NULL 0x00
 #define KC_LM1 0x01 //(STX) //Repurposing obsolete ascii codes for our layer modifier codes
@@ -118,6 +118,10 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
         }
 };
 
+// For SOME reason these matrices can't be placed in SwitchMatrixManager
+// because row one bugs our like crazy. Still don't understand why yet.
+byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
+byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 class SwitchMatrixManager
 {
     public:
@@ -133,10 +137,12 @@ class SwitchMatrixManager
         void iterate()
         {
             read_matrix();
+            handle_switch_state_changes();
+            copy_matrix_state_to_prev();
 
             if (SWITCH_TESTING_MODE)
             {
-                print_matrix_to_serial_out(_switchMatrix);
+                print_matrix_to_serial_out();
             }
             else
             {
@@ -146,9 +152,6 @@ class SwitchMatrixManager
 
     private:
         //Private Variables
-        byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
-        byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
-
         IKeyswitchPressedHandler* _pressHandler;
         IKeyswitchReleasedHandler* _releaseHandler;
 
@@ -174,6 +177,7 @@ class SwitchMatrixManager
                 // disable the row, turn the pullup resistor off
                 pinMode(curRow, INPUT);
             }
+            //print_matrix_to_serial_out();
         }
 
         void handle_switch_state_changes()
@@ -189,31 +193,47 @@ class SwitchMatrixManager
                         {
                             // We started pressing a key.
                             //TODO handle state call
+                            Serial.println("R:"+String(i)+"C:"+String(j)+", "+String("pressed"));
                         }
                         else
                         {
                             // We released a key.
                             //TODO handle state call
+                            Serial.println("R:"+String(i)+"C:"+String(j)+", "+String("released"));
                         }
                     }
                 }
             }
         }
 
-        static void print_matrix_to_serial_out(byte switchStateMatrix[ROW_COUNT][COLUMN_COUNT])
+        void copy_matrix_state_to_prev()
+        {
+            for (int i = 0; i < ROW_COUNT; i++)
+            {
+                for (int j = 0; j < COLUMN_COUNT; j++)
+                {
+                    _switchMatrixPrev[i][j] = _switchMatrix[i][j];
+                }
+            }
+        }
+
+        void print_matrix_to_serial_out()
         {
             String matrixstr = "";
             for (int row = 0; row < ROW_COUNT; row++)
             {
+                // print row labels
                 if (row < 10) {
                    matrixstr += String("0");
                 }
                 matrixstr += String(row);
                 matrixstr += String(": ");
 
+                // get byte vals
                 for (int col = 0; col < COLUMN_COUNT; col++)
                 {
-                    matrixstr += String(switchStateMatrix[row][col]);
+                    //Serial.println("R:"+String(row)+"C:"+String(col)+", "+String(_switchMatrix[row][col]));
+                    matrixstr += String(_switchMatrix[row][col]);
                     if (col < COLUMN_COUNT)
                         matrixstr += String(", ");
                 }
@@ -417,14 +437,32 @@ SwitchMatrixManager* _matrixManager;
 
 void setup()
 {
+    // Init serial output
+    Serial.begin(TESTING_SERIAL_BAUD_RATE);
+    // Wait for serial to boot up...
+    delay(1000);
+    Serial.println("Starting keyboard...");
+
+    // Init logic managers
     KeyswitchPressHandler pressHandler;
     KeyswitchReleaseHandler releaseHandler;
     SwitchMatrixManager manager(pressHandler, releaseHandler);
     _matrixManager = &manager;
+
+    // Init default pin modes;
+    for(int i = 0; i < ROW_COUNT; i++)
+    {
+        pinMode(ROWS[i], INPUT_PULLUP);
+    }
+    for (int i = 0; i < COLUMN_COUNT; i++)
+    {
+        pinMode(COLS[i], INPUT);
+    }
 }
 
 void loop()
 {
+    delay(LOOP_DELAY_TIME);
     _matrixManager->iterate();
 }
 
