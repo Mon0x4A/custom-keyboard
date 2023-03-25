@@ -1,4 +1,3 @@
-//TODO begin coding for mk3 layour
 //Imports
 #include "Keyboard.h"
 
@@ -43,17 +42,6 @@ enum KeyboardSide
     right = 69
 };
 
-enum TapKeyFunction
-{
-    escape,
-    tab,
-    space,
-    repeat,
-    colon,
-    backspace,
-    enter
-};
-
 //Interfaces
 class IBaseKeymap
 {
@@ -87,48 +75,184 @@ class ILayerInfoService :
 {
 };
 
+class IKeyswitchPressedHandler
+{
+    public:
+        virtual void handle_switch_press(unsigned int row, unsigned int col) = 0;
+};
+
+class IKeyswitchReleasedHandler
+{
+    public:
+        virtual void handle_switch_release(unsigned int row, unsigned int col) = 0;
+};
+
 //Classes
-class KeyHelper
+class KeyboardHelper
 {
     public:
         static bool has_reached_time_threshold(unsigned long holdStart, unsigned long timeout)
         {
             return ((millis()-holdStart) >= timeout);
         }
+
     private:
         KeyHelper() { }
+};
+
+class KeyswitchPressHandler : public IKeyswitchPressedHandler
+{
+    public:
+        void handle_switch_press(unsigned int row, unsigned int col) 
+        {
+            //TODO handle press
+        }
+};
+
+class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
+{
+    public:
+        virtual void handle_switch_release(unsigned int row, unsigned int col)
+        {
+            //TODO handle release
+        }
+};
+
+class SwitchMatrixManager
+{
+    public:
+        //Constructor
+        SwitchMatrixManager(IKeyswitchPressedHandler& pressHandler,
+            IKeyswitchReleasedHandler& releaseHandler)
+        {
+            _pressHandler = &pressHandler;
+            _releaseHandler = &releaseHandler;
+        }
+
+        //Public Methods
+        void iterate()
+        {
+            read_matrix();
+
+            if (SWITCH_TESTING_MODE)
+            {
+                print_matrix_to_serial_out(_switchMatrix);
+            }
+            else
+            {
+                handle_switch_state_changes();
+            }
+        }
+
+    private:
+        //Private Variables
+        byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
+        byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
+
+        IKeyswitchPressedHandler* _pressHandler;
+        IKeyswitchReleasedHandler* _releaseHandler;
+
+        //Private Methods
+        void read_matrix()
+        {
+            for (int row = 0; row < ROW_COUNT; row++)
+            {
+                // set the row to output low
+                byte curRow = ROWS[row];
+                pinMode(curRow, OUTPUT);
+                digitalWrite(curRow, LOW);
+
+                // iterate through the columns reading the value - should be zero if switch is pressed
+                for (int col = 0; col < COLUMN_COUNT; col++)
+                {
+                    byte rowCol = COLS[col];
+                    pinMode(rowCol, INPUT_PULLUP);
+                    _switchMatrix[row][col] = digitalRead(rowCol);
+                    pinMode(rowCol, INPUT);
+                }
+
+                // disable the row, turn the pullup resistor off
+                pinMode(curRow, INPUT);
+            }
+        }
+
+        void handle_switch_state_changes()
+        {
+            for (int i = 0; i < ROW_COUNT; i++)
+            {
+                for (int j = 0; j < COLUMN_COUNT; j++)
+                {
+                    // If the swich changed state..
+                    if (_switchMatrix[i][j] != _switchMatrixPrev[i][j])
+                    {
+                        if (_switchMatrix[i][j] == 0 && _switchMatrixPrev[i][j] == 1)
+                        {
+                            // We started pressing a key.
+                            //TODO handle state call
+                        }
+                        else
+                        {
+                            // We released a key.
+                            //TODO handle state call
+                        }
+                    }
+                }
+            }
+        }
+
+        static void print_matrix_to_serial_out(byte switchStateMatrix[ROW_COUNT][COLUMN_COUNT])
+        {
+            String matrixstr = "";
+            for (int row = 0; row < ROW_COUNT; row++)
+            {
+                if (row < 10) {
+                   matrixstr += String("0");
+                }
+                matrixstr += String(row);
+                matrixstr += String(": ");
+
+                for (int col = 0; col < COLUMN_COUNT; col++)
+                {
+                    matrixstr += String(switchStateMatrix[row][col]);
+                    if (col < COLUMN_COUNT)
+                        matrixstr += String(", ");
+                }
+                matrixstr += String("\n");
+            }
+            Serial.print(matrixstr);
+        }
 };
 
 class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
 {
     public:
         //IBaseTapStateProvider
-        virtual bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
+        bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
         {
             return (TAP_KEYS[row][col] != KC_NULL);
         }
-        virtual bool get_tap_keycode_at(unsigned int row, unsigned int col)
+        bool get_tap_keycode_at(unsigned int row, unsigned int col)
         {
             return TAP_KEYS[row][col];
         }
-        virtual bool get_has_tap_timed_out(unsigned int row, unsigned int col)
+        bool get_has_tap_timed_out(unsigned int row, unsigned int col)
         {
-            return !KeyHelper::has_reached_time_threshold(
+            return !KeyboardHelper::has_reached_time_threshold(
                 _pressStart[row][col], DEFAULT_TAP_ACTION_TIMEOUT);
         }
-        virtual bool get_has_base_timed_in(unsigned int row, unsigned int col)
+        bool get_has_base_timed_in(unsigned int row, unsigned int col)
         {
-            return KeyHelper::has_reached_time_threshold(
+            return KeyboardHelper::has_reached_time_threshold(
                 _pressStart[row][col], DEFAULT_BASE_APPLY_DELAY);
         }
 
         //IBaseTapStateSetter
-        virtual void set_start_key_press(unsigned int row, unsigned int col)
+        void set_start_key_press(unsigned int row, unsigned int col)
         {
             _chordPerformed[row][col] = false;
             _pressStart[row][col] = millis();
         }
-        virtual void set_has_base_chord_action_performed(
+        void set_has_base_chord_action_performed(
             unsigned int row, unsigned int col, bool hasBaseChordActionBeenPerfomed)
         {
             _chordPerformed[row][col] = true;
@@ -144,18 +268,18 @@ class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapS
         };
 
         //Private Variables
-        unsigned long _pressStart[ROW_COUNT][COLUMN_COUNT] =
-            {
-                { 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0 },
-            };
-        bool _chordPerformed[ROW_COUNT][COLUMN_COUNT] =
-            {
-                { 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0 },
-                { 0, 0, 0, 0, 0, 0, 0 },
-            };
+        unsigned long _pressStart[ROW_COUNT][COLUMN_COUNT] = {0};
+            //{
+            //    { 0, 0, 0, 0, 0, 0, 0 },
+            //    { 0, 0, 0, 0, 0, 0, 0 },
+            //    { 0, 0, 0, 0, 0, 0, 0 },
+            //};
+        bool _chordPerformed[ROW_COUNT][COLUMN_COUNT] = {0};
+            //{
+            //    { 0, 0, 0, 0, 0, 0, 0 },
+            //    { 0, 0, 0, 0, 0, 0, 0 },
+            //    { 0, 0, 0, 0, 0, 0, 0 },
+            //};
 };
 
 class LeftLayerZeroInfo : public ILayerInfoService
@@ -171,35 +295,35 @@ class LeftLayerZeroInfo : public ILayerInfoService
 
         //Public Methods
         //IBaseKeymap
-        virtual unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
+        unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
         {
             return BASE_KEYS[row][col];
         }
 
         //IBaseTapStateProvider
-        virtual bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
+        bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
         {
             return _baseTapStateProvider->get_is_base_tap_enabled_key(row,col);
         }
-        virtual bool get_tap_keycode_at(unsigned int row, unsigned int col)
+        bool get_tap_keycode_at(unsigned int row, unsigned int col)
         {
             return _baseTapStateProvider->get_tap_keycode_at(row,col);
         }
-        virtual bool get_has_tap_timed_out(unsigned int row, unsigned int col)
+        bool get_has_tap_timed_out(unsigned int row, unsigned int col)
         {
             return _baseTapStateProvider->get_has_tap_timed_out(row,col);
         }
-        virtual bool get_has_base_timed_in(unsigned int row, unsigned int col)
+        bool get_has_base_timed_in(unsigned int row, unsigned int col)
         {
             return _baseTapStateProvider->get_has_base_timed_in(row,col);
         }
 
         //IBaseTapStateSetter
-        virtual void set_start_key_press(unsigned int row, unsigned int col)
+        void set_start_key_press(unsigned int row, unsigned int col)
         {
             return _baseTapStateSetter->set_start_key_press(row,col);
         }
-        virtual void set_has_base_chord_action_performed(
+        void set_has_base_chord_action_performed(
             unsigned int row, unsigned int col, bool hasBaseChordActionBeenPerfomed)
         {
             return _baseTapStateSetter->set_has_base_chord_action_performed(
@@ -223,14 +347,84 @@ class LeftLayerZeroInfo : public ILayerInfoService
         IBaseTapStateSetter* _baseTapStateSetter;
 };
 
+class LeftLayerOneInfo : public ILayerInfoService
+{
+    public:
+        //Constructor
+        LeftLayerOneInfo(IBaseTapStateProvider& tapStateProvider,
+            IBaseTapStateSetter& tapStateSetter)
+        {
+            _baseTapStateProvider = &tapStateProvider;
+            _baseTapStateSetter = &tapStateSetter;
+        }
+
+        //Public Methods
+        //IBaseKeymap
+        unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
+        {
+            return BASE_KEYS[row][col];
+        }
+
+        //IBaseTapStateProvider
+        bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_is_base_tap_enabled_key(row,col);
+        }
+        bool get_tap_keycode_at(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_tap_keycode_at(row,col);
+        }
+        bool get_has_tap_timed_out(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_has_tap_timed_out(row,col);
+        }
+        bool get_has_base_timed_in(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_has_base_timed_in(row,col);
+        }
+
+        //IBaseTapStateSetter
+        void set_start_key_press(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateSetter->set_start_key_press(row,col);
+        }
+        void set_has_base_chord_action_performed(
+            unsigned int row, unsigned int col, bool hasBaseChordActionBeenPerfomed)
+        {
+            return _baseTapStateSetter->set_has_base_chord_action_performed(
+                row,col,hasBaseChordActionBeenPerfomed);
+        }
+
+    private:
+        //Private Constants
+        // NOTE: The left layer maps use the right shift because left shift is what is
+        // pressed and released during the 'Keyboard.write()' calls. Thus firing unwanted
+        // release events if the physical left shift key is held during that.
+        const unsigned char BASE_KEYS[ROW_COUNT][COLUMN_COUNT] =
+        {
+            { KEY_LEFT_ALT, KEY_F1,  KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5,  KC_LM1 },
+            { KC_NULL,      KEY_F6,  KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10, KC_LM2 },
+            { KC_NULL,      KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, KEY_RIGHT_SHIFT },
+        };
+
+        //Private Variables
+        IBaseTapStateProvider* _baseTapStateProvider;
+        IBaseTapStateSetter* _baseTapStateSetter;
+};
+
 //Main
+SwitchMatrixManager* _matrixManager;
+
 void setup()
 {
+    KeyswitchPressHandler pressHandler;
+    KeyswitchReleaseHandler releaseHandler;
+    SwitchMatrixManager manager(pressHandler, releaseHandler);
+    _matrixManager = &manager;
 }
 
 void loop()
 {
+    _matrixManager->iterate();
 }
-
-//Utility
 
