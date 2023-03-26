@@ -14,6 +14,8 @@ const unsigned long DEFAULT_BASE_APPLY_DELAY = 50;
 const int COLUMN_COUNT = 7;
 const int ROW_COUNT = 3;
 
+const int LAYER_COUNT = 3;
+
 const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 9;
 const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 7 : 8;
 const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 6 : 7;
@@ -75,6 +77,12 @@ class ILayerInfoService :
 {
 };
 
+class IIndexedLayerInfoServiceProvider
+{
+    public:
+        virtual ILayerInfoService* get_layer_info_for_index(unsigned int layerIndex) = 0;
+};
+
 class IKeyswitchPressedHandler
 {
     public:
@@ -103,23 +111,39 @@ class KeyboardHelper
 class KeyswitchPressHandler : public IKeyswitchPressedHandler
 {
     public:
+        KeyswitchPressHandler(IIndexedLayerInfoServiceProvider& layerInfoProvider)
+        {
+            _layerInfoProvider = &layerInfoProvider;
+        }
+
         void handle_switch_press(unsigned int row, unsigned int col) 
         {
             //TODO handle press
         }
+
+    private:
+        IIndexedLayerInfoServiceProvider* _layerInfoProvider;
 };
 
 class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
 {
     public:
-        virtual void handle_switch_release(unsigned int row, unsigned int col)
+        KeyswitchReleaseHandler(IIndexedLayerInfoServiceProvider& layerInfoProvider)
+        {
+            _layerInfoProvider = &layerInfoProvider;
+        }
+
+        void handle_switch_release(unsigned int row, unsigned int col)
         {
             //TODO handle release
         }
+    
+    private:
+        IIndexedLayerInfoServiceProvider* _layerInfoProvider;
 };
 
 // For SOME reason these matrices can't be placed in SwitchMatrixManager
-// because row one bugs our like crazy. Still don't understand why yet.
+// because row one bugs out like crazy. Still don't understand why yet.
 byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 class SwitchMatrixManager
@@ -246,6 +270,8 @@ class SwitchMatrixManager
 class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
 {
     public:
+        LeftBaseTapStateContainer() { }
+
         //IBaseTapStateProvider
         bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
         {
@@ -264,6 +290,10 @@ class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapS
         {
             return KeyboardHelper::has_reached_time_threshold(
                 _pressStart[row][col], DEFAULT_BASE_APPLY_DELAY);
+        }
+        bool get_has_base_chord_action_been_performed(unsigned int row, unsigned int col)
+        {
+            return _chordPerformed[row][col];
         }
 
         //IBaseTapStateSetter
@@ -337,6 +367,10 @@ class LeftLayerZeroInfo : public ILayerInfoService
         {
             return _baseTapStateProvider->get_has_base_timed_in(row,col);
         }
+        bool get_has_base_chord_action_been_performed(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_has_base_chord_action_been_performed(row,col);
+        }
 
         //IBaseTapStateSetter
         void set_start_key_press(unsigned int row, unsigned int col)
@@ -402,6 +436,10 @@ class LeftLayerOneInfo : public ILayerInfoService
         {
             return _baseTapStateProvider->get_has_base_timed_in(row,col);
         }
+        bool get_has_base_chord_action_been_performed(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_has_base_chord_action_been_performed(row,col);
+        }
 
         //IBaseTapStateSetter
         void set_start_key_press(unsigned int row, unsigned int col)
@@ -432,6 +470,26 @@ class LeftLayerOneInfo : public ILayerInfoService
         IBaseTapStateSetter* _baseTapStateSetter;
 };
 
+class LeftLayerInfoProvider : public IIndexedLayerInfoServiceProvider
+{
+    public:
+        LayerInfoProvider() { }
+
+        ILayerInfoService* get_layer_info_for_index(unsigned int layerIndex)
+        {
+            return _layerInfos[layerIndex];
+        }
+
+        void set_layer_info_for_index(unsigned int layerIndex, ILayerInfoService& layerInfo)
+        {
+            _layerInfos[layerIndex] = &layerInfo;
+        }
+
+    private:
+        ILayerInfoService* _layerInfos[LAYER_COUNT];
+};
+
+
 //Main
 SwitchMatrixManager* _matrixManager;
 
@@ -444,10 +502,31 @@ void setup()
     Serial.println("Starting keyboard...");
 
     // Init logic managers
-    KeyswitchPressHandler pressHandler;
-    KeyswitchReleaseHandler releaseHandler;
-    SwitchMatrixManager manager(pressHandler, releaseHandler);
-    _matrixManager = &manager;
+    if (IS_LEFT_KEYBOARD_SIDE)
+    {
+        LeftBaseTapStateContainer lBaseTapContainer;
+
+        LeftLayerInfoProvider lLayerProvder;
+        LeftLayerZeroInfo lZeroInfo(lBaseTapContainer, lBaseTapContainer);
+        lLayerProvder.set_layer_info_for_index(0, lZeroInfo);
+
+        KeyswitchPressHandler pressHandler(lLayerProvder);
+        KeyswitchReleaseHandler releaseHandler(lLayerProvder);
+        SwitchMatrixManager manager(pressHandler, releaseHandler);
+        _matrixManager = &manager;
+        Serial.println("Initializing Left Side.");
+    }
+    else
+    {
+        //TODO implement right side
+        //LeftLayerInfoProvider lLayerProvder;
+        //KeyswitchPressHandler pressHandler(lLayerProvder);
+        //KeyswitchReleaseHandler releaseHandler(lLayerProvder);
+        //SwitchMatrixManager manager(pressHandler, releaseHandler);
+        //_matrixManager = &manager;
+        //Serial.println("Initializing Left Side.");
+    }
+
 
     // Init default pin modes;
     for(int i = 0; i < ROW_COUNT; i++)
