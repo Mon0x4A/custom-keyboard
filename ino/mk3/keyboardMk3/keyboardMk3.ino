@@ -56,6 +56,13 @@ const unsigned char L1_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     { KC_NULL,      KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, KEY_RIGHT_SHIFT },
 };
 
+const unsigned char L2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KEY_LEFT_GUI, '`', '0', '1', '2', '3', KC_LM1 },
+    { KC_NULL,      '@', '$', '4', '5', '6', KC_LM2 },
+    { KC_NULL,      '<', '>', '7', '8', '9', KEY_RIGHT_SHIFT },
+};
+
 //Enums
 enum KeyboardSide
 {
@@ -201,7 +208,9 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                     KeyboardHelper::try_log("Declining to send null keycode.");
                     break;
                 default:
-                    // We have no special keycode handling.
+                    if (layerInfo->get_is_base_tap_enabled_key(row,col))
+                    {
+                    }
                     KeyboardHelper::try_log("Sending press of keycode: "+String(keycode));
                     //Keyboard.press(keycode);
                     break;
@@ -436,13 +445,13 @@ class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapS
             //{
             //    { 0, 0, 0, 0, 0, 0, 0 },
             //    { 0, 0, 0, 0, 0, 0, 0 },
-            //    { 0, 0, 0, 0, 0, 0, 0 },
+            //    { 0, 0, 0, 0, 0, 0, 0 }
             //};
         bool _chordPerformed[ROW_COUNT][COLUMN_COUNT] = {0};
             //{
             //    { 0, 0, 0, 0, 0, 0, 0 },
             //    { 0, 0, 0, 0, 0, 0, 0 },
-            //    { 0, 0, 0, 0, 0, 0, 0 },
+            //    { 0, 0, 0, 0, 0, 0, 0 }
             //};
 };
 
@@ -542,41 +551,46 @@ void setup()
 
     // Init logic managers
 
+    int initDelay = 20;
     if (IS_LEFT_KEYBOARD_SIDE)
     {
         KeyboardHelper::try_log("Initializing Left Side.");
         //Create the shared tap state container.
         LeftBaseTapStateContainer lBaseTapContainer;
-            delay(5);
+            delay(initDelay);
 
         //Initialize the layers
         LayerInfoContainer lZeroInfo(L0_BASE_KEYCODES, lBaseTapContainer, lBaseTapContainer);
-            delay(5);
+            delay(initDelay);
         LayerInfoContainer lOneInfo(L1_BASE_KEYCODES, lBaseTapContainer, lBaseTapContainer);
-            delay(5);
+            delay(initDelay);
+        LayerInfoContainer lTwoInfo(L2_BASE_KEYCODES, lBaseTapContainer, lBaseTapContainer);
+            delay(initDelay);
 
         //Collate the layers
         LeftLayerInfoProvider layerInfoProvider;
-            delay(5);
+            delay(initDelay);
         layerInfoProvider.set_layer_info_for_index(0, lZeroInfo);
-            delay(5);
+            delay(initDelay);
         layerInfoProvider.set_layer_info_for_index(1, lOneInfo);
-            delay(5);
+            delay(initDelay);
+        layerInfoProvider.set_layer_info_for_index(2, lTwoInfo);
+            delay(initDelay);
 
         //Build generic handling classes with the left code.
         //For some reason this cannot be moved outside of the if
         //conditional due to unknown scoping issues. This block
         //can be shared once that is figured out.
         KeyboardLayoutStateContainer keyboardStateContainer;
-            delay(5);
+            delay(initDelay);
         KeyswitchPressHandler pressHandler(layerInfoProvider, keyboardStateContainer);
-            delay(5);
+            delay(initDelay);
         KeyswitchReleaseHandler releaseHandler(layerInfoProvider, keyboardStateContainer);
-            delay(5);
+            delay(initDelay);
         SwitchMatrixManager manager(pressHandler, releaseHandler);
-            delay(5);
+            delay(initDelay);
         _matrixManager = &manager;
-            delay(5);
+            delay(initDelay);
         KeyboardHelper::try_log("Left side initialization complete.");
     }
     else
