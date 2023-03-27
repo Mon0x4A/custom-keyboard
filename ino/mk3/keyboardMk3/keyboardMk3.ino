@@ -17,17 +17,17 @@ const int ROW_COUNT = 3;
 
 const int LAYER_COUNT = 3;
 
-const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 9 : 9;
-const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 8;
-const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 7 : 7;
+const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 7 : 9;
+const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 9 : 8;
+const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 7;
 
-const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 10 : 10;
-const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 16 : 16;
+const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? A0 : 10;
+const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? A2 : 16;
 const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 15 : 15;
 const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 14 : 14;
-const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? A0 : A0;
-const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? A1 : A1;
-const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? A2 : A2;
+const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 16 : A0;
+const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 10 : A1;
+const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? A1 : A2;
 
 const byte ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
 const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN };
@@ -116,7 +116,7 @@ class KeyboardHelper
         {
             if (ENABLE_LOGGING)
             {
-                Serial.println(message);
+                Serial.println("> "+message);
                 delay(5);
             }
         }
@@ -129,7 +129,7 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
 {
     public:
         KeyboardLayoutStateContainer()
-        { 
+        {
             _currentLayer = 0;
         }
 
@@ -157,35 +157,35 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
             _keyboardStateContainer = &keyboardStateContainer;
         }
 
-        void handle_switch_press(unsigned int row, unsigned int col) 
+        void handle_switch_press(unsigned int row, unsigned int col)
         {
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("pressed"));
             unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
             ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
-            
+
             switch (keycode)
             {
                 case KC_LM1:
                     _keyboardStateContainer->set_current_layer(1);
-                    KeyboardHelper::try_log(">Entering layer 1");
+                    KeyboardHelper::try_log("Entering layer 1");
                     break;
                 case KC_LM2:
                     _keyboardStateContainer->set_current_layer(2);
-                    KeyboardHelper::try_log(">Entering layer 2");
+                    KeyboardHelper::try_log("Entering layer 2");
                     break;
                 case KC_REPEAT:
-                    KeyboardHelper::try_log(">Repeating last instruction:");
+                    KeyboardHelper::try_log("Repeating last instruction:");
                     break;
                 case KC_NULL:
                     // Do nothing if we hit the null keycode.
-                    KeyboardHelper::try_log(">Declining to send null keycode.");
+                    KeyboardHelper::try_log("Declining to send null keycode.");
                     break;
                 default:
                     // We have no special keycode handling.
-                    KeyboardHelper::try_log(">Sending press of keycode: "+String(keycode));
-                    Keyboard.press(keycode);
+                    KeyboardHelper::try_log("Sending press of keycode: "+String(keycode));
+                    //Keyboard.press(keycode);
                     break;
             }
         }
@@ -198,24 +198,44 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
 class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
 {
     public:
-        KeyswitchReleaseHandler(IIndexedLayerInfoServiceProvider& layerInfoProvider)
+        KeyswitchReleaseHandler(IIndexedLayerInfoServiceProvider& layerInfoProvider,
+            IKeyboardStateContainer& keyboardStateContainer)
         {
             _layerInfoProvider = &layerInfoProvider;
+            _keyboardStateContainer = &keyboardStateContainer;
         }
 
         void handle_switch_release(unsigned int row, unsigned int col)
         {
-            //TODO handle release
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("released"));
-            //unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
-            ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(0);
+            unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
+            ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
-            //KeyboardHelper::try_log("Sent releasecode "+String(keycode));
-            Keyboard.release(keycode);
+            KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
+
+            switch (keycode)
+            {
+                case KC_LM1:
+                case KC_LM2:
+                    _keyboardStateContainer->set_current_layer(0);
+                    KeyboardHelper::try_log("Entering layer 0");
+                    break;
+                case KC_REPEAT:
+                case KC_NULL:
+                    // Do nothing if we hit the null keycode.
+                    KeyboardHelper::try_log("Released a key where no action was required.");
+                    break;
+                default:
+                    // We have no special keycode handling.
+                    KeyboardHelper::try_log("Sending release of keycode: "+String(keycode));
+                    //Keyboard.release(keycode);
+                    break;
+            }
         }
-    
+
     private:
         IIndexedLayerInfoServiceProvider* _layerInfoProvider;
+        IKeyboardStateContainer* _keyboardStateContainer;
 };
 
 // For SOME reason these matrices can't be placed in SwitchMatrixManager
@@ -237,7 +257,6 @@ class SwitchMatrixManager
         void iterate()
         {
             read_matrix();
-            handle_switch_state_changes();
             copy_matrix_state_to_prev();
 
             if (SWITCH_TESTING_MODE)
@@ -578,28 +597,43 @@ void setup()
     KeyboardHelper::try_log("Starting keyboard...");
 
     // Init logic managers
-    LeftLayerInfoProvider layerInfoProvider;
-        delay(5);
 
     if (IS_LEFT_KEYBOARD_SIDE)
     {
-        LeftBaseTapStateContainer lBaseTapContainer;
-        delay(5);
-        LeftLayerZeroInfo lZeroInfo(lBaseTapContainer, lBaseTapContainer);
-        delay(5);
-        layerInfoProvider.set_layer_info_for_index(0, lZeroInfo);
-        delay(5);
         KeyboardHelper::try_log("Initializing Left Side.");
+        //Create the shared tap state container.
+        LeftBaseTapStateContainer lBaseTapContainer;
+            delay(5);
+
+        //Initialize the layers
+        LeftLayerZeroInfo lZeroInfo(lBaseTapContainer, lBaseTapContainer);
+            delay(5);
+        LeftLayerOneInfo lOneInfo(lBaseTapContainer, lBaseTapContainer);
+            delay(5);
+
+        //Collate the layers
+        LeftLayerInfoProvider layerInfoProvider;
+            delay(5);
+        layerInfoProvider.set_layer_info_for_index(0, lZeroInfo);
+            delay(5);
+        layerInfoProvider.set_layer_info_for_index(1, lOneInfo);
+            delay(5);
+
+        //Build generic handling classes with the left code.
+        //For some reason this cannot be moved outside of the if
+        //conditional due to unknown scoping issues. This block
+        //can be shared once that is figured out.
         KeyboardLayoutStateContainer keyboardStateContainer;
             delay(5);
         KeyswitchPressHandler pressHandler(layerInfoProvider, keyboardStateContainer);
             delay(5);
-        KeyswitchReleaseHandler releaseHandler(layerInfoProvider);
+        KeyswitchReleaseHandler releaseHandler(layerInfoProvider, keyboardStateContainer);
             delay(5);
         SwitchMatrixManager manager(pressHandler, releaseHandler);
             delay(5);
         _matrixManager = &manager;
             delay(5);
+        KeyboardHelper::try_log("Left side initialization complete.");
     }
     else
     {
