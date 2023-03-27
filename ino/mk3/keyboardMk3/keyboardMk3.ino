@@ -38,6 +38,24 @@ const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, CO
 #define KC_REPEAT 0x07 //(BEL)
 #define KEY_PRINT_SCREEN 0xCE
 
+// Layer Arrays
+// NOTE: The left layer maps use the right shift because left shift is what is
+// pressed and released during the 'Keyboard.write()' calls. Thus firing unwanted
+// release events if the physical left shift key is held during that.
+const unsigned char L0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KEY_LEFT_CTRL, 'q', 'w', 'e', 'r', 't', KC_LM1 },
+    { KC_NULL,       'a', 's', 'd', 'f', 'g', KC_LM2 },
+    { KC_NULL,       'z', 'x', 'c', 'v', 'b', KEY_RIGHT_SHIFT },
+};
+
+const unsigned char L1_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KEY_LEFT_ALT, KEY_F1,  KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5,  KC_LM1 },
+    { KC_NULL,      KEY_F6,  KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10, KC_LM2 },
+    { KC_NULL,      KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, KEY_RIGHT_SHIFT },
+};
+
 //Enums
 enum KeyboardSide
 {
@@ -257,7 +275,6 @@ class SwitchMatrixManager
         void iterate()
         {
             read_matrix();
-            copy_matrix_state_to_prev();
 
             if (SWITCH_TESTING_MODE)
             {
@@ -267,6 +284,8 @@ class SwitchMatrixManager
             {
                 handle_switch_state_changes();
             }
+
+            copy_matrix_state_to_prev();
         }
 
     private:
@@ -427,13 +446,16 @@ class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapS
             //};
 };
 
-class LeftLayerZeroInfo : public ILayerInfoService
+class LayerInfoContainer : public ILayerInfoService
 {
     public:
         //Constructor
-        LeftLayerZeroInfo(IBaseTapStateProvider& tapStateProvider,
+        LayerInfoContainer(
+            const unsigned char (&baseKeymap)[ROW_COUNT][COLUMN_COUNT],
+            IBaseTapStateProvider& tapStateProvider,
             IBaseTapStateSetter& tapStateSetter)
         {
+            _baseKeys = &baseKeymap;
             _baseTapStateProvider = &tapStateProvider;
             _baseTapStateSetter = &tapStateSetter;
         }
@@ -442,7 +464,7 @@ class LeftLayerZeroInfo : public ILayerInfoService
         //IBaseKeymap
         unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
         {
-            return BASE_KEYS[row][col];
+            return (*_baseKeys)[row][col];
         }
 
         //IBaseTapStateProvider
@@ -480,90 +502,12 @@ class LeftLayerZeroInfo : public ILayerInfoService
         }
 
     private:
-        //Private Constants
-        // NOTE: The left layer maps use the right shift because left shift is what is
-        // pressed and released during the 'Keyboard.write()' calls. Thus firing unwanted
-        // release events if the physical left shift key is held during that.
-        const unsigned char BASE_KEYS[ROW_COUNT][COLUMN_COUNT] =
-        {
-            { KEY_LEFT_CTRL, 'q', 'w', 'e', 'r', 't', KC_LM1 },
-            { KC_NULL,       'a', 's', 'd', 'f', 'g', KC_LM2 },
-            { KC_NULL,       'z', 'x', 'c', 'v', 'b', KEY_RIGHT_SHIFT },
-        };
-
         //Private Variables
         IBaseTapStateProvider* _baseTapStateProvider;
         IBaseTapStateSetter* _baseTapStateSetter;
+        unsigned char (*_baseKeys)[ROW_COUNT][COLUMN_COUNT];
 };
 
-class LeftLayerOneInfo : public ILayerInfoService
-{
-    public:
-        //Constructor
-        LeftLayerOneInfo(IBaseTapStateProvider& tapStateProvider,
-            IBaseTapStateSetter& tapStateSetter)
-        {
-            _baseTapStateProvider = &tapStateProvider;
-            _baseTapStateSetter = &tapStateSetter;
-        }
-
-        //Public Methods
-        //IBaseKeymap
-        unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
-        {
-            return BASE_KEYS[row][col];
-        }
-
-        //IBaseTapStateProvider
-        bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_is_base_tap_enabled_key(row,col);
-        }
-        bool get_tap_keycode_at(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_tap_keycode_at(row,col);
-        }
-        bool get_has_tap_timed_out(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_has_tap_timed_out(row,col);
-        }
-        bool get_has_base_timed_in(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_has_base_timed_in(row,col);
-        }
-        bool get_has_base_chord_action_been_performed(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_has_base_chord_action_been_performed(row,col);
-        }
-
-        //IBaseTapStateSetter
-        void set_start_key_press(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateSetter->set_start_key_press(row,col);
-        }
-        void set_has_base_chord_action_performed(
-            unsigned int row, unsigned int col, bool hasBaseChordActionBeenPerfomed)
-        {
-            return _baseTapStateSetter->set_has_base_chord_action_performed(
-                row,col,hasBaseChordActionBeenPerfomed);
-        }
-
-    private:
-        //Private Constants
-        // NOTE: The left layer maps use the right shift because left shift is what is
-        // pressed and released during the 'Keyboard.write()' calls. Thus firing unwanted
-        // release events if the physical left shift key is held during that.
-        const unsigned char BASE_KEYS[ROW_COUNT][COLUMN_COUNT] =
-        {
-            { KEY_LEFT_ALT, KEY_F1,  KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5,  KC_LM1 },
-            { KC_NULL,      KEY_F6,  KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10, KC_LM2 },
-            { KC_NULL,      KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, KEY_RIGHT_SHIFT },
-        };
-
-        //Private Variables
-        IBaseTapStateProvider* _baseTapStateProvider;
-        IBaseTapStateSetter* _baseTapStateSetter;
-};
 
 class LeftLayerInfoProvider : public IIndexedLayerInfoServiceProvider
 {
@@ -606,9 +550,9 @@ void setup()
             delay(5);
 
         //Initialize the layers
-        LeftLayerZeroInfo lZeroInfo(lBaseTapContainer, lBaseTapContainer);
+        LayerInfoContainer lZeroInfo(L0_BASE_KEYCODES, lBaseTapContainer, lBaseTapContainer);
             delay(5);
-        LeftLayerOneInfo lOneInfo(lBaseTapContainer, lBaseTapContainer);
+        LayerInfoContainer lOneInfo(L1_BASE_KEYCODES, lBaseTapContainer, lBaseTapContainer);
             delay(5);
 
         //Collate the layers
