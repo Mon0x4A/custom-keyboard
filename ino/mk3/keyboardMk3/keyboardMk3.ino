@@ -81,7 +81,7 @@ class IBaseTapStateProvider
 {
     public:
         virtual bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col) = 0;
-        virtual bool get_tap_keycode_at(unsigned int row, unsigned int col) = 0;
+        virtual unsigned char get_tap_keycode_at(unsigned int row, unsigned int col) = 0;
 
         virtual bool get_has_tap_timed_out(unsigned int row, unsigned int col) = 0;
         virtual bool get_has_base_timed_in(unsigned int row, unsigned int col) = 0;
@@ -190,6 +190,12 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
+            if (layerInfo->get_is_base_tap_enabled_key(row,col))
+            {
+                KeyboardHelper::try_log("Starting down timer on R:"+String(row)+"C:"+String(col));
+                layerInfo->set_start_key_press(row,col);
+            }
+
             switch (keycode)
             {
                 case KC_LM1:
@@ -208,9 +214,6 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                     KeyboardHelper::try_log("Declining to send null keycode.");
                     break;
                 default:
-                    if (layerInfo->get_is_base_tap_enabled_key(row,col))
-                    {
-                    }
                     KeyboardHelper::try_log("Sending press of keycode: "+String(keycode));
                     //Keyboard.press(keycode);
                     break;
@@ -239,6 +242,18 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
             ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
+
+            if (layerInfo->get_is_base_tap_enabled_key(row,col))
+            {
+                if(!layerInfo->get_has_tap_timed_out(row,col))
+                {
+                    unsigned char tapKeycode = layerInfo->get_tap_keycode_at(row,col);
+                    KeyboardHelper::try_log("Sending tap of keycode: "+String(tapKeycode));
+                    //Keyboard.write(tapKeycode);
+                }
+                else
+                    KeyboardHelper::try_log("Tap action has timed out.");
+            }
 
             switch (keycode)
             {
@@ -400,13 +415,13 @@ class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapS
         {
             return (TAP_KEYS[row][col] != KC_NULL);
         }
-        bool get_tap_keycode_at(unsigned int row, unsigned int col)
+        unsigned char get_tap_keycode_at(unsigned int row, unsigned int col)
         {
             return TAP_KEYS[row][col];
         }
         bool get_has_tap_timed_out(unsigned int row, unsigned int col)
         {
-            return !KeyboardHelper::has_reached_time_threshold(
+            return KeyboardHelper::has_reached_time_threshold(
                 _pressStart[row][col], DEFAULT_TAP_ACTION_TIMEOUT);
         }
         bool get_has_base_timed_in(unsigned int row, unsigned int col)
@@ -481,7 +496,7 @@ class LayerInfoContainer : public ILayerInfoService
         {
             return _baseTapStateProvider->get_is_base_tap_enabled_key(row,col);
         }
-        bool get_tap_keycode_at(unsigned int row, unsigned int col)
+        unsigned char get_tap_keycode_at(unsigned int row, unsigned int col)
         {
             return _baseTapStateProvider->get_tap_keycode_at(row,col);
         }
