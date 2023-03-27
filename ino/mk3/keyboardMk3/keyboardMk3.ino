@@ -85,15 +85,14 @@ class IBaseTapStateProvider
 
         virtual bool get_has_tap_timed_out(unsigned int row, unsigned int col) = 0;
         virtual bool get_has_base_timed_in(unsigned int row, unsigned int col) = 0;
-        virtual bool get_has_base_chord_action_been_performed(unsigned int row, unsigned int col) = 0;
+        virtual bool get_has_chord_action_been_performed() = 0;
 };
 
 class IBaseTapStateSetter
 {
     public:
         virtual void set_start_key_press(unsigned int row, unsigned int col) = 0;
-        virtual void set_has_base_chord_action_performed(
-            unsigned int row, unsigned int col, bool hasBaseChordActionBeenPerfomed) = 0;
+        virtual void notify_chord_action_performed() = 0;
 };
 
 class ILayerInfoService :
@@ -190,10 +189,17 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
+
             if (layerInfo->get_is_base_tap_enabled_key(row,col))
             {
                 KeyboardHelper::try_log("Starting down timer on R:"+String(row)+"C:"+String(col));
                 layerInfo->set_start_key_press(row,col);
+            }
+            else
+            {
+                // TODO I worry this might cause bugs with chords only involving tap enabled keys.
+                KeyboardHelper::try_log("Notifying chord action performed");
+                layerInfo->notify_chord_action_performed();
             }
 
             switch (keycode)
@@ -245,7 +251,8 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
 
             if (layerInfo->get_is_base_tap_enabled_key(row,col))
             {
-                if(!layerInfo->get_has_tap_timed_out(row,col))
+                if(!layerInfo->get_has_tap_timed_out(row,col) 
+                    && !layerInfo->get_has_chord_action_been_performed())
                 {
                     unsigned char tapKeycode = layerInfo->get_tap_keycode_at(row,col);
                     KeyboardHelper::try_log("Sending tap of keycode: "+String(tapKeycode));
@@ -269,8 +276,14 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                     break;
                 default:
                     // We have no special keycode handling.
-                    KeyboardHelper::try_log("Sending release of keycode: "+String(keycode));
-                    //Keyboard.release(keycode);
+                    for (int i = 0; i < LAYER_COUNT; i++)
+                    {
+                        // Release all keycodes at this location across all layers.
+                        ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
+                        unsigned char keycodeOnLayer = iLayerService->get_base_keycode_at(row,col);
+                        KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
+                        //Keyboard.release(keycode);
+                    }
                     break;
             }
         }
@@ -281,7 +294,7 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
 };
 
 // For SOME reason these matrices can't be placed in SwitchMatrixManager
-// because row one bugs out like crazy. Still don't understand why yet.
+// because row zero bugs out like crazy. Still don't understand why yet.
 byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 class SwitchMatrixManager
@@ -339,7 +352,6 @@ class SwitchMatrixManager
                 // disable the row, turn the pullup resistor off
                 pinMode(curRow, INPUT);
             }
-            //print_matrix_to_serial_out();
         }
 
         void handle_switch_state_changes()
@@ -354,13 +366,11 @@ class SwitchMatrixManager
                         if (_switchMatrix[i][j] == 0 && _switchMatrixPrev[i][j] == 1)
                         {
                             // We started pressing a key.
-                            //TODO handle state call
                             _pressHandler->handle_switch_press(i,j);
                         }
                         else
                         {
                             // We released a key.
-                            //TODO handle state call
                             _releaseHandler->handle_switch_release(i,j);
                         }
                     }
@@ -429,21 +439,22 @@ class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapS
             return KeyboardHelper::has_reached_time_threshold(
                 _pressStart[row][col], DEFAULT_BASE_APPLY_DELAY);
         }
-        bool get_has_base_chord_action_been_performed(unsigned int row, unsigned int col)
+        bool get_has_chord_action_been_performed()
         {
-            return _chordPerformed[row][col];
+            return _chordPerformed;
         }
 
         //IBaseTapStateSetter
         void set_start_key_press(unsigned int row, unsigned int col)
         {
-            _chordPerformed[row][col] = false;
+            //_chordPerformed[row][col] = false;
+            _chordPerformed = false;
             _pressStart[row][col] = millis();
         }
-        void set_has_base_chord_action_performed(
-            unsigned int row, unsigned int col, bool hasBaseChordActionBeenPerfomed)
+        void notify_chord_action_performed()
         {
-            _chordPerformed[row][col] = true;
+            _chordPerformed = true;
+            //_chordPerformed[row][col] = true;
         }
 
     private:
@@ -456,18 +467,8 @@ class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapS
         };
 
         //Private Variables
+        bool _chordPerformed;
         unsigned long _pressStart[ROW_COUNT][COLUMN_COUNT] = {0};
-            //{
-            //    { 0, 0, 0, 0, 0, 0, 0 },
-            //    { 0, 0, 0, 0, 0, 0, 0 },
-            //    { 0, 0, 0, 0, 0, 0, 0 }
-            //};
-        bool _chordPerformed[ROW_COUNT][COLUMN_COUNT] = {0};
-            //{
-            //    { 0, 0, 0, 0, 0, 0, 0 },
-            //    { 0, 0, 0, 0, 0, 0, 0 },
-            //    { 0, 0, 0, 0, 0, 0, 0 }
-            //};
 };
 
 class LayerInfoContainer : public ILayerInfoService
@@ -508,9 +509,9 @@ class LayerInfoContainer : public ILayerInfoService
         {
             return _baseTapStateProvider->get_has_base_timed_in(row,col);
         }
-        bool get_has_base_chord_action_been_performed(unsigned int row, unsigned int col)
+        bool get_has_chord_action_been_performed()
         {
-            return _baseTapStateProvider->get_has_base_chord_action_been_performed(row,col);
+            return _baseTapStateProvider->get_has_chord_action_been_performed();
         }
 
         //IBaseTapStateSetter
@@ -518,11 +519,9 @@ class LayerInfoContainer : public ILayerInfoService
         {
             return _baseTapStateSetter->set_start_key_press(row,col);
         }
-        void set_has_base_chord_action_performed(
-            unsigned int row, unsigned int col, bool hasBaseChordActionBeenPerfomed)
+        void notify_chord_action_performed()
         {
-            return _baseTapStateSetter->set_has_base_chord_action_performed(
-                row,col,hasBaseChordActionBeenPerfomed);
+            _baseTapStateSetter->notify_chord_action_performed();
         }
 
     private:
