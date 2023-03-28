@@ -3,7 +3,9 @@
 
 //Constants
 const bool ENABLE_LOGGING = true;
+const bool ENABLE_KEYBOARD_COMMANDS = true;
 const bool SWITCH_TESTING_MODE = false;
+
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
@@ -220,7 +222,8 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                     break;
                 default:
                     KeyboardHelper::try_log("Sending press of keycode: "+String(keycode));
-                    Keyboard.press(keycode);
+                    if (ENABLE_KEYBOARD_COMMANDS)
+                        Keyboard.press(keycode);
                     break;
             }
         }
@@ -268,7 +271,8 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                         ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
                         unsigned char keycodeOnLayer = iLayerService->get_base_keycode_at(row,col);
                         KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
-                        Keyboard.release(keycode);
+                        if (ENABLE_KEYBOARD_COMMANDS)
+                            Keyboard.release(keycode);
                     }
                     break;
             }
@@ -284,7 +288,8 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                 {
                     unsigned char tapKeycode = layerInfo->get_tap_keycode_at(row,col);
                     KeyboardHelper::try_log("Sending tap of keycode: "+String(tapKeycode));
-                    Keyboard.write(tapKeycode);
+                    if (ENABLE_KEYBOARD_COMMANDS)
+                        Keyboard.write(tapKeycode);
                 }
                 else
                     KeyboardHelper::try_log("Tap action has timed out.");
