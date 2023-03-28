@@ -35,7 +35,7 @@ const byte ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
 const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN };
 
 #define KC_NULL 0x00
-#define KC_LM1 0x01 //(STX) //Repurposing obsolete ascii codes for our layer modifier codes
+#define KC_LM1 0x01 //(STX) //Repurposing obsolete ascii codes for our custom codes
 #define KC_LM2 0x02 //(ETX)
 #define KC_REPEAT 0x07 //(BEL)
 #define KEY_PRINT_SCREEN 0xCE
@@ -447,7 +447,6 @@ class SwitchMatrixManager
                 // get byte vals
                 for (int col = 0; col < COLUMN_COUNT; col++)
                 {
-                    //KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String(_switchMatrix[row][col]));
                     matrixstr += String(_switchMatrix[row][col]);
                     if (col < COLUMN_COUNT)
                         matrixstr += String(", ");
@@ -494,14 +493,12 @@ class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapState
         //IBaseTapStateSetter
         void set_start_key_press(unsigned int row, unsigned int col)
         {
-            //_chordPerformed[row][col] = false;
             _chordPerformed = false;
             _pressStart[row][col] = millis();
         }
         void notify_chord_action_performed()
         {
             _chordPerformed = true;
-            //_chordPerformed[row][col] = true;
         }
 
     private:
@@ -672,7 +669,7 @@ void setup()
         layerInfoProvider.set_layer_info_for_index(2, rTwoInfo);
             delay(initDelay);
 
-        //Build generic handling classes with the left code.
+        //Build generic handling classes with the right code.
         //For some reason this cannot be moved outside of the if
         //conditional due to unknown scoping issues. This block
         //can be shared once that is figured out.
@@ -688,8 +685,6 @@ void setup()
             delay(initDelay);
         KeyboardHelper::try_log("Right side initialization complete.");
     }
-
-
 
     // Init default pin modes;
     for(int i = 0; i < ROW_COUNT; i++)
