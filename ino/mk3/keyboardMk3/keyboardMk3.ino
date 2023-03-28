@@ -189,7 +189,6 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
-
             if (layerInfo->get_is_base_tap_enabled_key(row,col))
             {
                 KeyboardHelper::try_log("Starting down timer on R:"+String(row)+"C:"+String(col));
@@ -221,7 +220,7 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                     break;
                 default:
                     KeyboardHelper::try_log("Sending press of keycode: "+String(keycode));
-                    //Keyboard.press(keycode);
+                    Keyboard.press(keycode);
                     break;
             }
         }
@@ -249,19 +248,6 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
-            if (layerInfo->get_is_base_tap_enabled_key(row,col))
-            {
-                if(!layerInfo->get_has_tap_timed_out(row,col) 
-                    && !layerInfo->get_has_chord_action_been_performed())
-                {
-                    unsigned char tapKeycode = layerInfo->get_tap_keycode_at(row,col);
-                    KeyboardHelper::try_log("Sending tap of keycode: "+String(tapKeycode));
-                    //Keyboard.write(tapKeycode);
-                }
-                else
-                    KeyboardHelper::try_log("Tap action has timed out.");
-            }
-
             switch (keycode)
             {
                 case KC_LM1:
@@ -282,9 +268,26 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                         ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
                         unsigned char keycodeOnLayer = iLayerService->get_base_keycode_at(row,col);
                         KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
-                        //Keyboard.release(keycode);
+                        Keyboard.release(keycode);
                     }
                     break;
+            }
+
+            // Now that any mod/base actions have been released on this key, fire the
+            // tap event, if applicable.
+            // NOTE: If we want to make separate tap events for each layer, the starting
+            // layer will need to be recorded somewhere on key down.
+            if (layerInfo->get_is_base_tap_enabled_key(row,col))
+            {
+                if(!layerInfo->get_has_tap_timed_out(row,col)
+                    && !layerInfo->get_has_chord_action_been_performed())
+                {
+                    unsigned char tapKeycode = layerInfo->get_tap_keycode_at(row,col);
+                    KeyboardHelper::try_log("Sending tap of keycode: "+String(tapKeycode));
+                    Keyboard.write(tapKeycode);
+                }
+                else
+                    KeyboardHelper::try_log("Tap action has timed out.");
             }
         }
 
