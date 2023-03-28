@@ -9,7 +9,7 @@ const bool SWITCH_TESTING_MODE = false;
 const bool IS_LEFT_KEYBOARD_SIDE = false;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
-const int LOOP_DELAY_TIME = 14;
+const int LOOP_DELAY_TIME = 20;
 
 const unsigned long DEFAULT_TAP_ACTION_TIMEOUT = 200;
 const unsigned long DEFAULT_BASE_APPLY_DELAY = 50;
@@ -302,15 +302,12 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                     // We have no special keycode handling.
                     for (int i = 0; i < LAYER_COUNT; i++)
                     {
-                        // Avoid sending release commands faster than the arduino can
-                        // keep up.
-                        delay(5);
                         // Release all keycodes at this location across all layers.
                         ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
                         unsigned char keycodeOnLayer = iLayerService->get_base_keycode_at(row,col);
                         KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
                         if (ENABLE_KEYBOARD_COMMANDS)
-                            Keyboard.release(keycode);
+                            Keyboard.release(keycodeOnLayer);
                     }
                     break;
             }
