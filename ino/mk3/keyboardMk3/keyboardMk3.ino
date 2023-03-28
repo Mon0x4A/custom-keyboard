@@ -2,14 +2,14 @@
 #include "Keyboard.h"
 
 //Constants
-const bool ENABLE_LOGGING = true;
+const bool ENABLE_SERIAL_LOGGING = false;
 const bool ENABLE_KEYBOARD_COMMANDS = true;
 const bool SWITCH_TESTING_MODE = false;
 
-const bool IS_LEFT_KEYBOARD_SIDE = true;
+const bool IS_LEFT_KEYBOARD_SIDE = false;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
-const int LOOP_DELAY_TIME = 20;
+const int LOOP_DELAY_TIME = 14;
 
 const unsigned long DEFAULT_TAP_ACTION_TIMEOUT = 200;
 const unsigned long DEFAULT_BASE_APPLY_DELAY = 50;
@@ -63,6 +63,41 @@ const unsigned char L2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     { KEY_LEFT_GUI, '`', '0', '1', '2', '3', KC_LM1 },
     { KC_NULL,      '@', '$', '4', '5', '6', KC_LM2 },
     { KC_NULL,      '<', '>', '7', '8', '9', KEY_RIGHT_SHIFT },
+};
+
+const unsigned char L_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KEY_ESC,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_TAB },
+    { KC_NULL,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, ' ' },
+    { KC_NULL,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_REPEAT },
+};
+
+const unsigned char R0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KC_LM1,          'y', 'u', 'i', 'o', 'p', KEY_RIGHT_CTRL },
+    { KC_LM2,          'h', 'j', 'k', 'l', ';', KC_NULL },
+    { KEY_RIGHT_SHIFT, 'n', 'm', ',', '.', '/', KC_NULL },
+};
+
+const unsigned char R1_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KC_LM1,          KEY_HOME,         KEY_PAGE_DOWN,  KEY_PAGE_UP,  KEY_END,         KEY_DELETE, KEY_RIGHT_ALT },
+    { KC_LM2,          KEY_LEFT_ARROW,   KEY_DOWN_ARROW, KEY_UP_ARROW, KEY_RIGHT_ARROW, KC_NULL,    KC_NULL },
+    { KEY_RIGHT_SHIFT, KEY_PRINT_SCREEN, KC_NULL,        KC_NULL,      KC_NULL,         KC_NULL,    KC_NULL },
+};
+
+const unsigned char R2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KC_LM1,          '&', '*', '(', ')', '=',  KEY_RIGHT_GUI },
+    { KC_LM2,          '-', '_', '{', '}', '\'', KC_NULL },
+    { KEY_RIGHT_SHIFT, '+', '!', '[', ']', '\\', KC_NULL },
+};
+
+const unsigned char R_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KEY_RETURN,    KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+    { KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+    { ':',           KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
 };
 
 //Enums
@@ -140,7 +175,7 @@ class KeyboardHelper
 
         static void try_log(String message)
         {
-            if (ENABLE_LOGGING)
+            if (ENABLE_SERIAL_LOGGING)
             {
                 Serial.println("> "+message);
                 delay(5);
@@ -267,6 +302,9 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                     // We have no special keycode handling.
                     for (int i = 0; i < LAYER_COUNT; i++)
                     {
+                        // Avoid sending release commands faster than the arduino can
+                        // keep up.
+                        delay(5);
                         // Release all keycodes at this location across all layers.
                         ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
                         unsigned char keycodeOnLayer = iLayerService->get_base_keycode_at(row,col);
@@ -423,19 +461,23 @@ class SwitchMatrixManager
         }
 };
 
-class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
+class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
 {
     public:
-        LeftBaseTapStateContainer() { }
+        BaseTapStateContainer(
+            const unsigned char (&tapLayer)[ROW_COUNT][COLUMN_COUNT])
+        {
+            _tapLayerKeys = &tapLayer;
+        }
 
         //IBaseTapStateProvider
         bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
         {
-            return (TAP_KEYS[row][col] != KC_NULL);
+            return ((*_tapLayerKeys)[row][col] != KC_NULL);
         }
         unsigned char get_tap_keycode_at(unsigned int row, unsigned int col)
         {
-            return TAP_KEYS[row][col];
+            return (*_tapLayerKeys)[row][col];
         }
         bool get_has_tap_timed_out(unsigned int row, unsigned int col)
         {
@@ -466,15 +508,9 @@ class LeftBaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapS
         }
 
     private:
-        //Private Constants
-        const unsigned char TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
-        {
-            { KEY_ESC,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_TAB },
-            { KC_NULL,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, ' ' },
-            { KC_NULL,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_REPEAT },
-        };
-
         //Private Variables
+        unsigned char (*_tapLayerKeys)[ROW_COUNT][COLUMN_COUNT];
+
         bool _chordPerformed;
         unsigned long _pressStart[ROW_COUNT][COLUMN_COUNT] = {0};
 };
@@ -572,13 +608,12 @@ void setup()
     KeyboardHelper::try_log("Starting keyboard...");
 
     // Init logic managers
-
     int initDelay = 20;
     if (IS_LEFT_KEYBOARD_SIDE)
     {
         KeyboardHelper::try_log("Initializing Left Side.");
         //Create the shared tap state container.
-        LeftBaseTapStateContainer lBaseTapContainer;
+        BaseTapStateContainer lBaseTapContainer(L_TAP_KEYS);
             delay(initDelay);
 
         //Initialize the layers
@@ -617,7 +652,44 @@ void setup()
     }
     else
     {
-        //TODO implement right side
+        KeyboardHelper::try_log("Initializing Right Side.");
+        //Create the shared tap state container.
+        BaseTapStateContainer rBaseTapContainer(R_TAP_KEYS);
+            delay(initDelay);
+
+        //Initialize the layers
+        LayerInfoContainer rZeroInfo(R0_BASE_KEYCODES, rBaseTapContainer, rBaseTapContainer);
+            delay(initDelay);
+        LayerInfoContainer rOneInfo(R1_BASE_KEYCODES, rBaseTapContainer, rBaseTapContainer);
+            delay(initDelay);
+        LayerInfoContainer rTwoInfo(R2_BASE_KEYCODES, rBaseTapContainer, rBaseTapContainer);
+            delay(initDelay);
+
+        //Collate the layers
+        LeftLayerInfoProvider layerInfoProvider;
+            delay(initDelay);
+        layerInfoProvider.set_layer_info_for_index(0, rZeroInfo);
+            delay(initDelay);
+        layerInfoProvider.set_layer_info_for_index(1, rOneInfo);
+            delay(initDelay);
+        layerInfoProvider.set_layer_info_for_index(2, rTwoInfo);
+            delay(initDelay);
+
+        //Build generic handling classes with the left code.
+        //For some reason this cannot be moved outside of the if
+        //conditional due to unknown scoping issues. This block
+        //can be shared once that is figured out.
+        KeyboardLayoutStateContainer keyboardStateContainer;
+            delay(initDelay);
+        KeyswitchPressHandler pressHandler(layerInfoProvider, keyboardStateContainer);
+            delay(initDelay);
+        KeyswitchReleaseHandler releaseHandler(layerInfoProvider, keyboardStateContainer);
+            delay(initDelay);
+        SwitchMatrixManager manager(pressHandler, releaseHandler);
+            delay(initDelay);
+        _matrixManager = &manager;
+            delay(initDelay);
+        KeyboardHelper::try_log("Right side initialization complete.");
     }
 
 
