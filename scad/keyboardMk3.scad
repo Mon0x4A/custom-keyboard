@@ -115,10 +115,11 @@ _arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdge
 _arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
 _arduinoHousingBaseDepth = 5;
 _arduinoHousingLidHeight = 12;
-_arduinoHousingLidBoltCounterSink = 1;
+_arduinoHousingLidBoltCounterSink = 0;
 _arduinoHousingLidBaseThickness = 2;
 _arduinoHousingCableCutoutWidth = _arduinoHousingBaseWidth*(3/5);
 _arduinoHousingCableCutoutOffset = _arduinoHousingBaseWidth*(1/5);
+_arduinoHousingPaddingOffsetAdjustment = 0.25;
 
 _arduinoInsetNutCutoutDepth = 3;
 _arduinoNutInsertLengthCenterToCenter = 25;
@@ -132,12 +133,12 @@ _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
 //oledScreenPunch(_arduinoHousingLidBaseThickness+2);
 //trrsBodyPunch();
-//arduinoHousing(renderLid=false);
+arduinoHousing(renderLid=true);
 //arduinoHousingBase();
 //arduinoHousingTop();
 //arduinoMicroPunch();
@@ -308,8 +309,8 @@ module housingBackplateEdgeSupportSet(supportDepth)
 {
     union()
     {
-        riserInwardsLengthAdjustment = 0.25;
-        riserInwardsWidthAdjustment = 0.25;
+        riserInwardsLengthAdjustment = _arduinoHousingPaddingOffsetAdjustment;
+        riserInwardsWidthAdjustment = _arduinoHousingPaddingOffsetAdjustment;
         //Corner backplate supports
         //Pinky Corners
         translate([riserInwardsLengthAdjustment,_key1uLength*(3)+_pinkyBackplateWidth-riserInwardsWidthAdjustment,_housingBaseThickness])
@@ -475,7 +476,7 @@ module arduinoHousing(renderLid)
     {
         union()
         {
-            arduinoHousingBase();
+            //arduinoHousingBase();
             if (renderLid)
                 translate([0, 0, _arduinoHousingBaseDepth])
                     arduinoHousingTop();
@@ -495,9 +496,8 @@ module arduinoHousingBase()
 {
     union()
     {
-        paddingOffsetAdjustment = 0.25;
-        arduinoLengthOffset = _arduinoHousingLengthEdgePadding-paddingOffsetAdjustment;
-        arduinoWidthOffset = _arduinoHousingWidthEdgePadding-paddingOffsetAdjustment;
+        arduinoLengthOffset = _arduinoHousingLengthEdgePadding-_arduinoHousingPaddingOffsetAdjustment;
+        arduinoWidthOffset = _arduinoHousingWidthEdgePadding-_arduinoHousingPaddingOffsetAdjustment;
         arduinoInsetIntoHousing = 2;
         difference()
         {
@@ -525,7 +525,7 @@ module arduinoHousingBase()
         }
 
         arduinoCenterSupportBeamLength = 8;
-        translate([((_arduinoHousingBaseLength-arduinoCenterSupportBeamLength)/2)-0.25, arduinoWidthOffset-1, 0.1])
+        translate([((_arduinoHousingBaseLength-arduinoCenterSupportBeamLength)/2)-_arduinoHousingPaddingOffsetAdjustment, arduinoWidthOffset-1, 0.1])
             cube([arduinoCenterSupportBeamLength, _arduinoMicroBodyWidth+2, _arduinoHousingBaseDepth-1.6]);
         //translate([arduinoLengthOffset, arduinoWidthOffset, _arduinoHousingBaseDepth-arduinoInsetIntoHousing])
         //    arduinoMicroPunch();
@@ -535,7 +535,7 @@ module arduinoHousingBase()
 module arduinoHousingTop()
 {
     trrsPortOffsetFromBottom = 6;
-    trrsPortOffsetFromRight = _housingWallThickness-0.25;
+    trrsPortOffsetFromRight = _housingWallThickness-_arduinoHousingPaddingOffsetAdjustment;
     trrsPortTotalLengthOffset = _arduinoHousingBaseLength-(_trrsBodyLength)-trrsPortOffsetFromRight;
     trrsPortTotalWidthOffset = trrsPortOffsetFromBottom;
 
@@ -549,6 +549,7 @@ module arduinoHousingTop()
                     rotate([0, 180, 0])
                         housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), _arduinoHousingLidHeight, _arduinoHousingLidBaseThickness, apply_to="z");
 
+                // bolt attachements from the top into the housing bottom
                 translate([_arduinoInsetNutSetLengthOffset, _arduinoInsetNutSetWidthOffset, _arduinoHousingLidHeight-_arduinoHousingLidBoltCounterSink])
                 {
                     translate([0, 0, 0])
@@ -561,15 +562,23 @@ module arduinoHousingTop()
                         riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
                 }
 
+                // cutout to bring in matrix row/col wires
                 arduinoCableCutoutDepth = 1.5;
                 translate([-1, _arduinoHousingCableCutoutOffset, -1])
                     cube([_housingWallThickness+2, _arduinoHousingCableCutoutWidth, arduinoCableCutoutDepth+1]);
 
                 //Screen cutout
                 oledWidthOffsetFromTop = _oledBodyWidth + 10;
-                oledLengthOffset = ((_arduinoHousingBaseLength - _oledBodyLength)/2)-0.25;
+                oledLengthOffset = ((_arduinoHousingBaseLength - _oledBodyLength)/2)-_arduinoHousingPaddingOffsetAdjustment;
                 translate([oledLengthOffset, _arduinoHousingBaseWidth-oledWidthOffsetFromTop, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-1])
                     oledScreenPunch(_arduinoHousingLidBaseThickness+2);
+
+                // cutout to leave room for the arudino tab connection
+                tabCutoutLength = 6;
+                tabCutoutWidth = _housingWallThickness + 2;
+                tabCutoutDepth = 3;
+                translate([(_arduinoHousingBaseLength-tabCutoutLength)/2-_arduinoHousingPaddingOffsetAdjustment, -1, -0.01])
+                    cube([tabCutoutLength, tabCutoutWidth, tabCutoutDepth]);
             }
 
             //TRRS port holder
