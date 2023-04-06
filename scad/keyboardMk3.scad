@@ -73,6 +73,11 @@ _trrsBodyWidth = 6.1;
 _trrsBodyDepth = 5.1;
 _trrsWallThickness = 2;
 
+_trrsWedgeLength = _trrsBodyWidth;
+_trrsWedgeWidth = _trrsBodyDepth;
+_trrsWedgeDepth = 2;
+_trrsWedgeAngle = 8;
+
 _riserBoltHeadCutoutDepth = 3;
 
 _riserTopDiameter = 6;
@@ -138,7 +143,8 @@ _arduinoWidthPlacment = 24.5;
 //backplate(_kailhBackplateDepth);
 //oledScreenPunch(_arduinoHousingLidBaseThickness+2);
 //trrsBodyPunch();
-arduinoHousing(renderLid=true);
+trrsWedgeBlock();
+//arduinoHousing(renderLid=true);
 //arduinoHousingBase();
 //arduinoHousingTop();
 //arduinoMicroPunch();
@@ -586,7 +592,7 @@ module arduinoHousingTop()
             {
                 trrsPortWallHeight = _trrsBodyDepth;
                 trrsCutoutTolerance = 0.1;
-                trrsShimThickness = 2;
+                trrsShimThickness = _trrsWedgeDepth;
                 translate([trrsPortTotalLengthOffset-_trrsWallThickness-trrsShimThickness, trrsPortTotalWidthOffset, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-trrsPortWallHeight])
                     difference()
                     {
@@ -697,6 +703,19 @@ module kailhKeycapShank()
         }
     }
 }
+
+module trrsWedgeBlock()
+{
+    difference()
+    //union()
+    {
+        cube([_trrsWedgeLength, _trrsWedgeWidth, _trrsWedgeDepth]);
+        translate([-1, -1, _trrsWedgeDepth/1.75])
+            rotate([0, -_trrsWedgeAngle, 0])
+                cube([_trrsWedgeLength+2, _trrsWedgeWidth+2, _trrsWedgeDepth+2]);
+    }
+}
+
 
 //Punches
 module arduinoMicroPunch()
