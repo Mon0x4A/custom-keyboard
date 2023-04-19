@@ -1,5 +1,6 @@
 //Imports
-#include "Keyboard.h"
+#include <Keyboard.h>
+#include <Wire.h>
 
 //Constants
 const bool ENABLE_SERIAL_LOGGING = false;
@@ -8,14 +9,18 @@ const bool SWITCH_TESTING_MODE = false;
 
 const bool IS_LEFT_KEYBOARD_SIDE = false;
 
+const int COLUMN_COUNT = 7;
+const int ROW_COUNT = 3;
+
+const int LEFT_SIDE_I2C_ADDRESS = 0x2A;
+const int RIGHT_SIDE_I2C_ADDRESS = 0x45;
+const int I2C_TRANSMISSION_BYTE_COUNT = COLUMN_COUNT*ROW_COUNT;
+
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
 
 const unsigned long DEFAULT_TAP_ACTION_TIMEOUT = 200;
 const unsigned long DEFAULT_BASE_APPLY_DELAY = 50;
-
-const int COLUMN_COUNT = 7;
-const int ROW_COUNT = 3;
 
 const int LAYER_COUNT = 3;
 
@@ -164,7 +169,15 @@ class IKeyboardStateContainer
         virtual void set_current_layer(unsigned int currentLayer) = 0;
 };
 
-//Classes
+class ISwitchStateProvider
+{
+    public:
+        virtual void update() = 0;
+        virtual bool get_is_switch_currently_pressed(unsigned int row, unsigned int col) = 0;
+        virtual bool get_was_switch_previous_pressed(unsigned int row, unsigned int col) = 0;
+};
+
+//Helpers
 class KeyboardHelper
 {
     public:
@@ -183,9 +196,29 @@ class KeyboardHelper
         }
 
     private:
-        KeyHelper() { }
+        KeyboardHelper() { }
 };
 
+class SwitchStateHelper
+{
+    public:
+        static void copy_matrix_state_to_prev(
+            byte (&currMatrix)[ROW_COUNT][COLUMN_COUNT], byte (&prevMatrix)[ROW_COUNT][COLUMN_COUNT])
+        {
+            for (int i = 0; i < ROW_COUNT; i++)
+            {
+                for (int j = 0; j < COLUMN_COUNT; j++)
+                {
+                    prevMatrix[i][j] = currMatrix[i][j];
+                }
+            }
+        }
+
+    private:
+        SwitchStateHelper() { }
+};
+
+//Classes
 class KeyboardLayoutStateContainer : public IKeyboardStateContainer
 {
     public:
@@ -334,6 +367,99 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
     private:
         IIndexedLayerInfoServiceProvider* _layerInfoProvider;
         IKeyboardStateContainer* _keyboardStateContainer;
+};
+
+class NativeSwitchStateProvider : ISwitchStateProvider
+{
+    public:
+        NativeSwitchStateProvider()
+        {
+        }
+
+        void update()
+        {
+            SwitchStateHelper::copy_matrix_state_to_prev(_switchMatrix, _switchMatrixPrev);
+            read_matrix();
+        }
+
+        bool get_is_switch_currently_pressed(unsigned int row, unsigned int col)
+        {
+            return _switchMatrix[row][col];
+        }
+
+        bool get_was_switch_previous_pressed(unsigned int row, unsigned int col)
+        {
+            return _switchMatrixPrev[row][col];
+        }
+
+    private:
+        byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
+        byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
+
+        void read_matrix()
+        {
+            for (int row = 0; row < ROW_COUNT; row++)
+            {
+                // set the row to output low
+                byte curRow = ROWS[row];
+                pinMode(curRow, OUTPUT);
+                digitalWrite(curRow, LOW);
+
+                // iterate through the columns reading the value - should be zero if switch is pressed
+                for (int col = 0; col < COLUMN_COUNT; col++)
+                {
+                    byte rowCol = COLS[col];
+                    pinMode(rowCol, INPUT_PULLUP);
+                    _switchMatrix[row][col] = digitalRead(rowCol);
+                    pinMode(rowCol, INPUT);
+                }
+
+                // disable the row, turn the pullup resistor off
+                pinMode(curRow, INPUT);
+            }
+        }
+};
+
+class I2cSwitchStateProvider : ISwitchStateProvider
+{
+    public:
+        I2cSwitchStateProvider()
+        {
+        }
+
+        void update()
+        {
+            SwitchStateHelper::copy_matrix_state_to_prev(_switchMatrix, _switchMatrixPrev);
+            read_matrix();
+        }
+
+        bool get_is_switch_currently_pressed(unsigned int row, unsigned int col)
+        {
+            return _switchMatrix[row][col];
+        }
+
+        bool get_was_switch_previous_pressed(unsigned int row, unsigned int col)
+        {
+            return _switchMatrixPrev[row][col];
+        }
+
+    private:
+        byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
+        byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
+
+        void read_matrix()
+        {
+            //todo transmitter right half
+            Wire.requestFrom(RIGHT_SIDE_I2C_ADDRESS, I2C_TRANSMISSION_BYTE_COUNT);
+            delay(2);
+            int byteIndex = 0;
+            while (Wire.available() && (byteIndex < I2C_TRANSMISSION_BYTE_COUNT))
+            {
+                //todo make sure int divsion and mod work the same way as c#
+                _switchMatrix[byteIndex/COLUMN_COUNT][byteIndex%COLUMN_COUNT] = Wire.read();
+                byteIndex++;
+            }
+        }
 };
 
 // For SOME reason these matrices can't be placed in SwitchMatrixManager
@@ -605,6 +731,8 @@ void setup()
     int initDelay = 20;
     if (IS_LEFT_KEYBOARD_SIDE)
     {
+        //Join I2C bus as a controller.
+        Wire.begin();
         KeyboardHelper::try_log("Initializing Left Side.");
         //Create the shared tap state container.
         BaseTapStateContainer lBaseTapContainer(L_TAP_KEYS);
@@ -646,6 +774,8 @@ void setup()
     }
     else
     {
+        //Join I2C bus as a transmitter.
+        Wire.begin(RIGHT_SIDE_I2C_ADDRESS);
         KeyboardHelper::try_log("Initializing Right Side.");
         //Create the shared tap state container.
         BaseTapStateContainer rBaseTapContainer(R_TAP_KEYS);
