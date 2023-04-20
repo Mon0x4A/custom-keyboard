@@ -14,6 +14,7 @@ const int ROW_COUNT = 3;
 
 const int LEFT_SIDE_I2C_ADDRESS = 0x2A;
 const int RIGHT_SIDE_I2C_ADDRESS = 0x45;
+//Note: The Wire library has a cap of 32 bytes per transmission.
 const int I2C_TRANSMISSION_BYTE_COUNT = COLUMN_COUNT*ROW_COUNT;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
@@ -462,6 +463,28 @@ class I2cSwitchStateProvider : ISwitchStateProvider
         }
 };
 
+class I2cSwitchStatePeripheralReporter
+{
+    public:
+        //Public Variables
+        //Constructor
+        I2cSwitchStatePeripheralReporter(ISwitchStateProvider &switchStateProvider)
+        {
+            _switchStateProvider = &switchStateProvider;
+            Wire.onRequest(transmit_matrix);
+        }
+
+        //Public Methods
+        void transmit_matrix()
+        {
+        }
+    private:
+        //Private Variables
+        ISwitchStateProvider* _switchStateProvider;
+
+        //Private Methods
+};
+
 // For SOME reason these matrices can't be placed in SwitchMatrixManager
 // because row zero bugs out like crazy. Still don't understand why yet.
 byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
@@ -695,7 +718,6 @@ class LayerInfoContainer : public ILayerInfoService
         unsigned char (*_baseKeys)[ROW_COUNT][COLUMN_COUNT];
 };
 
-
 class LeftLayerInfoProvider : public IIndexedLayerInfoServiceProvider
 {
     public:
@@ -714,7 +736,6 @@ class LeftLayerInfoProvider : public IIndexedLayerInfoServiceProvider
     private:
         ILayerInfoService* _layerInfos[LAYER_COUNT];
 };
-
 
 //Main
 SwitchMatrixManager* _matrixManager;
