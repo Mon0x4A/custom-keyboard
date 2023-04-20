@@ -138,12 +138,13 @@ _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
 //oledScreenPunch(_arduinoHousingLidBaseThickness+2);
 //trrsBodyPunch();
-trrsWedgeBlock();
+//trrsWedgeBlock();
 //arduinoHousing(renderLid=true);
 //arduinoHousingBase();
 //arduinoHousingTop();
@@ -716,6 +717,35 @@ module trrsWedgeBlock()
     }
 }
 
+module wristRest()
+{
+    wristRestDepth = 8;
+    pinkyRestLength = (_key1_25uLength*1)+(_key1uLength*0);
+    pinkyRestWidth = (_key1_25uWidth*1)+(_key1uWidth*2);
+    mainRestLength = (_key1_25uLength*1)+(_key1uLength*3);
+    mainRestWidth = (_key1_25uWidth*1)+(_key1uWidth*0)+(_housingWallThickness*1);
+    thumbRestLength = (_key1_25uLength*4)+(_key1uLength*3)+(_housingWallThickness*2);
+    thumbRestWidth = (_key1_25uWidth*3)+(_key1uWidth*0);
+
+    difference()
+    {
+        union()
+        {
+            translate([-_housingWallThickness, -_housingWallThickness*2, 0])
+                roundedCube(size=[pinkyRestLength, pinkyRestWidth, wristRestDepth], radius=_housingBodyRoundingRadius, apply_to="zall");
+            translate([-_housingWallThickness, -_housingWallThickness*2, 0])
+                roundedCube(size=[mainRestLength, mainRestWidth, wristRestDepth], radius=_housingBodyRoundingRadius, apply_to="zall");
+            translate([-_housingWallThickness, -thumbRestWidth-_housingWallThickness, 0])
+                roundedCube(size=[thumbRestLength, thumbRestWidth, wristRestDepth], radius=_housingBodyRoundingRadius, apply_to="zall");
+        }
+
+        //squareCutoutSideLength = _key1uLength;
+        //translate([0, -_key1_25uWidth*3, -1])
+        //    roundedCube(size=[squareCutoutSideLength, squareCutoutSideLength, wristRestDepth+2], radius=_housingBodyRoundingRadius, apply_to="zall");
+        //translate([(_key1_25uLength*4)+(_key1uLength*2), -_key1_25uWidth*3, -1])
+        //    roundedCube(size=[squareCutoutSideLength, squareCutoutSideLength, wristRestDepth+2], radius=_housingBodyRoundingRadius, apply_to="zall");
+    }
+}
 
 //Punches
 module arduinoMicroPunch()
