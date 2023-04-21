@@ -471,18 +471,26 @@ class I2cSwitchStatePeripheralReporter
         I2cSwitchStatePeripheralReporter(ISwitchStateProvider &switchStateProvider)
         {
             _switchStateProvider = &switchStateProvider;
+            // Apparently this method requires that the parameter be static... but
+            // that is not indicated in the documentation.
             Wire.onRequest(transmit_matrix);
         }
 
         //Public Methods
-        void transmit_matrix()
+        static void transmit_matrix()
         {
+            for (int i = 0; i < ROW_COUNT; i++)
+            {
+                for (int j = 0; j < COLUMN_COUNT; j++)
+                {
+                    Wire.write(_switchStateProvider->get_is_switch_currently_pressed(i, j));
+                }
+            }
         }
+
     private:
         //Private Variables
-        ISwitchStateProvider* _switchStateProvider;
-
-        //Private Methods
+        static ISwitchStateProvider* _switchStateProvider;
 };
 
 // For SOME reason these matrices can't be placed in SwitchMatrixManager
