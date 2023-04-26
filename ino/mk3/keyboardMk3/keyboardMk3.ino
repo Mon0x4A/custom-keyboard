@@ -20,6 +20,9 @@ const int I2C_TRANSMISSION_BYTE_COUNT = COLUMN_COUNT*ROW_COUNT;
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
 
+const byte SWITCH_PRESSED_VALUE = 0;
+const byte SWITCH_NOT_PRESSED_VALUE = 1;
+
 const unsigned long DEFAULT_TAP_ACTION_TIMEOUT = 200;
 const unsigned long DEFAULT_BASE_APPLY_DELAY = 50;
 
@@ -59,9 +62,9 @@ const unsigned char L0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
 
 const unsigned char L1_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
 {
-    { KEY_LEFT_ALT, KEY_F1,  KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5,  KC_LM1 },
-    { KC_NULL,      KEY_F6,  KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10, KC_LM2 },
-    { KC_NULL,      KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, KEY_RIGHT_SHIFT },
+    { KEY_LEFT_ALT, KEY_F1,   KEY_F4,  KEY_F7,  KEY_F10,  KEY_F13,  KC_LM1 },
+    { KC_NULL,      KEY_F2,   KEY_F5,  KEY_F8,  KEY_F11,  KEY_F14,  KC_LM2 },
+    { KC_NULL,      KEY_F3,   KEY_F6,  KEY_F9,  KEY_F12,  KEY_F15,  KEY_RIGHT_SHIFT },
 };
 
 const unsigned char L2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
@@ -370,11 +373,14 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
         IKeyboardStateContainer* _keyboardStateContainer;
 };
 
-class NativeSwitchStateProvider : ISwitchStateProvider
+class NativeSwitchStateProvider : public ISwitchStateProvider
 {
     public:
         NativeSwitchStateProvider()
         {
+            //This is called to set intitial values before an external
+            //entity begins querying for state.
+            update();
         }
 
         void update()
@@ -385,12 +391,12 @@ class NativeSwitchStateProvider : ISwitchStateProvider
 
         bool get_is_switch_currently_pressed(unsigned int row, unsigned int col)
         {
-            return _switchMatrix[row][col];
+            return _switchMatrix[row][col] == 0;
         }
 
         bool get_was_switch_previous_pressed(unsigned int row, unsigned int col)
         {
-            return _switchMatrixPrev[row][col];
+            return _switchMatrixPrev[row][col] == 0;
         }
 
     private:
@@ -421,11 +427,14 @@ class NativeSwitchStateProvider : ISwitchStateProvider
         }
 };
 
-class I2cSwitchStateProvider : ISwitchStateProvider
+class I2cSwitchStateProvider : public ISwitchStateProvider
 {
     public:
         I2cSwitchStateProvider()
         {
+            //This is called to set intitial values before an external
+            //entity begins querying for state.
+            update();
         }
 
         void update()
@@ -436,12 +445,12 @@ class I2cSwitchStateProvider : ISwitchStateProvider
 
         bool get_is_switch_currently_pressed(unsigned int row, unsigned int col)
         {
-            return _switchMatrix[row][col];
+            return _switchMatrix[row][col] == 0;
         }
 
         bool get_was_switch_previous_pressed(unsigned int row, unsigned int col)
         {
-            return _switchMatrixPrev[row][col];
+            return _switchMatrixPrev[row][col] == 0;
         }
 
     private:
@@ -450,7 +459,6 @@ class I2cSwitchStateProvider : ISwitchStateProvider
 
         void read_matrix()
         {
-            //todo transmitter right half
             Wire.requestFrom(RIGHT_SIDE_I2C_ADDRESS, I2C_TRANSMISSION_BYTE_COUNT);
             delay(2);
             int byteIndex = 0;
@@ -466,7 +474,6 @@ class I2cSwitchStateProvider : ISwitchStateProvider
 class I2cSwitchStatePeripheralReporter
 {
     public:
-        //Public Variables
         //Constructor
         I2cSwitchStatePeripheralReporter(ISwitchStateProvider &switchStateProvider)
         {
@@ -483,9 +490,11 @@ class I2cSwitchStatePeripheralReporter
             {
                 for (int j = 0; j < COLUMN_COUNT; j++)
                 {
-                    Wire.write(_switchStateProvider->get_is_switch_currently_pressed(i, j));
+                    Wire.write(_switchStateProvider->get_is_switch_currently_pressed(i, j)
+                        ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
                 }
             }
+            KeyboardHelper::try_log("Transmitted matrix bytes");
         }
 
     private:
@@ -501,9 +510,10 @@ class SwitchMatrixManager
 {
     public:
         //Constructor
-        SwitchMatrixManager(IKeyswitchPressedHandler& pressHandler,
-            IKeyswitchReleasedHandler& releaseHandler)
+        SwitchMatrixManager(ISwitchStateProvider &switchStateProvider,
+            IKeyswitchPressedHandler& pressHandler, IKeyswitchReleasedHandler& releaseHandler)
         {
+            _switchStateProvider = &switchStateProvider;
             _pressHandler = &pressHandler;
             _releaseHandler = &releaseHandler;
         }
@@ -511,7 +521,7 @@ class SwitchMatrixManager
         //Public Methods
         void iterate()
         {
-            read_matrix();
+            _switchStateProvider->update();
 
             if (SWITCH_TESTING_MODE)
             {
@@ -521,49 +531,27 @@ class SwitchMatrixManager
             {
                 handle_switch_state_changes();
             }
-
-            copy_matrix_state_to_prev();
         }
 
     private:
         //Private Variables
+        ISwitchStateProvider* _switchStateProvider;
         IKeyswitchPressedHandler* _pressHandler;
         IKeyswitchReleasedHandler* _releaseHandler;
 
         //Private Methods
-        void read_matrix()
-        {
-            for (int row = 0; row < ROW_COUNT; row++)
-            {
-                // set the row to output low
-                byte curRow = ROWS[row];
-                pinMode(curRow, OUTPUT);
-                digitalWrite(curRow, LOW);
-
-                // iterate through the columns reading the value - should be zero if switch is pressed
-                for (int col = 0; col < COLUMN_COUNT; col++)
-                {
-                    byte rowCol = COLS[col];
-                    pinMode(rowCol, INPUT_PULLUP);
-                    _switchMatrix[row][col] = digitalRead(rowCol);
-                    pinMode(rowCol, INPUT);
-                }
-
-                // disable the row, turn the pullup resistor off
-                pinMode(curRow, INPUT);
-            }
-        }
-
         void handle_switch_state_changes()
         {
             for (int i = 0; i < ROW_COUNT; i++)
             {
                 for (int j = 0; j < COLUMN_COUNT; j++)
                 {
+                    bool switchCurrPress = _switchStateProvider->get_is_switch_currently_pressed(i,j);
+                    bool switchPrevPress = _switchStateProvider->get_was_switch_previous_pressed(i,j);
                     // If the swich changed state..
-                    if (_switchMatrix[i][j] != _switchMatrixPrev[i][j])
+                    if (switchCurrPress != switchPrevPress)
                     {
-                        if (_switchMatrix[i][j] == 0 && _switchMatrixPrev[i][j] == 1)
+                        if (switchCurrPress == true && switchPrevPress == false)
                         {
                             // We started pressing a key.
                             _pressHandler->handle_switch_press(i,j);
@@ -574,17 +562,6 @@ class SwitchMatrixManager
                             _releaseHandler->handle_switch_release(i,j);
                         }
                     }
-                }
-            }
-        }
-
-        void copy_matrix_state_to_prev()
-        {
-            for (int i = 0; i < ROW_COUNT; i++)
-            {
-                for (int j = 0; j < COLUMN_COUNT; j++)
-                {
-                    _switchMatrixPrev[i][j] = _switchMatrix[i][j];
                 }
             }
         }
@@ -604,7 +581,8 @@ class SwitchMatrixManager
                 // get byte vals
                 for (int col = 0; col < COLUMN_COUNT; col++)
                 {
-                    matrixstr += String(_switchMatrix[row][col]);
+                    matrixstr += String(_switchStateProvider->get_is_switch_currently_pressed(row,col)
+                        ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
                     if (col < COLUMN_COUNT)
                         matrixstr += String(", ");
                 }
@@ -612,6 +590,33 @@ class SwitchMatrixManager
             }
             Serial.print(matrixstr);
         }
+};
+
+class KeyboardManager
+{
+    public:
+        //Public Variables
+
+        //Constructor
+        KeyboardManager(
+            SwitchMatrixManager &leftManager, SwitchMatrixManager &rightManager)
+        {
+            _leftManager = &leftManager;
+            _rightManager = &rightManager;
+        }
+
+        //Public Methods
+        void iterate()
+        {
+            Serial.println("Manager TODO");
+        }
+
+    private:
+        //Private Variables
+        SwitchMatrixManager* _leftManager;
+        SwitchMatrixManager* _rightManager;
+
+        //Private Methods
 };
 
 class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
@@ -726,7 +731,7 @@ class LayerInfoContainer : public ILayerInfoService
         unsigned char (*_baseKeys)[ROW_COUNT][COLUMN_COUNT];
 };
 
-class LeftLayerInfoProvider : public IIndexedLayerInfoServiceProvider
+class LayerInfoProvider : public IIndexedLayerInfoServiceProvider
 {
     public:
         LayerInfoProvider() { }
@@ -746,7 +751,9 @@ class LeftLayerInfoProvider : public IIndexedLayerInfoServiceProvider
 };
 
 //Main
-SwitchMatrixManager* _matrixManager;
+SwitchMatrixManager* _leftSwitchManager;
+SwitchMatrixManager* _rightSwitchManager;
+KeyboardManager* _keyboardManager;
 
 void setup()
 {
@@ -763,11 +770,12 @@ void setup()
         //Join I2C bus as a controller.
         Wire.begin();
         KeyboardHelper::try_log("Initializing Left Side.");
-        //Create the shared tap state container.
+
+        //Create the left layer shared tap state container.
         BaseTapStateContainer lBaseTapContainer(L_TAP_KEYS);
             delay(initDelay);
 
-        //Initialize the layers
+        //Initialize the left layers
         LayerInfoContainer lZeroInfo(L0_BASE_KEYCODES, lBaseTapContainer, lBaseTapContainer);
             delay(initDelay);
         LayerInfoContainer lOneInfo(L1_BASE_KEYCODES, lBaseTapContainer, lBaseTapContainer);
@@ -775,42 +783,21 @@ void setup()
         LayerInfoContainer lTwoInfo(L2_BASE_KEYCODES, lBaseTapContainer, lBaseTapContainer);
             delay(initDelay);
 
-        //Collate the layers
-        LeftLayerInfoProvider layerInfoProvider;
+        //Collate the left layers
+        LayerInfoProvider lLayerInfoProvider;
             delay(initDelay);
-        layerInfoProvider.set_layer_info_for_index(0, lZeroInfo);
+        lLayerInfoProvider.set_layer_info_for_index(0, lZeroInfo);
             delay(initDelay);
-        layerInfoProvider.set_layer_info_for_index(1, lOneInfo);
+        lLayerInfoProvider.set_layer_info_for_index(1, lOneInfo);
             delay(initDelay);
-        layerInfoProvider.set_layer_info_for_index(2, lTwoInfo);
+        lLayerInfoProvider.set_layer_info_for_index(2, lTwoInfo);
             delay(initDelay);
 
-        //Build generic handling classes with the left code.
-        //For some reason this cannot be moved outside of the if
-        //conditional due to unknown scoping issues. This block
-        //can be shared once that is figured out.
-        KeyboardLayoutStateContainer keyboardStateContainer;
-            delay(initDelay);
-        KeyswitchPressHandler pressHandler(layerInfoProvider, keyboardStateContainer);
-            delay(initDelay);
-        KeyswitchReleaseHandler releaseHandler(layerInfoProvider, keyboardStateContainer);
-            delay(initDelay);
-        SwitchMatrixManager manager(pressHandler, releaseHandler);
-            delay(initDelay);
-        _matrixManager = &manager;
-            delay(initDelay);
-        KeyboardHelper::try_log("Left side initialization complete.");
-    }
-    else
-    {
-        //Join I2C bus as a transmitter.
-        Wire.begin(RIGHT_SIDE_I2C_ADDRESS);
-        KeyboardHelper::try_log("Initializing Right Side.");
-        //Create the shared tap state container.
+        //Create the right layer shared tap state container.
         BaseTapStateContainer rBaseTapContainer(R_TAP_KEYS);
             delay(initDelay);
 
-        //Initialize the layers
+        //Initialize the right layers
         LayerInfoContainer rZeroInfo(R0_BASE_KEYCODES, rBaseTapContainer, rBaseTapContainer);
             delay(initDelay);
         LayerInfoContainer rOneInfo(R1_BASE_KEYCODES, rBaseTapContainer, rBaseTapContainer);
@@ -818,30 +805,53 @@ void setup()
         LayerInfoContainer rTwoInfo(R2_BASE_KEYCODES, rBaseTapContainer, rBaseTapContainer);
             delay(initDelay);
 
-        //Collate the layers
-        LeftLayerInfoProvider layerInfoProvider;
+        //Collate the right layers
+        LayerInfoProvider rLayerInfoProvider;
             delay(initDelay);
-        layerInfoProvider.set_layer_info_for_index(0, rZeroInfo);
+        rLayerInfoProvider.set_layer_info_for_index(0, rZeroInfo);
             delay(initDelay);
-        layerInfoProvider.set_layer_info_for_index(1, rOneInfo);
+        rLayerInfoProvider.set_layer_info_for_index(1, rOneInfo);
             delay(initDelay);
-        layerInfoProvider.set_layer_info_for_index(2, rTwoInfo);
+        rLayerInfoProvider.set_layer_info_for_index(2, rTwoInfo);
             delay(initDelay);
 
-        //Build generic handling classes with the right code.
-        //For some reason this cannot be moved outside of the if
-        //conditional due to unknown scoping issues. This block
-        //can be shared once that is figured out.
+        //Build the state container that will serve the entire keyboard.
         KeyboardLayoutStateContainer keyboardStateContainer;
             delay(initDelay);
-        KeyswitchPressHandler pressHandler(layerInfoProvider, keyboardStateContainer);
+
+        //Build left press handlers and manager.
+        KeyswitchPressHandler lPressHandler(lLayerInfoProvider, keyboardStateContainer);
             delay(initDelay);
-        KeyswitchReleaseHandler releaseHandler(layerInfoProvider, keyboardStateContainer);
+        KeyswitchReleaseHandler lReleaseHandler(lLayerInfoProvider, keyboardStateContainer);
             delay(initDelay);
-        SwitchMatrixManager manager(pressHandler, releaseHandler);
+        NativeSwitchStateProvider localSwitchStateProvider;
+        SwitchMatrixManager lManager(localSwitchStateProvider, lPressHandler, lReleaseHandler);
+        _leftSwitchManager = &lManager;
             delay(initDelay);
-        _matrixManager = &manager;
+
+        //Build right press handlers and manager.
+        KeyswitchPressHandler rPressHandler(rLayerInfoProvider, keyboardStateContainer);
             delay(initDelay);
+        KeyswitchReleaseHandler rReleaseHandler(rLayerInfoProvider, keyboardStateContainer);
+            delay(initDelay);
+        I2cSwitchStateProvider remoteSwitchStateProvider;
+        SwitchMatrixManager rManager(remoteSwitchStateProvider, rPressHandler, rReleaseHandler);
+        _rightSwitchManager = &rManager;
+            delay(initDelay);
+
+        KeyboardManager boardManager(*_leftSwitchManager, *_rightSwitchManager);
+        _keyboardManager = &boardManager;
+
+        KeyboardHelper::try_log("Left side initialization complete.");
+    }
+    else
+    {
+        //Join I2C bus as a transmitter.
+        Wire.begin(RIGHT_SIDE_I2C_ADDRESS);
+        KeyboardHelper::try_log("Initializing Right Side.");
+
+        //todo construct transmitter.
+
         KeyboardHelper::try_log("Right side initialization complete.");
     }
 
@@ -861,6 +871,6 @@ void setup()
 void loop()
 {
     delay(LOOP_DELAY_TIME);
-    _matrixManager->iterate();
+    _keyboardManager->iterate();
 }
 
