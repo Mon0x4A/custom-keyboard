@@ -6,7 +6,7 @@ const bool ENABLE_SERIAL_LOGGING = false;
 const bool ENABLE_KEYBOARD_COMMANDS = true;
 const bool SWITCH_TESTING_MODE = false;
 
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -53,9 +53,9 @@ const unsigned char L0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
 
 const unsigned char L1_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
 {
-    { KEY_LEFT_ALT, KEY_F1,  KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5,  KC_LM1 },
-    { KC_NULL,      KEY_F6,  KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10, KC_LM2 },
-    { KC_NULL,      KEY_F11, KEY_F12, KEY_F13, KEY_F14, KEY_F15, KEY_RIGHT_SHIFT },
+    { KEY_LEFT_ALT, KEY_F1,   KEY_F4,  KEY_F7,  KEY_F10,  KEY_F13,  KC_LM1 },
+    { KC_NULL,      KEY_F2,   KEY_F5,  KEY_F8,  KEY_F11,  KEY_F14,  KC_LM2 },
+    { KC_NULL,      KEY_F3,   KEY_F6,  KEY_F9,  KEY_F12,  KEY_F15,  KEY_RIGHT_SHIFT },
 };
 
 const unsigned char L2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =

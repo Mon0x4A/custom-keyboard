@@ -3,7 +3,7 @@
 
 //Constants
 const bool SWITCH_TESTING_MODE = false;
-const bool IS_LEFT_KEYBOARD_SIDE = false;
+const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
 const int LOOP_DELAY_TIME = 20;
@@ -59,10 +59,10 @@ const int LEFT_LAYER1_MODIFIER_KEY_COL_INDEX = 4;
 
 const unsigned char LEFT_LAYER1_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
     {
-        { KEY_LEFT_ALT,    KEY_F1,   KEY_F2,  KEY_F3,  KEY_F4,  KEY_F5   },
-        { KC_NULL,         KEY_F6,   KEY_F7,  KEY_F8,  KEY_F9,  KEY_F10  },
-        { KEY_RIGHT_SHIFT, KEY_F11,  KEY_F12, KEY_F13, KEY_F14, KEY_F15  },
-        { KC_NULL,         KC_NULL,  KC_NULL, KC_NULL, KC_LM,   ' '      }
+        { KEY_LEFT_ALT,    KEY_F1,   KEY_F4,  KEY_F7,  KEY_F10,  KEY_F13  },
+        { KC_NULL,         KEY_F2,   KEY_F5,  KEY_F8,  KEY_F11,  KEY_F14  },
+        { KEY_RIGHT_SHIFT, KEY_F3,   KEY_F6,  KEY_F9,  KEY_F12,  KEY_F15  },
+        { KC_NULL,         KC_NULL,  KC_NULL, KC_NULL, KC_LM,    ' '      }
     };
 
 //Left Layer 2
