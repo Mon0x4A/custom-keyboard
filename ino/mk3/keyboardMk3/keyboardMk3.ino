@@ -169,7 +169,15 @@ class IKeyswitchReleasedHandler
 class IKeyboardStateContainer
 {
     public:
+        virtual bool get_is_alt_pressed() = 0;
+        virtual bool get_is_gui_pressed() = 0;
+        virtual bool get_is_ctrl_pressed() = 0;
+        virtual bool get_is_shift_pressed() = 0;
         virtual unsigned int get_current_layer() = 0;
+        virtual void set_is_alt_pressed(bool isShiftPressed) = 0;
+        virtual void set_is_gui_pressed(bool isShiftPressed) = 0;
+        virtual void set_is_ctrl_pressed(bool isShiftPressed) = 0;
+        virtual void set_is_shift_pressed(bool isShiftPressed) = 0;
         virtual void set_current_layer(unsigned int currentLayer) = 0;
 };
 
@@ -228,12 +236,58 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
     public:
         KeyboardLayoutStateContainer()
         {
+            _is_alt_pressed = false;
+            _is_gui_pressed = false;
+            _is_ctrl_pressed = false;
+            _is_shift_pressed = false;
             _currentLayer = 0;
+        }
+
+        //Get Methods
+        bool get_is_alt_pressed()
+        {
+            return _is_alt_pressed;
+        }
+
+        bool get_is_gui_pressed()
+        {
+            return _is_gui_pressed;
+        }
+
+        bool get_is_ctrl_pressed()
+        {
+            return _is_ctrl_pressed;
+        }
+
+        bool get_is_shift_pressed()
+        {
+            return _is_shift_pressed;
         }
 
         unsigned int get_current_layer()
         {
             return _currentLayer;
+        }
+
+        //Set Methods
+        void set_is_alt_pressed(bool isAltPressed)
+        {
+            _is_alt_pressed = isAltPressed;
+        }
+
+        void set_is_gui_pressed(bool isGuiPressed)
+        {
+            _is_gui_pressed = isGuiPressed;
+        }
+
+        void set_is_ctrl_pressed(bool isCtrlPressed)
+        {
+            _is_ctrl_pressed = isCtrlPressed;
+        }
+
+        void set_is_shift_pressed(bool isShiftPressed)
+        {
+            _is_shift_pressed = isShiftPressed;
         }
 
         void set_current_layer(unsigned int currentLayer)
@@ -242,6 +296,10 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
         }
 
     private:
+        bool _is_alt_pressed;
+        bool _is_gui_pressed;
+        bool _is_ctrl_pressed;
+        bool _is_shift_pressed;
         unsigned int _currentLayer;
 };
 
@@ -275,8 +333,10 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                 layerInfo->notify_chord_action_performed();
             }
 
+            bool shouldSendPressCode = false;
             switch (keycode)
             {
+                //TODO update the state container with modifier keys
                 case KC_LM1:
                     _keyboardStateContainer->set_current_layer(1);
                     KeyboardHelper::try_log("Entering layer 1");
@@ -292,11 +352,32 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                     // Do nothing if we hit the null keycode.
                     KeyboardHelper::try_log("Declining to send null keycode.");
                     break;
-                default:
-                    KeyboardHelper::try_log("Sending press of keycode: "+String(keycode));
-                    if (ENABLE_KEYBOARD_COMMANDS)
-                        Keyboard.press(keycode);
+                case KEY_LEFT_ALT:
+                case KEY_RIGHT_ALT:
+                    shouldSendPressCode = true;
+                    _keyboardStateContainer->set_is_alt_pressed(true);
                     break;
+                case KEY_LEFT_GUI:
+                case KEY_RIGHT_GUI:
+                    shouldSendPressCode = true;
+                    _keyboardStateContainer->set_is_gui_pressed(true);
+                    break;
+                case KEY_LEFT_CTRL:
+                case KEY_RIGHT_CTRL:
+                    shouldSendPressCode = true;
+                    _keyboardStateContainer->set_is_ctrl_pressed(true);
+                    break;
+                case KEY_LEFT_SHIFT:
+                case KEY_RIGHT_SHIFT:
+                    shouldSendPressCode = true;
+                    _keyboardStateContainer->set_is_shift_pressed(true);
+                    break;
+            }
+
+            if (ENABLE_KEYBOARD_COMMANDS && shouldSendPressCode)
+            {
+                KeyboardHelper::try_log("Sending press of keycode: "+String(keycode));
+                Keyboard.press(keycode);
             }
         }
 
@@ -323,30 +404,52 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
+            bool shouldSendReleaseCode = true;
             switch (keycode)
             {
+                //TODO update the state container with modifier keys
                 case KC_LM1:
                 case KC_LM2:
+                    shouldSendReleaseCode = false;
                     _keyboardStateContainer->set_current_layer(0);
                     KeyboardHelper::try_log("Entering layer 0");
                     break;
                 case KC_REPEAT:
                 case KC_NULL:
+                    shouldSendReleaseCode = false;
                     // Do nothing if we hit the null keycode.
                     KeyboardHelper::try_log("Released a key where no action was required.");
                     break;
-                default:
-                    // We have no special keycode handling.
-                    for (int i = 0; i < LAYER_COUNT; i++)
-                    {
-                        // Release all keycodes at this location across all layers.
-                        ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
-                        unsigned char keycodeOnLayer = iLayerService->get_base_keycode_at(row,col);
-                        KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
-                        if (ENABLE_KEYBOARD_COMMANDS)
-                            Keyboard.release(keycodeOnLayer);
-                    }
+                //todo technically these don't account for both left and right
+                //being pressed at the same time...
+                case KEY_LEFT_ALT:
+                case KEY_RIGHT_ALT:
+                    _keyboardStateContainer->set_is_alt_pressed(false);
                     break;
+                case KEY_LEFT_GUI:
+                case KEY_RIGHT_GUI:
+                    _keyboardStateContainer->set_is_gui_pressed(false);
+                    break;
+                case KEY_LEFT_CTRL:
+                case KEY_RIGHT_CTRL:
+                    _keyboardStateContainer->set_is_ctrl_pressed(false);
+                    break;
+                case KEY_LEFT_SHIFT:
+                case KEY_RIGHT_SHIFT:
+                    _keyboardStateContainer->set_is_shift_pressed(false);
+                    break;
+            }
+
+            if(ENABLE_KEYBOARD_COMMANDS && shouldSendReleaseCode)
+            {
+                for (int i = 0; i < LAYER_COUNT; i++)
+                {
+                    // Release all keycodes at this location across all layers.
+                    ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
+                    unsigned char keycodeOnLayer = iLayerService->get_base_keycode_at(row,col);
+                    KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
+                    Keyboard.release(keycodeOnLayer);
+                }
             }
 
             // Now that any mod/base actions have been released on this key, fire the
@@ -608,7 +711,10 @@ class KeyboardManager
         //Public Methods
         void iterate()
         {
-            Serial.println("Manager TODO");
+            //Right manager first because I want any transmission delay
+            //that would occur to happen at the start of a 'logic cycle'
+            _rightManager->iterate();
+            _leftManager->iterate();
         }
 
     private:
