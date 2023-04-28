@@ -868,6 +868,7 @@ class LayerInfoProvider : public IIndexedLayerInfoServiceProvider
 SwitchMatrixManager* _leftSwitchManager;
 SwitchMatrixManager* _rightSwitchManager;
 KeyboardManager* _keyboardManager;
+I2cSwitchStatePeripheralReporter* _peripheralSwitchReporter;
 
 void setup()
 {
@@ -881,9 +882,12 @@ void setup()
     int initDelay = 20;
     if (IS_LEFT_KEYBOARD_SIDE)
     {
+        KeyboardHelper::try_log("Initializing Left Side.");
+
         //Join I2C bus as a controller.
         Wire.begin();
-        KeyboardHelper::try_log("Initializing Left Side.");
+        KeyboardHelper::try_log("Joining I2C bus as controller.");
+            delay(initDelay);
 
         //Create the left layer shared tap state container.
         BaseTapStateContainer lBaseTapContainer(L_TAP_KEYS);
@@ -939,6 +943,7 @@ void setup()
         KeyswitchReleaseHandler lReleaseHandler(lLayerInfoProvider, keyboardStateContainer);
             delay(initDelay);
         NativeSwitchStateProvider localSwitchStateProvider;
+            delay(initDelay);
         SwitchMatrixManager lManager(localSwitchStateProvider, lPressHandler, lReleaseHandler);
         _leftSwitchManager = &lManager;
             delay(initDelay);
@@ -949,22 +954,29 @@ void setup()
         KeyswitchReleaseHandler rReleaseHandler(rLayerInfoProvider, keyboardStateContainer);
             delay(initDelay);
         I2cSwitchStateProvider remoteSwitchStateProvider;
+            delay(initDelay);
         SwitchMatrixManager rManager(remoteSwitchStateProvider, rPressHandler, rReleaseHandler);
         _rightSwitchManager = &rManager;
             delay(initDelay);
 
         KeyboardManager boardManager(*_leftSwitchManager, *_rightSwitchManager);
         _keyboardManager = &boardManager;
+            delay(initDelay);
 
         KeyboardHelper::try_log("Left side initialization complete.");
     }
     else
     {
-        //Join I2C bus as a transmitter.
-        Wire.begin(RIGHT_SIDE_I2C_ADDRESS);
         KeyboardHelper::try_log("Initializing Right Side.");
 
-        //todo construct transmitter.
+        //Join I2C bus as a transmitter.
+        Wire.begin(RIGHT_SIDE_I2C_ADDRESS);
+        KeyboardHelper::try_log("Joining I2C bus with address: "+String(RIGHT_SIDE_I2C_ADDRESS));
+            delay(initDelay);
+
+        I2cSwitchStatePeripheralReporter peripheralSwitchStateReporter;
+        _peripheralSwitchReporter = &peripheralSwitchStateReporter;
+            delay(initDelay);
 
         KeyboardHelper::try_log("Right side initialization complete.");
     }
