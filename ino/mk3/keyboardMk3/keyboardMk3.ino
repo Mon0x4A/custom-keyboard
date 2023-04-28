@@ -588,10 +588,10 @@ class I2cSwitchStatePeripheralReporter
         //Constructor
         I2cSwitchStatePeripheralReporter(ISwitchStateProvider &switchStateProvider)
         {
-            _switchStateProvider = &switchStateProvider;
+            I2cSwitchStatePeripheralReporter::_switchStateProvider = &switchStateProvider;
             // Apparently this method requires that the parameter be static... but
             // that is not indicated in the documentation.
-            Wire.onRequest(transmit_matrix);
+            Wire.onRequest(I2cSwitchStatePeripheralReporter::transmit_matrix);
         }
 
         //Public Methods
@@ -601,8 +601,8 @@ class I2cSwitchStatePeripheralReporter
             {
                 for (int j = 0; j < COLUMN_COUNT; j++)
                 {
-                    Wire.write(_switchStateProvider->get_is_switch_currently_pressed(i, j)
-                        ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
+                    bool isSwitchPressed = I2cSwitchStatePeripheralReporter::_switchStateProvider->get_is_switch_currently_pressed(i, j);
+                    Wire.write(isSwitchPressed ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
                 }
             }
             KeyboardHelper::try_log("Transmitted matrix bytes");
@@ -868,6 +868,8 @@ class LayerInfoProvider : public IIndexedLayerInfoServiceProvider
 SwitchMatrixManager* _leftSwitchManager;
 SwitchMatrixManager* _rightSwitchManager;
 KeyboardManager* _keyboardManager;
+
+ISwitchStateProvider* I2cSwitchStatePeripheralReporter::_switchStateProvider;
 I2cSwitchStatePeripheralReporter* _peripheralSwitchReporter;
 
 void setup()
@@ -974,7 +976,10 @@ void setup()
         KeyboardHelper::try_log("Joining I2C bus with address: "+String(RIGHT_SIDE_I2C_ADDRESS));
             delay(initDelay);
 
-        I2cSwitchStatePeripheralReporter peripheralSwitchStateReporter;
+        NativeSwitchStateProvider localSwitchStateProvider;
+            delay(initDelay);
+
+        I2cSwitchStatePeripheralReporter peripheralSwitchStateReporter(localSwitchStateProvider);
         _peripheralSwitchReporter = &peripheralSwitchStateReporter;
             delay(initDelay);
 
