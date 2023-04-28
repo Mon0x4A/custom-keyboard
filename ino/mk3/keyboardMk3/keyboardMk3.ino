@@ -236,32 +236,32 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
     public:
         KeyboardLayoutStateContainer()
         {
-            _is_alt_pressed = false;
-            _is_gui_pressed = false;
-            _is_ctrl_pressed = false;
-            _is_shift_pressed = false;
+            _quant_alt_pressed = 0;
+            _quant_gui_pressed = 0;
+            _quant_ctrl_pressed = 0;
+            _quant_shift_pressed = 0;
             _currentLayer = 0;
         }
 
         //Get Methods
         bool get_is_alt_pressed()
         {
-            return _is_alt_pressed;
+            return _quant_alt_pressed > 0;
         }
 
         bool get_is_gui_pressed()
         {
-            return _is_gui_pressed;
+            return _quant_gui_pressed > 0;
         }
 
         bool get_is_ctrl_pressed()
         {
-            return _is_ctrl_pressed;
+            return _quant_ctrl_pressed > 0;
         }
 
         bool get_is_shift_pressed()
         {
-            return _is_shift_pressed;
+            return _quant_shift_pressed > 0;
         }
 
         unsigned int get_current_layer()
@@ -272,22 +272,34 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
         //Set Methods
         void set_is_alt_pressed(bool isAltPressed)
         {
-            _is_alt_pressed = isAltPressed;
+            if (isAltPressed)
+                _quant_alt_pressed++;
+            else
+                _quant_alt_pressed = max(_quant_alt_pressed-1, 0);
         }
 
         void set_is_gui_pressed(bool isGuiPressed)
         {
-            _is_gui_pressed = isGuiPressed;
+            if (isGuiPressed)
+                _quant_gui_pressed++;
+            else
+                _quant_gui_pressed = max(_quant_gui_pressed-1, 0);
         }
 
         void set_is_ctrl_pressed(bool isCtrlPressed)
         {
-            _is_ctrl_pressed = isCtrlPressed;
+            if (isCtrlPressed)
+                _quant_ctrl_pressed++;
+            else
+                _quant_ctrl_pressed = max(_quant_ctrl_pressed-1, 0);
         }
 
         void set_is_shift_pressed(bool isShiftPressed)
         {
-            _is_shift_pressed = isShiftPressed;
+            if (isShiftPressed)
+                _quant_shift_pressed++;
+            else
+                _quant_shift_pressed = max(_quant_shift_pressed-1, 0);
         }
 
         void set_current_layer(unsigned int currentLayer)
@@ -296,10 +308,10 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
         }
 
     private:
-        bool _is_alt_pressed;
-        bool _is_gui_pressed;
-        bool _is_ctrl_pressed;
-        bool _is_shift_pressed;
+        unsigned int _quant_alt_pressed;
+        unsigned int _quant_gui_pressed;
+        unsigned int _quant_ctrl_pressed;
+        unsigned int _quant_shift_pressed;
         unsigned int _currentLayer;
 };
 
@@ -336,7 +348,6 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
             bool shouldSendPressCode = false;
             switch (keycode)
             {
-                //TODO update the state container with modifier keys
                 case KC_LM1:
                     _keyboardStateContainer->set_current_layer(1);
                     KeyboardHelper::try_log("Entering layer 1");
@@ -407,7 +418,6 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
             bool shouldSendReleaseCode = true;
             switch (keycode)
             {
-                //TODO update the state container with modifier keys
                 case KC_LM1:
                 case KC_LM2:
                     shouldSendReleaseCode = false;
@@ -420,8 +430,6 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                     // Do nothing if we hit the null keycode.
                     KeyboardHelper::try_log("Released a key where no action was required.");
                     break;
-                //todo technically these don't account for both left and right
-                //being pressed at the same time...
                 case KEY_LEFT_ALT:
                 case KEY_RIGHT_ALT:
                     _keyboardStateContainer->set_is_alt_pressed(false);
