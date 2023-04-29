@@ -184,9 +184,14 @@ class IKeyboardStateContainer
 class ISwitchStateProvider
 {
     public:
-        virtual void update() = 0;
         virtual bool get_is_switch_currently_pressed(unsigned int row, unsigned int col) = 0;
         virtual bool get_was_switch_previous_pressed(unsigned int row, unsigned int col) = 0;
+};
+
+class IUpdatableSwitchStateProvider : public ISwitchStateProvider
+{
+    public:
+        virtual void update() = 0;
 };
 
 //Helpers
@@ -517,7 +522,7 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
         IKeyboardStateContainer* _keyboardStateContainer;
 };
 
-class NativeSwitchStateProvider : public ISwitchStateProvider
+class NativeSwitchStateProvider : public IUpdatableSwitchStateProvider
 {
     public:
         NativeSwitchStateProvider()
@@ -571,7 +576,7 @@ class NativeSwitchStateProvider : public ISwitchStateProvider
         }
 };
 
-class I2cSwitchStateProvider : public ISwitchStateProvider
+class I2cSwitchStateProvider : public IUpdatableSwitchStateProvider
 {
     public:
         I2cSwitchStateProvider()
@@ -619,7 +624,7 @@ class I2cSwitchStatePeripheralReporter
 {
     public:
         //Constructor
-        I2cSwitchStatePeripheralReporter(ISwitchStateProvider &switchStateProvider)
+        I2cSwitchStatePeripheralReporter(IUpdatableSwitchStateProvider &switchStateProvider)
         {
             I2cSwitchStatePeripheralReporter::_switchStateProvider = &switchStateProvider;
             // Apparently this method requires that the parameter be static... but
@@ -630,6 +635,7 @@ class I2cSwitchStatePeripheralReporter
         //Public Methods
         static void transmit_matrix()
         {
+            _switchStateProvider->update();
             for (int i = 0; i < ROW_COUNT; i++)
             {
                 for (int j = 0; j < COLUMN_COUNT; j++)
@@ -643,18 +649,18 @@ class I2cSwitchStatePeripheralReporter
 
     private:
         //Private Variables
-        static ISwitchStateProvider* _switchStateProvider;
+        static IUpdatableSwitchStateProvider* _switchStateProvider;
 };
 
 // For SOME reason these matrices can't be placed in SwitchMatrixManager
 // because row zero bugs out like crazy. Still don't understand why yet.
 byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
-class SwitchMatrixManager //: ISwitchStateProvider
+class SwitchMatrixManager : public ISwitchStateProvider
 {
     public:
         //Constructor
-        SwitchMatrixManager(ISwitchStateProvider &switchStateProvider,
+        SwitchMatrixManager(IUpdatableSwitchStateProvider &switchStateProvider,
             IKeyswitchPressedHandler& pressHandler, IKeyswitchReleasedHandler& releaseHandler)
         {
             _switchStateProvider = &switchStateProvider;
@@ -677,9 +683,19 @@ class SwitchMatrixManager //: ISwitchStateProvider
             }
         }
 
+        bool get_is_switch_currently_pressed(unsigned int row, unsigned int col)
+        {
+            return _switchStateProvider->get_is_switch_currently_pressed(row, col);
+        }
+
+        bool get_was_switch_previous_pressed(unsigned int row, unsigned int col)
+        {
+            return _switchStateProvider->get_was_switch_previous_pressed(row, col);
+        }
+
     private:
         //Private Variables
-        ISwitchStateProvider* _switchStateProvider;
+        IUpdatableSwitchStateProvider* _switchStateProvider;
         IKeyswitchPressedHandler* _pressHandler;
         IKeyswitchReleasedHandler* _releaseHandler;
 
@@ -878,7 +894,7 @@ SwitchMatrixManager* _leftSwitchManager;
 SwitchMatrixManager* _rightSwitchManager;
 KeyboardManager* _keyboardManager;
 
-ISwitchStateProvider* I2cSwitchStatePeripheralReporter::_switchStateProvider;
+IUpdatableSwitchStateProvider* I2cSwitchStatePeripheralReporter::_switchStateProvider;
 I2cSwitchStatePeripheralReporter* _peripheralSwitchReporter;
 
 void setup()
