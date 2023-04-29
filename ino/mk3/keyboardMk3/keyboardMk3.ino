@@ -609,6 +609,7 @@ class I2cSwitchStateProvider : public IUpdatableSwitchStateProvider
         void read_matrix()
         {
             Wire.requestFrom(RIGHT_SIDE_I2C_ADDRESS, I2C_TRANSMISSION_BYTE_COUNT);
+            KeyboardHelper::try_log("Sent request for matrix state...");
             delay(2);
             int byteIndex = 0;
             while (Wire.available() && (byteIndex < I2C_TRANSMISSION_BYTE_COUNT))
@@ -635,6 +636,7 @@ class I2cSwitchStatePeripheralReporter
         //Public Methods
         static void transmit_matrix()
         {
+            KeyboardHelper::try_log("Received request for matrix state!");
             _switchStateProvider->update();
             for (int i = 0; i < ROW_COUNT; i++)
             {
@@ -652,10 +654,6 @@ class I2cSwitchStatePeripheralReporter
         static IUpdatableSwitchStateProvider* _switchStateProvider;
 };
 
-// For SOME reason these matrices can't be placed in SwitchMatrixManager
-// because row zero bugs out like crazy. Still don't understand why yet.
-byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
-byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
 class SwitchMatrixManager : public ISwitchStateProvider
 {
     public:
@@ -725,7 +723,6 @@ class SwitchMatrixManager : public ISwitchStateProvider
                 }
             }
         }
-
 };
 
 class KeyboardManager
@@ -748,6 +745,9 @@ class KeyboardManager
             //that would occur to happen at the start of a 'logic cycle'
             _rightManager->iterate();
             _leftManager->iterate();
+
+            if (SWITCH_TESTING_MODE)
+                print_matrices_to_serial_out();
         }
 
     private:
@@ -756,6 +756,18 @@ class KeyboardManager
         SwitchMatrixManager* _rightManager;
 
         //Private Methods
+        void print_matrices_to_serial_out()
+        {
+            String totalMatrixStr = "";
+            for (int i = 0; i < ROW_COUNT; i++)
+            {
+                String leftRowStr = SwitchStateHelper::get_row_string(*_leftManager, i);
+                String rightRowStr = SwitchStateHelper::get_row_string(*_rightManager, i);
+                totalMatrixStr += String(leftRowStr+"|"+rightRowStr);
+                totalMatrixStr += "\n";
+            }
+            Serial.println(totalMatrixStr);
+        }
 };
 
 class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
