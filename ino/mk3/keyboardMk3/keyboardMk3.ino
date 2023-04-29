@@ -226,6 +226,39 @@ class SwitchStateHelper
             }
         }
 
+        static void print_matrix_to_serial_out(ISwitchStateProvider &switchStateProvider)
+        {
+            String matrixstr = "";
+            for (int row = 0; row < ROW_COUNT; row++)
+            {
+                String rowStr = SwitchStateHelper::get_row_string(switchStateProvider, row);
+                matrixstr += rowStr;
+                matrixstr += String("\n");
+            }
+            Serial.print(matrixstr);
+        }
+
+        static String get_row_string(ISwitchStateProvider &switchStateProvider, int rowIndex)
+        {
+            String rowStr = "";
+            // print row labels
+            if (rowIndex < 10)
+               rowStr += String("0");
+            rowStr += String(rowIndex);
+            rowStr += String(": ");
+
+            // get byte vals
+            for (int col = 0; col < COLUMN_COUNT; col++)
+            {
+                rowStr += String(switchStateProvider.get_is_switch_currently_pressed(rowIndex,col)
+                    ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
+                if (col < COLUMN_COUNT)
+                    rowStr += String(", ");
+            }
+
+            return rowStr;
+        }
+
     private:
         SwitchStateHelper() { }
 };
@@ -617,7 +650,7 @@ class I2cSwitchStatePeripheralReporter
 // because row zero bugs out like crazy. Still don't understand why yet.
 byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
 byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
-class SwitchMatrixManager
+class SwitchMatrixManager //: ISwitchStateProvider
 {
     public:
         //Constructor
@@ -636,7 +669,7 @@ class SwitchMatrixManager
 
             if (SWITCH_TESTING_MODE)
             {
-                print_matrix_to_serial_out();
+                SwitchStateHelper::print_matrix_to_serial_out(*_switchStateProvider);
             }
             else
             {
@@ -677,30 +710,6 @@ class SwitchMatrixManager
             }
         }
 
-        void print_matrix_to_serial_out()
-        {
-            String matrixstr = "";
-            for (int row = 0; row < ROW_COUNT; row++)
-            {
-                // print row labels
-                if (row < 10) {
-                   matrixstr += String("0");
-                }
-                matrixstr += String(row);
-                matrixstr += String(": ");
-
-                // get byte vals
-                for (int col = 0; col < COLUMN_COUNT; col++)
-                {
-                    matrixstr += String(_switchStateProvider->get_is_switch_currently_pressed(row,col)
-                        ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
-                    if (col < COLUMN_COUNT)
-                        matrixstr += String(", ");
-                }
-                matrixstr += String("\n");
-            }
-            Serial.print(matrixstr);
-        }
 };
 
 class KeyboardManager
