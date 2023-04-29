@@ -85,7 +85,7 @@ const unsigned char RIGHT_LAYER0_KEYMAP[ROW_COUNT][COLUMN_COUNT] =
         { 'y',           'u',        'i',     'o',     'p',     KEY_RIGHT_CTRL  },
         { 'h',           'j',        'k',     'l',     ';',     KC_NULL         },
         { 'n',           'm',        ',',     '.',     '/',     KEY_RIGHT_SHIFT },
-        { KEY_BACKSPACE, KEY_RETURN, KC_NULL, KC_NULL, KC_NULL, KC_NULL         }
+        { KEY_BACKSPACE, KC_NULL,    KC_NULL, KC_NULL, KC_NULL, KC_NULL         }
     };
 
 //Right Layer 1
@@ -451,6 +451,7 @@ void set_key_states()
                                     switch(get_current_layer_based_on_modifier_state())
                                     {
                                         case 0:
+                                            Keyboard.write(KEY_RETURN);
                                             break;
                                         case 1:
                                             break;
