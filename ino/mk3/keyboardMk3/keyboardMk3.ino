@@ -231,31 +231,21 @@ class SwitchStateHelper
             }
         }
 
-        static void print_matrix_to_serial_out(ISwitchStateProvider &switchStateProvider)
+        static void print_matrix_to_serial_out(ISwitchStateProvider* switchStateProvider)
         {
-            String matrixstr = "";
             for (int row = 0; row < ROW_COUNT; row++)
-            {
-                String rowStr = SwitchStateHelper::get_row_string(switchStateProvider, row);
-                matrixstr += rowStr;
-                matrixstr += String("\n");
-            }
-            Serial.print(matrixstr);
+                Serial.println(get_row_string(switchStateProvider, row));
         }
 
-        static String get_row_string(ISwitchStateProvider &switchStateProvider, int rowIndex)
+        static String get_row_string(ISwitchStateProvider* switchStateProvider, int rowIndex)
         {
-            String rowStr = "";
-            // print row labels
-            if (rowIndex < 10)
-               rowStr += String("0");
-            rowStr += String(rowIndex);
-            rowStr += String(": ");
+            // print row label
+            String rowStr = "0"+String(rowIndex)+": ";
 
             // get byte vals
             for (int col = 0; col < COLUMN_COUNT; col++)
             {
-                rowStr += String(switchStateProvider.get_is_switch_currently_pressed(rowIndex,col)
+                rowStr += String(switchStateProvider->get_is_switch_currently_pressed(rowIndex,col)
                     ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
                 if (col < COLUMN_COUNT)
                     rowStr += String(", ");
@@ -673,7 +663,7 @@ class SwitchMatrixManager : public ISwitchStateProvider
 
             if (SWITCH_TESTING_MODE)
             {
-                SwitchStateHelper::print_matrix_to_serial_out(*_switchStateProvider);
+                SwitchStateHelper::print_matrix_to_serial_out(_switchStateProvider);
             }
             else
             {
@@ -761,8 +751,8 @@ class KeyboardManager
             String totalMatrixStr = "";
             for (int i = 0; i < ROW_COUNT; i++)
             {
-                String leftRowStr = SwitchStateHelper::get_row_string(*_leftManager, i);
-                String rightRowStr = SwitchStateHelper::get_row_string(*_rightManager, i);
+                String leftRowStr = SwitchStateHelper::get_row_string(_leftManager, i);
+                String rightRowStr = SwitchStateHelper::get_row_string(_rightManager, i);
                 totalMatrixStr += String(leftRowStr+"|"+rightRowStr);
                 totalMatrixStr += "\n";
             }
