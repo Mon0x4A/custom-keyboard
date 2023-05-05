@@ -4,16 +4,16 @@
 
 //Constants
 const bool ENABLE_SERIAL_LOGGING = true;
-const bool ENABLE_KEYBOARD_COMMANDS = true;
-const bool SWITCH_TESTING_MODE = false;
+const bool ENABLE_KEYBOARD_COMMANDS = false;
+const bool SWITCH_TESTING_MODE = true;
 
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int COLUMN_COUNT = 7;
 const int ROW_COUNT = 3;
 
-const int LEFT_SIDE_I2C_ADDRESS = 0x2A;
-const int RIGHT_SIDE_I2C_ADDRESS = 0x45;
+int LEFT_SIDE_I2C_ADDRESS = 0x2A;
+int RIGHT_SIDE_I2C_ADDRESS = 0x45;
 //Note: The Wire library has a cap of 32 bytes per transmission.
 const int I2C_TRANSMISSION_BYTE_COUNT = COLUMN_COUNT*ROW_COUNT;
 
@@ -582,17 +582,16 @@ class NativeSwitchStateProvider : public IUpdatableSwitchStateProvider
 class I2cSwitchStateProvider : public IUpdatableSwitchStateProvider
 {
     public:
-        I2cSwitchStateProvider()
+        I2cSwitchStateProvider(void (*updateSwitchStateFuncPtr)())
         {
-            //This is called to set intitial values before an external
-            //entity begins querying for state.
-            update();
+            stateUpdateFuncPtr = updateSwitchStateFuncPtr;
         }
 
         void update()
         {
             SwitchStateHelper::copy_matrix_state_to_prev(_switchMatrix, _switchMatrixPrev);
-            read_matrix();
+            // Call our external update method. Wire crashes inside object context.
+            (*stateUpdateFuncPtr)();
         }
 
         bool get_is_switch_currently_pressed(unsigned int row, unsigned int col)
@@ -605,24 +604,16 @@ class I2cSwitchStateProvider : public IUpdatableSwitchStateProvider
             return _switchMatrixPrev[row][col] == 0;
         }
 
+        //Note:Only intended to be called by the main loop.
+        void set_is_switch_currently_pressed(unsigned int row, unsigned int col, byte value)
+        {
+            _switchMatrix[row][col] == value;
+        }
+
     private:
+        void (*stateUpdateFuncPtr)();
         byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
         byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
-
-        void read_matrix()
-        {
-            //TODO remove comments for testing
-            //Wire.requestFrom(RIGHT_SIDE_I2C_ADDRESS, I2C_TRANSMISSION_BYTE_COUNT);
-            //KeyboardHelper::try_log("Sent request for matrix state...");
-            //delay(2);
-            //int byteIndex = 0;
-            //while (Wire.available() && (byteIndex < I2C_TRANSMISSION_BYTE_COUNT))
-            //{
-            //    //todo make sure int divsion and mod work the same way as c#
-            //    _switchMatrix[byteIndex/COLUMN_COUNT][byteIndex%COLUMN_COUNT] = Wire.read();
-            //    byteIndex++;
-            //}
-        }
 };
 
 class I2cSwitchStatePeripheralReporter
@@ -889,7 +880,8 @@ SwitchMatrixManager _leftSwitchManager(_leftSwitchStateProvider, _leftPressHandl
 //Build right press handlers and manager.
 KeyswitchPressHandler _rightPressHandler(_rightLayerInfoProvider, _keyboardStateContainer);
 KeyswitchReleaseHandler _rightReleaseHandler(_rightLayerInfoProvider, _keyboardStateContainer);
-I2cSwitchStateProvider _rightSwitchStateProvider;
+void (*i2cUpdateFuncPtr)(){ UpdateI2cSwitchStateProvider };
+I2cSwitchStateProvider _rightSwitchStateProvider(i2cUpdateFuncPtr);
 SwitchMatrixManager _rightSwitchManager(_rightSwitchStateProvider, _rightPressHandler, _rightReleaseHandler, false);
 
 //Right Controller Variables
@@ -980,6 +972,7 @@ void loop()
     //TODO conditional for right side logic
     KeyboardHelper::try_log("Iterating right side...");
     _rightSwitchManager.iterate();
+    //BIG TODO move all the Wire code to a more static context.
     KeyboardHelper::try_log("Right iteration complete!");
     delay(5);
     KeyboardHelper::try_log("Iterating left side...");
@@ -990,3 +983,27 @@ void loop()
         SwitchStateHelper::print_matrices_to_serial_out(&_leftSwitchStateProvider, &_rightSwitchStateProvider);
 }
 
+//Global Methods
+void UpdateI2cSwitchStateProvider()
+{
+    KeyboardHelper::try_log("Test function resolution success.");
+    //NOTE:This method is run outside of the state provider as Wire
+    //seems to crash inside of an object.
+    Wire.requestFrom(RIGHT_SIDE_I2C_ADDRESS, I2C_TRANSMISSION_BYTE_COUNT);
+    KeyboardHelper::try_log("Sent request for matrix state...");
+    int byteIndex = 0;
+    bool loggedResponse = false;
+    while (Wire.available() && (byteIndex < I2C_TRANSMISSION_BYTE_COUNT))
+    {
+        if (!loggedResponse)
+        {
+            KeyboardHelper::try_log("Made connection with right half!");
+            loggedResponse = true;
+        }
+
+        _rightSwitchStateProvider.set_is_switch_currently_pressed(
+            byteIndex/COLUMN_COUNT, byteIndex%COLUMN_COUNT, Wire.read());
+        byteIndex++;
+    }
+    KeyboardHelper::try_log(String("Completed right matrix state request with "+String(byteIndex)+" bytes."));
+}
