@@ -4,8 +4,8 @@
 
 //Constants
 const bool ENABLE_SERIAL_LOGGING = true;
-const bool ENABLE_KEYBOARD_COMMANDS = false;
-const bool SWITCH_TESTING_MODE = true;
+const bool ENABLE_KEYBOARD_COMMANDS = true;
+const bool SWITCH_TESTING_MODE = false;
 
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
@@ -386,42 +386,42 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                 layerInfo->notify_chord_action_performed();
             }
 
-            bool shouldSendPressCode = false;
+            bool shouldSendPressCode = true;
             switch (keycode)
             {
                 case KC_LM1:
+                    shouldSendPressCode = false;
                     _keyboardStateContainer->set_current_layer(1);
                     KeyboardHelper::try_log("Entering layer 1");
                     break;
                 case KC_LM2:
+                    shouldSendPressCode = false;
                     _keyboardStateContainer->set_current_layer(2);
                     KeyboardHelper::try_log("Entering layer 2");
                     break;
                 case KC_REPEAT:
+                    shouldSendPressCode = false;
                     KeyboardHelper::try_log("Repeating last instruction:");
                     break;
                 case KC_NULL:
                     // Do nothing if we hit the null keycode.
+                    shouldSendPressCode = false;
                     KeyboardHelper::try_log("Declining to send null keycode.");
                     break;
                 case KEY_LEFT_ALT:
                 case KEY_RIGHT_ALT:
-                    shouldSendPressCode = true;
                     _keyboardStateContainer->set_is_alt_pressed(true);
                     break;
                 case KEY_LEFT_GUI:
                 case KEY_RIGHT_GUI:
-                    shouldSendPressCode = true;
                     _keyboardStateContainer->set_is_gui_pressed(true);
                     break;
                 case KEY_LEFT_CTRL:
                 case KEY_RIGHT_CTRL:
-                    shouldSendPressCode = true;
                     _keyboardStateContainer->set_is_ctrl_pressed(true);
                     break;
                 case KEY_LEFT_SHIFT:
                 case KEY_RIGHT_SHIFT:
-                    shouldSendPressCode = true;
                     _keyboardStateContainer->set_is_shift_pressed(true);
                     break;
             }
