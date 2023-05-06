@@ -370,8 +370,11 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
         {
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("pressed"));
             unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
+            //KeyboardHelper::try_log("Got currentLayer");
             ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
+            //KeyboardHelper::try_log("Got layerInfo");
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
+            //KeyboardHelper::try_log("Got layerInfo");
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
             if (layerInfo->get_is_base_tap_enabled_key(row,col))
@@ -607,46 +610,26 @@ class I2cSwitchStateProvider : public IUpdatableSwitchStateProvider
         //Note:Only intended to be called by the main loop.
         void set_is_switch_currently_pressed(unsigned int row, unsigned int col, byte value)
         {
-            _switchMatrix[row][col] == value;
+            _switchMatrix[row][col] = value;
         }
 
     private:
         void (*stateUpdateFuncPtr)();
-        byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] = {0};
-        byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
-};
-
-class I2cSwitchStatePeripheralReporter
-{
-    public:
-        //Constructor
-        I2cSwitchStatePeripheralReporter(IUpdatableSwitchStateProvider &switchStateProvider)
+        //These arrays are created like this to avoid firing all the release events upon
+        //first update after construction since the switch state source is not availble
+        //when the constructor is called.
+        byte _switchMatrix[ROW_COUNT][COLUMN_COUNT] =
         {
-            I2cSwitchStatePeripheralReporter::_switchStateProvider = &switchStateProvider;
-            // Apparently this method requires that the parameter be static... but
-            // that is not indicated in the documentation.
-            Wire.onRequest(I2cSwitchStatePeripheralReporter::transmit_matrix);
-        }
-
-        //Public Methods
-        static void transmit_matrix()
+            { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE },
+            { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE },
+            { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE }
+        };
+        byte _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] =
         {
-            KeyboardHelper::try_log("Received request for matrix state!");
-            _switchStateProvider->update();
-            for (int i = 0; i < ROW_COUNT; i++)
-            {
-                for (int j = 0; j < COLUMN_COUNT; j++)
-                {
-                    bool isSwitchPressed = I2cSwitchStatePeripheralReporter::_switchStateProvider->get_is_switch_currently_pressed(i, j);
-                    Wire.write(isSwitchPressed ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
-                }
-            }
-            KeyboardHelper::try_log("Transmitted matrix bytes");
-        }
-
-    private:
-        //Private Variables
-        static IUpdatableSwitchStateProvider* _switchStateProvider;
+            { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE },
+            { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE },
+            { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE }
+        };
 };
 
 class SwitchMatrixManager : public ISwitchStateProvider
@@ -793,6 +776,7 @@ class LayerInfoContainer : public ILayerInfoService
         //IBaseKeymap
         unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
         {
+            KeyboardHelper::try_log("Got into layer info");
             return (*_baseKeys)[row][col];
         }
 
@@ -880,14 +864,12 @@ SwitchMatrixManager _leftSwitchManager(_leftSwitchStateProvider, _leftPressHandl
 //Build right press handlers and manager.
 KeyswitchPressHandler _rightPressHandler(_rightLayerInfoProvider, _keyboardStateContainer);
 KeyswitchReleaseHandler _rightReleaseHandler(_rightLayerInfoProvider, _keyboardStateContainer);
-void (*i2cUpdateFuncPtr)(){ UpdateI2cSwitchStateProvider };
+void (*i2cUpdateFuncPtr)(){ update_i2c_switch_state_provider };
 I2cSwitchStateProvider _rightSwitchStateProvider(i2cUpdateFuncPtr);
 SwitchMatrixManager _rightSwitchManager(_rightSwitchStateProvider, _rightPressHandler, _rightReleaseHandler, false);
 
 //Right Controller Variables
-//TODO update the right side variables to static initialization as well.
-IUpdatableSwitchStateProvider* I2cSwitchStatePeripheralReporter::_switchStateProvider;
-I2cSwitchStatePeripheralReporter* _peripheralSwitchReporter;
+NativeSwitchStateProvider _peripheralSwitchStateProvider;
 
 //Main
 void setup()
@@ -895,11 +877,8 @@ void setup()
     // Init serial output
     Serial.begin(TESTING_SERIAL_BAUD_RATE);
     // Wait for serial to boot up...
-    delay(1000);
+    delay(3000);
     KeyboardHelper::try_log("Starting keyboard...");
-
-    //TODO probably want to remove this timeout once things are up and running
-    Wire.setWireTimeout(2000);
 
     // Init logic managers
     int initDelay = 20;
@@ -914,22 +893,31 @@ void setup()
 
         //Initialize the left layers
         LayerInfoContainer lZeroInfo(L0_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+            delay(initDelay);
         LayerInfoContainer lOneInfo(L1_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+            delay(initDelay);
         LayerInfoContainer lTwoInfo(L2_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
             delay(initDelay);
         _leftLayerInfoProvider.set_layer_info_for_index(0, lZeroInfo);
+            delay(initDelay);
         _leftLayerInfoProvider.set_layer_info_for_index(1, lOneInfo);
+            delay(initDelay);
         _leftLayerInfoProvider.set_layer_info_for_index(2, lTwoInfo);
             delay(initDelay);
 
         //Initialize the right layers
         LayerInfoContainer rZeroInfo(R0_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+            delay(initDelay);
         LayerInfoContainer rOneInfo(R1_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+            delay(initDelay);
         LayerInfoContainer rTwoInfo(R2_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
             delay(initDelay);
         _rightLayerInfoProvider.set_layer_info_for_index(0, rZeroInfo);
+            delay(initDelay);
         _rightLayerInfoProvider.set_layer_info_for_index(1, rOneInfo);
+            delay(initDelay);
         _rightLayerInfoProvider.set_layer_info_for_index(2, rTwoInfo);
+            delay(initDelay);
 
         KeyboardHelper::try_log("Left side initialization complete.");
     }
@@ -942,12 +930,8 @@ void setup()
         KeyboardHelper::try_log("Joining I2C bus with address: "+String(RIGHT_SIDE_I2C_ADDRESS));
             delay(initDelay);
 
-        NativeSwitchStateProvider localSwitchStateProvider;
-            delay(initDelay);
-
-        I2cSwitchStatePeripheralReporter peripheralSwitchStateReporter(localSwitchStateProvider);
-        _peripheralSwitchReporter = &peripheralSwitchStateReporter;
-            delay(initDelay);
+        Wire.onRequest(transmit_peripheral_matrix);
+        Wire.onReceive(test_on_recieve);
 
         KeyboardHelper::try_log("Right side initialization complete.");
     }
@@ -969,31 +953,43 @@ void loop()
 {
     delay(LOOP_DELAY_TIME);
 
-    //TODO conditional for right side logic
-    KeyboardHelper::try_log("Iterating right side...");
-    _rightSwitchManager.iterate();
-    //BIG TODO move all the Wire code to a more static context.
-    KeyboardHelper::try_log("Right iteration complete!");
-    delay(5);
-    KeyboardHelper::try_log("Iterating left side...");
-    _leftSwitchManager.iterate();
-    KeyboardHelper::try_log("Left iteration complete!");
+    if (IS_LEFT_KEYBOARD_SIDE)
+    {
+        //USB connection side logic
+        KeyboardHelper::try_log("Iterating right side...");
+        _rightSwitchManager.iterate();
+        KeyboardHelper::try_log("Right iteration complete!");
+        delay(5);
+        KeyboardHelper::try_log("Iterating left side...");
+        _leftSwitchManager.iterate();
+        KeyboardHelper::try_log("Left iteration complete!");
 
-    if (SWITCH_TESTING_MODE)
-        SwitchStateHelper::print_matrices_to_serial_out(&_leftSwitchStateProvider, &_rightSwitchStateProvider);
+        if (SWITCH_TESTING_MODE)
+            SwitchStateHelper::print_matrices_to_serial_out(&_leftSwitchStateProvider, &_rightSwitchStateProvider);
+    }
+    else
+    {
+        //Peripheral over TRRS side logic
+        if (SWITCH_TESTING_MODE)
+        {
+             _peripheralSwitchStateProvider.update();
+            SwitchStateHelper::print_matrix_to_serial_out(&_peripheralSwitchStateProvider);
+        }
+    }
+
 }
 
 //Global Methods
-void UpdateI2cSwitchStateProvider()
+void update_i2c_switch_state_provider()
 {
-    KeyboardHelper::try_log("Test function resolution success.");
     //NOTE:This method is run outside of the state provider as Wire
     //seems to crash inside of an object.
-    Wire.requestFrom(RIGHT_SIDE_I2C_ADDRESS, I2C_TRANSMISSION_BYTE_COUNT);
+    byte bytesAvaible = Wire.requestFrom(RIGHT_SIDE_I2C_ADDRESS, I2C_TRANSMISSION_BYTE_COUNT);
     KeyboardHelper::try_log("Sent request for matrix state...");
     int byteIndex = 0;
     bool loggedResponse = false;
-    while (Wire.available() && (byteIndex < I2C_TRANSMISSION_BYTE_COUNT))
+    KeyboardHelper::try_log(String("There are "+String(bytesAvaible)+" bytes available..."));
+    while (Wire.available()) //(byteIndex < bytesAvaible)
     {
         if (!loggedResponse)
         {
@@ -1001,9 +997,39 @@ void UpdateI2cSwitchStateProvider()
             loggedResponse = true;
         }
 
-        _rightSwitchStateProvider.set_is_switch_currently_pressed(
-            byteIndex/COLUMN_COUNT, byteIndex%COLUMN_COUNT, Wire.read());
+        int row = byteIndex/COLUMN_COUNT;
+        int col = byteIndex%COLUMN_COUNT;
+        byte val = Wire.read();
+        //KeyboardHelper::try_log(String("Attempting to set ["+String(row)+" ,"+String(col)+"] with value: "+String(val)));
+        _rightSwitchStateProvider.set_is_switch_currently_pressed(row, col, val);
         byteIndex++;
     }
     KeyboardHelper::try_log(String("Completed right matrix state request with "+String(byteIndex)+" bytes."));
+}
+
+void transmit_peripheral_matrix()
+{
+    KeyboardHelper::try_log("Received request for matrix state!");
+    _peripheralSwitchStateProvider.update();
+    int byteIndex = 0;
+    byte transmissionArray[I2C_TRANSMISSION_BYTE_COUNT];
+    for (int i = 0; i < ROW_COUNT; i++)
+    {
+        for (int j = 0; j < COLUMN_COUNT; j++)
+        {
+            bool isSwitchPressed = _peripheralSwitchStateProvider.get_is_switch_currently_pressed(i, j);
+            transmissionArray[byteIndex]
+                = isSwitchPressed ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE;
+            byteIndex++;
+        }
+    }
+    Wire.write(transmissionArray, byteIndex);
+    KeyboardHelper::try_log(String("Transmitted "+String(byteIndex)+ " matrix bytes"));
+}
+
+void test_on_recieve(int byteCount)
+{
+    KeyboardHelper::try_log(String("Received "+String(byteCount)+ " bytes from controller."));
+    while(Wire.available())
+        Wire.read();
 }
