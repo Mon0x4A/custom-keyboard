@@ -4,8 +4,8 @@
 
 //Constants
 const bool ENABLE_SERIAL_LOGGING = false;
-const bool ENABLE_KEYBOARD_COMMANDS = false;
-const bool SWITCH_TESTING_MODE = true;
+const bool ENABLE_KEYBOARD_COMMANDS = true;
+const bool SWITCH_TESTING_MODE = false;
 
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
@@ -356,13 +356,126 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
         unsigned int _currentLayer;
 };
 
+class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
+{
+    public:
+        BaseTapStateContainer(
+            const unsigned char (&tapLayer)[ROW_COUNT][COLUMN_COUNT])
+        {
+            _tapLayerKeys = &tapLayer;
+        }
+
+        //IBaseTapStateProvider
+        bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
+        {
+            return ((*_tapLayerKeys)[row][col] != KC_NULL);
+        }
+        unsigned char get_tap_keycode_at(unsigned int row, unsigned int col)
+        {
+            return (*_tapLayerKeys)[row][col];
+        }
+        bool get_has_tap_timed_out(unsigned int row, unsigned int col)
+        {
+            return KeyboardHelper::has_reached_time_threshold(
+                _pressStart[row][col], DEFAULT_TAP_ACTION_TIMEOUT);
+        }
+        bool get_has_base_timed_in(unsigned int row, unsigned int col)
+        {
+            return KeyboardHelper::has_reached_time_threshold(
+                _pressStart[row][col], DEFAULT_BASE_APPLY_DELAY);
+        }
+        bool get_has_chord_action_been_performed()
+        {
+            return _chordPerformed;
+        }
+
+        //IBaseTapStateSetter
+        void set_start_key_press(unsigned int row, unsigned int col)
+        {
+            _chordPerformed = false;
+            _pressStart[row][col] = millis();
+        }
+        void notify_chord_action_performed()
+        {
+            _chordPerformed = true;
+        }
+
+    private:
+        //Private Variables
+        unsigned char (*_tapLayerKeys)[ROW_COUNT][COLUMN_COUNT];
+
+        bool _chordPerformed;
+        unsigned long _pressStart[ROW_COUNT][COLUMN_COUNT] = {0};
+};
+
+class LayerInfoContainer : public ILayerInfoService
+{
+    public:
+        //Constructor
+        LayerInfoContainer(
+            const unsigned char (&baseKeymap)[ROW_COUNT][COLUMN_COUNT],
+            IBaseTapStateProvider& tapStateProvider,
+            IBaseTapStateSetter& tapStateSetter)
+        {
+            _baseKeys = &baseKeymap;
+            _baseTapStateProvider = &tapStateProvider;
+            _baseTapStateSetter = &tapStateSetter;
+        }
+
+        //Public Methods
+        //IBaseKeymap
+        unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
+        {
+            KeyboardHelper::try_log("Got into layer info");
+            return (*_baseKeys)[row][col];
+        }
+
+        //IBaseTapStateProvider
+        bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_is_base_tap_enabled_key(row,col);
+        }
+        unsigned char get_tap_keycode_at(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_tap_keycode_at(row,col);
+        }
+        bool get_has_tap_timed_out(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_has_tap_timed_out(row,col);
+        }
+        bool get_has_base_timed_in(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateProvider->get_has_base_timed_in(row,col);
+        }
+        bool get_has_chord_action_been_performed()
+        {
+            return _baseTapStateProvider->get_has_chord_action_been_performed();
+        }
+
+        //IBaseTapStateSetter
+        void set_start_key_press(unsigned int row, unsigned int col)
+        {
+            return _baseTapStateSetter->set_start_key_press(row,col);
+        }
+        void notify_chord_action_performed()
+        {
+            _baseTapStateSetter->notify_chord_action_performed();
+        }
+
+    private:
+        //Private Variables
+        IBaseTapStateProvider* _baseTapStateProvider;
+        IBaseTapStateSetter* _baseTapStateSetter;
+        unsigned char (*_baseKeys)[ROW_COUNT][COLUMN_COUNT];
+};
+
 class KeyswitchPressHandler : public IKeyswitchPressedHandler
 {
     public:
-        KeyswitchPressHandler(IIndexedLayerInfoServiceProvider& layerInfoProvider,
+        KeyswitchPressHandler(LayerInfoContainer (&layerArray)[LAYER_COUNT],
             IKeyboardStateContainer& keyboardStateContainer)
         {
-            _layerInfoProvider = &layerInfoProvider;
+            _layerArray = &layerArray;
             _keyboardStateContainer = &keyboardStateContainer;
         }
 
@@ -371,22 +484,22 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("pressed"));
             unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
             KeyboardHelper::try_log(String("Got currentLayer: "+String(currentLayer)));
-            ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
+            //ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
+            LayerInfoContainer& layerInfo = (*_layerArray)[currentLayer];
             KeyboardHelper::try_log("Got layerInfo");
-            unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
-            //KeyboardHelper::try_log("Got layerInfo");
+            unsigned char keycode = layerInfo.get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
-            if (layerInfo->get_is_base_tap_enabled_key(row,col))
+            if (layerInfo.get_is_base_tap_enabled_key(row,col))
             {
                 KeyboardHelper::try_log("Starting down timer on R:"+String(row)+"C:"+String(col));
-                layerInfo->set_start_key_press(row,col);
+                layerInfo.set_start_key_press(row,col);
             }
             else
             {
                 // TODO I worry this might cause bugs with chords only involving tap enabled keys.
                 KeyboardHelper::try_log("Notifying chord action performed");
-                layerInfo->notify_chord_action_performed();
+                layerInfo.notify_chord_action_performed();
             }
 
             bool shouldSendPressCode = true;
@@ -437,17 +550,17 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
         }
 
     private:
-        IIndexedLayerInfoServiceProvider* _layerInfoProvider;
+        LayerInfoContainer (*_layerArray)[LAYER_COUNT];
         IKeyboardStateContainer* _keyboardStateContainer;
 };
 
 class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
 {
     public:
-        KeyswitchReleaseHandler(IIndexedLayerInfoServiceProvider& layerInfoProvider,
+        KeyswitchReleaseHandler(LayerInfoContainer (&layerArray)[LAYER_COUNT],
             IKeyboardStateContainer& keyboardStateContainer)
         {
-            _layerInfoProvider = &layerInfoProvider;
+            _layerArray = &layerArray;
             _keyboardStateContainer = &keyboardStateContainer;
         }
 
@@ -455,8 +568,9 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
         {
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("released"));
             unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
-            ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
-            unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
+            //ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
+            LayerInfoContainer layerInfo = (*_layerArray)[currentLayer];
+            unsigned char keycode = layerInfo.get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
             bool shouldSendReleaseCode = true;
@@ -497,8 +611,9 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                 for (int i = 0; i < LAYER_COUNT; i++)
                 {
                     // Release all keycodes at this location across all layers.
-                    ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
-                    unsigned char keycodeOnLayer = iLayerService->get_base_keycode_at(row,col);
+                    //ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
+                    LayerInfoContainer layerInfoAtIndex = (*_layerArray)[i];
+                    unsigned char keycodeOnLayer = layerInfoAtIndex.get_base_keycode_at(row,col);
                     KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
                     Keyboard.release(keycodeOnLayer);
                 }
@@ -508,12 +623,12 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
             // tap event, if applicable.
             // NOTE: If we want to make separate tap events for each layer, the starting
             // layer will need to be recorded somewhere on key down.
-            if (layerInfo->get_is_base_tap_enabled_key(row,col))
+            if (layerInfo.get_is_base_tap_enabled_key(row,col))
             {
-                if(!layerInfo->get_has_tap_timed_out(row,col)
-                    && !layerInfo->get_has_chord_action_been_performed())
+                if(!layerInfo.get_has_tap_timed_out(row,col)
+                    && !layerInfo.get_has_chord_action_been_performed())
                 {
-                    unsigned char tapKeycode = layerInfo->get_tap_keycode_at(row,col);
+                    unsigned char tapKeycode = layerInfo.get_tap_keycode_at(row,col);
                     KeyboardHelper::try_log("Sending tap of keycode: "+String(tapKeycode));
                     if (ENABLE_KEYBOARD_COMMANDS)
                         Keyboard.write(tapKeycode);
@@ -524,7 +639,9 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
         }
 
     private:
-        IIndexedLayerInfoServiceProvider* _layerInfoProvider;
+        LayerInfoContainer (*_layerArray)[LAYER_COUNT];
+        //LayerInfoContainer* (*_getLayerFunc)(int);
+        //IIndexedLayerInfoServiceProvider* _layerInfoProvider;
         IKeyboardStateContainer* _keyboardStateContainer;
 };
 
@@ -706,137 +823,25 @@ class SwitchMatrixManager : public ISwitchStateProvider
         }
 };
 
-class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
-{
-    public:
-        BaseTapStateContainer(
-            const unsigned char (&tapLayer)[ROW_COUNT][COLUMN_COUNT])
-        {
-            _tapLayerKeys = &tapLayer;
-        }
 
-        //IBaseTapStateProvider
-        bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
-        {
-            return ((*_tapLayerKeys)[row][col] != KC_NULL);
-        }
-        unsigned char get_tap_keycode_at(unsigned int row, unsigned int col)
-        {
-            return (*_tapLayerKeys)[row][col];
-        }
-        bool get_has_tap_timed_out(unsigned int row, unsigned int col)
-        {
-            return KeyboardHelper::has_reached_time_threshold(
-                _pressStart[row][col], DEFAULT_TAP_ACTION_TIMEOUT);
-        }
-        bool get_has_base_timed_in(unsigned int row, unsigned int col)
-        {
-            return KeyboardHelper::has_reached_time_threshold(
-                _pressStart[row][col], DEFAULT_BASE_APPLY_DELAY);
-        }
-        bool get_has_chord_action_been_performed()
-        {
-            return _chordPerformed;
-        }
-
-        //IBaseTapStateSetter
-        void set_start_key_press(unsigned int row, unsigned int col)
-        {
-            _chordPerformed = false;
-            _pressStart[row][col] = millis();
-        }
-        void notify_chord_action_performed()
-        {
-            _chordPerformed = true;
-        }
-
-    private:
-        //Private Variables
-        unsigned char (*_tapLayerKeys)[ROW_COUNT][COLUMN_COUNT];
-
-        bool _chordPerformed;
-        unsigned long _pressStart[ROW_COUNT][COLUMN_COUNT] = {0};
-};
-
-class LayerInfoContainer : public ILayerInfoService
-{
-    public:
-        //Constructor
-        LayerInfoContainer(
-            const unsigned char (&baseKeymap)[ROW_COUNT][COLUMN_COUNT],
-            IBaseTapStateProvider& tapStateProvider,
-            IBaseTapStateSetter& tapStateSetter)
-        {
-            _baseKeys = &baseKeymap;
-            _baseTapStateProvider = &tapStateProvider;
-            _baseTapStateSetter = &tapStateSetter;
-        }
-
-        //Public Methods
-        //IBaseKeymap
-        unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
-        {
-            KeyboardHelper::try_log("Got into layer info");
-            return (*_baseKeys)[row][col];
-        }
-
-        //IBaseTapStateProvider
-        bool get_is_base_tap_enabled_key(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_is_base_tap_enabled_key(row,col);
-        }
-        unsigned char get_tap_keycode_at(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_tap_keycode_at(row,col);
-        }
-        bool get_has_tap_timed_out(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_has_tap_timed_out(row,col);
-        }
-        bool get_has_base_timed_in(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateProvider->get_has_base_timed_in(row,col);
-        }
-        bool get_has_chord_action_been_performed()
-        {
-            return _baseTapStateProvider->get_has_chord_action_been_performed();
-        }
-
-        //IBaseTapStateSetter
-        void set_start_key_press(unsigned int row, unsigned int col)
-        {
-            return _baseTapStateSetter->set_start_key_press(row,col);
-        }
-        void notify_chord_action_performed()
-        {
-            _baseTapStateSetter->notify_chord_action_performed();
-        }
-
-    private:
-        //Private Variables
-        IBaseTapStateProvider* _baseTapStateProvider;
-        IBaseTapStateSetter* _baseTapStateSetter;
-        unsigned char (*_baseKeys)[ROW_COUNT][COLUMN_COUNT];
-};
-
-class LayerInfoProvider : public IIndexedLayerInfoServiceProvider
-{
-    public:
-        LayerInfoProvider() { }
-
-        ILayerInfoService* get_layer_info_for_index(unsigned int layerIndex)
-        {
-            return _layerInfos[layerIndex];
-        }
-
-        void set_layer_info_for_index(unsigned int layerIndex, ILayerInfoService& layerInfo)
-        {
-            _layerInfos[layerIndex] = &layerInfo;
-        }
-
-    private:
-        ILayerInfoService* _layerInfos[LAYER_COUNT];
-};
+//class LayerInfoProvider : public IIndexedLayerInfoServiceProvider
+//{
+//    public:
+//        LayerInfoProvider() { }
+//
+//        ILayerInfoService* get_layer_info_for_index(unsigned int layerIndex)
+//        {
+//            return _layerInfos[layerIndex];
+//        }
+//
+//        void set_layer_info_for_index(unsigned int layerIndex, ILayerInfoService& layerInfo)
+//        {
+//            _layerInfos[layerIndex] = &layerInfo;
+//        }
+//
+//    private:
+//        ILayerInfoService* _layerInfos[LAYER_COUNT];
+//};
 
 //Global Variables
 //Left Controller Variables
@@ -844,32 +849,46 @@ class LayerInfoProvider : public IIndexedLayerInfoServiceProvider
 BaseTapStateContainer _leftBaseTapContainer(L_TAP_KEYS);
 
 //Collate the left layers
-LayerInfoProvider _leftLayerInfoProvider;
-LayerInfoContainer _leftLayerZeroInfo(L0_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
-LayerInfoContainer _leftLayerOneInfo(L1_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
-LayerInfoContainer _leftLayerTwoInfo(L2_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+//LayerInfoProvider _leftLayerInfoProvider;
+//LayerInfoContainer _leftLayerZeroInfo(L0_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+//LayerInfoContainer _leftLayerOneInfo(L1_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+//LayerInfoContainer _leftLayerTwoInfo(L2_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+LayerInfoContainer _leftLayers[LAYER_COUNT] =
+{
+    LayerInfoContainer(L0_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer),
+    LayerInfoContainer(L1_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer),
+    LayerInfoContainer(L2_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer)
+};
 
 //Create the right layer shared tap state container.
 BaseTapStateContainer _rightBaseTapContainer(R_TAP_KEYS);
 
 //Collate the right layers
-LayerInfoProvider _rightLayerInfoProvider;
-LayerInfoContainer _rightLayerZeroInfo(R0_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
-LayerInfoContainer _rightLayerOneInfo(R1_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
-LayerInfoContainer _rightLayerTwoInfo(R2_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+//LayerInfoProvider _rightLayerInfoProvider;
+//LayerInfoContainer _rightLayerZeroInfo(R0_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+//LayerInfoContainer _rightLayerOneInfo(R1_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+//LayerInfoContainer _rightLayerTwoInfo(R2_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+LayerInfoContainer _rightLayers[LAYER_COUNT] =
+{
+    LayerInfoContainer(R0_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer),
+    LayerInfoContainer(R1_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer),
+    LayerInfoContainer(R2_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer),
+};
 
 //Build the state container that will serve the entire keyboard.
 KeyboardLayoutStateContainer _keyboardStateContainer;
 
 //Build left press handlers and manager.
-KeyswitchPressHandler _leftPressHandler(_leftLayerInfoProvider, _keyboardStateContainer);
-KeyswitchReleaseHandler _leftReleaseHandler(_leftLayerInfoProvider, _keyboardStateContainer);
+//LayerInfoContainer* (*getLeftLayerFuncPtr){ get_left_layer_at };
+KeyswitchPressHandler _leftPressHandler(_leftLayers, _keyboardStateContainer);
+KeyswitchReleaseHandler _leftReleaseHandler(_leftLayers, _keyboardStateContainer);
 NativeSwitchStateProvider _leftSwitchStateProvider;
 SwitchMatrixManager _leftSwitchManager(_leftSwitchStateProvider, _leftPressHandler, _leftReleaseHandler, false);
 
 //Build right press handlers and manager.
-KeyswitchPressHandler _rightPressHandler(_rightLayerInfoProvider, _keyboardStateContainer);
-KeyswitchReleaseHandler _rightReleaseHandler(_rightLayerInfoProvider, _keyboardStateContainer);
+//LayerInfoContainer* (*getRightLayerFuncPtr){ get_right_layer_at };
+KeyswitchPressHandler _rightPressHandler(_rightLayers, _keyboardStateContainer);
+KeyswitchReleaseHandler _rightReleaseHandler(_rightLayers, _keyboardStateContainer);
 void (*i2cUpdateFuncPtr)(){ update_i2c_switch_state_provider };
 I2cSwitchStateProvider _rightSwitchStateProvider(i2cUpdateFuncPtr);
 SwitchMatrixManager _rightSwitchManager(_rightSwitchStateProvider, _rightPressHandler, _rightReleaseHandler, false);
@@ -898,20 +917,20 @@ void setup()
             delay(initDelay);
 
         //Initialize the left layers
-        _leftLayerInfoProvider.set_layer_info_for_index(0, _leftLayerZeroInfo);
-            delay(initDelay);
-        _leftLayerInfoProvider.set_layer_info_for_index(1, _leftLayerOneInfo);
-            delay(initDelay);
-        _leftLayerInfoProvider.set_layer_info_for_index(2, _leftLayerTwoInfo);
-            delay(initDelay);
+        //_leftLayerInfoProvider.set_layer_info_for_index(0, _leftLayerZeroInfo);
+        //    delay(initDelay);
+        //_leftLayerInfoProvider.set_layer_info_for_index(1, _leftLayerOneInfo);
+        //    delay(initDelay);
+        //_leftLayerInfoProvider.set_layer_info_for_index(2, _leftLayerTwoInfo);
+        //    delay(initDelay);
 
-        //Initialize the right layers
-        _rightLayerInfoProvider.set_layer_info_for_index(0, _rightLayerZeroInfo);
-            delay(initDelay);
-        _rightLayerInfoProvider.set_layer_info_for_index(1, _rightLayerOneInfo);
-            delay(initDelay);
-        _rightLayerInfoProvider.set_layer_info_for_index(2, _rightLayerTwoInfo);
-            delay(initDelay);
+        ////Initialize the right layers
+        //_rightLayerInfoProvider.set_layer_info_for_index(0, _rightLayerZeroInfo);
+        //    delay(initDelay);
+        //_rightLayerInfoProvider.set_layer_info_for_index(1, _rightLayerOneInfo);
+        //    delay(initDelay);
+        //_rightLayerInfoProvider.set_layer_info_for_index(2, _rightLayerTwoInfo);
+        //    delay(initDelay);
 
         KeyboardHelper::try_log("Left side initialization complete.");
     }
@@ -925,7 +944,6 @@ void setup()
             delay(initDelay);
 
         Wire.onRequest(transmit_peripheral_matrix);
-        Wire.onReceive(test_on_recieve);
 
         KeyboardHelper::try_log("Right side initialization complete.");
     }
@@ -1021,9 +1039,32 @@ void transmit_peripheral_matrix()
     KeyboardHelper::try_log(String("Transmitted "+String(byteIndex)+ " matrix bytes"));
 }
 
-void test_on_recieve(int byteCount)
-{
-    KeyboardHelper::try_log(String("Received "+String(byteCount)+ " bytes from controller."));
-    while(Wire.available())
-        Wire.read();
-}
+//LayerInfoContainer* get_left_layer_at(int layerIndex)
+//{
+//    switch (layerIndex)
+//    {
+//        case 0:
+//            return &_leftLayerZeroInfo;
+//        case 1:
+//            return &_leftLayerOneInfo;
+//        case 2:
+//            return &_leftLayerTwoInfo;
+//        default:
+//            return nullptr;
+//    }
+//}
+//
+//LayerInfoContainer* get_right_layer_at(int layerIndex)
+//{
+//    switch (layerIndex)
+//    {
+//        case 0:
+//            return &_rightLayerZeroInfo;
+//        case 1:
+//            return &_rightLayerOneInfo;
+//        case 2:
+//            return &_rightLayerTwoInfo;
+//        default:
+//            return nullptr;
+//    }
+//}
