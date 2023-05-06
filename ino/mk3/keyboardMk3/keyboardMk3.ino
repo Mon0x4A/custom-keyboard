@@ -565,7 +565,7 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
         {
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("released"));
             unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
-            LayerInfoContainer layerInfo = (*_layerArray)[currentLayer];
+            LayerInfoContainer& layerInfo = (*_layerArray)[currentLayer];
             unsigned char keycode = layerInfo.get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
@@ -607,7 +607,7 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                 for (int i = 0; i < LAYER_COUNT; i++)
                 {
                     // Release all keycodes at this location across all layers.
-                    LayerInfoContainer layerInfoAtIndex = (*_layerArray)[i];
+                    LayerInfoContainer& layerInfoAtIndex = (*_layerArray)[i];
                     unsigned char keycodeOnLayer = layerInfoAtIndex.get_base_keycode_at(row,col);
                     KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
                     Keyboard.release(keycodeOnLayer);
