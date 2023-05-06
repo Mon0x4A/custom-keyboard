@@ -483,10 +483,7 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
         {
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("pressed"));
             unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
-            KeyboardHelper::try_log(String("Got currentLayer: "+String(currentLayer)));
-            //ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
             LayerInfoContainer& layerInfo = (*_layerArray)[currentLayer];
-            KeyboardHelper::try_log("Got layerInfo");
             unsigned char keycode = layerInfo.get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
@@ -568,7 +565,6 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
         {
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("released"));
             unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
-            //ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
             LayerInfoContainer layerInfo = (*_layerArray)[currentLayer];
             unsigned char keycode = layerInfo.get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
@@ -611,7 +607,6 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                 for (int i = 0; i < LAYER_COUNT; i++)
                 {
                     // Release all keycodes at this location across all layers.
-                    //ILayerInfoService* iLayerService = _layerInfoProvider->get_layer_info_for_index(i);
                     LayerInfoContainer layerInfoAtIndex = (*_layerArray)[i];
                     unsigned char keycodeOnLayer = layerInfoAtIndex.get_base_keycode_at(row,col);
                     KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
@@ -640,8 +635,6 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
 
     private:
         LayerInfoContainer (*_layerArray)[LAYER_COUNT];
-        //LayerInfoContainer* (*_getLayerFunc)(int);
-        //IIndexedLayerInfoServiceProvider* _layerInfoProvider;
         IKeyboardStateContainer* _keyboardStateContainer;
 };
 
@@ -823,36 +816,12 @@ class SwitchMatrixManager : public ISwitchStateProvider
         }
 };
 
-
-//class LayerInfoProvider : public IIndexedLayerInfoServiceProvider
-//{
-//    public:
-//        LayerInfoProvider() { }
-//
-//        ILayerInfoService* get_layer_info_for_index(unsigned int layerIndex)
-//        {
-//            return _layerInfos[layerIndex];
-//        }
-//
-//        void set_layer_info_for_index(unsigned int layerIndex, ILayerInfoService& layerInfo)
-//        {
-//            _layerInfos[layerIndex] = &layerInfo;
-//        }
-//
-//    private:
-//        ILayerInfoService* _layerInfos[LAYER_COUNT];
-//};
-
 //Global Variables
 //Left Controller Variables
 //Create the left layer shared tap state container.
 BaseTapStateContainer _leftBaseTapContainer(L_TAP_KEYS);
 
 //Collate the left layers
-//LayerInfoProvider _leftLayerInfoProvider;
-//LayerInfoContainer _leftLayerZeroInfo(L0_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
-//LayerInfoContainer _leftLayerOneInfo(L1_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
-//LayerInfoContainer _leftLayerTwoInfo(L2_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
 LayerInfoContainer _leftLayers[LAYER_COUNT] =
 {
     LayerInfoContainer(L0_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer),
@@ -864,10 +833,6 @@ LayerInfoContainer _leftLayers[LAYER_COUNT] =
 BaseTapStateContainer _rightBaseTapContainer(R_TAP_KEYS);
 
 //Collate the right layers
-//LayerInfoProvider _rightLayerInfoProvider;
-//LayerInfoContainer _rightLayerZeroInfo(R0_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
-//LayerInfoContainer _rightLayerOneInfo(R1_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
-//LayerInfoContainer _rightLayerTwoInfo(R2_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
 LayerInfoContainer _rightLayers[LAYER_COUNT] =
 {
     LayerInfoContainer(R0_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer),
@@ -879,14 +844,12 @@ LayerInfoContainer _rightLayers[LAYER_COUNT] =
 KeyboardLayoutStateContainer _keyboardStateContainer;
 
 //Build left press handlers and manager.
-//LayerInfoContainer* (*getLeftLayerFuncPtr){ get_left_layer_at };
 KeyswitchPressHandler _leftPressHandler(_leftLayers, _keyboardStateContainer);
 KeyswitchReleaseHandler _leftReleaseHandler(_leftLayers, _keyboardStateContainer);
 NativeSwitchStateProvider _leftSwitchStateProvider;
 SwitchMatrixManager _leftSwitchManager(_leftSwitchStateProvider, _leftPressHandler, _leftReleaseHandler, false);
 
 //Build right press handlers and manager.
-//LayerInfoContainer* (*getRightLayerFuncPtr){ get_right_layer_at };
 KeyswitchPressHandler _rightPressHandler(_rightLayers, _keyboardStateContainer);
 KeyswitchReleaseHandler _rightReleaseHandler(_rightLayers, _keyboardStateContainer);
 void (*i2cUpdateFuncPtr)(){ update_i2c_switch_state_provider };
@@ -916,22 +879,6 @@ void setup()
         KeyboardHelper::try_log("Joining I2C bus as controller.");
             delay(initDelay);
 
-        //Initialize the left layers
-        //_leftLayerInfoProvider.set_layer_info_for_index(0, _leftLayerZeroInfo);
-        //    delay(initDelay);
-        //_leftLayerInfoProvider.set_layer_info_for_index(1, _leftLayerOneInfo);
-        //    delay(initDelay);
-        //_leftLayerInfoProvider.set_layer_info_for_index(2, _leftLayerTwoInfo);
-        //    delay(initDelay);
-
-        ////Initialize the right layers
-        //_rightLayerInfoProvider.set_layer_info_for_index(0, _rightLayerZeroInfo);
-        //    delay(initDelay);
-        //_rightLayerInfoProvider.set_layer_info_for_index(1, _rightLayerOneInfo);
-        //    delay(initDelay);
-        //_rightLayerInfoProvider.set_layer_info_for_index(2, _rightLayerTwoInfo);
-        //    delay(initDelay);
-
         KeyboardHelper::try_log("Left side initialization complete.");
     }
     else
@@ -944,6 +891,7 @@ void setup()
             delay(initDelay);
 
         Wire.onRequest(transmit_peripheral_matrix);
+            delay(initDelay);
 
         KeyboardHelper::try_log("Right side initialization complete.");
     }
@@ -971,7 +919,6 @@ void loop()
         KeyboardHelper::try_log("Iterating right side...");
         _rightSwitchManager.iterate();
         KeyboardHelper::try_log("Right iteration complete!");
-        delay(5);
         KeyboardHelper::try_log("Iterating left side...");
         _leftSwitchManager.iterate();
         KeyboardHelper::try_log("Left iteration complete!");
@@ -1001,19 +948,16 @@ void update_i2c_switch_state_provider()
     int byteIndex = 0;
     bool loggedResponse = false;
     KeyboardHelper::try_log(String("There are "+String(bytesAvaible)+" bytes available..."));
-    while (Wire.available()) //(byteIndex < bytesAvaible)
+    while (Wire.available())
     {
         if (!loggedResponse)
         {
             KeyboardHelper::try_log("Made connection with right half!");
             loggedResponse = true;
         }
+        _rightSwitchStateProvider.set_is_switch_currently_pressed(
+            byteIndex/COLUMN_COUNT, byteIndex%COLUMN_COUNT, Wire.read());
 
-        int row = byteIndex/COLUMN_COUNT;
-        int col = byteIndex%COLUMN_COUNT;
-        byte val = Wire.read();
-        //KeyboardHelper::try_log(String("Attempting to set ["+String(row)+" ,"+String(col)+"] with value: "+String(val)));
-        _rightSwitchStateProvider.set_is_switch_currently_pressed(row, col, val);
         byteIndex++;
     }
     KeyboardHelper::try_log(String("Completed right matrix state request with "+String(byteIndex)+" bytes."));
@@ -1038,33 +982,3 @@ void transmit_peripheral_matrix()
     Wire.write(transmissionArray, byteIndex);
     KeyboardHelper::try_log(String("Transmitted "+String(byteIndex)+ " matrix bytes"));
 }
-
-//LayerInfoContainer* get_left_layer_at(int layerIndex)
-//{
-//    switch (layerIndex)
-//    {
-//        case 0:
-//            return &_leftLayerZeroInfo;
-//        case 1:
-//            return &_leftLayerOneInfo;
-//        case 2:
-//            return &_leftLayerTwoInfo;
-//        default:
-//            return nullptr;
-//    }
-//}
-//
-//LayerInfoContainer* get_right_layer_at(int layerIndex)
-//{
-//    switch (layerIndex)
-//    {
-//        case 0:
-//            return &_rightLayerZeroInfo;
-//        case 1:
-//            return &_rightLayerOneInfo;
-//        case 2:
-//            return &_rightLayerTwoInfo;
-//        default:
-//            return nullptr;
-//    }
-//}
