@@ -3,7 +3,7 @@
 #include <Wire.h>
 
 //Constants
-const bool ENABLE_SERIAL_LOGGING = true;
+const bool ENABLE_SERIAL_LOGGING = false;
 const bool ENABLE_KEYBOARD_COMMANDS = false;
 const bool SWITCH_TESTING_MODE = true;
 
@@ -18,7 +18,7 @@ int RIGHT_SIDE_I2C_ADDRESS = 0x45;
 const int I2C_TRANSMISSION_BYTE_COUNT = COLUMN_COUNT*ROW_COUNT;
 
 const int TESTING_SERIAL_BAUD_RATE = 115200;
-const int LOOP_DELAY_TIME = 1000;
+const int LOOP_DELAY_TIME = 20;
 
 const byte SWITCH_PRESSED_VALUE = 0;
 const byte SWITCH_NOT_PRESSED_VALUE = 1;
@@ -370,9 +370,9 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
         {
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("pressed"));
             unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
-            //KeyboardHelper::try_log("Got currentLayer");
+            KeyboardHelper::try_log(String("Got currentLayer: "+String(currentLayer)));
             ILayerInfoService* layerInfo = _layerInfoProvider->get_layer_info_for_index(currentLayer);
-            //KeyboardHelper::try_log("Got layerInfo");
+            KeyboardHelper::try_log("Got layerInfo");
             unsigned char keycode = layerInfo->get_base_keycode_at(row,col);
             //KeyboardHelper::try_log("Got layerInfo");
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
@@ -845,12 +845,18 @@ BaseTapStateContainer _leftBaseTapContainer(L_TAP_KEYS);
 
 //Collate the left layers
 LayerInfoProvider _leftLayerInfoProvider;
+LayerInfoContainer _leftLayerZeroInfo(L0_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+LayerInfoContainer _leftLayerOneInfo(L1_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+LayerInfoContainer _leftLayerTwoInfo(L2_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
 
 //Create the right layer shared tap state container.
 BaseTapStateContainer _rightBaseTapContainer(R_TAP_KEYS);
 
 //Collate the right layers
 LayerInfoProvider _rightLayerInfoProvider;
+LayerInfoContainer _rightLayerZeroInfo(R0_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+LayerInfoContainer _rightLayerOneInfo(R1_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+LayerInfoContainer _rightLayerTwoInfo(R2_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
 
 //Build the state container that will serve the entire keyboard.
 KeyboardLayoutStateContainer _keyboardStateContainer;
@@ -892,31 +898,19 @@ void setup()
             delay(initDelay);
 
         //Initialize the left layers
-        LayerInfoContainer lZeroInfo(L0_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+        _leftLayerInfoProvider.set_layer_info_for_index(0, _leftLayerZeroInfo);
             delay(initDelay);
-        LayerInfoContainer lOneInfo(L1_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
+        _leftLayerInfoProvider.set_layer_info_for_index(1, _leftLayerOneInfo);
             delay(initDelay);
-        LayerInfoContainer lTwoInfo(L2_BASE_KEYCODES, _leftBaseTapContainer, _leftBaseTapContainer);
-            delay(initDelay);
-        _leftLayerInfoProvider.set_layer_info_for_index(0, lZeroInfo);
-            delay(initDelay);
-        _leftLayerInfoProvider.set_layer_info_for_index(1, lOneInfo);
-            delay(initDelay);
-        _leftLayerInfoProvider.set_layer_info_for_index(2, lTwoInfo);
+        _leftLayerInfoProvider.set_layer_info_for_index(2, _leftLayerTwoInfo);
             delay(initDelay);
 
         //Initialize the right layers
-        LayerInfoContainer rZeroInfo(R0_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+        _rightLayerInfoProvider.set_layer_info_for_index(0, _rightLayerZeroInfo);
             delay(initDelay);
-        LayerInfoContainer rOneInfo(R1_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
+        _rightLayerInfoProvider.set_layer_info_for_index(1, _rightLayerOneInfo);
             delay(initDelay);
-        LayerInfoContainer rTwoInfo(R2_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer);
-            delay(initDelay);
-        _rightLayerInfoProvider.set_layer_info_for_index(0, rZeroInfo);
-            delay(initDelay);
-        _rightLayerInfoProvider.set_layer_info_for_index(1, rOneInfo);
-            delay(initDelay);
-        _rightLayerInfoProvider.set_layer_info_for_index(2, rTwoInfo);
+        _rightLayerInfoProvider.set_layer_info_for_index(2, _rightLayerTwoInfo);
             delay(initDelay);
 
         KeyboardHelper::try_log("Left side initialization complete.");
