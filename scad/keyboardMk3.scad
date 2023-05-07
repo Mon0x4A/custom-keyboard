@@ -138,12 +138,14 @@ _arduinoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//mirror([1,0,0])
+wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
 //oledScreenPunch(_arduinoHousingLidBaseThickness+2);
 //trrsBodyPunch();
-trrsWedgeBlock();
+//trrsWedgeBlock();
 //arduinoHousing(renderLid=true);
 //arduinoHousingBase();
 //arduinoHousingTop();
@@ -482,7 +484,7 @@ module arduinoHousing(renderLid)
     {
         union()
         {
-            //arduinoHousingBase();
+            arduinoHousingBase();
             if (renderLid)
                 translate([0, 0, _arduinoHousingBaseDepth])
                     arduinoHousingTop();
@@ -716,6 +718,40 @@ module trrsWedgeBlock()
     }
 }
 
+module wristRest()
+{
+    wristRestDepth = 8;
+    pinkyRestLength = (_key1_25uLength*1)+(_key1uLength*0);
+    pinkyRestWidth = (_key1_25uWidth*1)+(_key1uWidth*2)+(_housingWallThickness*2);
+    mainRestLength = (_key1_25uLength*1)+(_key1uLength*3);
+    mainRestWidth = (_key1_25uWidth*1)+(_key1uWidth*0)+(_housingWallThickness*1);
+    thumbRestLength = (_key1_25uLength*4)+(_key1uLength*3)+(_housingWallThickness*2);
+    thumbRestWidth = (_key1_25uWidth*3)+(_key1uWidth*1);
+
+    difference()
+    {
+        union()
+        {
+            translate([-_housingWallThickness, -_housingWallThickness*4, 0])
+                roundedCube(size=[pinkyRestLength, pinkyRestWidth, wristRestDepth], radius=_housingBodyRoundingRadius, apply_to="zall");
+            translate([-_housingWallThickness, -_housingWallThickness*2, 0])
+                roundedCube(size=[mainRestLength, mainRestWidth, wristRestDepth], radius=_housingBodyRoundingRadius, apply_to="zall");
+            translate([-_housingWallThickness, -thumbRestWidth-_housingWallThickness, 0])
+                roundedCube(size=[thumbRestLength, thumbRestWidth, wristRestDepth], radius=_housingBodyRoundingRadius, apply_to="zall");
+        }
+
+        // Cutout idea, but it won't work on the outside of the rest because it interferes
+        // with the palm placement and stability.
+        //squareCutoutSideLength = _key1uLength;
+        //restCutoutPadding = _housingWallThickness;
+        //translate([0, -(_key1_25uWidth*3)-(_key1uWidth*1), -1])
+        //    roundedCube(size=[squareCutoutSideLength, squareCutoutSideLength, wristRestDepth+2], radius=_housingBodyRoundingRadius, apply_to="zall");
+        //translate([0, -(_key1_25uWidth*3)+restCutoutPadding, -1])
+        //    roundedCube(size=[squareCutoutSideLength/2, squareCutoutSideLength/2, wristRestDepth+2], radius=_housingBodyRoundingRadius/1.5, apply_to="zall");
+        //translate([(_key1uLength*1)+restCutoutPadding, -(_key1_25uWidth*3)-(_key1uWidth*1), -1])
+        //    roundedCube(size=[squareCutoutSideLength/2, squareCutoutSideLength/2, wristRestDepth+2], radius=_housingBodyRoundingRadius/1.5, apply_to="zall");
+    }
+}
 
 //Punches
 module arduinoMicroPunch()
