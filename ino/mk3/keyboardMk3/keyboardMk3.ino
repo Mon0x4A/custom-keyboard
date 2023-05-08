@@ -169,16 +169,19 @@ class IKeyswitchReleasedHandler
 class IKeyboardStateContainer
 {
     public:
+        virtual bool get_is_lm1_pressed() = 0;
+        virtual bool get_is_lm2_pressed() = 0;
         virtual bool get_is_alt_pressed() = 0;
         virtual bool get_is_gui_pressed() = 0;
         virtual bool get_is_ctrl_pressed() = 0;
         virtual bool get_is_shift_pressed() = 0;
         virtual unsigned int get_current_layer() = 0;
+        virtual void set_is_lm1_pressed(bool isLm1Pressed) = 0;
+        virtual void set_is_lm2_pressed(bool isLm2Pressed) = 0;
         virtual void set_is_alt_pressed(bool isAltPressed) = 0;
         virtual void set_is_gui_pressed(bool isGuiPressed) = 0;
         virtual void set_is_ctrl_pressed(bool isCtrlPressed) = 0;
         virtual void set_is_shift_pressed(bool isShiftPressed) = 0;
-        virtual void set_current_layer(unsigned int currentLayer) = 0;
 };
 
 class ISwitchStateProvider
@@ -277,14 +280,26 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
     public:
         KeyboardLayoutStateContainer()
         {
+            _quant_lm1_pressed = 0;
+            _quant_lm2_pressed = 0;
+            _lastLayerPressed = 0;
             _quant_alt_pressed = 0;
             _quant_gui_pressed = 0;
             _quant_ctrl_pressed = 0;
             _quant_shift_pressed = 0;
-            _currentLayer = 0;
         }
 
         //Get Methods
+        bool get_is_lm1_pressed()
+        {
+            return _quant_lm1_pressed > 0;
+        }
+
+        bool get_is_lm2_pressed()
+        {
+            return _quant_lm2_pressed > 0;
+        }
+
         bool get_is_alt_pressed()
         {
             return _quant_alt_pressed > 0;
@@ -307,10 +322,42 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
 
         unsigned int get_current_layer()
         {
-            return _currentLayer;
+            if (get_is_lm1_pressed() && get_is_lm2_pressed())
+                return _lastLayerPressed;
+            if (get_is_lm2_pressed())
+                return 2;
+            if (get_is_lm1_pressed())
+                return 1;
+            return 0;
         }
 
         //Set Methods
+        void set_is_lm1_pressed(bool isLm1Pressed)
+        {
+            if (isLm1Pressed)
+            {
+                _quant_lm1_pressed++;
+                _lastLayerPressed = 1;
+            }
+            else
+            {
+                _quant_lm1_pressed = max(_quant_lm1_pressed-1, 0);
+            }
+        }
+
+        void set_is_lm2_pressed(bool isLm2Pressed)
+        {
+            if (isLm2Pressed)
+            {
+                _quant_lm2_pressed++;
+                _lastLayerPressed = 2;
+            }
+            else
+            {
+                _quant_lm2_pressed = max(_quant_lm2_pressed-1, 0);
+            }
+        }
+
         void set_is_alt_pressed(bool isAltPressed)
         {
             if (isAltPressed)
@@ -343,18 +390,14 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
                 _quant_shift_pressed = max(_quant_shift_pressed-1, 0);
         }
 
-        void set_current_layer(unsigned int currentLayer)
-        {
-            _currentLayer = currentLayer;
-        }
-
     private:
-        //TODO state methods for layer mod keys too
+        unsigned int _quant_lm1_pressed = 0;
+        unsigned int _quant_lm2_pressed = 0;
         unsigned int _quant_alt_pressed = 0;
         unsigned int _quant_gui_pressed = 0;
         unsigned int _quant_ctrl_pressed = 0;
         unsigned int _quant_shift_pressed = 0;
-        unsigned int _currentLayer;
+        unsigned int _lastLayerPressed = 0;
 };
 
 class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
@@ -505,12 +548,12 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
             {
                 case KC_LM1:
                     shouldSendPressCode = false;
-                    _keyboardStateContainer->set_current_layer(1);
+                    _keyboardStateContainer->set_is_lm1_pressed(true);
                     KeyboardHelper::try_log("Entering layer 1");
                     break;
                 case KC_LM2:
                     shouldSendPressCode = false;
-                    _keyboardStateContainer->set_current_layer(2);
+                    _keyboardStateContainer->set_is_lm2_pressed(true);
                     KeyboardHelper::try_log("Entering layer 2");
                     break;
                 case KC_REPEAT:
@@ -579,10 +622,14 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
             switch (keycode)
             {
                 case KC_LM1:
+                    shouldSendReleaseCodes = false;
+                    keyboardStateContainer.set_is_lm1_pressed(false);
+                    KeyboardHelper::try_log("Layer 1 physically released.");
+                    break;
                 case KC_LM2:
                     shouldSendReleaseCodes = false;
-                    keyboardStateContainer.set_current_layer(0);
-                    KeyboardHelper::try_log("Entering layer 0");
+                    keyboardStateContainer.set_is_lm2_pressed(false);
+                    KeyboardHelper::try_log("Layer 2 physically released.");
                     break;
                 case KC_REPEAT:
                 case KC_NULL:
