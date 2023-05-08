@@ -174,9 +174,9 @@ class IKeyboardStateContainer
         virtual bool get_is_ctrl_pressed() = 0;
         virtual bool get_is_shift_pressed() = 0;
         virtual unsigned int get_current_layer() = 0;
-        virtual void set_is_alt_pressed(bool isShiftPressed) = 0;
-        virtual void set_is_gui_pressed(bool isShiftPressed) = 0;
-        virtual void set_is_ctrl_pressed(bool isShiftPressed) = 0;
+        virtual void set_is_alt_pressed(bool isAltPressed) = 0;
+        virtual void set_is_gui_pressed(bool isGuiPressed) = 0;
+        virtual void set_is_ctrl_pressed(bool isCtrlPressed) = 0;
         virtual void set_is_shift_pressed(bool isShiftPressed) = 0;
         virtual void set_current_layer(unsigned int currentLayer) = 0;
 };
@@ -349,10 +349,11 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
         }
 
     private:
-        unsigned int _quant_alt_pressed;
-        unsigned int _quant_gui_pressed;
-        unsigned int _quant_ctrl_pressed;
-        unsigned int _quant_shift_pressed;
+        //TODO state methods for layer mod keys too
+        unsigned int _quant_alt_pressed = 0;
+        unsigned int _quant_gui_pressed = 0;
+        unsigned int _quant_ctrl_pressed = 0;
+        unsigned int _quant_shift_pressed = 0;
         unsigned int _currentLayer;
 };
 
@@ -524,18 +525,22 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                 case KEY_LEFT_ALT:
                 case KEY_RIGHT_ALT:
                     _keyboardStateContainer->set_is_alt_pressed(true);
+                    KeyboardHelper::try_log("Alt physically pressed.");
                     break;
                 case KEY_LEFT_GUI:
                 case KEY_RIGHT_GUI:
                     _keyboardStateContainer->set_is_gui_pressed(true);
+                    KeyboardHelper::try_log("Gui physically pressed.");
                     break;
                 case KEY_LEFT_CTRL:
                 case KEY_RIGHT_CTRL:
                     _keyboardStateContainer->set_is_ctrl_pressed(true);
+                    KeyboardHelper::try_log("Ctrl physically pressed.");
                     break;
                 case KEY_LEFT_SHIFT:
                 case KEY_RIGHT_SHIFT:
                     _keyboardStateContainer->set_is_shift_pressed(true);
+                    KeyboardHelper::try_log("Shift physically pressed.");
                     break;
             }
 
@@ -555,7 +560,7 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
 {
     public:
         KeyswitchReleaseHandler(LayerInfoContainer (&layerArray)[LAYER_COUNT],
-            IKeyboardStateContainer& keyboardStateContainer)
+            KeyboardLayoutStateContainer& keyboardStateContainer)
         {
             _layerArray = &layerArray;
             _keyboardStateContainer = &keyboardStateContainer;
@@ -564,51 +569,66 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
         void handle_switch_release(unsigned int row, unsigned int col)
         {
             KeyboardHelper::try_log("R:"+String(row)+"C:"+String(col)+", "+String("released"));
-            unsigned int currentLayer = _keyboardStateContainer->get_current_layer();
+            KeyboardLayoutStateContainer& keyboardStateContainer = *_keyboardStateContainer;
+            unsigned int currentLayer = keyboardStateContainer.get_current_layer();
             LayerInfoContainer& layerInfo = (*_layerArray)[currentLayer];
             unsigned char keycode = layerInfo.get_base_keycode_at(row,col);
             KeyboardHelper::try_log("Keycode:"+String(keycode)+" on layer:"+String(currentLayer));
 
-            bool shouldSendReleaseCode = true;
+            bool shouldSendReleaseCodes = true;
             switch (keycode)
             {
                 case KC_LM1:
                 case KC_LM2:
-                    shouldSendReleaseCode = false;
-                    _keyboardStateContainer->set_current_layer(0);
+                    shouldSendReleaseCodes = false;
+                    keyboardStateContainer.set_current_layer(0);
                     KeyboardHelper::try_log("Entering layer 0");
                     break;
                 case KC_REPEAT:
                 case KC_NULL:
-                    shouldSendReleaseCode = false;
+                    shouldSendReleaseCodes = false;
                     // Do nothing if we hit the null keycode.
                     KeyboardHelper::try_log("Released a key where no action was required.");
                     break;
                 case KEY_LEFT_ALT:
                 case KEY_RIGHT_ALT:
-                    _keyboardStateContainer->set_is_alt_pressed(false);
+                    keyboardStateContainer.set_is_alt_pressed(false);
+                    KeyboardHelper::try_log("Alt physically released.");
                     break;
                 case KEY_LEFT_GUI:
                 case KEY_RIGHT_GUI:
-                    _keyboardStateContainer->set_is_gui_pressed(false);
+                    keyboardStateContainer.set_is_gui_pressed(false);
+                    KeyboardHelper::try_log("Gui physically released.");
                     break;
                 case KEY_LEFT_CTRL:
                 case KEY_RIGHT_CTRL:
-                    _keyboardStateContainer->set_is_ctrl_pressed(false);
+                    keyboardStateContainer.set_is_ctrl_pressed(false);
+                    KeyboardHelper::try_log("Ctrl physically released.");
                     break;
                 case KEY_LEFT_SHIFT:
                 case KEY_RIGHT_SHIFT:
-                    _keyboardStateContainer->set_is_shift_pressed(false);
+                    keyboardStateContainer.set_is_shift_pressed(false);
+                    KeyboardHelper::try_log("Shift physically released.");
                     break;
             }
 
-            if(ENABLE_KEYBOARD_COMMANDS && shouldSendReleaseCode)
+            if(ENABLE_KEYBOARD_COMMANDS && shouldSendReleaseCodes)
             {
                 for (int i = 0; i < LAYER_COUNT; i++)
                 {
                     // Release all keycodes at this location across all layers.
                     LayerInfoContainer& layerInfoAtIndex = (*_layerArray)[i];
                     unsigned char keycodeOnLayer = layerInfoAtIndex.get_base_keycode_at(row,col);
+                    // Don't release duplicate keys we keep state for, if applicable.
+                    switch (keycodeOnLayer)
+                    {
+                        //Note: This case is here because we duplicate right shift on both
+                        //halves and we don't want the release firing if it's still physically down.
+                        case KEY_RIGHT_SHIFT:
+                            if (keyboardStateContainer.get_is_shift_pressed())
+                                continue;
+                            break;
+                    }
                     KeyboardHelper::try_log("Sending release of keycode: "+String(keycodeOnLayer));
                     Keyboard.release(keycodeOnLayer);
                 }
@@ -635,7 +655,7 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
 
     private:
         LayerInfoContainer (*_layerArray)[LAYER_COUNT];
-        IKeyboardStateContainer* _keyboardStateContainer;
+        KeyboardLayoutStateContainer* _keyboardStateContainer;
 };
 
 class NativeSwitchStateProvider : public IUpdatableSwitchStateProvider
@@ -916,12 +936,12 @@ void loop()
     if (IS_LEFT_KEYBOARD_SIDE)
     {
         //USB connection side logic
-        KeyboardHelper::try_log("Iterating right side...");
+        //KeyboardHelper::try_log("Iterating right side...");
         _rightSwitchManager.iterate();
-        KeyboardHelper::try_log("Right iteration complete!");
-        KeyboardHelper::try_log("Iterating left side...");
+        //KeyboardHelper::try_log("Right iteration complete!");
+        //KeyboardHelper::try_log("Iterating left side...");
         _leftSwitchManager.iterate();
-        KeyboardHelper::try_log("Left iteration complete!");
+        //KeyboardHelper::try_log("Left iteration complete!");
 
         if (SWITCH_TESTING_MODE)
             SwitchStateHelper::print_matrices_to_serial_out(&_leftSwitchStateProvider, &_rightSwitchStateProvider);
@@ -944,23 +964,23 @@ void update_i2c_switch_state_provider()
     //NOTE:This method is run outside of the state provider as Wire
     //seems to crash inside of an object.
     byte bytesAvaible = Wire.requestFrom(RIGHT_SIDE_I2C_ADDRESS, I2C_TRANSMISSION_BYTE_COUNT);
-    KeyboardHelper::try_log("Sent request for matrix state...");
+    //KeyboardHelper::try_log("Sent request for matrix state...");
     int byteIndex = 0;
-    bool loggedResponse = false;
-    KeyboardHelper::try_log(String("There are "+String(bytesAvaible)+" bytes available..."));
+    //bool loggedResponse = false;
+    //KeyboardHelper::try_log(String("There are "+String(bytesAvaible)+" bytes available..."));
     while (Wire.available())
     {
-        if (!loggedResponse)
-        {
-            KeyboardHelper::try_log("Made connection with right half!");
-            loggedResponse = true;
-        }
+        //if (!loggedResponse)
+        //{
+        //    KeyboardHelper::try_log("Made connection with right half!");
+        //    loggedResponse = true;
+        //}
         _rightSwitchStateProvider.set_is_switch_currently_pressed(
             byteIndex/COLUMN_COUNT, byteIndex%COLUMN_COUNT, Wire.read());
 
         byteIndex++;
     }
-    KeyboardHelper::try_log(String("Completed right matrix state request with "+String(byteIndex)+" bytes."));
+    //KeyboardHelper::try_log(String("Completed right matrix state request with "+String(byteIndex)+" bytes."));
 }
 
 void transmit_peripheral_matrix()
