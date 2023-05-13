@@ -1,11 +1,16 @@
 //Imports
 #include <Keyboard.h>
 #include <Wire.h>
+//CAUTION: Do not add any more imports to the mk3 code.
+//This code has grown large enough to cause instability
+//in the Pro Micro if much more is added. Do not add more
+//codebases until the microcontroller for this project
+//has been upgraded.
 
 //Constants
 const bool ENABLE_SERIAL_LOGGING = false;
 const bool ENABLE_KEYBOARD_COMMANDS = true;
-const bool SWITCH_TESTING_MODE = true;
+const bool SWITCH_TESTING_MODE = false;
 
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
@@ -31,13 +36,13 @@ const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 7 : 9;
 const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 9 : 8;
 const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 7;
 
-const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? A0 : 10;
-const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? A2 : 16;
-const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 15 : 15;
+const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 6 : 10;
+const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 5 : 16;
+const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? A2 : 15;
 const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 14 : 14;
 const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 16 : A0;
 const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 10 : A1;
-const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? A1 : A2;
+const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? 4 : A2;
 
 const byte ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
 const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN };
