@@ -144,6 +144,8 @@ wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
 //oledScreenPunch(_arduinoHousingLidBaseThickness+2);
+//oledScreenPlateCover(depth=1.5);
+//oledScreenFrame();
 //trrsBodyPunch();
 //trrsWedgeBlock();
 //arduinoHousing(renderLid=true);
@@ -753,6 +755,33 @@ module wristRest()
     }
 }
 
+module oledScreenPlateCover(depth, includeScreenCutout=false)
+{
+    difference()
+    {
+        cube([_oledBodyLength, _oledBodyWidth, depth]);
+        translate([_arduinoHousingPaddingOffsetAdjustment, 0, -1])
+            oledScreenPunch(depth+2, includeScreenCutout);
+    }
+}
+
+module oledScreenFrame()
+{
+    union()
+    {
+        frameDepth = 1.5;
+        oledScreenPlateCover(frameDepth, includeScreenCutout=true);
+        difference()
+        {
+            extraPadding = 1.5;
+            translate([-extraPadding, -extraPadding, 0])
+                roundedCube(size = [_oledBodyLength+(extraPadding*2), _oledBodyWidth+(extraPadding*2), frameDepth], radius=0.75, apply_to="zall");
+            translate([0, 0, -1])
+                cube([_oledBodyLength, _oledBodyWidth, frameDepth+2]);
+        }
+    }
+}
+
 //Punches
 module arduinoMicroPunch()
 {
@@ -830,7 +859,7 @@ module riserBackplateBoltPunch(backplateDepth)
     }
 }
 
-module oledScreenPunch(depth)
+module oledScreenPunch(depth, includeScreenCutout=true)
 {
     union()
     {
@@ -848,8 +877,9 @@ module oledScreenPunch(depth)
         }
 
         //screen cutout
-        translate([_oledScreenWidthOffsetFromLeft, _oledScreenWidth-_oledScreenLengthOffsetFromTop, 0])
-            cube([_oledScreenLength, _oledScreenWidth, depth]);
+        if (includeScreenCutout)
+            translate([_oledScreenWidthOffsetFromLeft, _oledScreenWidth-_oledScreenLengthOffsetFromTop, 0])
+                cube([_oledScreenLength, _oledScreenWidth, depth]);
     }
 }
 
