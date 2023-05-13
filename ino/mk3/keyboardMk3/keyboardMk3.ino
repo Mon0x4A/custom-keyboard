@@ -5,14 +5,13 @@
 //Constants
 const bool ENABLE_SERIAL_LOGGING = false;
 const bool ENABLE_KEYBOARD_COMMANDS = true;
-const bool SWITCH_TESTING_MODE = false;
+const bool SWITCH_TESTING_MODE = true;
 
 const bool IS_LEFT_KEYBOARD_SIDE = true;
 
 const int COLUMN_COUNT = 7;
 const int ROW_COUNT = 3;
 
-int LEFT_SIDE_I2C_ADDRESS = 0x2A;
 int RIGHT_SIDE_I2C_ADDRESS = 0x45;
 //Note: The Wire library has a cap of 32 bytes per transmission.
 const int I2C_TRANSMISSION_BYTE_COUNT = COLUMN_COUNT*ROW_COUNT;
@@ -107,13 +106,6 @@ const unsigned char R_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
     { KC_NULL,       KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_RETURN },
     { KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
     { KC_NULL,       KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
-};
-
-//Enums
-enum KeyboardSide
-{
-    left = 420,
-    right = 69
 };
 
 //Interfaces
@@ -236,21 +228,21 @@ class SwitchStateHelper
 
         static void print_matrices_to_serial_out(ISwitchStateProvider* leftProvider, ISwitchStateProvider* rightProvider)
         {
-            String totalMatrixStr = "";
             for (int i = 0; i < ROW_COUNT; i++)
             {
                 String leftRowStr = SwitchStateHelper::get_row_string(leftProvider, i);
                 String rightRowStr = SwitchStateHelper::get_row_string(rightProvider, i);
-                totalMatrixStr += String(leftRowStr+" | "+rightRowStr);
-                totalMatrixStr += "\n";
+                Serial.println(String(leftRowStr+" | "+rightRowStr));
             }
-            Serial.println(totalMatrixStr);
         }
 
         static void print_matrix_to_serial_out(ISwitchStateProvider* switchStateProvider)
         {
             for (int row = 0; row < ROW_COUNT; row++)
+            {
                 Serial.println(get_row_string(switchStateProvider, row));
+                delay(5);
+            }
         }
 
         static String get_row_string(ISwitchStateProvider* switchStateProvider, int rowIndex)
@@ -262,9 +254,7 @@ class SwitchStateHelper
             for (int col = 0; col < COLUMN_COUNT; col++)
             {
                 rowStr += String(switchStateProvider->get_is_switch_currently_pressed(rowIndex,col)
-                    ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE);
-                if (col < COLUMN_COUNT)
-                    rowStr += String(", ");
+                    ? SWITCH_PRESSED_VALUE : SWITCH_NOT_PRESSED_VALUE)+", ";
             }
 
             return rowStr;
@@ -449,6 +439,7 @@ class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapState
         unsigned char (*_tapLayerKeys)[ROW_COUNT][COLUMN_COUNT];
 
         bool _chordPerformed;
+        //TODO this could be space optimized. It's fairly greedy.
         unsigned long _pressStart[ROW_COUNT][COLUMN_COUNT] = {0};
 };
 
