@@ -120,6 +120,29 @@ class IBaseKeymap
         virtual unsigned char get_base_keycode_at(unsigned int row, unsigned int col) = 0;
 };
 
+class IKeyboardStateContainer
+{
+    public:
+        //Getters
+        virtual bool get_is_lm1_pressed() = 0;
+        virtual bool get_is_lm2_pressed() = 0;
+        virtual bool get_is_alt_pressed() = 0;
+        virtual bool get_is_gui_pressed() = 0;
+        virtual bool get_is_ctrl_pressed() = 0;
+        virtual bool get_is_shift_pressed() = 0;
+        virtual unsigned int get_current_layer() = 0;
+        virtual bool get_has_chord_action_been_performed() = 0;
+
+        //Setters
+        virtual void set_is_lm1_pressed(bool isLm1Pressed) = 0;
+        virtual void set_is_lm2_pressed(bool isLm2Pressed) = 0;
+        virtual void set_is_alt_pressed(bool isAltPressed) = 0;
+        virtual void set_is_gui_pressed(bool isGuiPressed) = 0;
+        virtual void set_is_ctrl_pressed(bool isCtrlPressed) = 0;
+        virtual void set_is_shift_pressed(bool isShiftPressed) = 0;
+        virtual void set_has_chord_action_been_performed(bool chordActionPeformed) = 0;
+};
+
 class IBaseTapStateProvider
 {
     public:
@@ -161,24 +184,6 @@ class IKeyswitchReleasedHandler
 {
     public:
         virtual void handle_switch_release(unsigned int row, unsigned int col) = 0;
-};
-
-class IKeyboardStateContainer
-{
-    public:
-        virtual bool get_is_lm1_pressed() = 0;
-        virtual bool get_is_lm2_pressed() = 0;
-        virtual bool get_is_alt_pressed() = 0;
-        virtual bool get_is_gui_pressed() = 0;
-        virtual bool get_is_ctrl_pressed() = 0;
-        virtual bool get_is_shift_pressed() = 0;
-        virtual unsigned int get_current_layer() = 0;
-        virtual void set_is_lm1_pressed(bool isLm1Pressed) = 0;
-        virtual void set_is_lm2_pressed(bool isLm2Pressed) = 0;
-        virtual void set_is_alt_pressed(bool isAltPressed) = 0;
-        virtual void set_is_gui_pressed(bool isGuiPressed) = 0;
-        virtual void set_is_ctrl_pressed(bool isCtrlPressed) = 0;
-        virtual void set_is_shift_pressed(bool isShiftPressed) = 0;
 };
 
 class ISwitchStateProvider
@@ -326,6 +331,11 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
             return 0;
         }
 
+        bool get_has_chord_action_been_performed()
+        {
+            return _chordActionPeformed;
+        }
+
         //Set Methods
         void set_is_lm1_pressed(bool isLm1Pressed)
         {
@@ -385,6 +395,11 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
                 _quant_shift_pressed = max(_quant_shift_pressed-1, 0);
         }
 
+        void set_has_chord_action_been_performed(bool chordActionPeformed)
+        {
+            _chordActionPeformed = chordActionPeformed;
+        }
+
     private:
         unsigned int _quant_lm1_pressed = 0;
         unsigned int _quant_lm2_pressed = 0;
@@ -393,15 +408,18 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
         unsigned int _quant_ctrl_pressed = 0;
         unsigned int _quant_shift_pressed = 0;
         unsigned int _lastLayerPressed = 0;
+        bool _chordActionPeformed;
 };
 
 class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
 {
     public:
         BaseTapStateContainer(
-            const unsigned char (&tapLayer)[ROW_COUNT][COLUMN_COUNT])
+            const unsigned char (&tapLayer)[ROW_COUNT][COLUMN_COUNT],
+            IKeyboardStateContainer& keyboardStateContainer)
         {
             _tapLayerKeys = &tapLayer;
+            _fullKeyboardStateContainer = &keyboardStateContainer;
         }
 
         //IBaseTapStateProvider
@@ -425,25 +443,25 @@ class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapState
         }
         bool get_has_chord_action_been_performed()
         {
-            return _chordPerformed;
+            return _fullKeyboardStateContainer->get_has_chord_action_been_performed();
         }
 
         //IBaseTapStateSetter
         void set_start_key_press(unsigned int row, unsigned int col)
         {
-            _chordPerformed = false;
+            _fullKeyboardStateContainer->set_has_chord_action_been_performed(false);
             _pressStart[row][col] = millis();
         }
         void notify_chord_action_performed()
         {
-            _chordPerformed = true;
+            _fullKeyboardStateContainer->set_has_chord_action_been_performed(true);
         }
 
     private:
         //Private Variables
         unsigned char (*_tapLayerKeys)[ROW_COUNT][COLUMN_COUNT];
+        IKeyboardStateContainer* _fullKeyboardStateContainer;
 
-        bool _chordPerformed;
         //TODO this could be space optimized. It's fairly greedy.
         unsigned long _pressStart[ROW_COUNT][COLUMN_COUNT] = {0};
 };
@@ -881,8 +899,11 @@ class SwitchMatrixManager : public ISwitchStateProvider
 
 //Global Variables
 //Left Controller Variables
+//Build the state container that will serve the entire keyboard.
+KeyboardLayoutStateContainer _keyboardStateContainer;
+
 //Create the left layer shared tap state container.
-BaseTapStateContainer _leftBaseTapContainer(L_TAP_KEYS);
+BaseTapStateContainer _leftBaseTapContainer(L_TAP_KEYS, _keyboardStateContainer);
 
 //Collate the left layers
 LayerInfoContainer _leftLayers[LAYER_COUNT] =
@@ -893,7 +914,7 @@ LayerInfoContainer _leftLayers[LAYER_COUNT] =
 };
 
 //Create the right layer shared tap state container.
-BaseTapStateContainer _rightBaseTapContainer(R_TAP_KEYS);
+BaseTapStateContainer _rightBaseTapContainer(R_TAP_KEYS, _keyboardStateContainer);
 
 //Collate the right layers
 LayerInfoContainer _rightLayers[LAYER_COUNT] =
@@ -902,9 +923,6 @@ LayerInfoContainer _rightLayers[LAYER_COUNT] =
     LayerInfoContainer(R1_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer),
     LayerInfoContainer(R2_BASE_KEYCODES, _rightBaseTapContainer, _rightBaseTapContainer),
 };
-
-//Build the state container that will serve the entire keyboard.
-KeyboardLayoutStateContainer _keyboardStateContainer;
 
 //Build left press handlers and manager.
 KeyswitchPressHandler _leftPressHandler(_leftLayers, _keyboardStateContainer);
