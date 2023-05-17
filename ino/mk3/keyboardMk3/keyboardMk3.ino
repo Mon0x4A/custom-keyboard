@@ -459,7 +459,7 @@ class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapState
 
     private:
         //Private Variables
-        unsigned char (*_tapLayerKeys)[ROW_COUNT][COLUMN_COUNT];
+        const unsigned char (*_tapLayerKeys)[ROW_COUNT][COLUMN_COUNT];
         IKeyboardStateContainer* _fullKeyboardStateContainer;
 
         //TODO this could be space optimized. It's fairly greedy.
@@ -524,7 +524,7 @@ class LayerInfoContainer : public ILayerInfoService
         //Private Variables
         IBaseTapStateProvider* _baseTapStateProvider;
         IBaseTapStateSetter* _baseTapStateSetter;
-        unsigned char (*_baseKeys)[ROW_COUNT][COLUMN_COUNT];
+        const unsigned char (*_baseKeys)[ROW_COUNT][COLUMN_COUNT];
 };
 
 class KeyswitchPressHandler : public IKeyswitchPressedHandler
