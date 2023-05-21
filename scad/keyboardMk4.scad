@@ -30,6 +30,7 @@ _key1uWidth = (_switchWidth*KEY_1U_MODIFIER)+(_switchPaddingWidth*2);
 _key1_25uLength = (_switchLength*KEY_1U_MODIFIER)+(_switchPaddingLength*2);
 _key1_25uWidth = (_switchWidth*KEY_1_25U_MODIFIER)+(_switchPaddingWidth*2);
 
+//TODO this needs to be decreased slightly
 _keySwitchCutoutLength = 13.90;
 _keySwitchCutoutWidth = 13.90;
 
@@ -110,47 +111,57 @@ _keyCap1uWidth = _key1uWidth - _keyCapSpacingOffset;
 _keyCap1_25uLength = _key1_25uLength - _keyCapSpacingOffset;
 _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 
+//Pico Variables
+_picoBodyLength = 21;
+_picoBodyWidth = 51;
+_picoBodyDepth = 1;
+
 // Ardiuno Variables
 _arduinoMicroBodyLength = 18.5;
 _arduinoMicroBodyWidth = 36.45;
 
-_arduinoHousingLengthEdgePadding = 8;
-_arduinoHousingWidthEdgePadding = 9;
-_arduinoHousingBaseLength = _arduinoMicroBodyLength + (_arduinoHousingLengthEdgePadding*2);
-_arduinoHousingBaseWidth = _arduinoMicroBodyWidth + (_arduinoHousingWidthEdgePadding*2);
-_arduinoHousingBaseDepth = 5;
-_arduinoHousingLidHeight = 12;
-_arduinoHousingLidBoltCounterSink = 0;
-_arduinoHousingLidBaseThickness = 2;
-_arduinoHousingCableCutoutWidth = _arduinoHousingBaseWidth*(3/5);
-_arduinoHousingCableCutoutOffset = _arduinoHousingBaseWidth*(1/5);
-_arduinoHousingPaddingOffsetAdjustment = 0.25;
+_picoHousingLengthEdgePadding = 7;
+_picoHousingWidthEdgePadding = 2;
+_picoHousingBaseLength = _picoBodyLength + (_picoHousingLengthEdgePadding*2);
+_picoHousingBaseWidth = _picoBodyWidth + (_picoHousingWidthEdgePadding*2);
+_picoHousingBaseDepth = 5;
+_picoHousingLidHeight = 12;
+_picoHousingLidBoltCounterSink = 0;
+_picoHousingLidBaseThickness = 2;
+_picoHousingCableCutoutWidth = _picoHousingBaseWidth*(3/5);
+_picoHousingCableCutoutOffset = _picoHousingBaseWidth*(1/5);
+_picoHousingPaddingOffsetAdjustment = 0.25;
 
-_arduinoInsetNutCutoutDepth = 3;
-_arduinoNutInsertLengthCenterToCenter = 25;
-_arduinoNutInsertWidthCenterToCenter = 45;
-_arduinoNutSetOffsetAdjustment = -0.5;
-_arduinoInsetNutSetLengthOffset = ((_arduinoHousingBaseLength-_arduinoNutInsertLengthCenterToCenter)/2)+_arduinoNutSetOffsetAdjustment;
-_arduinoInsetNutSetWidthOffset = ((_arduinoHousingBaseWidth-_arduinoNutInsertWidthCenterToCenter)/2)+_arduinoNutSetOffsetAdjustment;
+_picoIntraHousingLengthOffset = _picoHousingLengthEdgePadding-_picoHousingPaddingOffsetAdjustment;
+_picoIntraHousingWidthOffset = _picoHousingWidthEdgePadding-_picoHousingPaddingOffsetAdjustment;
+_picoInsetIntoHousing = 0.9;
 
-_arduinoLengthPlacment = _key1uWidth*(6)+1.3;
-_arduinoWidthPlacment = 24.5;
+_picoInsetNutCutoutDepth = 3;
+_picoNutInsertLengthCenterToCenter = 27;
+_picoNutInsertWidthCenterToCenter = 47;
+_picoNutSetOffsetAdjustment = -0.25;
+_picoInsetNutSetLengthOffset = ((_picoHousingBaseLength-_picoNutInsertLengthCenterToCenter)/2)+_picoNutSetOffsetAdjustment;
+_picoInsetNutSetWidthOffset = ((_picoHousingBaseWidth-_picoNutInsertWidthCenterToCenter)/2)+_picoNutSetOffsetAdjustment;
+
+_picoLengthPlacment = _key1uWidth*(6)+1.3;
+_picoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //mirror([1,0,0])
-wristRest();
+//wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
-//oledScreenPunch(_arduinoHousingLidBaseThickness+2);
+//oledScreenPunch(_picoHousingLidBaseThickness+2);
 //oledScreenPlateCover(depth=1.5);
 //oledScreenFrame();
+//picoModel();
 //trrsBodyPunch();
 //trrsWedgeBlock();
-//arduinoHousing(renderLid=true);
-//arduinoHousingBase();
-//arduinoHousingTop();
+picoHousing(renderLid=false, renderPico=true);
+//picoHousingBase();
+//picoHousingTop();
 //arduinoMicroPunch();
 //kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
 //kailhKeyCapTop(_key1_25uWidth, _key1uWidth, _kailhKeyCapDepth);
@@ -194,23 +205,23 @@ module keyboardAssembly(switchType)
                 }
                 translate([0,0,backplateOffsetFromHousing])
                     backplate(backplateDepth);
-                //Arduino enclosure
-                translate([_arduinoLengthPlacment,_arduinoWidthPlacment,0])
+                //pico enclosure
+                translate([_picoLengthPlacment,_picoWidthPlacment,0])
                     union()
                     {
-                        arduinoHousing(renderLid=true);
-                        arduinoHousingBodyJointWidth = 60.45;
-                        arduinoHousingBodyJointLength = 28.70;
-                        arduinoHousingBodyJointDepth = 2;
+                        picoHousing(renderLid=true);
+                        picoHousingBodyJointWidth = 60.45;
+                        picoHousingBodyJointLength = 28.70;
+                        picoHousingBodyJointDepth = 2;
                         jointLengthOffset = -7;
                         jointWidthOffset = -7;
                         translate([jointLengthOffset, jointWidthOffset, 0])
                             difference()
                             {
-                                roundedCube(size=[arduinoHousingBodyJointLength, arduinoHousingBodyJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
+                                roundedCube(size=[picoHousingBodyJointLength, picoHousingBodyJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
                                 cutoutEdgePadding = 5;
-                                translate([-cutoutEdgePadding,-cutoutEdgePadding, arduinoHousingBodyJointDepth])
-                                    cube([arduinoHousingBodyJointLength+(cutoutEdgePadding*2), arduinoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
+                                translate([-cutoutEdgePadding,-cutoutEdgePadding, picoHousingBodyJointDepth])
+                                    cube([picoHousingBodyJointLength+(cutoutEdgePadding*2), picoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
                             }
 
                     }
@@ -271,29 +282,29 @@ module housing(housingDepth)
                     roundedCube(size = [thumbWallCutoutLength, thumbWallCutoutWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="zmax");
             }
 
-            // Arduino-adjacent wall cutouts
-            arduinoHousingCutoutWidthOffset = -0.1;
-            arduinoHousingCutoutLengthOffset = -0.6;
+            // pico-adjacent wall cutouts
+            picoHousingCutoutWidthOffset = -0.1;
+            picoHousingCutoutLengthOffset = -0.6;
             // reduce the width here so we can get the round joint at the top
-            arduinoHousingCutoutDifferenceFromRoundedMeasure = -3.1;
-            arduinoHousingCutoutExtraLength = 2;
-            translate([_arduinoLengthPlacment+arduinoHousingCutoutLengthOffset,_arduinoWidthPlacment+arduinoHousingCutoutWidthOffset,_housingBaseThickness])
+            picoHousingCutoutDifferenceFromRoundedMeasure = -3.1;
+            picoHousingCutoutExtraLength = 2;
+            translate([_picoLengthPlacment+picoHousingCutoutLengthOffset,_picoWidthPlacment+picoHousingCutoutWidthOffset,_housingBaseThickness])
             {
-                cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth+arduinoHousingCutoutDifferenceFromRoundedMeasure, housingDepth*2]);
+                cube([_picoHousingBaseLength, _picoHousingBaseWidth+picoHousingCutoutDifferenceFromRoundedMeasure, housingDepth*2]);
                 //include the housing lid shape itself for scuplted top cutout
-                housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), housingDepth*2, _arduinoHousingLidBaseThickness, apply_to="z");
+                housingSubModule(_picoHousingBaseLength-(_housingBodyRoundingRadius*2), _picoHousingBaseWidth-(_housingBodyRoundingRadius*2), housingDepth*2, _picoHousingLidBaseThickness, apply_to="z");
             }
         }
 
-        //Arduino/Thumb Wall corner patch
-        arduinoCornerWallPatchLength = 1.5;
-        arduinoCornerWallPatchWidth = 3;
-        arduinoCornerWallPatchDepth = 3;
-        arduinoCornerWallPatchLengthPlacement = _arduinoLengthPlacment + arduinoCornerWallPatchLength + 18.1;
-        arduinoCornerWallPatchWidthPlacement = _arduinoWidthPlacment - 2;
-        arduinoCornerWallPatchDepthPlacement = 2;
-        translate([arduinoCornerWallPatchLengthPlacement, arduinoCornerWallPatchWidthPlacement , arduinoCornerWallPatchDepthPlacement])
-            cube([arduinoCornerWallPatchLength, arduinoCornerWallPatchWidth, arduinoCornerWallPatchDepth]);
+        //pico/Thumb Wall corner patch
+        picoCornerWallPatchLength = 1.5;
+        picoCornerWallPatchWidth = 3;
+        picoCornerWallPatchDepth = 3;
+        picoCornerWallPatchLengthPlacement = _picoLengthPlacment + picoCornerWallPatchLength + 18.1;
+        picoCornerWallPatchWidthPlacement = _picoWidthPlacment - 2;
+        picoCornerWallPatchDepthPlacement = 2;
+        translate([picoCornerWallPatchLengthPlacement, picoCornerWallPatchWidthPlacement , picoCornerWallPatchDepthPlacement])
+            cube([picoCornerWallPatchLength, picoCornerWallPatchWidth, picoCornerWallPatchDepth]);
 
     }
 }
@@ -319,8 +330,8 @@ module housingBackplateEdgeSupportSet(supportDepth)
 {
     union()
     {
-        riserInwardsLengthAdjustment = _arduinoHousingPaddingOffsetAdjustment;
-        riserInwardsWidthAdjustment = _arduinoHousingPaddingOffsetAdjustment;
+        riserInwardsLengthAdjustment = _picoHousingPaddingOffsetAdjustment;
+        riserInwardsWidthAdjustment = _picoHousingPaddingOffsetAdjustment;
         //Corner backplate supports
         //Pinky Corners
         translate([riserInwardsLengthAdjustment,_key1uLength*(3)+_pinkyBackplateWidth-riserInwardsWidthAdjustment,_housingBaseThickness])
@@ -369,7 +380,7 @@ module housingBackplateEdgeSupportSet(supportDepth)
             rotate([0, 0, -90])
                 housingStraightSupport(supportDepth);
 
-        //Main arduino side
+        //Main pico side
         translate([_key1_25uLength*(3)+_key1uLength*(3)-riserInwardsLengthAdjustment,_key1_25uWidth*(1)+_key1uWidth*(1.5)-(_housingStraightSupportLength*(3/4)),_housingBaseThickness])
             rotate([0, 0, 0])
                 housingStraightSupport(supportDepth);
@@ -379,7 +390,7 @@ module housingBackplateEdgeSupportSet(supportDepth)
             rotate([0, 0, -90])
                 housingStraightSupport(supportDepth);
 
-        //Thumb top arduino side
+        //Thumb top pico side
         translate([_key1_25uLength*(3)+_key1uLength*(3.5)-_housingStraightSupportLength+_housingStraightSupportLength/2,_key1_25uWidth*(1)-riserInwardsWidthAdjustment,_housingBaseThickness])
             rotate([0, 0, -90])
                 housingStraightSupport(supportDepth);
@@ -480,73 +491,73 @@ module keyUnit(length, width, depth)
     }
 }
 
-module arduinoHousing(renderLid)
-{
-    difference()
-    {
-        union()
-        {
-            arduinoHousingBase();
-            if (renderLid)
-                translate([0, 0, _arduinoHousingBaseDepth])
-                    arduinoHousingTop();
-        }
-        usbcCutoutLength = 12;
-        usbcCutoutWidth = 20;
-        usbcCutoutHeight = 7.25;
-        usbcCutoutHeightOffset = 3.0;
-        usbcCutoutDepth = 7;
-        //Cutout for usbc connection
-        translate([(_arduinoHousingBaseLength-usbcCutoutLength)/2, _arduinoHousingBaseWidth-usbcCutoutDepth, usbcCutoutHeightOffset])
-            cube([usbcCutoutLength, usbcCutoutWidth, usbcCutoutHeight]);
-    }
-}
-
-module arduinoHousingBase()
+module picoHousing(renderLid, renderPico)
 {
     union()
     {
-        arduinoLengthOffset = _arduinoHousingLengthEdgePadding-_arduinoHousingPaddingOffsetAdjustment;
-        arduinoWidthOffset = _arduinoHousingWidthEdgePadding-_arduinoHousingPaddingOffsetAdjustment;
-        arduinoInsetIntoHousing = 2;
+        difference()
+        {
+            union()
+            {
+                picoHousingBase();
+                if (renderLid)
+                    translate([0, 0, _picoHousingBaseDepth])
+                        picoHousingTop();
+            }
+            usbcCutoutLength = 12;
+            usbcCutoutWidth = 20;
+            usbcCutoutHeight = 7.25;
+            usbcCutoutHeightOffset = 3.0;
+            usbcCutoutDepth = 2.5;
+            //Cutout for usb connection
+            translate([((_picoHousingBaseLength-usbcCutoutLength)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseWidth-usbcCutoutDepth, usbcCutoutHeightOffset])
+                cube([usbcCutoutLength, usbcCutoutWidth, usbcCutoutHeight]);
+        }
+        if(renderPico)
+            translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-_picoInsetIntoHousing])
+                picoModel();
+    }
+}
+
+module picoHousingBase()
+{
+    union()
+    {
+        picoCutoutDepth = 2;
         difference()
         {
             difference()
             {
                 arbitraryDepth = 10;
-                housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), arbitraryDepth, _arduinoHousingBaseDepth);
-                translate([0,0,_arduinoHousingBaseDepth])
-                    cube([_arduinoHousingBaseLength, _arduinoHousingBaseWidth, arbitraryDepth]);
+                housingSubModule(_picoHousingBaseLength-(_housingBodyRoundingRadius*2), _picoHousingBaseWidth-(_housingBodyRoundingRadius*2), arbitraryDepth, _picoHousingBaseDepth);
+                translate([0,0,_picoHousingBaseDepth])
+                    cube([_picoHousingBaseLength, _picoHousingBaseWidth, arbitraryDepth]);
             }
 
             // Lid attachement nut set
-            translate([_arduinoInsetNutSetLengthOffset,_arduinoInsetNutSetWidthOffset,_arduinoHousingBaseDepth-_arduinoInsetNutCutoutDepth])
-                arduinoInsetNutPunchSet();
-            // Arduino cutout
-            translate([arduinoLengthOffset, arduinoWidthOffset, _arduinoHousingBaseDepth-arduinoInsetIntoHousing])
-                arduinoMicroPunch();
+            translate([_picoInsetNutSetLengthOffset,_picoInsetNutSetWidthOffset,_picoHousingBaseDepth-_picoInsetNutCutoutDepth])
+                picoInsetNutPunchSet();
+            // Pico cutout
+            translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-picoCutoutDepth])
+                picoPunch(picoCutoutDepth+1);
             // Cable ramp cutout
-            arduinoCableRampAngle = 42;
-            translate([-_arduinoHousingBaseDepth*1.5, _arduinoHousingCableCutoutOffset, 0])
-                rotate([0, arduinoCableRampAngle, 0])
-                    cube([_arduinoHousingBaseDepth, _arduinoHousingCableCutoutWidth, _arduinoHousingBaseDepth*3]);
-            translate([_arduinoHousingBaseLength/2, _arduinoInsetNutSetWidthOffset, _arduinoHousingBaseDepth-_arduinoInsetNutCutoutDepth])
-                arduinoInsetNutPunch();
+            picoCableRampAngle = 42;
+            translate([-_picoHousingBaseDepth*1.5, _picoHousingCableCutoutOffset, 0])
+                rotate([0, picoCableRampAngle, 0])
+                    cube([_picoHousingBaseDepth, _picoHousingCableCutoutWidth, _picoHousingBaseDepth*3]);
         }
 
-        arduinoCenterSupportBeamLength = 8;
-        translate([((_arduinoHousingBaseLength-arduinoCenterSupportBeamLength)/2)-_arduinoHousingPaddingOffsetAdjustment, arduinoWidthOffset-1, 0.1])
-            cube([arduinoCenterSupportBeamLength, _arduinoMicroBodyWidth+2, _arduinoHousingBaseDepth-1.6]);
-        //translate([arduinoLengthOffset, arduinoWidthOffset, _arduinoHousingBaseDepth-arduinoInsetIntoHousing])
-        //    arduinoMicroPunch();
+        picoCenterSupportBeamLength = 8;
+        translate([((_picoHousingBaseLength-picoCenterSupportBeamLength)/2)-_picoHousingPaddingOffsetAdjustment, _picoIntraHousingWidthOffset-1, 0.1])
+            cube([picoCenterSupportBeamLength, _picoBodyWidth+2, _picoHousingBaseDepth-1.6]);
     }
 }
 
-module arduinoHousingTop()
+module picoHousingTop()
 {
     trrsPortOffsetFromBottom = 6;
-    trrsPortOffsetFromRight = _housingWallThickness-_arduinoHousingPaddingOffsetAdjustment;
-    trrsPortTotalLengthOffset = _arduinoHousingBaseLength-(_trrsBodyLength)-trrsPortOffsetFromRight;
+    trrsPortOffsetFromRight = _housingWallThickness-_picoHousingPaddingOffsetAdjustment;
+    trrsPortTotalLengthOffset = _picoHousingBaseLength-(_trrsBodyLength)-trrsPortOffsetFromRight;
     trrsPortTotalWidthOffset = trrsPortOffsetFromBottom;
 
     difference()
@@ -555,39 +566,39 @@ module arduinoHousingTop()
         {
             difference()
             {
-                translate([_arduinoHousingBaseLength-1, 0, _arduinoHousingLidHeight])
+                translate([_picoHousingBaseLength-1, 0, _picoHousingLidHeight])
                     rotate([0, 180, 0])
-                        housingSubModule(_arduinoHousingBaseLength-(_housingBodyRoundingRadius*2), _arduinoHousingBaseWidth-(_housingBodyRoundingRadius*2), _arduinoHousingLidHeight, _arduinoHousingLidBaseThickness, apply_to="z");
+                        housingSubModule(_picoHousingBaseLength-(_housingBodyRoundingRadius*2), _picoHousingBaseWidth-(_housingBodyRoundingRadius*2), _picoHousingLidHeight, _picoHousingLidBaseThickness, apply_to="z");
 
                 // bolt attachements from the top into the housing bottom
-                translate([_arduinoInsetNutSetLengthOffset, _arduinoInsetNutSetWidthOffset, _arduinoHousingLidHeight-_arduinoHousingLidBoltCounterSink])
+                translate([_picoInsetNutSetLengthOffset, _picoInsetNutSetWidthOffset, _picoHousingLidHeight-_picoHousingLidBoltCounterSink])
                 {
                     translate([0, 0, 0])
-                        riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
-                    translate([_arduinoNutInsertLengthCenterToCenter, 0, 0])
-                        riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
-                    translate([0, _arduinoNutInsertWidthCenterToCenter, 0])
-                        riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
-                    translate([_arduinoNutInsertLengthCenterToCenter, _arduinoNutInsertWidthCenterToCenter, 0])
-                        riserBackplateBoltPunch(_arduinoHousingLidBaseThickness);
+                        riserBackplateBoltPunch(_picoHousingLidBaseThickness);
+                    translate([_picoNutInsertLengthCenterToCenter, 0, 0])
+                        riserBackplateBoltPunch(_picoHousingLidBaseThickness);
+                    translate([0, _picoNutInsertWidthCenterToCenter, 0])
+                        riserBackplateBoltPunch(_picoHousingLidBaseThickness);
+                    translate([_picoNutInsertLengthCenterToCenter, _picoNutInsertWidthCenterToCenter, 0])
+                        riserBackplateBoltPunch(_picoHousingLidBaseThickness);
                 }
 
                 // cutout to bring in matrix row/col wires
-                arduinoCableCutoutDepth = 1.5;
-                translate([-1, _arduinoHousingCableCutoutOffset, -1])
-                    cube([_housingWallThickness+2, _arduinoHousingCableCutoutWidth, arduinoCableCutoutDepth+1]);
+                picoCableCutoutDepth = 1.5;
+                translate([-1, _picoHousingCableCutoutOffset, -1])
+                    cube([_housingWallThickness+2, _picoHousingCableCutoutWidth, picoCableCutoutDepth+1]);
 
                 //Screen cutout
                 oledWidthOffsetFromTop = _oledBodyWidth + 10;
-                oledLengthOffset = ((_arduinoHousingBaseLength - _oledBodyLength)/2)-_arduinoHousingPaddingOffsetAdjustment;
-                translate([oledLengthOffset, _arduinoHousingBaseWidth-oledWidthOffsetFromTop, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-1])
-                    oledScreenPunch(_arduinoHousingLidBaseThickness+2);
+                oledLengthOffset = ((_picoHousingBaseLength - _oledBodyLength)/2)-_picoHousingPaddingOffsetAdjustment;
+                translate([oledLengthOffset, _picoHousingBaseWidth-oledWidthOffsetFromTop, _picoHousingLidHeight-_picoHousingLidBaseThickness-1])
+                    oledScreenPunch(_picoHousingLidBaseThickness+2);
 
                 // cutout to leave room for the arudino tab connection
                 tabCutoutLength = 6;
                 tabCutoutWidth = _housingWallThickness + 2;
                 tabCutoutDepth = 3;
-                translate([(_arduinoHousingBaseLength-tabCutoutLength)/2-_arduinoHousingPaddingOffsetAdjustment, -1, -0.01])
+                translate([(_picoHousingBaseLength-tabCutoutLength)/2-_picoHousingPaddingOffsetAdjustment, -1, -0.01])
                     cube([tabCutoutLength, tabCutoutWidth, tabCutoutDepth]);
             }
 
@@ -597,7 +608,7 @@ module arduinoHousingTop()
                 trrsPortWallHeight = _trrsBodyDepth;
                 trrsCutoutTolerance = 0.1;
                 trrsShimThickness = _trrsWedgeDepth;
-                translate([trrsPortTotalLengthOffset-_trrsWallThickness-trrsShimThickness, trrsPortTotalWidthOffset, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-trrsPortWallHeight])
+                translate([trrsPortTotalLengthOffset-_trrsWallThickness-trrsShimThickness, trrsPortTotalWidthOffset, _picoHousingLidHeight-_picoHousingLidBaseThickness-trrsPortWallHeight])
                     difference()
                     {
                         cube([_trrsBodyLength+(_trrsWallThickness*2)+trrsShimThickness, _trrsBodyWidth+(_trrsWallThickness*2), trrsPortWallHeight]);
@@ -609,7 +620,7 @@ module arduinoHousingTop()
 
         //TRRS port hole punch
         trrsPortCountsinkDepth = 1.5;
-        translate([trrsPortTotalLengthOffset-0.1, trrsPortTotalWidthOffset+_trrsWallThickness, _arduinoHousingLidHeight-_arduinoHousingLidBaseThickness-_trrsBodyDepth])
+        translate([trrsPortTotalLengthOffset-0.1, trrsPortTotalWidthOffset+_trrsWallThickness, _picoHousingLidHeight-_picoHousingLidBaseThickness-_trrsBodyDepth])
         {
             trrsBodyPunch();
             //TRRS countersink punch
@@ -760,7 +771,7 @@ module oledScreenPlateCover(depth, includeScreenCutout=false)
     difference()
     {
         cube([_oledBodyLength, _oledBodyWidth, depth]);
-        translate([_arduinoHousingPaddingOffsetAdjustment, 0, -1])
+        translate([_picoHousingPaddingOffsetAdjustment, 0, -1])
             oledScreenPunch(depth+2, includeScreenCutout);
     }
 }
@@ -782,49 +793,40 @@ module oledScreenFrame()
     }
 }
 
-//Punches
-module arduinoMicroPunch()
+module picoModel()
 {
-    arduinoMicroBodyLength = _arduinoMicroBodyLength;
-    arduinoMicroBodyWidth = _arduinoMicroBodyWidth;
-    arduinoMicroBodyDepth = 2.6;
+    translate([_picoBodyLength/2, _picoBodyWidth/2, _picoBodyDepth/2])
+        rotate([90, 0, 0])
+            import("../resources/stl/Raspberry-Pi-Pico-R3.stl");
+}
 
-    usbCPortLength = 9.1;
-    usbCPortWidth = 7.5 + 10; //plus an extention for hole punching
-    usbCPortDepth = 3.2;
-    usbCDepthCutInToBody = 0.4;
+//Punches
 
-    usbCOnBoardWidth = 5.5;
-    usbCPortOverhang = 2;
-
+module picoPunch(depth)
+{
     union()
     {
-        cube([arduinoMicroBodyLength, arduinoMicroBodyWidth, arduinoMicroBodyDepth]);
-
-        translate([(arduinoMicroBodyLength-usbCPortLength)/2, arduinoMicroBodyWidth-(usbCOnBoardWidth), arduinoMicroBodyDepth-usbCDepthCutInToBody])
-        {
-            cube([usbCPortLength, usbCPortWidth, usbCPortDepth]);
-        }
+        cube([_picoBodyLength, _picoBodyWidth, depth]);
     }
 }
 
-module arduinoInsetNutPunchSet()
+module picoInsetNutPunchSet()
 {
     translate([0,0,0])
-        arduinoInsetNutPunch();
-    translate([_arduinoNutInsertLengthCenterToCenter,0,0])
-        arduinoInsetNutPunch();
-    translate([0,_arduinoNutInsertWidthCenterToCenter,0])
-        arduinoInsetNutPunch();
-    translate([_arduinoNutInsertLengthCenterToCenter,_arduinoNutInsertWidthCenterToCenter,0])
-        arduinoInsetNutPunch();
+        picoInsetNutPunch();
+    translate([_picoNutInsertLengthCenterToCenter,0,0])
+        picoInsetNutPunch();
+    translate([0,_picoNutInsertWidthCenterToCenter,0])
+        picoInsetNutPunch();
+    translate([_picoNutInsertLengthCenterToCenter,_picoNutInsertWidthCenterToCenter,0])
+        picoInsetNutPunch();
 }
 
-module arduinoInsetNutPunch()
+module picoInsetNutPunch()
 {
     union()
     {
-        cylinder(r=_insetNutCutoutRadius,h=_arduinoInsetNutCutoutDepth+1,$fn=100);
+        cylinder(r=_insetNutCutoutRadius,h=_picoInsetNutCutoutDepth+1,$fn=100);
     }
 }
 
@@ -904,52 +906,52 @@ module trrsBodyPunch()
 /// apply_to - which sides to round
 module roundedCube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "all")
 {
-  // If single value, convert to [x, y, z] vector
-	size = (size[0] == undef) ? [size, size, size] : size;
+    // If single value, convert to [x, y, z] vector
+    size = (size[0] == undef) ? [size, size, size] : size;
 
-	translate_min = radius;
-	translate_xmax = size[0] - radius;
-	translate_ymax = size[1] - radius;
-	translate_zmax = size[2] - radius;
+    translate_min = radius;
+    translate_xmax = size[0] - radius;
+    translate_ymax = size[1] - radius;
+    translate_zmax = size[2] - radius;
 
-	diameter = radius * 2;
+    diameter = radius * 2;
 
-	obj_translate = (center == false) ?
-		[0, 0, 0] : [
-			-(size[0] / 2),
-			-(size[1] / 2),
-			-(size[2] / 2)
-		];
+    obj_translate = (center == false) ?
+        [0, 0, 0] : [
+            -(size[0] / 2),
+            -(size[1] / 2),
+            -(size[2] / 2)
+        ];
 
-	translate(v = obj_translate) {
-		hull() {
-			for (translate_x = [translate_min, translate_xmax]) {
-				x_at = (translate_x == translate_min) ? "min" : "max";
-				for (translate_y = [translate_min, translate_ymax]) {
-					y_at = (translate_y == translate_min) ? "min" : "max";
-					for (translate_z = [translate_min, translate_zmax]) {
-						z_at = (translate_z == translate_min) ? "min" : "max";
+    translate(v = obj_translate) {
+        hull() {
+            for (translate_x = [translate_min, translate_xmax]) {
+                x_at = (translate_x == translate_min) ? "min" : "max";
+                for (translate_y = [translate_min, translate_ymax]) {
+                    y_at = (translate_y == translate_min) ? "min" : "max";
+                    for (translate_z = [translate_min, translate_zmax]) {
+                        z_at = (translate_z == translate_min) ? "min" : "max";
 
-						translate(v = [translate_x, translate_y, translate_z])
-						if (
-							(apply_to == "all") ||
-							(apply_to == "xmin" && x_at == "min") || (apply_to == "xmax" && x_at == "max") ||
-							(apply_to == "ymin" && y_at == "min") || (apply_to == "ymax" && y_at == "max") ||
-							(apply_to == "zmin" && z_at == "min") || (apply_to == "zmax" && z_at == "max")
-						) {
-							sphere(r = radius, $fn=20);
-						} else {
-							rotate =
-								(apply_to == "xmin" || apply_to == "xmax" || apply_to == "x") ? [0, 90, 0] : (
-								(apply_to == "ymin" || apply_to == "ymax" || apply_to == "y") ? [90, 90, 0] :
-								[0, 0, 0]
-							);
-							rotate(a = rotate)
-							cylinder(h = diameter, r = radius, center = true, $fn=20);
-						}
-					}
-				}
-			}
-		}
-	}
+                        translate(v = [translate_x, translate_y, translate_z])
+                        if (
+                            (apply_to == "all") ||
+                            (apply_to == "xmin" && x_at == "min") || (apply_to == "xmax" && x_at == "max") ||
+                            (apply_to == "ymin" && y_at == "min") || (apply_to == "ymax" && y_at == "max") ||
+                            (apply_to == "zmin" && z_at == "min") || (apply_to == "zmax" && z_at == "max")
+                        ) {
+                            sphere(r = radius, $fn=20);
+                        } else {
+                            rotate =
+                                (apply_to == "xmin" || apply_to == "xmax" || apply_to == "x") ? [0, 90, 0] : (
+                                (apply_to == "ymin" || apply_to == "ymax" || apply_to == "y") ? [90, 90, 0] :
+                                [0, 0, 0]
+                            );
+                            rotate(a = rotate)
+                            cylinder(h = diameter, r = radius, center = true, $fn=20);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
