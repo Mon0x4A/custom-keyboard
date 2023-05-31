@@ -30,9 +30,8 @@ _key1uWidth = (_switchWidth*KEY_1U_MODIFIER)+(_switchPaddingWidth*2);
 _key1_25uLength = (_switchLength*KEY_1U_MODIFIER)+(_switchPaddingLength*2);
 _key1_25uWidth = (_switchWidth*KEY_1_25U_MODIFIER)+(_switchPaddingWidth*2);
 
-//TODO this needs to be decreased slightly
-_keySwitchCutoutLength = 13.90;
-_keySwitchCutoutWidth = 13.90;
+_keySwitchCutoutLength = 13.86;
+_keySwitchCutoutWidth = 13.86;
 
 _backplateRoundingRadius = 1.25;
 _backplateGrooveDepth = 1;
