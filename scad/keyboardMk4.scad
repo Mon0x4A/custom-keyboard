@@ -54,7 +54,7 @@ _housingStraightSupportLength = _housingCornerSupportLegWidth;
 _housingStraightSupportWidth = _housingCornerSupportLegLength;
 _housingSupportExposureIntoHousing = 3;
 
-_insetNutCutoutDiameter = 3.6;
+_insetNutCutoutDiameter = 3.2;
 _insetNutCutoutRadius = _insetNutCutoutDiameter/2;
 
 _oledBodyLength = 27.8;
