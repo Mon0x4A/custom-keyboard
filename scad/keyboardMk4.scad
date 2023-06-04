@@ -111,20 +111,17 @@ _keyCap1_25uLength = _key1_25uLength - _keyCapSpacingOffset;
 _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 
 //Pico Variables
-_picoBodyLength = 21;
-_picoBodyWidth = 51;
+_picoBodySizePadding = 0.4;
+_picoBodyLength = 21 + _picoBodySizePadding;
+_picoBodyWidth = 51 + _picoBodySizePadding;
 _picoBodyDepth = 1;
 
-// Ardiuno Variables
-_arduinoMicroBodyLength = 18.5;
-_arduinoMicroBodyWidth = 36.45;
-
 _picoHousingLengthEdgePadding = 7;
-_picoHousingWidthEdgePadding = 2;
+_picoHousingWidthEdgePadding = 3.5;
 _picoHousingBaseLength = _picoBodyLength + (_picoHousingLengthEdgePadding*2);
 _picoHousingBaseWidth = _picoBodyWidth + (_picoHousingWidthEdgePadding*2);
-_picoHousingBaseDepth = 5;
-_picoHousingLidHeight = 12;
+_picoHousingBaseDepth = 6.5;
+_picoHousingLidHeight = 10;
 _picoHousingLidBoltCounterSink = 0;
 _picoHousingLidBaseThickness = 2;
 _picoHousingCableCutoutWidth = _picoHousingBaseWidth*(3/5);
@@ -134,6 +131,17 @@ _picoHousingPaddingOffsetAdjustment = 0.25;
 _picoIntraHousingLengthOffset = _picoHousingLengthEdgePadding-_picoHousingPaddingOffsetAdjustment;
 _picoIntraHousingWidthOffset = _picoHousingWidthEdgePadding-_picoHousingPaddingOffsetAdjustment;
 _picoInsetIntoHousing = 0.9;
+
+_picoMountingHolesLengthCenterToCenter = 11.4;
+_picoMountingHolesWidthCenterToCenter = 47;
+_picoMountingStudWallThickess = 1.5;
+_picoMountingStudHeight = 3;
+_picoMountingStudInsetDepth = 3;
+
+_picoCutoutDepth = 2;
+_picoCenterSupportBeamLength = 8;
+_picoCenterSupportBeamOffsetFromBottom = 2;
+_picoCenterSupportBeamOffsetFromTop = 1.1;
 
 _picoInsetNutCutoutDepth = 3;
 _picoNutInsertLengthCenterToCenter = 27;
@@ -147,8 +155,10 @@ _picoWidthPlacment = 24.5;
 
 /// MAIN START ///
 
-//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+// Comment in this mirror statement to make any right-hand parts.
 //mirror([1,0,0])
+
+//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
@@ -158,6 +168,9 @@ _picoWidthPlacment = 24.5;
 //picoModel();
 //trrsBodyPunch();
 //trrsWedgeBlock();
+//picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
+//picoMountingStud(_picoMountingStudHeight,_picoMountingStudInsetDepth);
+//picoMountingNutPunchSet();
 picoHousing(renderLid=false, renderPico=true);
 //picoHousingBase();
 //picoHousingTop();
@@ -208,7 +221,7 @@ module keyboardAssembly(switchType)
                 translate([_picoLengthPlacment,_picoWidthPlacment,0])
                     union()
                     {
-                        picoHousing(renderLid=true);
+                        picoHousing(renderLid=true, renderPico=true);
                         picoHousingBodyJointWidth = 60.45;
                         picoHousingBodyJointLength = 28.70;
                         picoHousingBodyJointDepth = 2;
@@ -501,20 +514,27 @@ module picoHousing(renderLid, renderPico)
                 picoHousingBase();
                 if (renderLid)
                     translate([0, 0, _picoHousingBaseDepth])
-                        picoHousingTop();
+                        %picoHousingTop();
             }
             usbcCutoutLength = 12;
             usbcCutoutWidth = 20;
             usbcCutoutHeight = 7.25;
             usbcCutoutHeightOffset = 3.0;
-            usbcCutoutDepth = 2.5;
+            usbcCutoutDepth = 3.76;
             //Cutout for usb connection
             translate([((_picoHousingBaseLength-usbcCutoutLength)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseWidth-usbcCutoutDepth, usbcCutoutHeightOffset])
                 cube([usbcCutoutLength, usbcCutoutWidth, usbcCutoutHeight]);
+
+            translate([(_picoHousingBaseLength-_picoMountingHolesLengthCenterToCenter)/2, (_picoHousingBaseWidth-_picoMountingHolesWidthCenterToCenter)/2, _picoHousingBaseDepth-_picoMountingStudHeight-_picoCenterSupportBeamOffsetFromTop])
+                picoMountingStudSet(_picoMountingStudHeight,0);
         }
+
         if(renderPico)
             translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-_picoInsetIntoHousing])
                 picoModel();
+
+translate([((_picoHousingBaseLength-_picoMountingHolesLengthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, ((_picoHousingBaseWidth-_picoMountingHolesWidthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseDepth-_picoMountingStudHeight-_picoCenterSupportBeamOffsetFromTop])
+            picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
     }
 }
 
@@ -522,7 +542,6 @@ module picoHousingBase()
 {
     union()
     {
-        picoCutoutDepth = 2;
         difference()
         {
             difference()
@@ -535,10 +554,10 @@ module picoHousingBase()
 
             // Lid attachement nut set
             translate([_picoInsetNutSetLengthOffset,_picoInsetNutSetWidthOffset,_picoHousingBaseDepth-_picoInsetNutCutoutDepth])
-                picoInsetNutPunchSet();
+                lidAttachmentNutPunchSet();
             // Pico cutout
-            translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-picoCutoutDepth])
-                picoPunch(picoCutoutDepth+1);
+            translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-_picoCutoutDepth])
+                picoPunch(_picoCutoutDepth+1);
             // Cable ramp cutout
             picoCableRampAngle = 42;
             translate([-_picoHousingBaseDepth*1.5, _picoHousingCableCutoutOffset, 0])
@@ -546,9 +565,30 @@ module picoHousingBase()
                     cube([_picoHousingBaseDepth, _picoHousingCableCutoutWidth, _picoHousingBaseDepth*3]);
         }
 
-        picoCenterSupportBeamLength = 8;
-        translate([((_picoHousingBaseLength-picoCenterSupportBeamLength)/2)-_picoHousingPaddingOffsetAdjustment, _picoIntraHousingWidthOffset-1, 0.1])
-            cube([picoCenterSupportBeamLength, _picoBodyWidth+2, _picoHousingBaseDepth-1.6]);
+        translate([((_picoHousingBaseLength-_picoCenterSupportBeamLength)/2)-_picoHousingPaddingOffsetAdjustment, _picoIntraHousingWidthOffset-1, _picoCenterSupportBeamOffsetFromBottom])
+            cube([_picoCenterSupportBeamLength, _picoBodyWidth+2, _picoHousingBaseDepth-_picoCenterSupportBeamOffsetFromTop-_picoCenterSupportBeamOffsetFromBottom]);
+    }
+}
+
+module picoMountingStudSet(height, insertDepth)
+{
+    translate([0,0,0])
+        picoMountingStud(height, insertDepth);
+    translate([_picoMountingHolesLengthCenterToCenter,0,0])
+        picoMountingStud(height, insertDepth);
+    translate([0,_picoMountingHolesWidthCenterToCenter,0])
+        picoMountingStud(height, insertDepth);
+    translate([_picoMountingHolesLengthCenterToCenter,_picoMountingHolesWidthCenterToCenter,0])
+        picoMountingStud(height, insertDepth);
+}
+
+module picoMountingStud(height, insertDepth)
+{
+    difference()
+    {
+        cylinder(r=_insetNutCutoutRadius+_picoMountingStudWallThickess, h=height, $fn=100);
+        translate([0, 0, height-insertDepth])
+            picoMountNutPunch();
     }
 }
 
@@ -800,7 +840,6 @@ module picoModel()
 }
 
 //Punches
-
 module picoPunch(depth)
 {
     union()
@@ -809,19 +848,39 @@ module picoPunch(depth)
     }
 }
 
-module picoInsetNutPunchSet()
+module lidAttachmentNutPunchSet()
 {
     translate([0,0,0])
-        picoInsetNutPunch();
+        lidAttachmentNutPunch();
     translate([_picoNutInsertLengthCenterToCenter,0,0])
-        picoInsetNutPunch();
+        lidAttachmentNutPunch();
     translate([0,_picoNutInsertWidthCenterToCenter,0])
-        picoInsetNutPunch();
+        lidAttachmentNutPunch();
     translate([_picoNutInsertLengthCenterToCenter,_picoNutInsertWidthCenterToCenter,0])
-        picoInsetNutPunch();
+        lidAttachmentNutPunch();
 }
 
-module picoInsetNutPunch()
+module lidAttachmentNutPunch()
+{
+    union()
+    {
+        cylinder(r=_insetNutCutoutRadius,h=_picoInsetNutCutoutDepth+1,$fn=100);
+    }
+}
+
+module picoMountingNutPunchSet()
+{
+    translate([0,0,0])
+        picoMountNutPunch();
+    translate([_picoMountingHolesLengthCenterToCenter,0,0])
+        picoMountNutPunch();
+    translate([0,_picoMountingHolesWidthCenterToCenter,0])
+        picoMountNutPunch();
+    translate([_picoMountingHolesLengthCenterToCenter,_picoMountingHolesWidthCenterToCenter,0])
+        picoMountNutPunch();
+}
+
+module picoMountNutPunch()
 {
     union()
     {
