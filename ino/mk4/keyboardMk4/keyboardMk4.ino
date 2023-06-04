@@ -40,16 +40,16 @@ const unsigned long DEFAULT_BASE_APPLY_DELAY = 50;
 
 const int LAYER_COUNT = 3;
 
-const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 14 : 14;
-const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 15 : 15;
-const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 16 : 16;
+const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 22 : 14;
+const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 11 : 15;
+const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 12 : 16;
 
-const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 27 : 27;
-const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 26 : 26;
-const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 9 : 25;
-const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 10 : 24;
-const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 12 : 22;
-const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 11 : 21;
+const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 2 : 27;
+const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 6 : 26;
+const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 25;
+const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 14 : 24;
+const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 16 : 22;
+const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 18 : 21;
 const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? 20 : 20;
 
 const byte ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
@@ -492,7 +492,6 @@ class LayerInfoContainer : public ILayerInfoService
         //IBaseKeymap
         unsigned char get_base_keycode_at(unsigned int row, unsigned int col)
         {
-            KeyboardHelper::try_log("Got into layer info");
             return (*_baseKeys)[row][col];
         }
 
@@ -761,21 +760,21 @@ class NativeSwitchStateProvider : public IUpdatableSwitchStateProvider
         {
             for (int row = 0; row < ROW_COUNT; row++)
             {
-                // set the row to output low
+                // Pull the row pins LOW. With the INPUT_PULLUP cols high and the diodes pointed
+                // toward the rows, we will allow current to flow from Col->Row.
                 byte curRow = ROWS[row];
                 pinMode(curRow, OUTPUT);
                 digitalWrite(curRow, LOW);
 
-                // iterate through the columns reading the value - should be zero if switch is pressed
                 for (int col = 0; col < COLUMN_COUNT; col++)
                 {
-                    byte rowCol = COLS[col];
-                    pinMode(rowCol, INPUT_PULLUP);
-                    _switchMatrix[row][col] = digitalRead(rowCol);
-                    pinMode(rowCol, INPUT);
+                    byte currCol = COLS[col];
+                    // Attempt connection to the pullup resistor (pulled to high/up) that should already be set.
+                    // Should read zero if switch is pressed.
+                    _switchMatrix[row][col] = digitalRead(currCol);
                 }
 
-                // disable the row, turn the pullup resistor off
+                // Disable the row output
                 pinMode(curRow, INPUT);
             }
         }
@@ -1002,12 +1001,14 @@ void setup()
     // Init default pin modes;
     for(int i = 0; i < ROW_COUNT; i++)
     {
-        pinMode(ROWS[i], INPUT_PULLUP);
+        pinMode(ROWS[i], INPUT);
         delay(5);
     }
     for (int i = 0; i < COLUMN_COUNT; i++)
     {
-        pinMode(COLS[i], INPUT);
+        // Columns should init to HIGH via INPUT_PULLUP. The Pico seems fine
+        // leaving this state on for long periods.
+        pinMode(COLS[i], INPUT_PULLUP);
         delay(5);
     }
 }
