@@ -158,7 +158,7 @@ _picoWidthPlacment = 24.5;
 // Comment in this mirror statement to make any right-hand parts.
 //mirror([1,0,0])
 
-//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
@@ -171,7 +171,7 @@ _picoWidthPlacment = 24.5;
 //picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingStud(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingNutPunchSet();
-picoHousing(renderLid=false, renderPico=true);
+//picoHousing(renderLid=false, renderPico=true);
 //picoHousingBase();
 //picoHousingTop();
 //arduinoMicroPunch();
@@ -215,18 +215,19 @@ module keyboardAssembly(switchType)
                     translate([-_housingWallThickness*3, -_housingWallThickness*3, housingDepth-housingTopTrimAmount])
                         cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
                 }
-                translate([0,0,backplateOffsetFromHousing])
-                    backplate(backplateDepth);
+                //translate([0,0,backplateOffsetFromHousing])
+                //    backplate(backplateDepth);
                 //pico enclosure
                 translate([_picoLengthPlacment,_picoWidthPlacment,0])
                     union()
                     {
-                        picoHousing(renderLid=true, renderPico=true);
-                        picoHousingBodyJointWidth = 60.45;
+                        picoHousing(renderLid=true, renderPico=false);
+                        picoHousingBodyJointWidth = 64.40;
                         picoHousingBodyJointLength = 28.70;
                         picoHousingBodyJointDepth = 2;
                         jointLengthOffset = -7;
                         jointWidthOffset = -7;
+                        // Smoothing for joint seam.
                         translate([jointLengthOffset, jointWidthOffset, 0])
                             difference()
                             {
@@ -262,13 +263,18 @@ module housing(housingDepth)
         {
             union()
             {
+                // Hide the joint between the pink and main bodies
                 additionPinkyHousingLengthToHideRearSeam = 1;
+
+                // Pink housing body
                 translate([0,_key1uWidth*(3),0])
                     translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
                         housingSubModule(_pinkyBackplateLength+additionPinkyHousingLengthToHideRearSeam, _pinkyBackplateWidth, housingDepth, _housingBaseThickness);
+                // Main housing body.
                 translate([_key1_25uLength*(1),_key1_25uWidth*(1),0])
                     translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
                         housingSubModule(_mainBackplateLength, _mainBackplateWidth, housingDepth, _housingBaseThickness);
+                // Thumb housing body.
                 translate([_key1uLength*(4),0,0])
                     translate([-_housingWallThickness,-_housingWallThickness,0]) // Zero on origin
                         housingSubModule(_thumbBackplateLength, _thumbBackplateWidth, housingDepth, _housingBaseThickness);
@@ -533,7 +539,7 @@ module picoHousing(renderLid, renderPico)
             translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-_picoInsetIntoHousing])
                 picoModel();
 
-translate([((_picoHousingBaseLength-_picoMountingHolesLengthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, ((_picoHousingBaseWidth-_picoMountingHolesWidthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseDepth-_picoMountingStudHeight-_picoCenterSupportBeamOffsetFromTop])
+        translate([((_picoHousingBaseLength-_picoMountingHolesLengthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, ((_picoHousingBaseWidth-_picoMountingHolesWidthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseDepth-_picoMountingStudHeight-_picoCenterSupportBeamOffsetFromTop])
             picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
     }
 }
