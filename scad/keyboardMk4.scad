@@ -531,7 +531,7 @@ module picoHousing(renderLid, renderPico)
             translate([((_picoHousingBaseLength-usbcCutoutLength)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseWidth-usbcCutoutDepth, usbcCutoutHeightOffset])
                 cube([usbcCutoutLength, usbcCutoutWidth, usbcCutoutHeight]);
 
-            translate([(_picoHousingBaseLength-_picoMountingHolesLengthCenterToCenter)/2, (_picoHousingBaseWidth-_picoMountingHolesWidthCenterToCenter)/2, _picoHousingBaseDepth-_picoMountingStudHeight-_picoCenterSupportBeamOffsetFromTop])
+            translate([((_picoHousingBaseLength-_picoMountingHolesLengthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, ((_picoHousingBaseWidth-_picoMountingHolesWidthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseDepth-_picoMountingStudHeight-_picoCenterSupportBeamOffsetFromTop])
                 picoMountingStudSet(_picoMountingStudHeight,0);
         }
 
