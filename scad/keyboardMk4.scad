@@ -171,7 +171,7 @@ keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingStud(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingNutPunchSet();
-//picoHousing(renderLid=false, renderPico=true);
+//picoHousing(renderLid=true, renderBase=false, renderPico=false);
 //picoHousingBase();
 //picoHousingTop();
 //arduinoMicroPunch();
@@ -215,13 +215,13 @@ module keyboardAssembly(switchType)
                     translate([-_housingWallThickness*3, -_housingWallThickness*3, housingDepth-housingTopTrimAmount])
                         cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
                 }
-                //translate([0,0,backplateOffsetFromHousing])
-                //    backplate(backplateDepth);
+                translate([0,0,backplateOffsetFromHousing])
+                    backplate(backplateDepth);
                 //pico enclosure
                 translate([_picoLengthPlacment,_picoWidthPlacment,0])
                     union()
                     {
-                        picoHousing(renderLid=true, renderPico=false);
+                        picoHousing(renderLid=true, renderBase=true, renderPico=false);
                         picoHousingBodyJointWidth = 64.40;
                         picoHousingBodyJointLength = 28.70;
                         picoHousingBodyJointDepth = 2;
@@ -509,7 +509,7 @@ module keyUnit(length, width, depth)
     }
 }
 
-module picoHousing(renderLid, renderPico)
+module picoHousing(renderLid, renderBase, renderPico)
 {
     union()
     {
@@ -517,10 +517,11 @@ module picoHousing(renderLid, renderPico)
         {
             union()
             {
-                picoHousingBase();
+                if (renderBase)
+                    picoHousingBase();
                 if (renderLid)
                     translate([0, 0, _picoHousingBaseDepth])
-                        %picoHousingTop();
+                        picoHousingTop();
             }
             usbcCutoutLength = 12;
             usbcCutoutWidth = 20;
@@ -539,8 +540,9 @@ module picoHousing(renderLid, renderPico)
             translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-_picoInsetIntoHousing])
                 picoModel();
 
-        translate([((_picoHousingBaseLength-_picoMountingHolesLengthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, ((_picoHousingBaseWidth-_picoMountingHolesWidthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseDepth-_picoMountingStudHeight-_picoCenterSupportBeamOffsetFromTop])
-            picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
+        if (renderBase)
+            translate([((_picoHousingBaseLength-_picoMountingHolesLengthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, ((_picoHousingBaseWidth-_picoMountingHolesWidthCenterToCenter)/2)-_picoHousingPaddingOffsetAdjustment, _picoHousingBaseDepth-_picoMountingStudHeight-_picoCenterSupportBeamOffsetFromTop])
+                picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
     }
 }
 
@@ -600,7 +602,7 @@ module picoMountingStud(height, insertDepth)
 
 module picoHousingTop()
 {
-    trrsPortOffsetFromBottom = 6;
+    trrsPortOffsetFromBottom = 7.5;
     trrsPortOffsetFromRight = _housingWallThickness-_picoHousingPaddingOffsetAdjustment;
     trrsPortTotalLengthOffset = _picoHousingBaseLength-(_trrsBodyLength)-trrsPortOffsetFromRight;
     trrsPortTotalWidthOffset = trrsPortOffsetFromBottom;
@@ -616,7 +618,7 @@ module picoHousingTop()
                         housingSubModule(_picoHousingBaseLength-(_housingBodyRoundingRadius*2), _picoHousingBaseWidth-(_housingBodyRoundingRadius*2), _picoHousingLidHeight, _picoHousingLidBaseThickness, apply_to="z");
 
                 // bolt attachements from the top into the housing bottom
-                translate([_picoInsetNutSetLengthOffset, _picoInsetNutSetWidthOffset, _picoHousingLidHeight-_picoHousingLidBoltCounterSink])
+                translate([_picoInsetNutSetLengthOffset-_picoHousingPaddingOffsetAdjustment, _picoInsetNutSetWidthOffset, _picoHousingLidHeight-_picoHousingLidBoltCounterSink])
                 {
                     translate([0, 0, 0])
                         riserBackplateBoltPunch(_picoHousingLidBaseThickness);
@@ -638,13 +640,6 @@ module picoHousingTop()
                 oledLengthOffset = ((_picoHousingBaseLength - _oledBodyLength)/2)-_picoHousingPaddingOffsetAdjustment;
                 translate([oledLengthOffset, _picoHousingBaseWidth-oledWidthOffsetFromTop, _picoHousingLidHeight-_picoHousingLidBaseThickness-1])
                     oledScreenPunch(_picoHousingLidBaseThickness+2);
-
-                // cutout to leave room for the arudino tab connection
-                tabCutoutLength = 6;
-                tabCutoutWidth = _housingWallThickness + 2;
-                tabCutoutDepth = 3;
-                translate([(_picoHousingBaseLength-tabCutoutLength)/2-_picoHousingPaddingOffsetAdjustment, -1, -0.01])
-                    cube([tabCutoutLength, tabCutoutWidth, tabCutoutDepth]);
             }
 
             //TRRS port holder
