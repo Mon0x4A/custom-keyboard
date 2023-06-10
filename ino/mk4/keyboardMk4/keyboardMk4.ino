@@ -3,11 +3,6 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-//CAUTION: Do not add any more imports to the mk3 code.
-//This code has grown large enough to cause instability
-//in the Pro Micro if much more is added. Do not add more
-//codebases until the microcontroller for this project
-//has been upgraded.
 
 //Constants
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -40,17 +35,17 @@ const unsigned long DEFAULT_BASE_APPLY_DELAY = 50;
 
 const int LAYER_COUNT = 3;
 
-const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 22 : 14;
-const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 11 : 15;
-const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 12 : 16;
+const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 20 : 14;
+const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 19 : 15;
+const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 18 : 16;
 
-const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 2 : 27;
-const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 6 : 26;
+const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 6 : 27;
+const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 7 : 26;
 const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 25;
-const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 14 : 24;
-const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 16 : 22;
-const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 18 : 21;
-const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? 20 : 20;
+const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 9 : 24;
+const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 10 : 22;
+const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 11 : 21;
+const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? 12 : 20;
 
 const byte ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
 const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN };
@@ -90,7 +85,7 @@ const unsigned char L_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
 {
     { KEY_ESC,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_TAB },
     { KC_NULL,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, ' ' },
-    { KC_NULL,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_REPEAT },
+    { KC_NULL,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
 };
 
 const unsigned char R0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
@@ -116,7 +111,7 @@ const unsigned char R2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
 
 const unsigned char R_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
 {
-    { KC_NULL,       KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_RETURN },
+    { KC_REPEAT,     KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KEY_RETURN },
     { KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
     { KC_NULL,       KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
 };
@@ -149,6 +144,12 @@ class IKeyboardStateContainer
         virtual void set_is_ctrl_pressed(bool isCtrlPressed) = 0;
         virtual void set_is_shift_pressed(bool isShiftPressed) = 0;
         virtual void set_has_chord_action_been_performed(bool chordActionPeformed) = 0;
+        virtual void set_last_keycode_sent(unsigned char lastSentKeycode) = 0;
+
+        //Other Methods
+        //TODO break the repeat code out into another class/interface when we have
+        //the power to do so in mk4
+        virtual void send_repeat_of_last_sent_keycode() = 0;
 };
 
 class IBaseTapStateProvider
@@ -408,6 +409,64 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
             _chordActionPeformed = chordActionPeformed;
         }
 
+        void set_last_keycode_sent(unsigned char lastSentKeycode)
+        {
+            _was_ctrl_held_for_last_sent_code = get_is_ctrl_pressed();
+            _was_alt_held_for_last_sent_code = get_is_alt_pressed();
+            _was_ctrl_held_for_last_sent_code = get_is_ctrl_pressed();
+            _was_shift_held_for_last_sent_code = get_is_shift_pressed();
+            _lastSentKeycode = lastSentKeycode;
+        }
+
+        //Other Methods
+        virtual void send_repeat_of_last_sent_keycode()
+        {
+            if (_lastSentKeycode == KC_NULL)
+                return;
+
+            // Set any applicable modifiers from the last press that are not
+            // already pressed.
+            if (_was_alt_held_for_last_sent_code && !get_is_alt_pressed())
+            {
+                KeyboardHelper::try_log("Alt pressed for repeat.");
+                Keyboard.press(KEY_LEFT_ALT);
+            }
+
+            if (_was_gui_held_for_last_sent_code && !get_is_gui_pressed())
+            {
+                KeyboardHelper::try_log("Gui pressed for repeat.");
+                Keyboard.press(KEY_LEFT_GUI);
+            }
+
+            if (_was_ctrl_held_for_last_sent_code && !get_is_ctrl_pressed())
+            {
+                KeyboardHelper::try_log("Ctrl pressed for repeat.");
+                Keyboard.press(KEY_LEFT_CTRL);
+            }
+
+            //Again, using right shift is intentional such the we don't conflict
+            //with the arduino keyboard library 'write' method.
+            if (_was_shift_held_for_last_sent_code && !get_is_shift_pressed())
+            {
+                KeyboardHelper::try_log("Shift pressed for repeat");
+                Keyboard.press(KEY_RIGHT_SHIFT);
+            }
+
+            // Now that we have set any applicable modifiers, write our code.
+            Keyboard.write(_lastSentKeycode);
+            KeyboardHelper::try_log("Sending repeat press of keycode: "+String(_lastSentKeycode));
+
+            // Now release all modifiers that we identified are not physically held.
+            if (!get_is_alt_pressed())
+                Keyboard.release(KEY_LEFT_ALT);
+            if (!get_is_gui_pressed())
+                Keyboard.release(KEY_LEFT_GUI);
+            if (!get_is_ctrl_pressed())
+                Keyboard.release(KEY_LEFT_CTRL);
+            if (!get_is_shift_pressed())
+                Keyboard.release(KEY_RIGHT_SHIFT);
+        }
+
     private:
         unsigned int _quant_lm1_pressed = 0;
         unsigned int _quant_lm2_pressed = 0;
@@ -417,6 +476,12 @@ class KeyboardLayoutStateContainer : public IKeyboardStateContainer
         unsigned int _quant_shift_pressed = 0;
         unsigned int _lastLayerPressed = 0;
         bool _chordActionPeformed;
+
+        bool _was_alt_held_for_last_sent_code = false;
+        bool _was_gui_held_for_last_sent_code = false;
+        bool _was_ctrl_held_for_last_sent_code = false;
+        bool _was_shift_held_for_last_sent_code = false;
+        unsigned char _lastSentKeycode = KC_NULL;
 };
 
 class BaseTapStateContainer : public IBaseTapStateProvider, public IBaseTapStateSetter
@@ -565,6 +630,7 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
             }
 
             bool shouldSendPressCode = true;
+            bool shouldRecordCodeForRepeat = false;
             switch (keycode)
             {
                 case KC_LM1:
@@ -579,7 +645,8 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                     break;
                 case KC_REPEAT:
                     shouldSendPressCode = false;
-                    KeyboardHelper::try_log("Repeating last instruction:");
+                    _keyboardStateContainer->send_repeat_of_last_sent_keycode();
+                    KeyboardHelper::try_log("Repeating last instruction!");
                     break;
                 case KC_NULL:
                     // Do nothing if we hit the null keycode.
@@ -606,6 +673,9 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                     _keyboardStateContainer->set_is_shift_pressed(true);
                     KeyboardHelper::try_log("Shift physically pressed.");
                     break;
+                default:
+                    shouldRecordCodeForRepeat = true;
+                    break;
             }
 
             if (ENABLE_KEYBOARD_COMMANDS && shouldSendPressCode)
@@ -613,6 +683,9 @@ class KeyswitchPressHandler : public IKeyswitchPressedHandler
                 KeyboardHelper::try_log("Sending press of keycode: "+String(keycode));
                 Keyboard.press(keycode);
             }
+
+            if (shouldRecordCodeForRepeat)
+                _keyboardStateContainer->set_last_keycode_sent(keycode);
         }
 
     private:
@@ -712,9 +785,17 @@ class KeyswitchReleaseHandler : public IKeyswitchReleasedHandler
                     && !layerInfo.get_has_chord_action_been_performed())
                 {
                     unsigned char tapKeycode = layerInfo.get_tap_keycode_at(row,col);
-                    KeyboardHelper::try_log("Sending tap of keycode: "+String(tapKeycode));
-                    if (ENABLE_KEYBOARD_COMMANDS)
-                        Keyboard.write(tapKeycode);
+                    switch (tapKeycode)
+                    {
+                        case KC_REPEAT:
+                            keyboardStateContainer.send_repeat_of_last_sent_keycode();
+                            break;
+                        default:
+                            KeyboardHelper::try_log("Sending tap of keycode: "+String(tapKeycode));
+                            if (ENABLE_KEYBOARD_COMMANDS)
+                                Keyboard.write(tapKeycode);
+                            break;
+                    }
                 }
                 else
                     KeyboardHelper::try_log("Tap action has timed out.");
