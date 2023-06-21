@@ -35,17 +35,17 @@ const unsigned long DEFAULT_BASE_APPLY_DELAY = 50;
 
 const int LAYER_COUNT = 3;
 
-const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 20 : 14;
-const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 19 : 15;
-const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 18 : 16;
+const byte ROW_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 20 : 18;
+const byte ROW_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 19 : 19;
+const byte ROW_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 18 : 20;
 
-const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 6 : 27;
-const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 7 : 26;
-const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 25;
-const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 9 : 24;
-const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 10 : 22;
-const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 11 : 21;
-const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? 12 : 20;
+const byte COL_0_PIN = IS_LEFT_KEYBOARD_SIDE ? 12 : 12;
+const byte COL_1_PIN = IS_LEFT_KEYBOARD_SIDE ? 8 : 6;
+const byte COL_2_PIN = IS_LEFT_KEYBOARD_SIDE ? 11 : 11;
+const byte COL_3_PIN = IS_LEFT_KEYBOARD_SIDE ? 9 : 7;
+const byte COL_4_PIN = IS_LEFT_KEYBOARD_SIDE ? 10 : 10;
+const byte COL_5_PIN = IS_LEFT_KEYBOARD_SIDE ? 7 : 8;
+const byte COL_6_PIN = IS_LEFT_KEYBOARD_SIDE ? 6 : 9;
 
 const byte ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
 const byte COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN };
