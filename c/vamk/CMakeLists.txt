@@ -27,6 +27,12 @@ pico_sdk_init()
 
 add_executable(vamk vamk.c )
 
+# Seems to be required to get the TinyUSB binaries to use local config
+target_sources(vamk PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/vamk.c
+        ${CMAKE_CURRENT_LIST_DIR}/usb_descriptors.c
+        )
+
 pico_set_program_name(vamk "vamk")
 pico_set_program_version(vamk "0.1")
 
@@ -36,12 +42,10 @@ pico_enable_stdio_usb(vamk 0)
 # Add the standard library to the build
 target_link_libraries(vamk
         pico_stdlib
-        tinyusb_device
-        tinyusb_board
         )
 
 # Add the standard include files to the build
-target_include_directories(vamk PRIVATE
+target_include_directories(vamk PUBLIC
   ${CMAKE_CURRENT_LIST_DIR}
   ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts or any other standard includes, if required
 )
@@ -50,6 +54,8 @@ target_include_directories(vamk PRIVATE
 target_link_libraries(vamk 
         hardware_i2c
         hardware_timer
+        tinyusb_device
+        tinyusb_board
         )
 
 pico_add_extra_outputs(vamk)

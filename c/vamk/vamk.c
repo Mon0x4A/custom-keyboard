@@ -48,7 +48,7 @@
 int main(void)
 {
     stdio_init_all();
-    //tusb_init();
+    tusb_init();
 
     // Set up our UART
     //uart_init(UART_ID, BAUD_RATE);
@@ -98,4 +98,36 @@ int main(void)
 
     return 0;
 }
+
+// REQUIRED FOR TinyUSB ------------------------------------------------------//
+// These function 'implementions' seem to be required for TinyUSB to compile.
+// At this point I am not entirely sure why, but the stubs seem to satisfy.
+
+// Invoked when received GET_REPORT control request
+// Application must fill buffer report's content and return its length.
+// Return zero will cause the stack to STALL request
+uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
+{
+   // Suppress complier warnings about unused parameters.
+   (void) instance;
+   (void) report_id;
+   (void) report_type;
+   (void) buffer;
+   (void) reqlen;
+
+  return 0;
+}
+
+// Invoked when received SET_REPORT control request or
+// received data on OUT endpoint ( Report ID = 0, Type = 0 )
+void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
+{
+   // Suppress complier warnings about unused parameters.
+   (void) instance;
+   (void) report_id;
+   (void) report_type;
+   (void) buffer;
+   (void) bufsize;
+}
+// END REQUIRED TinyUSB FUNCTIONS ---------------------------------------------//
 
