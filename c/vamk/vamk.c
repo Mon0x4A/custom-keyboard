@@ -1,9 +1,8 @@
 // Pico SDK imports
-//#include <stdio.h>
+#include <stdio.h>
+#include <string.h>
 #include "pico/stdlib.h"
-#include "hardware/uart.h"
 #include "hardware/gpio.h"
-#include "hardware/divider.h"
 #include "hardware/i2c.h"
 #include "hardware/timer.h"
 
@@ -11,24 +10,16 @@
 #include "tusb.h"
 #include "usb_descriptors.h"
 
+// Required to access on-board switch and LED.
+#include "bsp/board.h"
+
 // Project Imports
 #include "vamk_config.h"
 #include "vamk_constants.h"
 
-// UART defines
-// By default the stdout UART is `uart0`, so we will use the second one
-#define UART_ID uart1
-#define BAUD_RATE 9600
-
-// Use pins 4 and 5 for UART1
-// Pins can be changed, see the GPIO function select table in the datasheet for information on GPIO assignments
-#define UART_TX_PIN 4
-#define UART_RX_PIN 5
-
 // GPIO defines
 // Example uses GPIO 2
 #define GPIO 2
-
 
 // I2C defines
 // This example will use I2C0 on GPIO8 (SDA) and GPIO9 (SCL) running at 400KHz.
@@ -37,132 +28,53 @@
 #define I2C_SDA 8
 #define I2C_SCL 9
 
-//int64_t alarm_callback(alarm_id_t id, void *user_data) {
-//    // Put your timeout handler code in here
-//    return 0;
-//}
-
-
-//// ENTRY POINT
-//int main(void)
-//{
-//    stdio_init_all();
-//    tusb_init();
-//
-//
-//    // Set up our UART
-//    //uart_init(UART_ID, BAUD_RATE);
-//    //// Set the TX and RX pins by using the function select on the GPIO
-//    //// Set datasheet for more information on function select
-//    //gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
-//    //gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
-//
-//    //// GPIO initialisation.
-//    //// We will make this GPIO an input, and pull it up by default
-//    //gpio_init(GPIO);
-//    //gpio_set_dir(GPIO, GPIO_IN);
-//    //gpio_pull_up(GPIO);
-//
-//    //// Example of using the HW divider. The pico_divider library provides a more user friendly set of APIs
-//    //// over the divider (and support for 64 bit divides), and of course by default regular C language integer
-//    //// divisions are redirected thru that library, meaning you can just use C level `/` and `%` operators and
-//    //// gain the benefits of the fast hardware divider.
-//    //int32_t dividend = 123456;
-//    //int32_t divisor = -321;
-//    //// This is the recommended signed fast divider for general use.
-//    //divmod_result_t result = hw_divider_divmod_s32(dividend, divisor);
-//    //printf("%d/%d = %d remainder %d\n", dividend, divisor, to_quotient_s32(result), to_remainder_s32(result));
-//    //// This is the recommended unsigned fast divider for general use.
-//    //int32_t udividend = 123456;
-//    //int32_t udivisor = 321;
-//    //divmod_result_t uresult = hw_divider_divmod_u32(udividend, udivisor);
-//    //printf("%d/%d = %d remainder %d\n", udividend, udivisor, to_quotient_u32(uresult), to_remainder_u32(uresult));
-//
-//    //// I2C Initialisation. Using it at 400Khz.
-//    //i2c_init(I2C_PORT, 400*1000);
-//
-//    //gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
-//    //gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
-//    //gpio_pull_up(I2C_SDA);
-//    //gpio_pull_up(I2C_SCL);
-//
-//    //// Timer example code - This example fires off the callback after 2000ms
-//    //add_alarm_in_ms(2000, alarm_callback, NULL, false);
-//
-//    // Main run loop
-//    bool has_keyboard_key = false;
-//    unsigned int counter = 0;
-//    while(true)
-//    {
-//        sleep_ms(1000);
-//        tud_task();
-//        //cdc_task();
-//        char counterStr[12];
-//        sprintf(counterStr, "%u", counter);
-//        printf(counterStr);
-//        printf(": Hello, world! This is the latest version!\n");
-//        counter++;
-//
-//        if (tud_suspended())
-//        {
-//            tud_remote_wakeup();
-//        }
-//
-//        if (!tud_hid_ready())
-//        {
-//            printf("tud_hid_ready is not ready!\n");
-//            continue;
-//        }
-//
-//        if (!has_keyboard_key)
-//        {
-//            uint8_t keycode[6] = { 0 };
-//            keycode[0] = HID_KEY_A;
-//            printf("Attempting to press \'a\'\n");
-//            tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-//            has_keyboard_key = true;
-//        }
-//        else if (tud_hid_ready())
-//        {
-//            printf("Attempting to release \'a\'\n");
-//            tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
-//            has_keyboard_key = false;
-//        }
-//    }
-//
-//    return 0;
-//}
-
-#include <string.h>
-
-// Required to access on-board switch and LED.
-#include "bsp/board.h"
-
-// Blink Pattern (ms)
-enum  {
-  BLINK_NOT_MOUNTED = 250,
-  BLINK_MOUNTED = 1000,
-  BLINK_SUSPENDED = 2500,
-};
+// Enums
+typedef enum led_blink_pattern_ms
+{
+    NOT_MOUNTED = 250,
+    MOUNTED = 1000,
+    SUSPENDED = 2500,
+} led_pattern_t;
 
 // Global Variables
-static uint32_t blink_interval_ms = BLINK_NOT_MOUNTED;
+static led_pattern_t led_mode = NOT_MOUNTED;
 
 // Function Declarations
 static void led_blinking_task(void);
 static void hid_task(void);
+
+////TODO this timer code could be very useful for key events
+//int64_t alarm_callback(alarm_id_t id, void *user_data) {
+//    // Put your timeout handler code in here
+//    return 0;
+//}
 
 // ENTRY POINT
 int main(void)
 {
     // Required pico utils initialization call.
     stdio_init_all();
-
     // Required board utils initialization call.
     board_init();
-
     // TinyUSB required initialization call.
     tusb_init();
+
+    //// GPIO initialisation.
+    //// We will make this GPIO an input, and pull it up by default
+    //gpio_init(GPIO);
+    //gpio_set_dir(GPIO, GPIO_IN);
+    //gpio_pull_up(GPIO);
+
+    //// I2C Initialisation. Using it at 400Khz.
+    //i2c_init(I2C_PORT, 400*1000);
+
+    //gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
+    //gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
+    //gpio_pull_up(I2C_SDA);
+    //gpio_pull_up(I2C_SCL);
+
+    //// Timer example code - This example fires off the callback after 2000ms
+    //add_alarm_in_ms(2000, alarm_callback, NULL, false);
 
     // Main run loop
     while (1)
@@ -170,7 +82,9 @@ int main(void)
         // TinyUSB device task required to be called every iteration.
         tud_task();
 
+        // Update LED state.
         led_blinking_task();
+        // Update keyboard state.
         hid_task();
     }
 
@@ -187,22 +101,22 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
         return;
 
     // Avoid sending multiple consecutive reports.
-    static bool has_keyboard_key = false;
+    static bool has_reported_keys = false;
 
-    if (btn && !has_keyboard_key)
+    if (btn && !has_reported_keys)
     {
         uint8_t keycode[6] = { 0 };
         keycode[0] = HID_KEY_A;
         printf("Attempting to press \'a\'\n");
         tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-        has_keyboard_key = true;
+        has_reported_keys = true;
     }
-    else if (!btn && has_keyboard_key)
+    else if (!btn && has_reported_keys)
     {
         // Send empty key report if we previously had a key pressed.
         printf("Attempting to release \'a\'\n");
         tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
-        has_keyboard_key = false;
+        has_reported_keys = false;
     }
 }
 
@@ -237,14 +151,14 @@ static void led_blinking_task(void)
     static bool led_state = false;
 
     // LED blink is disabled if set to zero.
-    if (!blink_interval_ms)
+    if (!led_mode)
         return;
 
     // Blink every interval ms
-    if (board_millis() - start_ms < blink_interval_ms)
+    if (board_millis() - start_ms < led_mode)
         return;
 
-    start_ms += blink_interval_ms;
+    start_ms += led_mode;
 
     board_led_write(led_state);
     // Toggle LED state
@@ -256,13 +170,13 @@ static void led_blinking_task(void)
 // Invoked when device is mounted
 void tud_mount_cb(void)
 {
-    blink_interval_ms = BLINK_MOUNTED;
+    led_mode = MOUNTED;
 }
 
 // Invoked when device is unmounted
 void tud_umount_cb(void)
 {
-    blink_interval_ms = BLINK_NOT_MOUNTED;
+    led_mode = NOT_MOUNTED;
 }
 
 // Invoked when usb bus is suspended
@@ -271,13 +185,13 @@ void tud_umount_cb(void)
 void tud_suspend_cb(bool remote_wakeup_en)
 {
     (void) remote_wakeup_en;
-    blink_interval_ms = BLINK_SUSPENDED;
+    led_mode = SUSPENDED;
 }
 
 // Invoked when usb bus is resumed
 void tud_resume_cb(void)
 {
-    blink_interval_ms = BLINK_MOUNTED;
+    led_mode = MOUNTED;
 }
 
 // Invoked when sent REPORT successfully to host
