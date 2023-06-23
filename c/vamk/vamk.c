@@ -1,3 +1,5 @@
+// Imports
+
 // Pico SDK imports
 #include <stdio.h>
 #include <string.h>
@@ -16,6 +18,7 @@
 // Project Imports
 #include "vamk_config.h"
 #include "vamk_constants.h"
+#include "vamk_types.h"
 
 // GPIO defines
 // Example uses GPIO 2
@@ -28,16 +31,8 @@
 #define I2C_SDA 8
 #define I2C_SCL 9
 
-// Enums
-typedef enum led_blink_pattern_ms
-{
-    NOT_MOUNTED = 250,
-    MOUNTED = 1000,
-    SUSPENDED = 2500,
-} led_pattern_t;
-
 // Global Variables
-static led_pattern_t led_mode = NOT_MOUNTED;
+static led_blink_pattern_t _led_mode = NOT_MOUNTED;
 
 // Function Declarations
 static void led_blinking_task(void);
@@ -151,14 +146,14 @@ static void led_blinking_task(void)
     static bool led_state = false;
 
     // LED blink is disabled if set to zero.
-    if (!led_mode)
+    if (!_led_mode)
         return;
 
     // Blink every interval ms
-    if (board_millis() - start_ms < led_mode)
+    if (board_millis() - start_ms < _led_mode)
         return;
 
-    start_ms += led_mode;
+    start_ms += _led_mode;
 
     board_led_write(led_state);
     // Toggle LED state
@@ -170,13 +165,13 @@ static void led_blinking_task(void)
 // Invoked when device is mounted
 void tud_mount_cb(void)
 {
-    led_mode = MOUNTED;
+    _led_mode = MOUNTED;
 }
 
 // Invoked when device is unmounted
 void tud_umount_cb(void)
 {
-    led_mode = NOT_MOUNTED;
+    _led_mode = NOT_MOUNTED;
 }
 
 // Invoked when usb bus is suspended
@@ -185,13 +180,13 @@ void tud_umount_cb(void)
 void tud_suspend_cb(bool remote_wakeup_en)
 {
     (void) remote_wakeup_en;
-    led_mode = SUSPENDED;
+    _led_mode = SUSPENDED;
 }
 
 // Invoked when usb bus is resumed
 void tud_resume_cb(void)
 {
-    led_mode = MOUNTED;
+    _led_mode = MOUNTED;
 }
 
 // Invoked when sent REPORT successfully to host
