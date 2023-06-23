@@ -1,4 +1,4 @@
-// Imports
+///Imports
 
 // Pico SDK imports
 #include <stdio.h>
@@ -31,10 +31,10 @@
 #define I2C_SDA 8
 #define I2C_SCL 9
 
-// Global Variables
+///Global Variables
 static led_blink_pattern_t _led_mode = NOT_MOUNTED;
 
-// Function Declarations
+///Function Declarations
 static void led_blinking_task(void);
 static void hid_task(void);
 
@@ -44,7 +44,7 @@ static void hid_task(void);
 //    return 0;
 //}
 
-// ENTRY POINT
+///ENTRY POINT
 int main(void)
 {
     // Required pico utils initialization call.
@@ -86,7 +86,7 @@ int main(void)
     return 0;
 }
 
-// Static (Private/Local) Functions
+///Static (Private/Local) Functions
 static void send_hid_report(uint8_t report_id, uint32_t btn)
 {
     (void) report_id;
@@ -160,6 +160,7 @@ static void led_blinking_task(void)
     led_state = 1 - led_state;
 }
 
+///Public Functions
 
 // BEGIN TinyUSB Device Callbacks -----------------------------------------+
 // Invoked when device is mounted
