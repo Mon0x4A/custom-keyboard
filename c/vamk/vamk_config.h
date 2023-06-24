@@ -1,5 +1,8 @@
+// Protect from multiple includes
+#ifndef VAMK_CONFIG_H
+#define VAMK_CONFIG_H
+
 //Imports
-#include <stdbool.h>
 
 //Serial Config
 #define SERIAL_BAUD_RATE 9600
@@ -17,11 +20,13 @@
 #define OLED_SCREEN_HEIGHT 64
 
 //Keyboard Config
-const bool SWITCH_TESTING_MODE = false;
-const bool ENABLE_SERIAL_LOGGING = false;
-const bool ENABLE_KEYBOARD_COMMANDS = false;
+#define SWITCH_TESTING_MODE 0
+#define ENABLE_SERIAL_LOGGING 0
+#define ENABLE_KEYBOARD_COMMANDS 0
 
-const bool IS_PRIMARY_KEYBOARD_SIDE = true;
+#define IS_PRIMARY_KEYBOARD_SIDE 1
 
-const int COLUMN_COUNT = 7;
-const int ROW_COUNT = 3;
+#define COLUMN_COUNT 7
+#define ROW_COUNT 3
+
+#endif

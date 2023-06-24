@@ -18,6 +18,7 @@
 // Project Imports
 #include "vamk_config.h"
 #include "vamk_types.h"
+#include "vamk_switch_state.h"
 
 // GPIO defines
 // Example uses GPIO 2
@@ -80,6 +81,7 @@ int main(void)
         led_blinking_task();
         // Update keyboard state.
         hid_task();
+        switch_state_task();
     }
 
     return 0;
