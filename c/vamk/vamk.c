@@ -17,7 +17,6 @@
 
 // Project Imports
 #include "vamk_config.h"
-#include "vamk_constants.h"
 #include "vamk_types.h"
 
 // GPIO defines
