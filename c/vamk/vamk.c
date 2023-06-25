@@ -55,6 +55,8 @@ int main(void)
     board_init();
     // TinyUSB required initialization call.
     tusb_init();
+    // Physical swtich logic initialization call.
+    switch_state_init();
 
     //// GPIO initialisation.
     //// We will make this GPIO an input, and pull it up by default
@@ -81,9 +83,10 @@ int main(void)
 
         // Update LED state.
         led_blinking_task();
-        // Update keyboard state.
+        // Update reported keyboard state.
         hid_task();
 
+        // Update phyiscal switch state.
         switch_state_task();
     }
 
