@@ -30,6 +30,8 @@ add_executable(vamk vamk.c )
 target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/vamk.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_switch_state.c
+        ${CMAKE_CURRENT_LIST_DIR}/vamk_press_handler.c
+        ${CMAKE_CURRENT_LIST_DIR}/vamk_release_handler.c
         # Seems to be required to get the TinyUSB binaries to use local config
         ${CMAKE_CURRENT_LIST_DIR}/usb_descriptors.c
         )

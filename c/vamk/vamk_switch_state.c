@@ -1,5 +1,3 @@
-// Protect from multiple includes
-
 ///Imports
 #include <stddef.h>
 #include "vamk_config.h"

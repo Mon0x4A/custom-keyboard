@@ -19,6 +19,7 @@
 #include "vamk_config.h"
 #include "vamk_types.h"
 #include "vamk_switch_state.h"
+#include "vamk_key_state.h"
 
 // GPIO defines
 // Example uses GPIO 2
@@ -81,6 +82,7 @@ int main(void)
         led_blinking_task();
         // Update keyboard state.
         hid_task();
+
         switch_state_task();
     }
 
@@ -98,14 +100,28 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
 
     // Avoid sending multiple consecutive reports.
     static bool has_reported_keys = false;
+    static bool prev_reported_a = false;
 
     if (btn && !has_reported_keys)
     {
-        uint8_t keycode[6] = { 0 };
+        uint8_t keycode[6] = {0};
         keycode[0] = HID_KEY_A;
         printf("Attempting to press \'a\'\n");
         tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
         has_reported_keys = true;
+        prev_reported_a = true;
+    }
+    else if (btn && has_reported_keys && prev_reported_a)
+    {
+        uint8_t keycode[6] = {0};
+        keycode[1] = HID_KEY_A;
+        keycode[0] = HID_KEY_B;
+        printf("Attempting to press \'b\' as well...\n");
+        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
+        prev_reported_a = false;
+    }
+    else if (!btn && prev_reported_a)
+    {
     }
     else if (!btn && has_reported_keys)
     {

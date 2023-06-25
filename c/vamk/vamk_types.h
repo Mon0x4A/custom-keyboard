@@ -3,6 +3,7 @@
 #define VAMK_TYPES_H
 
 ///Imports
+#include "pico/stdlib.h"
 
 ///Enums
 typedef enum led_blink_pattern_ms
@@ -13,8 +14,8 @@ typedef enum led_blink_pattern_ms
 } led_blink_pattern_t;
 
 ///Function Pointers
-typedef void (*switch_pressed_callback_t)(int row, int col);
-typedef void (*switch_released_callback_t)(int row, int col);
+typedef void (*switch_pressed_callback_t)(uint16_t row, uint16_t col);
+typedef void (*switch_released_callback_t)(uint16_t row, uint16_t col);
 
 ///Structures
 
