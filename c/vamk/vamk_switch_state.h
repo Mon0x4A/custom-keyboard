@@ -3,6 +3,7 @@
 #define VAMK_SWITCH_STATE_H
 
 ///Imports
+#include "vamk_types.h"
 
 ///Function Declarations
 void switch_state_init(void);

@@ -1,6 +1,7 @@
 ///Imports
 #include "pico/stdlib.h"
 #include "vamk_config.h"
+#include "vamk_release_handler.h"
 
 ///Global Variables
 

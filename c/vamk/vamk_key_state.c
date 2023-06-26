@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "pico/stdlib.h"
 #include "vamk_config.h"
+#include "vamk_key_state.h"
 #include "vamk_types.h"
 
 ///Global Variables
