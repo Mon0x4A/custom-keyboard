@@ -4,6 +4,7 @@
 
 //Imports
 #include "pico/stdlib.h"
+#include "tusb.h"
 
 //Serial Config
 #define SERIAL_BAUD_RATE 9600
@@ -14,6 +15,7 @@
 #define PRIMARY_KEYBOARD_ADDRESS 0x2A
 #define SECONDARY_KEYBOARD_ADDRESS 0x45
 
+//TODO make these addresses condition on which side is primary?
 #define OLED_PRIMARY_SCREEN_ADDRESS 0x3C
 #define OLED_SECONDARY_SCREEN_ADDRESS 0x3D
 
@@ -25,10 +27,10 @@
 #define SWITCH_NOT_PRESSED_VALUE 1
 
 #define KC_NULL 0x00
-#define KC_LM1 0x01 //(STX) //Repurposing obsolete ascii codes for our custom codes
+#define KC_LM1 0x01 //(STX) //TODO these wont work with TINYUSB, however there is a 'reserved' block that could be used.
 #define KC_LM2 0x02 //(ETX)
 #define KC_REPEAT 0x07 //(BEL)
-#define KEY_PRINT_SCREEN 0xCE //TODO Unclear if this will work with TinyUSB...
+#define KEY_PRINT_SCREEN 0xCE //TODO Unclear if this will work with TinyUSB... (it won't)
 
 #define SWITCH_POLLING_INTERVAL_MS 1000
 
@@ -57,4 +59,62 @@ static const uint8_t COL_6_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 6  : 9;
 static const uint8_t ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
 static const uint8_t COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN };
 
+static const uint8_t L0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { HID_KEY_CONTROL_LEFT, 'q', 'w', 'e', 'r', 't', KC_LM1 },
+    { KC_NULL,              'a', 's', 'd', 'f', 'g', KC_LM2 },
+    { KC_NULL,              'z', 'x', 'c', 'v', 'b', HID_KEY_SHIFT_LEFT },
+};
+
+//TODO need another array dimension or parallel that determines if we are already
+//a keycode or if the ascii translation needs to happen.
+
+static const uint8_t L1_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { HID_KEY_ALT_LEFT, HID_KEY_F1, HID_KEY_F4, HID_KEY_F7, HID_KEY_F10, KC_NULL, KC_LM1 },
+    { KC_NULL,          HID_KEY_F2, HID_KEY_F5, HID_KEY_F8, HID_KEY_F11, KC_NULL, KC_LM2 },
+    { KC_NULL,          HID_KEY_F3, HID_KEY_F6, HID_KEY_F9, HID_KEY_F12, KC_NULL, HID_KEY_SHIFT_LEFT },
+};
+
+static const uint8_t L2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { HID_KEY_GUI_LEFT, '`', '0', '1', '2', '3', KC_LM1 },
+    { KC_NULL,          '@', '$', '4', '5', '6', KC_LM2 },
+    { KC_NULL,          '<', '>', '7', '8', '9', HID_KEY_SHIFT_RIGHT },
+};
+
+//static const uint8_t L_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
+//{
+//    { HID_KEY_ESC,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_TAB },
+//    { KC_NULL,      KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_SPACE },
+//    { KC_NULL,      KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+//};
+
+static const uint8_t R0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KC_LM1,              'y', 'u', 'i', 'o', 'p', HID_KEY_CONTROL_RIGHT },
+    { KC_LM2,              'h', 'j', 'k', 'l', ';', KC_NULL },
+    { HID_KEY_SHIFT_RIGHT, 'n', 'm', ',', '.', '/', KC_NULL },
+};
+
+static const uint8_t R1_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KC_LM1,              HID_KEY_HOME,         HID_KEY_PAGE_DOWN,  HID_KEY_PAGE_UP,  HID_KEY_END,         HID_KEY_DELETE, HID_KEY_ALT_RIGHT },
+    { KC_LM2,              HID_KEY_ARROW_LEFT,   HID_KEY_ARROW_DOWN, HID_KEY_ARROW_UP, HID_KEY_ARROW_RIGHT, KC_NULL,        KC_NULL },
+    { HID_KEY_SHIFT_RIGHT, HID_KEY_PRINT_SCREEN, KC_NULL,            KC_NULL,          KC_NULL,             KC_NULL,        KC_NULL },
+};
+
+static const uint8_t R2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KC_LM1,              '&', '*', '(', ')', '=',  HID_KEY_GUI_RIGHT },
+    { KC_LM2,              '-', '_', '{', '}', '\'', KC_NULL },
+    { HID_KEY_SHIFT_RIGHT, '+', '!', '[', ']', '\\', KC_NULL },
+};
+
+//static const unsigned uint8_t R_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
+//{
+//    { KC_REPEAT,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_RETURN },
+//    { HID_KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+//    { KC_NULL,           KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+//};
 #endif
