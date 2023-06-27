@@ -6,9 +6,11 @@
 #include "vamk_types.h"
 
 ///Global Variables
+
+///Static Variables
 static uint8_t _current_layer = 0;
 
-///Function Declarations
+///Private Declarations
 
 ///Static (Private/Local) Functions
 

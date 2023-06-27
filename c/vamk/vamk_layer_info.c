@@ -6,13 +6,13 @@
 #include "vamk_types.h"
 #include "tusb.h"
 
-///Global Variables
+///Static Variables
 // TinyUSB provided lookup of ascii keycodes (literal chars) to the HID_* codes
 // The [128][1] array is the char byte keys and the [128][0] array is a bool if shift
 // should be applied to print it.
-static const uint8_t _ASCII_CHAR_TO_HID_KEYCODE [128][2] =  { HID_ASCII_TO_KEYCODE };
+static const uint8_t _ASCII_CHAR_TO_HID_KEYCODE [128][2] = { HID_ASCII_TO_KEYCODE };
 
-///Private Structure Declarations
+///Private Declarations
 typedef struct layer_index_value_container
 {
     uint8_t layer_index_value;
@@ -27,36 +27,55 @@ static layer_index_value_container_t get_layer_value_at(
     layer_index_value_container_t index_value_container;
 
     const uint8_t (*layer_array_ptr)[ROW_COUNT][COLUMN_COUNT] = NULL;
+    const bool (*is_ascii_array_ptr)[ROW_COUNT][COLUMN_COUNT] = NULL;
     switch (layer_index)
     {
         case 0:
             if (keyboard_side == LEFT_SIDE)
+            {
                 layer_array_ptr = &L0_BASE_KEYCODES;
+                is_ascii_array_ptr = &L0_IS_ASCII;
+            }
             else
+            {
                 layer_array_ptr = &R0_BASE_KEYCODES;
+                is_ascii_array_ptr = &R0_IS_ASCII;
+            }
             break;
         case 1:
             if (keyboard_side == LEFT_SIDE)
+            {
                 layer_array_ptr = &L1_BASE_KEYCODES;
+                is_ascii_array_ptr = &L1_IS_ASCII;
+            }
             else
+            {
                 layer_array_ptr = &R1_BASE_KEYCODES;
+                is_ascii_array_ptr = &R1_IS_ASCII;
+            }
             break;
         case 2:
             if (keyboard_side == LEFT_SIDE)
+            {
                 layer_array_ptr = &L2_BASE_KEYCODES;
+                is_ascii_array_ptr = &L2_IS_ASCII;
+            }
             else
+            {
                 layer_array_ptr = &R2_BASE_KEYCODES;
+                is_ascii_array_ptr = &R2_IS_ASCII;
+            }
             break;
     }
 
-    if (layer_array_ptr == NULL)
+    if (layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
     {
         index_value_container.has_valid_contents = false;
         return index_value_container;
     }
 
     index_value_container.layer_index_value = (*layer_array_ptr)[row][col];
-    //TODO get shift flag
+    index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
     index_value_container.has_valid_contents = true;
 }
 
