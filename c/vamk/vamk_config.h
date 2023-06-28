@@ -26,6 +26,8 @@
 #define SWITCH_PRESSED_VALUE 0
 #define SWITCH_NOT_PRESSED_VALUE 1
 
+#define HID_REPORT_KEYCODE_ARRAY_LENGTH 6
+
 #define KC_NULL 0x00 //Same as HID_KEY_NONE
 
 #define KC_LM0 0xA5 //Layer keycodes. These are reserved codes
