@@ -27,7 +27,7 @@ typedef void (*switch_released_callback_t)(uint16_t row, uint16_t col);
 struct key_report_t
 {
     uint8_t keycodes[6];
-    uint8_t modfiers;
+    uint8_t modifier;
 };
 
 struct hid_keycode_container_t

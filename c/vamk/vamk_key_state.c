@@ -6,9 +6,7 @@
 #include "vamk_layer_info.h"
 #include "vamk_types.h"
 
-///Global Variables
-
-///Static Variables
+///Static Global Variables
 static uint8_t _current_hid_report_codes[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 static uint8_t _current_report_code_quantity = 0;
 static bool _code_has_single_report_lifetime[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
@@ -16,9 +14,7 @@ static uint8_t _current_modifier = 0;
 
 static uint8_t _current_layer = 0;
 
-///Private Declarations
-
-///Static (Private/Local) Functions
+///Static Functions
 static bool contains_hid_report_code(uint8_t hid_keycode)
 {
     for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
@@ -47,6 +43,8 @@ static void insert_hid_report_code(struct hid_keycode_container_t keycode_contai
             _current_report_code_quantity++;
         }
     }
+
+    _current_modifier = keycode_container.modifier;
 }
 
 static void remove_hid_report_code(uint8_t hid_keycode)
@@ -60,11 +58,17 @@ static void remove_hid_report_code(uint8_t hid_keycode)
             _current_report_code_quantity--;
         }
     }
+
+    _current_modifier = 0;
 }
 
-///Public Functions
+///Global Functions
 struct key_report_t key_state_build_hid_report()
 {
+    struct key_report_t key_report_to_send;
+    for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
+        key_report_to_send.keycodes[i] = _current_hid_report_codes[i];
+    key_report_to_send.modifier = _current_modifier;
 }
 
 uint8_t key_state_get_current_layer()
@@ -74,8 +78,10 @@ uint8_t key_state_get_current_layer()
 
 void key_state_press(struct hid_keycode_container_t keycode_container, bool release_on_next_report)
 {
+    insert_hid_report_code(keycode_container, release_on_next_report);
 }
 
 void key_state_release(uint8_t hid_keycode)
 {
+    remove_hid_report_code(hid_keycode);
 }
