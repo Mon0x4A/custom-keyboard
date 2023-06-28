@@ -24,17 +24,17 @@ typedef void (*switch_pressed_callback_t)(uint16_t row, uint16_t col);
 typedef void (*switch_released_callback_t)(uint16_t row, uint16_t col);
 
 ///Structures
-typedef struct key_report
+struct key_report_t
 {
     uint8_t keycodes[6];
     uint8_t modfiers;
-} key_report_t;
+};
 
-typedef struct hid_keycode_container
+struct hid_keycode_container_t
 {
     uint8_t hid_keycode;
     uint8_t modifier;
     bool has_valid_contents;
-} hid_keycode_container_t;
+};
 
 #endif

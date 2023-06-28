@@ -13,18 +13,18 @@
 static const uint8_t _ASCII_CHAR_TO_HID_KEYCODE [128][2] = { HID_ASCII_TO_KEYCODE };
 
 ///Private Declarations
-typedef struct layer_index_value_container
+struct layer_index_value_container_t
 {
     uint8_t layer_index_value;
     bool needs_ascii_translation;
     bool has_valid_contents;
-} layer_index_value_container_t;
+};
 
 ///Static (Private) Functions
-static layer_index_value_container_t get_layer_value_at(
+static struct layer_index_value_container_t get_layer_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    layer_index_value_container_t index_value_container;
+    struct layer_index_value_container_t index_value_container;
 
     const uint8_t (*layer_array_ptr)[ROW_COUNT][COLUMN_COUNT] = NULL;
     const bool (*is_ascii_array_ptr)[ROW_COUNT][COLUMN_COUNT] = NULL;
@@ -80,12 +80,12 @@ static layer_index_value_container_t get_layer_value_at(
 }
 
 ///Public Functions
-hid_keycode_container_t layer_info_get_keycode_at(
+struct hid_keycode_container_t layer_info_get_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    hid_keycode_container_t code_container;
+    struct hid_keycode_container_t code_container;
 
-    layer_index_value_container_t layer_value = get_layer_value_at(row, col, layer_index, keyboard_side);
+    struct layer_index_value_container_t layer_value = get_layer_value_at(row, col, layer_index, keyboard_side);
 
     if (!layer_value.has_valid_contents)
     {
