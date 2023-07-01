@@ -81,7 +81,7 @@ int main(void)
         // Update LED state.
         led_blinking_task();
         // Update reported keyboard state.
-        //hid_task();
+        hid_task();
 
         // Update phyiscal switch state.
         switch_state_task();
@@ -100,37 +100,40 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
         return;
 
     // Avoid sending multiple consecutive reports.
-    static bool has_reported_keys = false;
-    static bool prev_reported_a = false;
+    //static bool has_reported_keys = false;
+    //static bool prev_reported_a = false;
 
-    if (btn && !has_reported_keys)
-    {
-        uint8_t keycode[6] = {0};
-        keycode[0] = HID_KEY_A;
-        printf("Attempting to press \'a\'\n");
-        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-        has_reported_keys = true;
-        prev_reported_a = true;
-    }
-    else if (btn && has_reported_keys && prev_reported_a)
-    {
-        uint8_t keycode[6] = {0};
-        keycode[1] = HID_KEY_A;
-        keycode[0] = HID_KEY_B;
-        printf("Attempting to press \'b\' as well...\n");
-        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-        prev_reported_a = false;
-    }
-    else if (!btn && prev_reported_a)
-    {
-    }
-    else if (!btn && has_reported_keys)
-    {
-        // Send empty key report if we previously had a key pressed.
-        printf("Attempting to release \'a\'\n");
-        tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
-        has_reported_keys = false;
-    }
+    //if (btn && !has_reported_keys)
+    //{
+    //    uint8_t keycode[6] = {0};
+    //    keycode[0] = HID_KEY_A;
+    //    printf("Attempting to press \'a\'\n");
+    //    tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
+    //    has_reported_keys = true;
+    //    prev_reported_a = true;
+    //}
+    //else if (btn && has_reported_keys && prev_reported_a)
+    //{
+    //    uint8_t keycode[6] = {0};
+    //    keycode[1] = HID_KEY_A;
+    //    keycode[0] = HID_KEY_B;
+    //    printf("Attempting to press \'b\' as well...\n");
+    //    tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
+    //    prev_reported_a = false;
+    //}
+    //else if (!btn && prev_reported_a)
+    //{
+    //}
+    //else if (!btn && has_reported_keys)
+    //{
+    //    // Send empty key report if we previously had a key pressed.
+    //    printf("Attempting to release \'a\'\n");
+    //    tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
+    //    has_reported_keys = false;
+    //}
+    struct key_report_t keyboard_report = key_state_build_hid_report();
+    tud_hid_keyboard_report(
+        REPORT_ID_KEYBOARD, keyboard_report.modifier, keyboard_report.keycodes);
 }
 
 static void hid_task(void)

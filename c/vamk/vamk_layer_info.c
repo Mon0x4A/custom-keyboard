@@ -104,6 +104,8 @@ struct hid_keycode_container_t layer_info_get_keycode_at(
         // Determine if we need to apply shift to correctly print this character.
         if (_ASCII_CHAR_TO_HID_KEYCODE[layer_value.layer_index_value][0])
             code_container.modifier = KEYBOARD_MODIFIER_LEFTSHIFT;
+        else
+            code_container.modifier = 0;
 
         // Translate the ascii char into the HID_* keycode we need.
         code_container.hid_keycode

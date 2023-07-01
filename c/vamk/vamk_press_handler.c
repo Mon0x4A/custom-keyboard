@@ -29,6 +29,9 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col)
         //TODO side logic
         layer_info_get_keycode_at(row, col, current_layer, LEFT_SIDE);
 
+    if (!code_container.has_valid_contents)
+        return;
+
     //TODO single tap action handling
     //TODO double tap action handling
     //TODO else notify chord action performed

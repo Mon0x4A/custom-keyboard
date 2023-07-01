@@ -27,8 +27,8 @@ static bool contains_hid_report_code(uint8_t hid_keycode)
 
 static void insert_hid_report_code(struct hid_keycode_container_t keycode_container, bool release_on_next_report)
 {
-    // Check to make sure we are not at the maximum report key quanitity.
-    if (_current_report_code_quantity >= HID_REPORT_KEYCODE_ARRAY_LENGTH)
+    // If this did not initialize correctly, something has gone wrong.
+    if (!keycode_container.has_valid_contents)
         return;
 
     // Check to make sure it's not already in the report.
@@ -42,11 +42,11 @@ static void insert_hid_report_code(struct hid_keycode_container_t keycode_contai
         {
             _current_hid_report_codes[i] = keycode_container.hid_keycode;
             _code_has_single_report_lifetime[i] = release_on_next_report;
-            _current_report_code_quantity++;
+            _current_modifier = keycode_container.modifier;
+            break;
         }
     }
 
-    _current_modifier = keycode_container.modifier;
 }
 
 static void remove_hid_report_code(uint8_t hid_keycode)
@@ -57,11 +57,10 @@ static void remove_hid_report_code(uint8_t hid_keycode)
         {
             _current_hid_report_codes[i] = 0;
             _code_has_single_report_lifetime[i] = false;
-            _current_report_code_quantity--;
+            _current_modifier = 0;
         }
     }
 
-    _current_modifier = 0;
 }
 
 ///Global Functions
@@ -71,6 +70,8 @@ struct key_report_t key_state_build_hid_report(void)
     for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
         key_report_to_send.keycodes[i] = _current_hid_report_codes[i];
     key_report_to_send.modifier = _current_modifier;
+
+    return key_report_to_send;
 }
 
 uint8_t key_state_get_current_layer_index(void)
