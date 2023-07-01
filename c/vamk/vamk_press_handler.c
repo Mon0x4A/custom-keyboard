@@ -6,13 +6,20 @@
 #include "vamk_layer_info.h"
 #include "vamk_press_handler.h"
 
-//TODO here
-
 ///Global Variables
 
 ///Function Declarations
 
 ///Static (Private) Functions
+//#include "hardware/timer.h"
+////TODO this timer code could be very useful for key events
+//// Timer example code - This example fires off the callback after 2000ms
+//add_alarm_in_ms(2000, alarm_callback, NULL, false);
+//// And the callback:
+//int64_t alarm_callback(alarm_id_t id, void *user_data) {
+//    // Put your timeout handler code in here
+//    return 0;
+//}
 
 ///Public Functions
 void press_handler_on_switch_press(uint16_t row, uint16_t col)
@@ -34,12 +41,12 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col)
         case KC_LM1:
             should_report_code = false;
             key_state_set_current_layer_index(1);
-            printf("Entering layer 1");
+            printf("Entering layer 1\n");
             break;
         case KC_LM2:
             should_report_code = false;
             key_state_set_current_layer_index(2);
-            printf("Entering layer 2");
+            printf("Entering layer 2\n");
             break;
         case KC_NULL:
         //HID_KEY_NONE as well
@@ -65,6 +72,11 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col)
     if (ENABLE_KEYBOARD_COMMANDS && should_report_code)
     {
         key_state_press(code_container, false);
+    }
+
+    if (ENABLE_SERIAL_LOGGING && should_report_code)
+    {
+        printf("Keycode value pressed: %u\n", code_container.hid_keycode);
     }
 }
 

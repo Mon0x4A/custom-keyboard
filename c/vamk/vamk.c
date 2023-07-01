@@ -7,7 +7,6 @@
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
 #include "hardware/i2c.h"
-#include "hardware/timer.h"
 
 // TinyUSB imports
 #include "tusb.h"
@@ -18,9 +17,11 @@
 
 // Project Imports
 #include "vamk_config.h"
-#include "vamk_types.h"
-#include "vamk_switch_state.h"
 #include "vamk_key_state.h"
+#include "vamk_press_handler.h"
+#include "vamk_release_handler.h"
+#include "vamk_switch_state.h"
+#include "vamk_types.h"
 
 // GPIO defines
 // Example uses GPIO 2
@@ -33,18 +34,12 @@
 #define I2C_SDA 8
 #define I2C_SCL 9
 
-///Global Variables
+///Static Variables
 static led_blink_pattern_t _led_mode = NOT_MOUNTED;
 
 ///Function Declarations
 static void led_blinking_task(void);
 static void hid_task(void);
-
-////TODO this timer code could be very useful for key events
-//int64_t alarm_callback(alarm_id_t id, void *user_data) {
-//    // Put your timeout handler code in here
-//    return 0;
-//}
 
 ///ENTRY POINT
 int main(void)
@@ -57,6 +52,10 @@ int main(void)
     tusb_init();
     // Physical swtich logic initialization call.
     switch_state_init();
+
+    sleep_ms(100);
+    switch_state_set_pressed_callback(press_handler_on_switch_press);
+    switch_state_set_released_callback(release_handler_on_switch_release);
 
     //// GPIO initialisation.
     //// We will make this GPIO an input, and pull it up by default
@@ -72,8 +71,6 @@ int main(void)
     //gpio_pull_up(I2C_SDA);
     //gpio_pull_up(I2C_SCL);
 
-    //// Timer example code - This example fires off the callback after 2000ms
-    //add_alarm_in_ms(2000, alarm_callback, NULL, false);
 
     // Main run loop
     while (1)
@@ -84,7 +81,7 @@ int main(void)
         // Update LED state.
         led_blinking_task();
         // Update reported keyboard state.
-        hid_task();
+        //hid_task();
 
         // Update phyiscal switch state.
         switch_state_task();

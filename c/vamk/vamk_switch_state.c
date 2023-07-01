@@ -61,7 +61,8 @@ static void fire_callback_events(void)
             uint8_t switchPrevPress = _switchMatrixPrev[i][j];
             if (switchCurrPress != switchPrevPress)
             {
-                if (switchCurrPress && !switchPrevPress)
+                if (switchCurrPress == SWITCH_PRESSED_VALUE && 
+                    switchPrevPress == SWITCH_NOT_PRESSED_VALUE)
                 {
                     // We started pressing a key.
                     if (_pressed_callback != NULL)
@@ -114,9 +115,10 @@ void switch_state_init(void)
 
 void switch_state_task(void)
 {
-    update_prev_matrix();
     read_matrix_state();
     fire_callback_events();
+
+    update_prev_matrix();
 
     if (SWITCH_TESTING_MODE)
     {
