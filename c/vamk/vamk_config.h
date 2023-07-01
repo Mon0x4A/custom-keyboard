@@ -56,6 +56,8 @@
 #define COLUMN_COUNT 7
 #define ROW_COUNT 3
 
+#define LAYER_COUNT 3
+
 static const uint8_t ROW_0_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 20 : 18;
 static const uint8_t ROW_1_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 19 : 19;
 static const uint8_t ROW_2_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 18 : 20;

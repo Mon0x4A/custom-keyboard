@@ -19,6 +19,7 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col)
 {
     uint8_t current_layer = key_state_get_current_layer_index();
     struct hid_keycode_container_t code_container =
+        //TODO side logic
         layer_info_get_keycode_at(row, col, current_layer, LEFT_SIDE);
 
     //TODO single tap action handling
