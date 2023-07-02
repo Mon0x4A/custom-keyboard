@@ -67,13 +67,13 @@ static void fire_callback_events(void)
                 {
                     // We started pressing a key.
                     if (_pressed_callback != NULL)
-                        _pressed_callback(i, j);
+                        _pressed_callback(i, j, CURRENT_KEYBOARD_SIDE);
                 }
                 else
                 {
                     // We released a key.
                     if (_released_callback != NULL)
-                        _released_callback(i, j);
+                        _released_callback(i, j, CURRENT_KEYBOARD_SIDE);
                 }
             }
         }

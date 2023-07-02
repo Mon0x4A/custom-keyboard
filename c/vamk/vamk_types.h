@@ -20,8 +20,8 @@ typedef enum keyboard_side
 } keyboard_side_t;
 
 ///Function Pointers
-typedef void (*switch_pressed_callback_t)(uint16_t row, uint16_t col);
-typedef void (*switch_released_callback_t)(uint16_t row, uint16_t col);
+typedef void (*switch_pressed_callback_t)(uint16_t row, uint16_t col, keyboard_side_t keyboard_side);
+typedef void (*switch_released_callback_t)(uint16_t row, uint16_t col, keyboard_side_t keyboard_side);
 
 ///Structures
 struct key_report_t

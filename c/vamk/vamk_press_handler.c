@@ -5,6 +5,7 @@
 #include "vamk_key_state.h"
 #include "vamk_layer_info.h"
 #include "vamk_press_handler.h"
+#include "vamk_types.h"
 
 ///Global Variables
 
@@ -22,12 +23,11 @@
 //}
 
 ///Public Functions
-void press_handler_on_switch_press(uint16_t row, uint16_t col)
+void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
 {
     uint8_t current_layer = key_state_get_current_layer_index();
     struct hid_keycode_container_t code_container =
-        //TODO side logic
-        layer_info_get_keycode_at(row, col, current_layer, LEFT_SIDE);
+        layer_info_get_keycode_at(row, col, current_layer, keyboard_side);
 
     if (!code_container.has_valid_contents)
         return;
