@@ -29,6 +29,7 @@ add_executable(vamk vamk.c )
 
 target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/vamk.c
+        ${CMAKE_CURRENT_LIST_DIR}/vamk_i2c_switch_state_transmitter.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_key_state.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_layer_info.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_peripheral_switch_state.c
@@ -48,6 +49,7 @@ pico_enable_stdio_usb(vamk 0)
 # Add the standard library to the build
 target_link_libraries(vamk
         pico_stdlib
+        pico_i2c_slave
         )
 
 # Add the standard include files to the build
