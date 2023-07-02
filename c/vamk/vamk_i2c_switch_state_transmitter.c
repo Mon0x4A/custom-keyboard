@@ -48,12 +48,12 @@ void i2c_switch_state_request_handler(i2c_inst_t *i2c, i2c_slave_event_t event)
     }
 }
 
-void i2c_switch_state_on_switch_pressed(uint8_t row, uint8_t col)
+void i2c_switch_state_on_switch_pressed(uint16_t row, uint16_t col)
 {
     _transmission_switch_matrix[row][col] = 1;
 }
 
-void i2c_switch_state_on_switch_released(uint8_t row, uint8_t col)
+void i2c_switch_state_on_switch_released(uint16_t row, uint16_t col)
 {
     _transmission_switch_matrix[row][col] = 0;
 }

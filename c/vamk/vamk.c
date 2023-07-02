@@ -17,16 +17,13 @@
 
 // Project Imports
 #include "vamk_config.h"
+#include "vamk_i2c_switch_state_transmitter.h"
 #include "vamk_key_state.h"
+#include "vamk_peripheral_switch_state.h"
 #include "vamk_press_handler.h"
 #include "vamk_release_handler.h"
 #include "vamk_switch_state.h"
 #include "vamk_types.h"
-
-// GPIO defines
-// Example uses GPIO 2
-#define GPIO 2
-
 
 ///Static Variables
 static led_blink_pattern_t _led_mode = NOT_MOUNTED;
@@ -51,7 +48,6 @@ int main(void)
     {
         // TODO Set up I2C as controller
 
-        sleep_ms(100);
         switch_state_set_pressed_callback(press_handler_on_switch_press);
         switch_state_set_released_callback(release_handler_on_switch_release);
 
@@ -72,30 +68,25 @@ int main(void)
     }
     else
     {
-        // TODO Set up I2C as peripheral
+        // Set up I2C as peripheral
+        i2c_switch_state_transmitter_init();
+
+        switch_state_set_pressed_callback(i2c_switch_state_on_switch_pressed);
+        switch_state_set_released_callback(i2c_switch_state_on_switch_released);
 
         // Peripheral side run loop
+        bool led_is_on = false;
         while (1)
         {
-            //TODO
+            // Keep our local switch state up to date.
+            switch_state_task();
+
+            sleep_ms(10);
+            // Pulse our LED to show the loop is running.
+            led_is_on = !led_is_on;
+            board_led_write(led_is_on);
         }
     }
-
-    //// GPIO initialisation.
-    //// We will make this GPIO an input, and pull it up by default
-    //gpio_init(GPIO);
-    //gpio_set_dir(GPIO, GPIO_IN);
-    //gpio_pull_up(GPIO);
-
-    //// I2C Initialisation. Using it at 400Khz.
-    //i2c_init(I2C_PORT, 400*1000);
-
-    //gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
-    //gpio_set_function(I2C_SCL, GPIO_FUNC_I2C);
-    //gpio_pull_up(I2C_SDA);
-    //gpio_pull_up(I2C_SCL);
-
-
 
     return 0;
 }
@@ -141,9 +132,38 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
     //    tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
     //    has_reported_keys = false;
     //}
-    struct key_report_t keyboard_report = key_state_build_hid_report();
+
+    static struct key_report_t keyboard_report_prev =
+    {
+        .keycodes = 0,
+        .modifier = 0
+    };
+
+    // Build our new report
+    struct key_report_t keyboard_report_curr = key_state_build_hid_report();
+
+    // Compare current and previously sent report. If we're sending
+    // the same codes, there's no need to report.
+    bool keycodes_differ = false;
+    for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
+    {
+        if (keyboard_report_curr.keycodes[i] !=
+            keyboard_report_prev.keycodes[i])
+        {
+            keycodes_differ = true;
+            break;
+        }
+    }
+
+    if (!keycodes_differ)
+        return;
+
+    // If the reports differ, send the new one.
     tud_hid_keyboard_report(
-        REPORT_ID_KEYBOARD, keyboard_report.modifier, keyboard_report.keycodes);
+        REPORT_ID_KEYBOARD, keyboard_report_curr.modifier, keyboard_report_curr.keycodes);
+
+    // Update the prev report
+    keyboard_report_prev = keyboard_report_curr;
 }
 
 static void hid_task(void)
