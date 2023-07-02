@@ -27,12 +27,6 @@
 // Example uses GPIO 2
 #define GPIO 2
 
-// I2C defines
-// This example will use I2C0 on GPIO8 (SDA) and GPIO9 (SCL) running at 400KHz.
-// Pins can be changed, see the GPIO function select table in the datasheet for information on GPIO assignments
-#define I2C_PORT i2c0
-#define I2C_SDA 8
-#define I2C_SCL 9
 
 ///Static Variables
 static led_blink_pattern_t _led_mode = NOT_MOUNTED;
@@ -53,9 +47,39 @@ int main(void)
     // Physical swtich logic initialization call.
     switch_state_init();
 
-    sleep_ms(100);
-    switch_state_set_pressed_callback(press_handler_on_switch_press);
-    switch_state_set_released_callback(release_handler_on_switch_release);
+    if (IS_PRIMARY_KEYBOARD_SIDE)
+    {
+        // TODO Set up I2C as controller
+
+        sleep_ms(100);
+        switch_state_set_pressed_callback(press_handler_on_switch_press);
+        switch_state_set_released_callback(release_handler_on_switch_release);
+
+        // Primary side run loop
+        while (1)
+        {
+            // TinyUSB device task required to be called every iteration.
+            tud_task();
+
+            // Update LED state.
+            led_blinking_task();
+            // Update reported keyboard state.
+            hid_task();
+
+            // Update phyiscal switch state.
+            switch_state_task();
+        }
+    }
+    else
+    {
+        // TODO Set up I2C as peripheral
+
+        // Peripheral side run loop
+        while (1)
+        {
+            //TODO
+        }
+    }
 
     //// GPIO initialisation.
     //// We will make this GPIO an input, and pull it up by default
@@ -72,20 +96,6 @@ int main(void)
     //gpio_pull_up(I2C_SCL);
 
 
-    // Main run loop
-    while (1)
-    {
-        // TinyUSB device task required to be called every iteration.
-        tud_task();
-
-        // Update LED state.
-        led_blinking_task();
-        // Update reported keyboard state.
-        hid_task();
-
-        // Update phyiscal switch state.
-        switch_state_task();
-    }
 
     return 0;
 }

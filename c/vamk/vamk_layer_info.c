@@ -77,7 +77,7 @@ static struct layer_index_value_container_t get_layer_value_at(
     index_value_container.layer_index_value = (*layer_array_ptr)[row][col];
     index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
     index_value_container.has_valid_contents = true;
-    
+
     return index_value_container;
 }
 

@@ -60,7 +60,6 @@ static void remove_hid_report_code(uint8_t hid_keycode)
             _current_modifier = 0;
         }
     }
-
 }
 
 ///Global Functions

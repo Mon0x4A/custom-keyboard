@@ -4,23 +4,12 @@
 
 //Imports
 #include "pico/stdlib.h"
+#include "vamk_config.h"
+#include "vamk_types.h"
 #include "tusb.h"
 
 //Serial Config
 #define SERIAL_BAUD_RATE 9600
-
-//I2C Config
-#define I2C_CLOCK_SPEED 100*1000 //100Khz
-
-#define PRIMARY_KEYBOARD_ADDRESS 0x2A
-#define SECONDARY_KEYBOARD_ADDRESS 0x45
-
-//TODO make these addresses condition on which side is primary?
-#define OLED_PRIMARY_SCREEN_ADDRESS 0x3C
-#define OLED_SECONDARY_SCREEN_ADDRESS 0x3D
-
-#define OLED_SCREEN_WIDTH 128
-#define OLED_SCREEN_HEIGHT 64
 
 //Keyboard Constants
 #define SWITCH_PRESSED_VALUE 0
@@ -45,30 +34,29 @@
 
 #define SWITCH_POLLING_INTERVAL_MS 1000
 
-//Keyboard Config
 #define SWITCH_TESTING_MODE 0
 #define ENABLE_SERIAL_LOGGING 1
 #define ENABLE_KEYBOARD_COMMANDS 1
-
-#define IS_PRIMARY_KEYBOARD_SIDE 1
-#define IS_LEFT_SIDE 1
 
 #define COLUMN_COUNT 7
 #define ROW_COUNT 3
 
 #define LAYER_COUNT 3
 
-static const uint8_t ROW_0_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 20 : 18;
-static const uint8_t ROW_1_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 19 : 19;
-static const uint8_t ROW_2_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 18 : 20;
+#define IS_PRIMARY_KEYBOARD_SIDE 1
+static const keyboard_side_t CURRENT_KEYBOARD_SIDE = LEFT_SIDE;
 
-static const uint8_t COL_0_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 12 : 12;
-static const uint8_t COL_1_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 8  : 6;
-static const uint8_t COL_2_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 11 : 11;
-static const uint8_t COL_3_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 9  : 7;
-static const uint8_t COL_4_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 10 : 10;
-static const uint8_t COL_5_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 7  : 8;
-static const uint8_t COL_6_PIN = IS_PRIMARY_KEYBOARD_SIDE ? 6  : 9;
+static const uint8_t ROW_0_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 20 : 18;
+static const uint8_t ROW_1_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 19 : 19;
+static const uint8_t ROW_2_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 18 : 20;
+
+static const uint8_t COL_0_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 12 : 12;
+static const uint8_t COL_1_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 8  : 6;
+static const uint8_t COL_2_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 11 : 11;
+static const uint8_t COL_3_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 9  : 7;
+static const uint8_t COL_4_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 10 : 10;
+static const uint8_t COL_5_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 7  : 8;
+static const uint8_t COL_6_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 6  : 9;
 
 static const uint8_t ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
 static const uint8_t COLS[COLUMN_COUNT] = { COL_0_PIN, COL_1_PIN, COL_2_PIN, COL_3_PIN, COL_4_PIN, COL_5_PIN, COL_6_PIN };
@@ -164,4 +152,23 @@ static const bool R2_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
 //    { HID_KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
 //    { KC_NULL,           KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
 //};
+
+//I2C Config
+#define I2C_CLOCK_SPEED 100*1000 //100Khz
+#define I2C_PORT i2c0
+#define I2C_SDA_PIN 4
+#define I2C_SCL_PIN 5
+
+static const uint8_t I2C_TRANSMISSION_SIZE = ROW_COUNT*COLUMN_COUNT;
+
+#define CONTROLLER_KEYBOARD_ADDRESS 0x2A
+#define PERIPHERAL_KEYBOARD_ADDRESS 0x45
+
+//TODO make these addresses condition on which side is primary?
+#define OLED_PRIMARY_SCREEN_ADDRESS 0x3C
+#define OLED_SECONDARY_SCREEN_ADDRESS 0x3D
+
+#define OLED_SCREEN_WIDTH 128
+#define OLED_SCREEN_HEIGHT 64
+
 #endif

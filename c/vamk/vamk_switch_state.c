@@ -7,9 +7,10 @@
 #include "vamk_types.h"
 
 ///Global Variables
-static uint8_t _switchMatrixCurr[ROW_COUNT][COLUMN_COUNT] = {0};
-static uint8_t _switchMatrixPrev[ROW_COUNT][COLUMN_COUNT] = {0};
+static uint8_t _switch_matrix_curr[ROW_COUNT][COLUMN_COUNT] = {0};
+static uint8_t _switch_matrix_prev[ROW_COUNT][COLUMN_COUNT] = {0};
 
+//TODO these need to accept a side and this class will pass the CURRENT_KEYBOARD_SIDE
 static switch_pressed_callback_t _pressed_callback = NULL;
 static switch_released_callback_t _released_callback = NULL;
 
@@ -31,7 +32,7 @@ static void read_matrix_state(void)
             uint8_t colPin = COLS[col];
             gpio_set_dir(colPin, GPIO_IN);
             gpio_pull_up(colPin);
-            _switchMatrixCurr[row][col] = gpio_get(COLS[col]);
+            _switch_matrix_curr[row][col] = gpio_get(COLS[col]);
         }
 
         // Disable the row output.
@@ -46,7 +47,7 @@ static void update_prev_matrix(void)
     {
         for (uint16_t j = 0; j < COLUMN_COUNT; j++)
         {
-            _switchMatrixPrev[i][j] = _switchMatrixCurr[i][j];
+            _switch_matrix_prev[i][j] = _switch_matrix_curr[i][j];
         }
     }
 }
@@ -57,11 +58,11 @@ static void fire_callback_events(void)
     {
         for (uint16_t j = 0; j < COLUMN_COUNT; j++)
         {
-            uint8_t switchCurrPress = _switchMatrixCurr[i][j];
-            uint8_t switchPrevPress = _switchMatrixPrev[i][j];
+            uint8_t switchCurrPress = _switch_matrix_curr[i][j];
+            uint8_t switchPrevPress = _switch_matrix_prev[i][j];
             if (switchCurrPress != switchPrevPress)
             {
-                if (switchCurrPress == SWITCH_PRESSED_VALUE && 
+                if (switchCurrPress == SWITCH_PRESSED_VALUE &&
                     switchPrevPress == SWITCH_NOT_PRESSED_VALUE)
                 {
                     // We started pressing a key.
@@ -86,7 +87,7 @@ static void print_matrix_state(void)
         printf("0%i:", i);
         for (uint16_t j = 0; j < COLUMN_COUNT; j++)
         {
-            printf("%i", _switchMatrixCurr[i][j]);
+            printf("%i", _switch_matrix_curr[i][j]);
         }
         printf("\n");
     }
