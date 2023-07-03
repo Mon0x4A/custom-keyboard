@@ -21,7 +21,7 @@ struct layer_index_value_container_t
 };
 
 ///Static (Private) Functions
-static struct layer_index_value_container_t get_layer_value_at(
+static struct layer_index_value_container_t get_base_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
     struct layer_index_value_container_t index_value_container;
@@ -36,7 +36,7 @@ static struct layer_index_value_container_t get_layer_value_at(
                 layer_array_ptr = &L0_BASE_KEYCODES;
                 is_ascii_array_ptr = &L0_IS_ASCII;
             }
-            else
+            else if (keyboard_side == RIGHT_SIDE)
             {
                 layer_array_ptr = &R0_BASE_KEYCODES;
                 is_ascii_array_ptr = &R0_IS_ASCII;
@@ -48,7 +48,7 @@ static struct layer_index_value_container_t get_layer_value_at(
                 layer_array_ptr = &L1_BASE_KEYCODES;
                 is_ascii_array_ptr = &L1_IS_ASCII;
             }
-            else
+            else if (keyboard_side == RIGHT_SIDE)
             {
                 layer_array_ptr = &R1_BASE_KEYCODES;
                 is_ascii_array_ptr = &R1_IS_ASCII;
@@ -60,7 +60,7 @@ static struct layer_index_value_container_t get_layer_value_at(
                 layer_array_ptr = &L2_BASE_KEYCODES;
                 is_ascii_array_ptr = &L2_IS_ASCII;
             }
-            else
+            else if (keyboard_side == RIGHT_SIDE)
             {
                 layer_array_ptr = &R2_BASE_KEYCODES;
                 is_ascii_array_ptr = &R2_IS_ASCII;
@@ -81,13 +81,47 @@ static struct layer_index_value_container_t get_layer_value_at(
     return index_value_container;
 }
 
-///Public Functions
-struct hid_keycode_container_t layer_info_get_keycode_at(
+struct layer_index_value_container_t get_tap_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    struct hid_keycode_container_t code_container;
+    struct layer_index_value_container_t index_value_container;
 
-    struct layer_index_value_container_t layer_value = get_layer_value_at(row, col, layer_index, keyboard_side);
+    const uint8_t (*tap_layer_array_ptr)[ROW_COUNT][COLUMN_COUNT] = NULL;
+    const bool (*is_ascii_array_ptr)[ROW_COUNT][COLUMN_COUNT] = NULL;
+    switch (layer_index)
+    {
+        case 0:
+        case 1:
+        case 2:
+            if (keyboard_side == LEFT_SIDE)
+            {
+                tap_layer_array_ptr = &L_TAP_KEYS;
+                is_ascii_array_ptr = &L_TAP_IS_ASCII;
+            }
+            else if (keyboard_side == RIGHT_SIDE)
+            {
+                tap_layer_array_ptr = &R_TAP_KEYS;
+                is_ascii_array_ptr = &R_TAP_IS_ASCII;
+            }
+            break;
+    }
+
+    if (tap_layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
+    {
+        index_value_container.has_valid_contents = false;
+        return index_value_container;
+    }
+
+    index_value_container.layer_index_value = (*tap_layer_array_ptr)[row][col];
+    index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
+    index_value_container.has_valid_contents = true;
+
+    return index_value_container;
+}
+
+static struct hid_keycode_container_t build_code_container(struct layer_index_value_container_t layer_value)
+{
+    struct hid_keycode_container_t code_container;
 
     if (!layer_value.has_valid_contents)
     {
@@ -119,4 +153,20 @@ struct hid_keycode_container_t layer_info_get_keycode_at(
     }
 
     return code_container;
+}
+
+
+///Public Functions
+struct hid_keycode_container_t layer_info_get_base_keycode_at(
+    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+{
+    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, keyboard_side);
+    return build_code_container(layer_value);
+}
+
+struct hid_keycode_container_t layer_info_get_tap_keycode_at(
+    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+{
+    struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, keyboard_side);
+    return build_code_container(layer_value);
 }

@@ -27,7 +27,7 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
 {
     uint8_t current_layer = key_state_get_current_layer_index();
     struct hid_keycode_container_t code_container =
-        layer_info_get_keycode_at(row, col, current_layer, keyboard_side);
+        layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);
 
     // If we are receiving invalid codes, something has gone
     // programatically wrong with the layers.

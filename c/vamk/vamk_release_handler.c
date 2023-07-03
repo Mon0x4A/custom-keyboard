@@ -17,7 +17,7 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side
 {
     uint8_t current_layer = key_state_get_current_layer_index();
     struct hid_keycode_container_t code_container =
-        layer_info_get_keycode_at(row, col, current_layer, keyboard_side);
+        layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);
 
     //TODO record repeat state
 
@@ -61,7 +61,7 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side
         // have been removed from the report.
         struct hid_keycode_container_t code_container =
             //TODO side logic
-            layer_info_get_keycode_at(row, col, i, LEFT_SIDE);
+            layer_info_get_base_keycode_at(row, col, i, LEFT_SIDE);
 
         if (ENABLE_KEYBOARD_COMMANDS && need_remove_code_from_report)
             key_state_release(code_container.hid_keycode);

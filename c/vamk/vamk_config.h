@@ -101,12 +101,13 @@ static const bool L2_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
     { 0, 1, 1, 1, 1, 1, 0 },
 };
 
-//static const uint8_t L_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
-//{
-//    { HID_KEY_ESC,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_TAB },
-//    { KC_NULL,      KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_SPACE },
-//    { KC_NULL,      KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
-//};
+static const uint8_t L_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
+{
+    { HID_KEY_ESCAPE,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_TAB },
+    { KC_NULL,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_SPACE },
+    { KC_NULL,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+};
+static const bool L_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
 
 static const uint8_t R0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
 {
@@ -147,12 +148,13 @@ static const bool R2_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
     { 0, 1, 1, 1, 1, 1, 0 },
 };
 
-//static const unsigned uint8_t R_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
-//{
-//    { KC_REPEAT,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_RETURN },
-//    { HID_KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
-//    { KC_NULL,           KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
-//};
+static const uint8_t R_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
+{
+    { KC_REPEAT,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_RETURN },
+    { HID_KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+    { KC_NULL,           KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+};
+static const bool R_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
 
 //I2C Config
 #define I2C_CLOCK_SPEED 100000 //100Khz
