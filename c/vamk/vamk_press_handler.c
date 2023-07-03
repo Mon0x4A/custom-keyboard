@@ -29,8 +29,9 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     struct hid_keycode_container_t code_container =
         layer_info_get_keycode_at(row, col, current_layer, keyboard_side);
 
-    if (!code_container.has_valid_contents)
-        return;
+    // If we are receiving invalid codes, something has gone
+    // programatically wrong with the layers.
+    hard_assert(code_container.has_valid_contents);
 
     //TODO single tap action handling
     //TODO double tap action handling

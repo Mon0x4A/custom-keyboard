@@ -1,4 +1,4 @@
-///Imports
+//Imports
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -41,15 +41,24 @@ int main(void)
     board_init();
     // TinyUSB required initialization call.
     tusb_init();
-    // Physical swtich logic initialization call.
+    // Physical switch logic initialization call.
     switch_state_init();
 
     if (IS_PRIMARY_KEYBOARD_SIDE)
     {
-        // TODO Set up I2C as controller
+        // TODO TEMP TEST Set up I2C as peripheral
+        i2c_switch_state_transmitter_init();
 
+        // Join I2C bus as controller
+        peripheral_switch_state_init();
+
+        // Init press handling
         switch_state_set_pressed_callback(press_handler_on_switch_press);
+        peripheral_switch_state_set_pressed_callback(press_handler_on_switch_press);
+
+        // Init release handling
         switch_state_set_released_callback(release_handler_on_switch_release);
+        peripheral_switch_state_set_released_callback(release_handler_on_switch_release);
 
         // Primary side run loop
         while (1)
@@ -59,11 +68,15 @@ int main(void)
 
             // Update LED state.
             led_blinking_task();
-            // Update reported keyboard state.
-            hid_task();
 
             // Update phyiscal switch state.
             switch_state_task();
+
+            // Update non-native (peripheral) switch state.
+            peripheral_switch_state_task();
+
+            // Update reported keyboard state.
+            hid_task();
         }
     }
     else
@@ -82,9 +95,6 @@ int main(void)
             switch_state_task();
 
             sleep_ms(10);
-            // Pulse our LED to show the loop is running.
-            led_is_on = !led_is_on;
-            board_led_write(led_is_on);
         }
     }
 
@@ -101,38 +111,6 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
         return;
 
     // Avoid sending multiple consecutive reports.
-    //static bool has_reported_keys = false;
-    //static bool prev_reported_a = false;
-
-    //if (btn && !has_reported_keys)
-    //{
-    //    uint8_t keycode[6] = {0};
-    //    keycode[0] = HID_KEY_A;
-    //    printf("Attempting to press \'a\'\n");
-    //    tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-    //    has_reported_keys = true;
-    //    prev_reported_a = true;
-    //}
-    //else if (btn && has_reported_keys && prev_reported_a)
-    //{
-    //    uint8_t keycode[6] = {0};
-    //    keycode[1] = HID_KEY_A;
-    //    keycode[0] = HID_KEY_B;
-    //    printf("Attempting to press \'b\' as well...\n");
-    //    tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, keycode);
-    //    prev_reported_a = false;
-    //}
-    //else if (!btn && prev_reported_a)
-    //{
-    //}
-    //else if (!btn && has_reported_keys)
-    //{
-    //    // Send empty key report if we previously had a key pressed.
-    //    printf("Attempting to release \'a\'\n");
-    //    tud_hid_keyboard_report(REPORT_ID_KEYBOARD, 0, NULL);
-    //    has_reported_keys = false;
-    //}
-
     static struct key_report_t keyboard_report_prev =
     {
         .keycodes = 0,
@@ -147,8 +125,7 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
     bool keycodes_differ = false;
     for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
     {
-        if (keyboard_report_curr.keycodes[i] !=
-            keyboard_report_prev.keycodes[i])
+        if (keyboard_report_curr.keycodes[i] != keyboard_report_prev.keycodes[i])
         {
             keycodes_differ = true;
             break;

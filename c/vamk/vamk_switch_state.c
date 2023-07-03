@@ -84,7 +84,7 @@ static void print_matrix_state(void)
 {
     for (uint16_t i = 0; i < ROW_COUNT; i++)
     {
-        printf("0%i:", i);
+        printf("N0%i:", i);
         for (uint16_t j = 0; j < COLUMN_COUNT; j++)
         {
             printf("%i", _switch_matrix_curr[i][j]);
@@ -125,6 +125,7 @@ void switch_state_task(void)
     {
         //TODO this sleep suspends the USB device. REMOVE WHEN REPORTING IS NEEDED.
         //sleep_ms(500);
+
         print_matrix_state();
     }
 }

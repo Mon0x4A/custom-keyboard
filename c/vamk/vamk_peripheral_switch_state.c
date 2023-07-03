@@ -20,8 +20,11 @@ static void read_matrix_state(void)
     // Request the peripheral I2C device for matrix state.
     uint8_t read_buffer[I2C_TRANSMISSION_SIZE];
     uint8_t read_count = i2c_read_blocking(
-        I2C_PORT, PERIPHERAL_KEYBOARD_ADDRESS, read_buffer, I2C_TRANSMISSION_SIZE, true);
-    hard_assert(read_count == I2C_TRANSMISSION_SIZE);
+        I2C_CONTROLLER_PORT, PERIPHERAL_KEYBOARD_ADDRESS, read_buffer, I2C_TRANSMISSION_SIZE, true);
+
+    // Do not attempt to process a malformed message.
+    if (read_count != I2C_TRANSMISSION_SIZE)
+        return;
 
     // Break out the sequential buffer contents.
     for (int i = 0; i < I2C_TRANSMISSION_SIZE; i++)
@@ -74,7 +77,7 @@ static void print_matrix_state(void)
     //todo helper
     for (uint16_t i = 0; i < ROW_COUNT; i++)
     {
-        printf("0%i:", i);
+        printf("P0%i:", i);
         for (uint16_t j = 0; j < COLUMN_COUNT; j++)
         {
             printf("%i", _peripheral_switch_matrix_curr[i][j]);
@@ -87,15 +90,15 @@ static void print_matrix_state(void)
 void peripheral_switch_state_init(void)
 {
     //Set up this device as I2C controller.
-    gpio_init(I2C_SDA_PIN);
-    gpio_set_function(I2C_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(I2C_SDA_PIN);
+    gpio_init(I2C_CONTROLLER_SDA_PIN);
+    gpio_set_function(I2C_CONTROLLER_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(I2C_CONTROLLER_SDA_PIN);
 
-    gpio_init(I2C_SCL_PIN);
-    gpio_set_function(I2C_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(I2C_SCL_PIN);
+    gpio_init(I2C_CONTROLLER_SCL_PIN);
+    gpio_set_function(I2C_CONTROLLER_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(I2C_CONTROLLER_SCL_PIN);
 
-    i2c_init(I2C_PORT, I2C_CLOCK_SPEED);
+    i2c_init(I2C_CONTROLLER_PORT, I2C_CLOCK_SPEED);
 
     //Load the default switch state into each array.
     read_matrix_state();

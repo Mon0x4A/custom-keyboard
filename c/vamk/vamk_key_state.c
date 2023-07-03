@@ -28,8 +28,7 @@ static bool contains_hid_report_code(uint8_t hid_keycode)
 static void insert_hid_report_code(struct hid_keycode_container_t keycode_container, bool release_on_next_report)
 {
     // If this did not initialize correctly, something has gone wrong.
-    if (!keycode_container.has_valid_contents)
-        return;
+    hard_assert(keycode_container.has_valid_contents);
 
     // Check to make sure it's not already in the report.
     if (contains_hid_report_code(keycode_container.hid_keycode))
