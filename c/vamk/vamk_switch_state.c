@@ -82,15 +82,17 @@ static void fire_callback_events(void)
 
 static void print_matrix_state(void)
 {
+    static uint32_t report_id = 0;
     for (uint16_t i = 0; i < ROW_COUNT; i++)
     {
-        printf("N0%i:", i);
+        printf("%uN0%i:", report_id, i);
         for (uint16_t j = 0; j < COLUMN_COUNT; j++)
         {
             printf("%i", _switch_matrix_curr[i][j]);
         }
         printf("\n");
     }
+    report_id++;
 }
 
 ///Public Functions

@@ -47,7 +47,7 @@ int main(void)
     if (IS_PRIMARY_KEYBOARD_SIDE)
     {
         // TODO TEMP TEST Set up I2C as peripheral
-        i2c_switch_state_transmitter_init();
+        //i2c_switch_state_transmitter_init();
 
         // Join I2C bus as controller
         peripheral_switch_state_init();
@@ -95,6 +95,7 @@ int main(void)
             switch_state_task();
 
             sleep_ms(10);
+            board_led_write(1);
         }
     }
 

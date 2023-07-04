@@ -65,7 +65,7 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side
         // have been removed from the report.
         struct hid_keycode_container_t code_container =
             //TODO side logic
-            layer_info_get_base_keycode_at(row, col, i, LEFT_SIDE);
+            layer_info_get_base_keycode_at(row, col, i, keyboard_side);
 
         if (ENABLE_KEYBOARD_COMMANDS && need_remove_code_from_report)
             key_state_release(code_container.hid_keycode);

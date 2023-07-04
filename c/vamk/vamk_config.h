@@ -44,7 +44,7 @@
 #define LAYER_COUNT 3
 
 #define IS_PRIMARY_KEYBOARD_SIDE 1
-static const keyboard_side_t CURRENT_KEYBOARD_SIDE = LEFT_SIDE;
+static const keyboard_side_t CURRENT_KEYBOARD_SIDE = RIGHT_SIDE;
 static const keyboard_side_t OPPOSITE_KEYBOARD_SIDE = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? RIGHT_SIDE : LEFT_SIDE;
 
 static const uint8_t ROW_0_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 20 : 18;
@@ -159,13 +159,13 @@ static const uint8_t R_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
 static const bool R_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
 
 //I2C Config
-#define I2C_CLOCK_SPEED 100000 //100Khz
+#define I2C_CLOCK_SPEED 10000 //Khz
 
 #define I2C_CONTROLLER_PORT i2c0
-#define I2C_CONTROLLER_SDA_PIN 14
-#define I2C_CONTROLLER_SCL_PIN 15
+#define I2C_CONTROLLER_SDA_PIN 4
+#define I2C_CONTROLLER_SCL_PIN 5
 
-#define I2C_PERIPHERAL_PORT i2c1
+#define I2C_PERIPHERAL_PORT i2c0
 #define I2C_PERIPHERAL_SDA_PIN 4
 #define I2C_PERIPHERAL_SCL_PIN 5
 
@@ -174,8 +174,7 @@ static const uint8_t I2C_TRANSMISSION_SIZE = ROW_COUNT*COLUMN_COUNT;
 #define CONTROLLER_KEYBOARD_ADDRESS 0x2A
 #define PERIPHERAL_KEYBOARD_ADDRESS 0x45
 
-
-//TODO make these addresses condition on which side is primary?
+//TODO make these addresses conditional on which side is primary?
 #define OLED_PRIMARY_SCREEN_ADDRESS 0x3C
 #define OLED_SECONDARY_SCREEN_ADDRESS 0x3D
 

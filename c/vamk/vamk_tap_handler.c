@@ -68,6 +68,11 @@ bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_ind
         // We do not need to handle this event.
         return false;
 
+    //TODO support REPEAT
+    if (code_container.hid_keycode == KC_REPEAT)
+        // Suppress repeat calls for now.
+        return true;
+
     absolute_time_t *key_down_at = get_key_down_time_pointer(row, col, keyboard_side);
     if (key_down_at == NULL)
         return false;

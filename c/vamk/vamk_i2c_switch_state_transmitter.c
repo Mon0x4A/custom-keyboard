@@ -10,7 +10,12 @@
 #include "vamk_types.h"
 
 ///Static Global Variables
-static uint8_t _transmission_switch_matrix[ROW_COUNT][COLUMN_COUNT] = {0};
+static uint8_t _transmission_switch_matrix[ROW_COUNT][COLUMN_COUNT] =
+{
+    { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE },
+    { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE },
+    { SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE, SWITCH_NOT_PRESSED_VALUE },
+};
 
 ///Static Functions
 
@@ -33,21 +38,23 @@ void i2c_switch_state_transmitter_init(void)
 void i2c_switch_state_request_handler(i2c_inst_t *i2c, i2c_slave_event_t event)
 {
     static uint8_t tx_byte_index = 0;
-    static bool send_one = false;
+    //static bool send_one = false;
     switch (event)
     {
         case I2C_SLAVE_RECEIVE:
             break;
         case I2C_SLAVE_REQUEST:
-            i2c_write_byte_raw(i2c, send_one ? 1 : _transmission_switch_matrix[tx_byte_index/COLUMN_COUNT][tx_byte_index%COLUMN_COUNT]);
+            //i2c_write_byte_raw(i2c, send_one ? 1 : _transmission_switch_matrix[tx_byte_index/COLUMN_COUNT][tx_byte_index%COLUMN_COUNT]);
+            i2c_write_byte_raw(i2c, _transmission_switch_matrix[tx_byte_index/COLUMN_COUNT][tx_byte_index%COLUMN_COUNT]);
             tx_byte_index++;
-            send_one = !send_one;
+            //send_one = !send_one;
             //TODO led blink for transmit?
             // Once we reach the full matrix set, restart from 0;
             if (tx_byte_index >= I2C_TRANSMISSION_SIZE)
             {
                 tx_byte_index = 0;
-                send_one = false;
+                board_led_write(0);
+                //send_one = false;
             }
             break;
         case I2C_SLAVE_FINISH:
@@ -60,12 +67,12 @@ void i2c_switch_state_request_handler(i2c_inst_t *i2c, i2c_slave_event_t event)
 void i2c_switch_state_on_switch_pressed(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
 {
     (void) keyboard_side;
-    _transmission_switch_matrix[row][col] = 1;
+    _transmission_switch_matrix[row][col] = SWITCH_PRESSED_VALUE;
 }
 
 void i2c_switch_state_on_switch_released(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
 {
     (void) keyboard_side;
-    _transmission_switch_matrix[row][col] = 0;
+    _transmission_switch_matrix[row][col] = SWITCH_NOT_PRESSED_VALUE;
 }
 

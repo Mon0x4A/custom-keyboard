@@ -75,15 +75,17 @@ static void fire_callback_events(void)
 static void print_matrix_state(void)
 {
     //todo helper
+    static uint32_t report_id = 0;
     for (uint16_t i = 0; i < ROW_COUNT; i++)
     {
-        printf("P0%i:", i);
+        printf("%uP0%i:", report_id, i);
         for (uint16_t j = 0; j < COLUMN_COUNT; j++)
         {
             printf("%i", _peripheral_switch_matrix_curr[i][j]);
         }
         printf("\n");
     }
+    report_id++;
 }
 
 ///Public Functions
@@ -108,6 +110,19 @@ void peripheral_switch_state_init(void)
 void peripheral_switch_state_task(void)
 {
     read_matrix_state();
+    //static bool just_pressed = false;
+    ////sleep_ms(100);
+    //if (!just_pressed)
+    //{
+    //    _peripheral_switch_matrix_curr[0][5] = 1;
+    //    just_pressed = true;
+    //}
+    //else
+    //{
+    //    _peripheral_switch_matrix_curr[0][5] = 0;
+    //    just_pressed = false;
+    //}
+
     fire_callback_events();
 
     update_prev_matrix();
