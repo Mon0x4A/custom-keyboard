@@ -69,6 +69,17 @@ struct key_report_t key_state_build_hid_report(void)
         key_report_to_send.keycodes[i] = _current_hid_report_codes[i];
     key_report_to_send.modifier = _current_modifier;
 
+    // Now that we've build the report, remove the single report keys.
+    for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
+    {
+        if(_code_has_single_report_lifetime[i])
+        {
+            _current_hid_report_codes[i] = 0;
+            _code_has_single_report_lifetime[i] = false;
+            _current_modifier = 0;
+        }
+    }
+
     return key_report_to_send;
 }
 
