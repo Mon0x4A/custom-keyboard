@@ -134,6 +134,9 @@ _couplingNutSetOffsetAdjustment = -0.25;
 _couplingInsetNutSetLengthOffset = (((_couplingLength+(_housingBodyRoundingRadius*2))-_couplingNutInsertLengthCenterToCenter)/2)+(_couplingNutSetOffsetAdjustment*2);
 _couplingInsetNutSetWidthOffset = (((_couplingWidth+(_housingBodyRoundingRadius*2))-_couplingNutInsertWidthCenterToCenter)/2)+(_couplingNutSetOffsetAdjustment*2);
 
+_couplingCableCutoutWidth = _couplingWidth*(3/9);
+_couplingCableCutoutOffset = _couplingWidth*(2/5)+0.5;
+
 _couplingBlockLength = 8;
 _couplingBlockWidth = 10;
 _couplingBlockDepth = 8;
@@ -143,6 +146,7 @@ _couplingBoltLength = _couplingBlockLength*3;
 _couplingBoltRadius = _m3BoltHoleRadius;
 _couplingBoltCounterSinkDepth = 0;
 _couplingBoltCounterSinkRadius = _couplingBoltRadius*2;
+
 
 //Pico Variables
 _picoBodySizePadding = 0.4;
@@ -193,12 +197,12 @@ _picoWidthPlacement = 24.5;
 // Comment in this mirror statement to make any right-hand parts.
 //mirror([1,0,0])
 
-//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
-housingCoupling(true);
-housingCoupling(false);
+//housingCoupling(false);
+//housingCouplingBody();
 //oledScreenPunch(_picoHousingLidBaseThickness+2);
 //oledScreenPlateCover(depth=1.5);
 //oledScreenFrame();
@@ -255,8 +259,8 @@ module keyboardAssembly(switchType)
                 translate([0,0,backplateOffsetFromHousing])
                     backplate(backplateDepth);
 
-                translate([_bridgeLengthPlacement,_bridgeWidthPlacement,0])
-                    housingSubModule(_bridgeLength, _bridgeWidth, housingDepth, _housingBaseThickness);
+//                translate([_bridgeLengthPlacement,_bridgeWidthPlacement,0])
+//                    housingSubModule(_bridgeLength, _bridgeWidth, housingDepth, _housingBaseThickness);
 
                 translate([_matrixHousingCutoutLengthPlacement,_bridgeWidthPlacement,0])
                     union()
@@ -275,6 +279,8 @@ module keyboardAssembly(switchType)
                                 translate([-cutoutEdgePadding,-cutoutEdgePadding, picoHousingBodyJointDepth])
                                     cube([picoHousingBodyJointLength+(cutoutEdgePadding*2), picoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
                             }
+
+                        housingCoupling(true);
                     }
 
                 //pico enclosure
@@ -568,12 +574,13 @@ module housingCoupling(isLeftSideConnector)
     }
     else
     {
-        difference()
-        {
-            housingCouplingBody();
-            translate([-_couplingLength+(_couplingLength/2)+_housingBodyRoundingRadius-_boltBlockOffsetAdjustment, 0, -1])
-                cube([_couplingLength, _couplingWidth*2, (_couplingBaseDepth+_couplingBlockDepth)*2]);
-        }
+        translate([(-_couplingLength/2)-_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, 0, 0])
+            difference()
+            {
+                housingCouplingBody();
+                translate([-_couplingLength+(_couplingLength/2)+_housingBodyRoundingRadius-_boltBlockOffsetAdjustment, 0, -1])
+                    cube([_couplingLength, _couplingWidth*2, (_couplingBaseDepth+_couplingBlockDepth)*2]);
+            }
     }
 }
 
@@ -595,6 +602,18 @@ module housingCouplingBody()
             // Lid attachement nut set
             translate([_couplingInsetNutSetLengthOffset,_couplingInsetNutSetWidthOffset,_couplingBaseDepth-_couplingInsetNutCutoutDepth])
                 couplingLidAttachmentNutPunchSet();
+
+            // Left cable ramp cutout
+            couplingCableRampAngle = 42;
+            translate([-_couplingBaseDepth*1.5, _couplingCableCutoutOffset, 0])
+                rotate([0, couplingCableRampAngle, 0])
+                    cube([_couplingBaseDepth, _couplingCableCutoutWidth, _couplingBaseDepth*3]);
+
+            // Right cable ramp cutout
+            mirror([1,0,0])
+            translate([-_couplingBaseDepth*1.5-_couplingLength-(_housingBodyRoundingRadius*2)+1, _couplingCableCutoutOffset, 0])
+                rotate([0, couplingCableRampAngle, 0])
+                    cube([_couplingBaseDepth, _couplingCableCutoutWidth, _couplingBaseDepth*3]);
         }
 
         // Bolt block
