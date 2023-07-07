@@ -151,6 +151,19 @@ _couplingBoltCounterSinkRadius = _couplingBoltRadius*2;
 
 _housingCouplingTotalHalfWidth = (_couplingLength/2)+_housingBodyRoundingRadius-_boltBlockOffsetAdjustment;
 
+_bridgeGridEtchingRowCount = 3;
+_bridgeGridEtchingColumnCount = 7;
+_bridgeGridEtchingSideLength = _bridgeBackplateLength/_bridgeGridEtchingColumnCount;
+_bridgeGridEtchingSideWidth = _bridgeBackplateWidth/_bridgeGridEtchingRowCount;
+_bridgeGridEtchingDepth = 0.5;
+_bridgeGridEtchingCutoutSideLength = 10;
+_bridgeGridEtchingCutoutSideWidth = 10;
+
+_bridgeOledScreenCoverBaseLength = 33;
+_bridgeOledScreenCoverBaseWidth = 32;
+_bridgeOledScreenCoverBaseDepth = 7;
+_bridgeOledScreenCoverBaseThickness = 2;
+
 //Pico Variables
 _picoBodySizePadding = 0.4;
 _picoBodyLength = 21 + _picoBodySizePadding;
@@ -208,6 +221,8 @@ keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //housingCouplingBody();
 //bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
 //bridgeHousing(_kailhHousingBodyDepth);
+//bridgeBackplate(_kailhBackplateDepth);
+//bridgeScreenCover();
 //boltCouplingBlock();
 //oledScreenPunch(_picoHousingLidBaseThickness+2);
 //oledScreenPlateCover(depth=1.5);
@@ -225,6 +240,7 @@ keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
 //kailhKeyCapTop(_key1_25uWidth, _key1uWidth, _kailhKeyCapDepth);
 //kailhKeycapShank();
+//gridEtching(_bridgeGridEtchingRowCount, _bridgeGridEtchingColumnCount, _bridgeGridEtchingSideLength, _bridgeGridEtchingSideWidth, _bridgeGridEtchingDepth+1, _bridgeGridEtchingCutoutSideLength, _bridgeGridEtchingCutoutSideWidth);
 
 /// MAIN END ///
 module keyboard(switchType, isLeftSide)
@@ -603,16 +619,46 @@ module bridgeHousing(housingDepth)
 
 module bridgeBackplate(backplateDepth)
 {
-    union()
+    difference()
+    //union()
     {
         roundedCube([_bridgeBackplateLength, _bridgeBackplateWidth, backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+        translate([0, 0, backplateDepth-_bridgeGridEtchingDepth])
+            gridEtching(_bridgeGridEtchingRowCount, _bridgeGridEtchingColumnCount, _bridgeGridEtchingSideLength, _bridgeGridEtchingSideWidth, _bridgeGridEtchingDepth+1, _bridgeGridEtchingCutoutSideLength, _bridgeGridEtchingCutoutSideWidth);
+
+        translate([0, 0, -1])
+        {
+            riserBridgeBackplateBoltPunchSet(backplateDepth);
+            riserBridgeScreenBoltPunchSet(backplateDepth, centerAtOrigin=false);
+        }
     }
 }
 
+module bridgeScreenCover()
+{
+    union()
+    difference()
+    {
+        translate([_bridgeOledScreenCoverBaseLength+(_housingBodyRoundingRadius*2)-1, 0, _bridgeOledScreenCoverBaseDepth+1])
+            rotate([0, 180, 0])
+                housingSubModule(_bridgeOledScreenCoverBaseLength, _bridgeOledScreenCoverBaseWidth, _bridgeOledScreenCoverBaseDepth, _bridgeOledScreenCoverBaseThickness, apply_to="z");
+
+        //Screen cutout
+        oledWidthOffsetFromTop = _oledBodyWidth - 1.5;
+        oledLengthOffset = ((_bridgeOledScreenCoverBaseLength - _oledBodyLength)/2)+3.5;
+        translate([oledLengthOffset, _bridgeOledScreenCoverBaseWidth-oledWidthOffsetFromTop, _bridgeOledScreenCoverBaseDepth-2])
+            oledScreenPunch(_picoHousingLidBaseThickness+3);
+
+        //Bolt Punches
+        boltPunchSetOriginLengthOffset = 4.5;
+        boltPunchSetOriginWidthOffset = 4.5;
+        translate([boltPunchSetOriginLengthOffset, boltPunchSetOriginWidthOffset, _bridgeOledScreenCoverBaseDepth-1])
+            riserBridgeScreenBoltPunchSet(_bridgeOledScreenCoverBaseThickness+2, centerAtOrigin=true);
+    }
+}
 
 module housingCoupling(isLeftSideConnector, shouldRenderRamp)
 {
-
     if (isLeftSideConnector)
     {
         difference()
@@ -1104,6 +1150,42 @@ module picoMountNutPunch()
     }
 }
 
+module riserBridgeBackplateBoltPunchSet(backplateDepth)
+{
+    translate([(_bridgeGridEtchingSideLength*1), (_bridgeGridEtchingSideWidth*0.5), _riserBoltHeadCutoutDepth])
+        riserBackplateBoltPunch(backplateDepth);
+
+    translate([(_bridgeGridEtchingSideLength*1), (_bridgeGridEtchingSideWidth*2.5), _riserBoltHeadCutoutDepth])
+        riserBackplateBoltPunch(backplateDepth);
+
+    translate([(_bridgeGridEtchingSideLength*6), (_bridgeGridEtchingSideWidth*0.5), _riserBoltHeadCutoutDepth])
+        riserBackplateBoltPunch(backplateDepth);
+
+    translate([(_bridgeGridEtchingSideLength*6), (_bridgeGridEtchingSideWidth*2.5), _riserBoltHeadCutoutDepth])
+        riserBackplateBoltPunch(backplateDepth);
+}
+
+module riserBridgeScreenBoltPunchSet(backplateDepth, centerAtOrigin)
+{
+    xTran = centerAtOrigin ? -(_bridgeGridEtchingSideLength*2.5) : 0;
+    yTran = centerAtOrigin ? -(_bridgeGridEtchingSideWidth*0.5) : 0;
+    translate([xTran, yTran, 0])
+        union()
+        {
+            translate([(_bridgeGridEtchingSideLength*2.5), (_bridgeGridEtchingSideWidth*0.5), _riserBoltHeadCutoutDepth])
+                riserBackplateBoltPunch(backplateDepth);
+
+            translate([(_bridgeGridEtchingSideLength*2.5), (_bridgeGridEtchingSideWidth*2.5), _riserBoltHeadCutoutDepth])
+                riserBackplateBoltPunch(backplateDepth);
+
+            translate([(_bridgeGridEtchingSideLength*4.5), (_bridgeGridEtchingSideWidth*0.5), _riserBoltHeadCutoutDepth])
+                riserBackplateBoltPunch(backplateDepth);
+
+            translate([(_bridgeGridEtchingSideLength*4.5), (_bridgeGridEtchingSideWidth*2.5), _riserBoltHeadCutoutDepth])
+                riserBackplateBoltPunch(backplateDepth);
+        }
+}
+
 module riserBackplateBoltPunchSet(backplateDepth)
 {
     translate([(_key1uLength*1)+(_key1_25uLength*1), (_key1uWidth*2)+(_key1_25uWidth*1), _riserBoltHeadCutoutDepth])
@@ -1169,6 +1251,33 @@ module trrsBodyPunch()
         translate([_trrsBodyLength, _trrsBodyWidth/2, _trrsBodyDepth/2])
             rotate([0, 90, 0])
                 cylinder(r=(_trrsBodyDepth/2)+trrsConnectorTolerance,h=trrsConnectorDepth, $fn=100);
+    }
+}
+
+module gridEtching(rowCount, columnCount, gridUnitSideLength, gridUnitSideWidth, gridDepth, gridUnitCutoutSideLength, gridUnitCutoutSideWidth)
+{
+    lengthSeparatorThickness = (gridUnitSideLength - gridUnitCutoutSideLength)/2;
+    widthSeparatorThickness = (gridUnitSideWidth - gridUnitCutoutSideWidth)/2;
+
+    for (i=[0:columnCount-1])
+        for (j=[0:rowCount-1])
+        {
+            translate([i*(gridUnitSideLength-0.001), j*(gridUnitSideWidth-0.001), 0])
+                gridEtchingUnit(gridUnitSideLength, gridUnitSideWidth, gridDepth, gridUnitCutoutSideLength, gridUnitCutoutSideWidth);
+        }
+}
+
+module gridEtchingUnit(gridUnitSideLength, gridUnitSideWidth, gridDepth, gridUnitCutoutSideLength, gridUnitCutoutSideWidth)
+{
+    difference()
+    {
+        cube([gridUnitSideLength, gridUnitSideWidth, gridDepth]);
+        translate([(gridUnitSideLength-gridUnitCutoutSideLength)/2+(_backplateRoundingRadius/2), (gridUnitSideWidth-gridUnitCutoutSideWidth)/2+(_backplateRoundingRadius/2), -1])
+            minkowski()
+            {
+                cube([gridUnitCutoutSideLength-_backplateRoundingRadius, gridUnitCutoutSideWidth-_backplateRoundingRadius, gridDepth+2]);
+                cylinder(r=_backplateRoundingRadius, h=gridDepth+2, $fn=100);
+            }
     }
 }
 
