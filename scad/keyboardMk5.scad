@@ -118,7 +118,7 @@ _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 _bridgeHousingInsetIntoCoupling = 7;
 
 _bridgeBackplateLengthForHousing = 120;
-_bridgeBackplateLength = _bridgeBackplateLengthForHousing - (_bridgeHousingInsetIntoCoupling*2);
+_bridgeBackplateLength = _bridgeBackplateLengthForHousing - (_bridgeHousingInsetIntoCoupling*1.75);
 _bridgeBackplateWidth = 53-(_housingBodyRoundingRadius*2); //Reverse engineering from mk3 protype size.
 
 _bridgeLengthPlacement = _matrixHousingCutoutLengthPlacement+_bridgeHousingInsetIntoCoupling+10.1;
@@ -206,6 +206,7 @@ keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //backplate(_kailhBackplateDepth);
 //housingCoupling(false);
 //housingCouplingBody();
+//bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
 //bridgeHousing(_kailhHousingBodyDepth);
 //boltCouplingBlock();
 //oledScreenPunch(_picoHousingLidBaseThickness+2);
@@ -265,7 +266,7 @@ module keyboardAssembly(switchType)
                     backplate(backplateDepth);
 
                 translate([_bridgeLengthPlacement,_bridgeWidthPlacement,0])
-                    bridgeHousing(housingDepth);
+                    bridgeSection(housingDepth, backplateDepth, backplateOffsetFromHousing);
 
                 translate([_matrixHousingCutoutLengthPlacement,_bridgeWidthPlacement,0])
                     union()
@@ -497,28 +498,6 @@ module housingStraightSupport(depth)
     }
 }
 
-module bridgeHousing(housingDepth)
-{
-    union()
-    {
-        //TODO trim top
-        //TODO add couplings to ends
-        translate([0, 0, 0])
-            housingCoupling(isLeftSideConnector=false, shouldRenderRamp=true);
-        difference()
-        {
-            translate([_bridgeHousingInsetIntoCoupling, 0, 0])
-                housingSubModule(_bridgeBackplateLengthForHousing, _bridgeBackplateWidth, housingDepth, _housingBaseThickness);
-            //Cutouts for coupling sides
-            translate([_bridgeHousingInsetIntoCoupling, -1, _couplingBaseDepth])
-                cube([_bridgeHousingInsetIntoCoupling+1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
-            translate([_bridgeBackplateLengthForHousing+_bridgeHousingInsetIntoCoupling-1, -1, _couplingBaseDepth])
-                cube([_bridgeHousingInsetIntoCoupling+1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
-        }
-        translate([_bridgeBackplateLengthForHousing+(_housingBodyRoundingRadius*2)-2, 0, 0])
-            housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true);
-    }
-}
 
 module backplate(backplateDepth)
 {
@@ -580,13 +559,56 @@ module keyUnit(length, width, depth)
 {
     difference()
     {
-        roundedCube(size = [length, width, depth], radius=1.25, apply_to="zmax");
+        roundedCube(size = [length, width, depth], radius=_backplateRoundingRadius, apply_to="zmax");
 
         translate([length/2, width/2, -1]) //forward to final position
             translate([-_keySwitchCutoutLength/2, -_keySwitchCutoutWidth/2, 0]) //back to origin
                 cube([_keySwitchCutoutLength, _keySwitchCutoutWidth, depth+2]);
     }
 }
+
+module bridgeSection(housingDepth, backplateDepth, backplateOffsetFromHousing)
+{
+    union()
+    {
+        _bridgeBackplateLengthOffsetAdjustment = 1.6;
+        _bridgeBackplateWidthOffsetAdjustment = -0.5;
+        bridgeHousing(housingDepth);
+        translate([(_housingBodyRoundingRadius*2)+_bridgeHousingInsetIntoCoupling+_bridgeBackplateLengthOffsetAdjustment, _housingBodyRoundingRadius+_bridgeBackplateWidthOffsetAdjustment, backplateOffsetFromHousing])
+            bridgeBackplate(backplateDepth);
+    }
+}
+
+module bridgeHousing(housingDepth)
+{
+    union()
+    {
+        //TODO trim top
+        translate([0, 0, 0])
+            housingCoupling(isLeftSideConnector=false, shouldRenderRamp=true);
+        difference()
+        {
+            translate([_bridgeHousingInsetIntoCoupling, 0, 0])
+                housingSubModule(_bridgeBackplateLengthForHousing, _bridgeBackplateWidth, housingDepth, _housingBaseThickness);
+            //Cutouts for coupling sides
+            translate([_bridgeHousingInsetIntoCoupling, -1, _couplingBaseDepth])
+                cube([_bridgeHousingInsetIntoCoupling+1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
+            translate([_bridgeBackplateLengthForHousing+_bridgeHousingInsetIntoCoupling-1, -1, _couplingBaseDepth])
+                cube([_bridgeHousingInsetIntoCoupling+1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
+        }
+        translate([_bridgeBackplateLengthForHousing+(_housingBodyRoundingRadius*2)-2, 0, 0])
+            housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true);
+    }
+}
+
+module bridgeBackplate(backplateDepth)
+{
+    union()
+    {
+        roundedCube([_bridgeBackplateLength, _bridgeBackplateWidth, backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
+    }
+}
+
 
 module housingCoupling(isLeftSideConnector, shouldRenderRamp)
 {
