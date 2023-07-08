@@ -87,7 +87,7 @@ _riserBottomDiameter = 8;
 _riserBottomRadius = _riserBottomDiameter/2;
 _riserCutoutDiameter = 3.6;
 _riserCutoutRadius = _riserCutoutDiameter/2;
-_riserCutoutDepth = 4;
+_riserCutoutDepth = 3;
 
 _matrixHousingCutoutLengthPlacement = _key1uWidth*(6)+1.3;
 
@@ -213,14 +213,13 @@ _picoWidthPlacement = 11.80;
 // Comment in this mirror statement to make any right-hand parts.
 //mirror([1,0,0])
 
-keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
+//keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
 //housingCoupling(false);
 //housingCouplingBody();
-//bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
-//bridgeHousing(_kailhHousingBodyDepth);
+bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
 //bridgeBackplate(_kailhBackplateDepth);
 //bridgeScreenCover();
 //boltCouplingBlock();
@@ -262,6 +261,7 @@ module keyboardAssembly(switchType)
     backplateOffsetFromHousing = (switchType == MX_SWITCH_TYPE) ? _mxBackplateOffsetFromHousing : _kailhBackplateOffsetFromHousing;
     housingDepth = (switchType == MX_SWITCH_TYPE) ? _mxHousingBodyDepth : _kailhHousingBodyDepth;
     backplateSupportHeight = backplateOffsetFromHousing-_housingBaseThickness;
+    riserCounterSinkAmount = _riserCutoutDepth - backplateSupportHeight;
     union()
     {
         difference()
@@ -278,8 +278,8 @@ module keyboardAssembly(switchType)
                     translate([-_housingWallThickness*3, -_housingWallThickness*3, housingDepth-housingTopTrimAmount])
                         cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
                 }
-                translate([0,0,backplateOffsetFromHousing])
-                    backplate(backplateDepth);
+                //translate([0,0,backplateOffsetFromHousing])
+                //    backplate(backplateDepth);
 
                 translate([_bridgeLengthPlacement,_bridgeWidthPlacement,0])
                     bridgeSection(housingDepth, backplateDepth, backplateOffsetFromHousing);
@@ -287,40 +287,42 @@ module keyboardAssembly(switchType)
                 translate([_matrixHousingCutoutLengthPlacement,_bridgeWidthPlacement,0])
                     union()
                     {
-                        picoHousingBodyJointWidth = 64.40;
-                        picoHousingBodyJointLength = 28.70;
-                        picoHousingBodyJointDepth = 3;
+                        couplingJointWidth = 59;
+                        couplingJointLength = 28.70;
+                        couplingJointDepth = 3;
                         jointLengthOffset = -7;
                         jointWidthOffset = -7;
+                        couplingJointOutEdgeOffset = _housingCouplingTotalHalfWidth+_housingBodyRoundingRadius+2;
                         // Smoothing for joint seam.
                         translate([jointLengthOffset, jointWidthOffset, 0])
                             difference()
                             {
-                                roundedCube(size=[picoHousingBodyJointLength, picoHousingBodyJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
+                                roundedCube(size=[couplingJointLength, couplingJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
                                 cutoutEdgePadding = 5;
-                                translate([-cutoutEdgePadding,-cutoutEdgePadding, picoHousingBodyJointDepth])
-                                    cube([picoHousingBodyJointLength+(cutoutEdgePadding*2), picoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
+                                translate([-cutoutEdgePadding,-cutoutEdgePadding, couplingJointDepth])
+                                    cube([couplingJointLength+(cutoutEdgePadding*2), couplingJointWidth+(cutoutEdgePadding*2), housingDepth]);
+                                translate([couplingJointOutEdgeOffset, 0, -1])
+                                    cube([couplingJointLength+(cutoutEdgePadding*2), couplingJointWidth+(cutoutEdgePadding*2), housingDepth]);
                             }
 
                         housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true);
                     }
 
-                //pico enclosure
-                translate([_picoLengthPlacement,_picoWidthPlacement,0])
-                    union()
-                    {
-                        picoHousing(renderLid=false, renderBase=true, renderPico=false);
-                    }
+                ////pico enclosure
+                //translate([_picoLengthPlacement,_picoWidthPlacement,0])
+                //    union()
+                //    {
+                //        picoHousing(renderLid=false, renderBase=true, renderPico=false);
+                //    }
             }
             if (backplateSupportHeight < _riserCutoutDepth)
             {
-                riserCounterSinkAmount = _riserCutoutDepth - backplateSupportHeight;
-                translate([0, 0, riserCounterSinkAmount])
-                    backplateMountingRiserSet(backplateSupportHeight, renderNutHoles=false);
+                translate([0, 0, _housingBaseThickness - riserCounterSinkAmount])
+                    backplateMountingRiserSet(_riserCutoutDepth, renderNutHoles=false);
             }
         }
         //Backplate mounting risers
-        translate([0,0,_housingBaseThickness - (_riserCutoutDepth-backplateSupportHeight)])
+        translate([0,0,_housingBaseThickness - riserCounterSinkAmount])
             backplateMountingRiserSet(max(_riserCutoutDepth, backplateSupportHeight), renderNutHoles=true);
         //Housing backplate supports
         housingBackplateEdgeSupportSet(backplateSupportHeight);
@@ -379,24 +381,13 @@ module housing(housingDepth)
             // adjust the width here so we can get the round joint at the top
             picoHousingCutoutDifferenceFromRoundedMeasure = 5.1;
             picoHousingCutoutExtraLength = 2;
-            translate([_matrixHousingCutoutLengthPlacement+picoHousingCutoutLengthOffset,_bridgeWidthPlacement+picoHousingCutoutWidthOffset,_housingBaseThickness])
+            translate([_matrixHousingCutoutLengthPlacement+picoHousingCutoutLengthOffset,_bridgeWidthPlacement+picoHousingCutoutWidthOffset,0])
             {
                 cube([_picoHousingBaseLength, _bridgeBackplateWidth+picoHousingCutoutDifferenceFromRoundedMeasure, housingDepth*2]);
                 //include the housing lid shape itself for scuplted top cutout
                 housingSubModule(_picoHousingBaseLength-(_housingBodyRoundingRadius*2), _bridgeBackplateWidth, housingDepth*2, _picoHousingLidBaseThickness, apply_to="z");
             }
         }
-
-        //pico/Thumb Wall corner patch
-        picoCornerWallPatchLength = 1.5;
-        picoCornerWallPatchWidth = 3;
-        picoCornerWallPatchDepth = 3;
-        picoCornerWallPatchLengthPlacement = _matrixHousingCutoutLengthPlacement + picoCornerWallPatchLength + 18.1;
-        picoCornerWallPatchWidthPlacement = _bridgeWidthPlacement - 2;
-        picoCornerWallPatchDepthPlacement = 2;
-        translate([picoCornerWallPatchLengthPlacement, picoCornerWallPatchWidthPlacement , picoCornerWallPatchDepthPlacement])
-            cube([picoCornerWallPatchLength, picoCornerWallPatchWidth, picoCornerWallPatchDepth]);
-
     }
 }
 
@@ -472,7 +463,8 @@ module housingBackplateEdgeSupportSet(supportDepth)
                 housingStraightSupport(supportDepth);
 
         //Main pico side
-        translate([_key1_25uLength*(3)+_key1uLength*(3)-riserInwardsLengthAdjustment,_key1_25uWidth*(1)+_key1uWidth*(1.5)-(_housingStraightSupportLength*(3/4)),_housingBaseThickness])
+        decenteringAdjustmentForWires = 3;
+        translate([_key1_25uLength*(3)+_key1uLength*(3)-riserInwardsLengthAdjustment,_key1_25uWidth*(1)+_key1uWidth*(1.5)-(_housingStraightSupportLength*(3/4))+decenteringAdjustmentForWires,_housingBaseThickness])
             rotate([0, 0, 0])
                 housingStraightSupport(supportDepth);
 
@@ -514,7 +506,6 @@ module housingStraightSupport(depth)
     }
 }
 
-
 module backplate(backplateDepth)
 {
     difference()
@@ -543,6 +534,36 @@ module backplateSubModule(rowCount, columnCount, keyLength, keyWidth, backplateD
             translate([keyLength*j,keyWidth*i, 0])
                 keyUnit(keyLength, keyWidth, backplateDepth);
         }
+}
+
+module bridgeScreenMountingRiserSet(riserHeight, renderNutHoles)
+{
+    translate([(_bridgeGridEtchingSideLength*2.5), (_bridgeGridEtchingSideWidth*0.5), _riserBoltHeadCutoutDepth])
+        backplateMountingRiser(riserHeight, renderNutHoles);
+
+    translate([(_bridgeGridEtchingSideLength*2.5), (_bridgeGridEtchingSideWidth*2.5), _riserBoltHeadCutoutDepth])
+        backplateMountingRiser(riserHeight, renderNutHoles);
+
+    translate([(_bridgeGridEtchingSideLength*4.5), (_bridgeGridEtchingSideWidth*0.5), _riserBoltHeadCutoutDepth])
+        backplateMountingRiser(riserHeight, renderNutHoles);
+
+    translate([(_bridgeGridEtchingSideLength*4.5), (_bridgeGridEtchingSideWidth*2.5), _riserBoltHeadCutoutDepth])
+        backplateMountingRiser(riserHeight, renderNutHoles);
+}
+
+module bridgeBackplateMountingRiserSet(riserHeight, renderNutHoles)
+{
+    translate([(_bridgeGridEtchingSideLength*1), (_bridgeGridEtchingSideWidth*0.5), _riserBoltHeadCutoutDepth])
+        backplateMountingRiser(riserHeight, renderNutHoles);
+
+    translate([(_bridgeGridEtchingSideLength*1), (_bridgeGridEtchingSideWidth*2.5), _riserBoltHeadCutoutDepth])
+        backplateMountingRiser(riserHeight, renderNutHoles);
+
+    translate([(_bridgeGridEtchingSideLength*6), (_bridgeGridEtchingSideWidth*0.5), _riserBoltHeadCutoutDepth])
+        backplateMountingRiser(riserHeight, renderNutHoles);
+
+    translate([(_bridgeGridEtchingSideLength*6), (_bridgeGridEtchingSideWidth*2.5), _riserBoltHeadCutoutDepth])
+        backplateMountingRiser(riserHeight, renderNutHoles);
 }
 
 module backplateMountingRiserSet(riserHeight, renderNutHoles)
@@ -585,13 +606,36 @@ module keyUnit(length, width, depth)
 
 module bridgeSection(housingDepth, backplateDepth, backplateOffsetFromHousing)
 {
+    backplateSupportHeight = backplateOffsetFromHousing - _housingBaseThickness;
+    riserCounterSinkAmount = _riserCutoutDepth - backplateSupportHeight;
     union()
     {
         _bridgeBackplateLengthOffsetAdjustment = 1.6;
         _bridgeBackplateWidthOffsetAdjustment = -0.5;
-        bridgeHousing(housingDepth);
-        translate([(_housingBodyRoundingRadius*2)+_bridgeHousingInsetIntoCoupling+_bridgeBackplateLengthOffsetAdjustment, _housingBodyRoundingRadius+_bridgeBackplateWidthOffsetAdjustment, backplateOffsetFromHousing])
-            bridgeBackplate(backplateDepth);
+
+        bridgeBackplateLengthOffset = (_housingBodyRoundingRadius*2)+_bridgeHousingInsetIntoCoupling+_bridgeBackplateLengthOffsetAdjustment;
+        bridgeBackplateWidthOffset = _housingBodyRoundingRadius+_bridgeBackplateWidthOffsetAdjustment;
+        difference()
+        {
+            bridgeHousing(housingDepth);
+
+            if (backplateSupportHeight < _riserCutoutDepth)
+            {
+                translate([bridgeBackplateLengthOffset, bridgeBackplateWidthOffset, -riserCounterSinkAmount])
+                    bridgeBackplateMountingRiserSet(_riserCutoutDepth, renderNutHoles=false);
+                translate([bridgeBackplateLengthOffset, bridgeBackplateWidthOffset, -riserCounterSinkAmount])
+                    bridgeScreenMountingRiserSet(_riserCutoutDepth, renderNutHoles=false);
+            }
+        }
+
+        //translate([bridgeBackplateLengthOffset, bridgeBackplateWidthOffset, backplateOffsetFromHousing])
+        //    bridgeBackplate(backplateDepth);
+
+        //Backplate mounting risers
+        translate([bridgeBackplateLengthOffset, bridgeBackplateWidthOffset, -riserCounterSinkAmount])
+            bridgeBackplateMountingRiserSet(max(_riserCutoutDepth, backplateSupportHeight), renderNutHoles=true);
+        translate([bridgeBackplateLengthOffset, bridgeBackplateWidthOffset, -riserCounterSinkAmount])
+            bridgeScreenMountingRiserSet(_riserCutoutDepth, renderNutHoles=true);
     }
 }
 
@@ -599,18 +643,25 @@ module bridgeHousing(housingDepth)
 {
     union()
     {
-        //TODO trim top
         translate([0, 0, 0])
             housingCoupling(isLeftSideConnector=false, shouldRenderRamp=true);
         difference()
         {
             translate([_bridgeHousingInsetIntoCoupling, 0, 0])
                 housingSubModule(_bridgeBackplateLengthForHousing, _bridgeBackplateWidth, housingDepth, _housingBaseThickness);
+
             //Cutouts for coupling sides
             translate([_bridgeHousingInsetIntoCoupling, -1, _couplingBaseDepth])
                 cube([_bridgeHousingInsetIntoCoupling+1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
             translate([_bridgeBackplateLengthForHousing+_bridgeHousingInsetIntoCoupling-1, -1, _couplingBaseDepth])
                 cube([_bridgeHousingInsetIntoCoupling+1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
+
+            //Trim off the top of the housing to avoid sharp edges.
+            housingTopTrimBlockLength = _bridgeBackplateLength*2;
+            housingTopTrimBlockWidth = _bridgeBackplateWidth*2;
+            housingTopTrimAmount = 1.0;
+            translate([-_housingWallThickness*3, -_housingWallThickness*3, housingDepth-housingTopTrimAmount])
+                cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
         }
         translate([_bridgeBackplateLengthForHousing+(_housingBodyRoundingRadius*2)-2, 0, 0])
             housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true);
