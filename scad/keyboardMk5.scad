@@ -135,6 +135,8 @@ _couplingNutInsertWidthCenterToCenter = 43.5;
 _couplingNutSetOffsetAdjustment = -0.25;
 _couplingInsetNutSetLengthOffset = (((_couplingLength+(_housingBodyRoundingRadius*2))-_couplingNutInsertLengthCenterToCenter)/2)+(_couplingNutSetOffsetAdjustment*2);
 _couplingInsetNutSetWidthOffset = (((_couplingWidth+(_housingBodyRoundingRadius*2))-_couplingNutInsertWidthCenterToCenter)/2)+(_couplingNutSetOffsetAdjustment*2);
+_couplingHousingLidHeight = 10.5;
+_couplingHousingLidBaseThickness = 2;
 
 _couplingCableCutoutWidth = _couplingWidth*(3/9);
 _couplingCableCutoutOffset = _couplingWidth*(2/5)+0.5;
@@ -217,8 +219,8 @@ _picoWidthPlacement = 11.80;
 //wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_kailhBackplateDepth);
-//housingCoupling(false);
-//housingCouplingBody();
+//housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
+//housingCouplingBody(shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
 bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
 //bridgeBackplate(_kailhBackplateDepth);
 //bridgeScreenCover();
@@ -305,7 +307,7 @@ module keyboardAssembly(switchType)
                                     cube([couplingJointLength+(cutoutEdgePadding*2), couplingJointWidth+(cutoutEdgePadding*2), housingDepth]);
                             }
 
-                        housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true);
+                        housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true, shouldRenderLid=false, shouldRenderBase=true);
                     }
 
                 ////pico enclosure
@@ -644,7 +646,7 @@ module bridgeHousing(housingDepth)
     union()
     {
         translate([0, 0, 0])
-            housingCoupling(isLeftSideConnector=false, shouldRenderRamp=true);
+            housingCoupling(isLeftSideConnector=false, shouldRenderRamp=true, shouldRenderLid=false, shouldRenderBase=true);
         difference()
         {
             translate([_bridgeHousingInsetIntoCoupling, 0, 0])
@@ -652,9 +654,13 @@ module bridgeHousing(housingDepth)
 
             //Cutouts for coupling sides
             translate([_bridgeHousingInsetIntoCoupling, -1, _couplingBaseDepth])
+                cube([_bridgeHousingInsetIntoCoupling-1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
+            housingCoupling(isLeftSideConnector=false, shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
+
+            translate([_bridgeBackplateLengthForHousing+_bridgeHousingInsetIntoCoupling+1, -1, _couplingBaseDepth])
                 cube([_bridgeHousingInsetIntoCoupling+1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
-            translate([_bridgeBackplateLengthForHousing+_bridgeHousingInsetIntoCoupling-1, -1, _couplingBaseDepth])
-                cube([_bridgeHousingInsetIntoCoupling+1, _bridgeBackplateWidth+(_housingBodyRoundingRadius*2), housingDepth]);
+            translate([_bridgeBackplateLengthForHousing+_bridgeHousingInsetIntoCoupling-1, 0, 0])
+                housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
 
             //Trim off the top of the housing to avoid sharp edges.
             housingTopTrimBlockLength = _bridgeBackplateLength*2;
@@ -664,7 +670,7 @@ module bridgeHousing(housingDepth)
                 cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
         }
         translate([_bridgeBackplateLengthForHousing+(_housingBodyRoundingRadius*2)-2, 0, 0])
-            housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true);
+            housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true, shouldRenderLid=false, shouldRenderBase=true);
     }
 }
 
@@ -708,15 +714,15 @@ module bridgeScreenCover()
     }
 }
 
-module housingCoupling(isLeftSideConnector, shouldRenderRamp)
+module housingCoupling(isLeftSideConnector, shouldRenderRamp, shouldRenderLid, shouldRenderBase)
 {
     if (isLeftSideConnector)
     {
         difference()
         {
-            housingCouplingBody(shouldRenderRamp);
-            translate([(_couplingLength/2)+_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, 0, -1])
-                cube([_couplingLength*2, _couplingWidth*2, (_couplingBaseDepth+_couplingBlockDepth)*2]);
+            housingCouplingBody(shouldRenderRamp, shouldRenderLid, shouldRenderBase);
+            translate([(_couplingLength/2)+_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, -1, -1])
+                cube([_couplingLength*2, _couplingWidth*2, (_couplingBaseDepth+_couplingBlockDepth+_couplingHousingLidHeight)*2]);
         }
     }
     else
@@ -724,57 +730,64 @@ module housingCoupling(isLeftSideConnector, shouldRenderRamp)
         translate([-_housingCouplingTotalHalfWidth, 0, 0])
             difference()
             {
-                housingCouplingBody(shouldRenderRamp);
-                translate([-_couplingLength+(_couplingLength/2)+_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, 0, -1])
-                    cube([_couplingLength, _couplingWidth*2, (_couplingBaseDepth+_couplingBlockDepth)*2]);
+                housingCouplingBody(shouldRenderRamp, shouldRenderLid, shouldRenderBase);
+                translate([-_couplingLength+(_couplingLength/2)+_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, -1, -1])
+                    cube([_couplingLength, _couplingWidth*2, (_couplingBaseDepth+_couplingBlockDepth+_couplingHousingLidHeight)*2]);
             }
     }
 }
 
-module housingCouplingBody(shouldRenderRamp)
+module housingCouplingBody(shouldRenderRamp, shouldRenderLid, shouldRenderBase)
 {
     union()
     {
         // Body
-        difference()
+        if (shouldRenderBase)
         {
             difference()
             {
-                arbitraryDepth = _couplingBaseDepth+10;
-                housingSubModule(_couplingLength, _couplingWidth, arbitraryDepth, _couplingBaseDepth);
-                translate([0,0,_couplingBaseDepth])
-                    cube([_couplingLength+10, _couplingWidth+10, arbitraryDepth]);
+                difference()
+                {
+                    arbitraryDepth = _couplingBaseDepth+10;
+                    housingSubModule(_couplingLength, _couplingWidth, arbitraryDepth, _couplingBaseDepth);
+                    translate([0,0,_couplingBaseDepth])
+                        cube([_couplingLength+10, _couplingWidth+10, arbitraryDepth]);
+                }
+
+                // Lid attachement nut set
+                translate([_couplingInsetNutSetLengthOffset,_couplingInsetNutSetWidthOffset,_couplingBaseDepth-_couplingInsetNutCutoutDepth])
+                    couplingLidAttachmentNutPunchSet();
+
+                if (shouldRenderRamp)
+                {
+                    // Left cable ramp cutout
+                    couplingCableRampAngle = 42;
+                    translate([-_couplingBaseDepth*1.5, _couplingCableCutoutOffset, 0])
+                        rotate([0, couplingCableRampAngle, 0])
+                            cube([_couplingBaseDepth, _couplingCableCutoutWidth, _couplingBaseDepth*3]);
+
+                    // Right cable ramp cutout
+                    mirror([1,0,0])
+                    translate([-_couplingBaseDepth*1.5-_couplingLength-(_housingBodyRoundingRadius*2)+1, _couplingCableCutoutOffset, 0])
+                        rotate([0, couplingCableRampAngle, 0])
+                            cube([_couplingBaseDepth, _couplingCableCutoutWidth, _couplingBaseDepth*3]);
+                }
             }
 
-            // Lid attachement nut set
-            translate([_couplingInsetNutSetLengthOffset,_couplingInsetNutSetWidthOffset,_couplingBaseDepth-_couplingInsetNutCutoutDepth])
-                couplingLidAttachmentNutPunchSet();
-
-            if (shouldRenderRamp)
+            // Bolt block
+            translate([0, _couplingBlockLength, 0])
             {
-                // Left cable ramp cutout
-                couplingCableRampAngle = 42;
-                translate([-_couplingBaseDepth*1.5, _couplingCableCutoutOffset, 0])
-                    rotate([0, couplingCableRampAngle, 0])
-                        cube([_couplingBaseDepth, _couplingCableCutoutWidth, _couplingBaseDepth*3]);
-
-                // Right cable ramp cutout
-                mirror([1,0,0])
-                translate([-_couplingBaseDepth*1.5-_couplingLength-(_housingBodyRoundingRadius*2)+1, _couplingCableCutoutOffset, 0])
-                    rotate([0, couplingCableRampAngle, 0])
-                        cube([_couplingBaseDepth, _couplingCableCutoutWidth, _couplingBaseDepth*3]);
+                blockToBlockOffset = _couplingBlockWidth+16;
+                translate([(_couplingLength-_couplingBlockLength)/2+_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, 0, 0])
+                    boltCouplingBlock();
+                translate([(_couplingLength-_couplingBlockLength)/2+_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, blockToBlockOffset, 0])
+                    boltCouplingBlock();
             }
         }
 
-        // Bolt block
-        translate([0, _couplingBlockLength, 0])
-        {
-            blockToBlockOffset = _couplingBlockWidth+16;
-            translate([(_couplingLength-_couplingBlockLength)/2+_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, 0, 0])
-                boltCouplingBlock();
-            translate([(_couplingLength-_couplingBlockLength)/2+_housingBodyRoundingRadius+_boltBlockOffsetAdjustment, blockToBlockOffset, 0])
-                boltCouplingBlock();
-        }
+        if(shouldRenderLid)
+            translate([0, 0, _couplingBaseDepth])
+                housingCouplingLid();
     }
 }
 
@@ -808,6 +821,20 @@ module boltCouplingBlock()
                             cylinder(r=_couplingBoltCounterSinkRadius, h=_couplingBoltLength, $fn=100);
                 }
             }
+}
+
+module housingCouplingLid()
+{
+    difference()
+    {
+        translate([_couplingLength+(_housingBodyRoundingRadius*2)-1, 0, _couplingHousingLidHeight])
+            rotate([0, 180, 0])
+                housingSubModule(_couplingLength, _couplingWidth, _couplingHousingLidHeight, _couplingHousingLidBaseThickness, apply_to="z");
+
+        // Lid attachement nut set
+        translate([_couplingInsetNutSetLengthOffset,_couplingInsetNutSetWidthOffset,_couplingBaseDepth])
+            couplingLidAttachmentNutPunchSet();
+    }
 }
 
 module picoHousing(renderLid, renderBase, renderPico)
@@ -872,9 +899,9 @@ module picoHousingBase()
         translate([((_picoHousingBaseLength-_picoCenterSupportBeamLength)/2)-_picoHousingPaddingOffsetAdjustment, _picoIntraHousingWidthOffset-1, _picoCenterSupportBeamOffsetFromBottom])
             cube([_picoCenterSupportBeamLength, _picoBodyWidth+2, _picoHousingBaseDepth-_picoCenterSupportBeamOffsetFromTop-_picoCenterSupportBeamOffsetFromBottom]);
         translate([-_housingCouplingTotalHalfWidth+2.1, (_picoHousingBaseWidth-_couplingWidth)/2-(_housingBodyRoundingRadius), 0])
-            housingCoupling(isLeftSideConnector=false, shouldRenderRamp=false);
+            housingCoupling(isLeftSideConnector=false, shouldRenderRamp=false, shouldRenderLid=false, shouldRenderBase=true);
         translate([_picoHousingBaseLength-1.1, (_picoHousingBaseWidth-_couplingWidth)/2-(_housingBodyRoundingRadius), 0])
-            housingCoupling(isLeftSideConnector=true, shouldRenderRamp=false);
+            housingCoupling(isLeftSideConnector=true, shouldRenderRamp=false, shouldRenderLid=false, shouldRenderBase=true);
     }
 }
 
