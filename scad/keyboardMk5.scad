@@ -194,7 +194,7 @@ _picoMountingStudWallThickess = 1.5;
 _picoMountingStudHeight = 3;
 _picoMountingStudInsetDepth = 3;
 
-_picoCutoutDepth = 2;
+_picoCutoutDepth = 3;
 _picoCenterSupportBeamLength = 8;
 _picoCenterSupportBeamOffsetFromBottom = 2;
 _picoCenterSupportBeamOffsetFromTop = 1.1;
@@ -209,6 +209,11 @@ _picoInsetNutSetWidthOffset = ((_picoHousingBaseWidth-_picoNutInsertWidthCenterT
 _picoLengthPlacement = _matrixHousingCutoutLengthPlacement+175.1;
 _picoWidthPlacement = 11.80;
 
+_usbcBreakoutLength = 9.4;
+_usbcBreakoutWidth = 14.6;
+_usbcBreakoutDepth = 3.3;
+_usbcBreakoutMountingInsertCenterToCenter = 20;
+
 
 /// MAIN START ///
 
@@ -221,7 +226,7 @@ _picoWidthPlacement = 11.80;
 //backplate(_kailhBackplateDepth);
 //housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
 //housingCouplingBody(shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
-bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
+//bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
 //bridgeBackplate(_kailhBackplateDepth);
 //bridgeScreenCover();
 //boltCouplingBlock();
@@ -234,7 +239,7 @@ bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffse
 //picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingStud(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingNutPunchSet();
-//picoHousing(renderLid=false, renderBase=true, renderPico=false);
+picoHousing(renderLid=false, renderBase=true, renderPico=false);
 //picoHousingBase();
 //picoHousingTop();
 //arduinoMicroPunch();
@@ -891,17 +896,61 @@ module picoHousingBase()
             // Lid attachement nut set
             translate([_picoInsetNutSetLengthOffset,_picoInsetNutSetWidthOffset,_picoHousingBaseDepth-_picoInsetNutCutoutDepth])
                 lidAttachmentNutPunchSet();
+
             // Pico cutout
             translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-_picoCutoutDepth])
                 picoPunch(_picoCutoutDepth+1);
+
+            //USB passthrough wiring route
+            usbPassthroughCutoutLength = 6;
+            usbPassthroughCutoutWidth = 9;
+            usbPassthroughCutoutDepth = _picoCutoutDepth+1;
+
+            usbPassthroughCutoutLengthOffset = _picoIntraHousingLengthOffset-usbPassthroughCutoutLength;
+            usbPassthroughCutoutWidthOffset = _picoIntraHousingWidthOffset+_picoBodyWidth-usbPassthroughCutoutWidth;
+            translate([usbPassthroughCutoutLengthOffset, usbPassthroughCutoutWidthOffset, _picoHousingBaseDepth-_picoCutoutDepth])
+                cube([usbPassthroughCutoutLength, usbPassthroughCutoutWidth, usbPassthroughCutoutDepth]);
+
+            // USBC breakout cutout
+            usbcCutoutLengthOffset = 14+_picoHousingPaddingOffsetAdjustment;
+            usbcCutoutWidthOffset = 62;
+            translate([usbcCutoutLengthOffset, usbcCutoutWidthOffset, _picoHousingBaseDepth-(_usbcBreakoutDepth/2)])
+            {
+                cube([_usbcBreakoutLength, _usbcBreakoutWidth, _usbcBreakoutDepth]);
+                usbcMountingLengthOffset = -5-_picoHousingPaddingOffsetAdjustment;
+                usbcMountingWidthOffset = 7;
+                translate([usbcMountingLengthOffset, usbcMountingWidthOffset, -1])
+                    union()
+                    {
+                        cylinder(r=_insetNutCutoutRadius, h=_riserCutoutDepth+1, $fn=100);
+                        translate([_usbcBreakoutMountingInsertCenterToCenter, 0, 0])
+                            cylinder(r=_insetNutCutoutRadius, h=_riserCutoutDepth+1, $fn=100);
+                    }
+            }
+
         }
 
-        translate([((_picoHousingBaseLength-_picoCenterSupportBeamLength)/2)-_picoHousingPaddingOffsetAdjustment, _picoIntraHousingWidthOffset-1, _picoCenterSupportBeamOffsetFromBottom])
-            cube([_picoCenterSupportBeamLength, _picoBodyWidth+2, _picoHousingBaseDepth-_picoCenterSupportBeamOffsetFromTop-_picoCenterSupportBeamOffsetFromBottom]);
-        translate([-_housingCouplingTotalHalfWidth+2.1, (_picoHousingBaseWidth-_couplingWidth)/2-(_housingBodyRoundingRadius), 0])
+        couplingWidthOffset = (_picoHousingBaseWidth-_couplingWidth)/2-(_housingBodyRoundingRadius);
+        translate([-_housingCouplingTotalHalfWidth+2.1, couplingWidthOffset, 0])
             housingCoupling(isLeftSideConnector=false, shouldRenderRamp=false, shouldRenderLid=false, shouldRenderBase=true);
-        translate([_picoHousingBaseLength-1.1, (_picoHousingBaseWidth-_couplingWidth)/2-(_housingBodyRoundingRadius), 0])
+        translate([_picoHousingBaseLength-1.1, couplingWidthOffset, 0])
             housingCoupling(isLeftSideConnector=true, shouldRenderRamp=false, shouldRenderLid=false, shouldRenderBase=true);
+
+        couplingJointWidth = _couplingWidth+(_housingBodyRoundingRadius*2)-1.0;
+        couplingJointLength = _picoHousingBaseLength+20;
+        couplingJointDepth = 3;
+        jointLengthOffset = -8;
+        jointWidthOffset = couplingWidthOffset;
+        couplingJointOutEdgeOffset = _housingCouplingTotalHalfWidth+_housingBodyRoundingRadius+2;
+        // Smoothing for joint seam.
+        translate([jointLengthOffset, jointWidthOffset, 1.5])
+            difference()
+            {
+                roundedCube(size=[couplingJointLength, couplingJointWidth, _picoHousingBaseDepth], radius=_housingBodyRoundingRadius, apply_to="all");
+                cutoutEdgePadding = 5;
+                translate([-cutoutEdgePadding,-cutoutEdgePadding, 2])
+                    cube([couplingJointLength+(cutoutEdgePadding*2), couplingJointWidth+(cutoutEdgePadding*2), _picoHousingBaseDepth*2]);
+            }
     }
 }
 
