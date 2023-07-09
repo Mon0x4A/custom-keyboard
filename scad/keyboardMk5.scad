@@ -164,7 +164,7 @@ _bridgeGridEtchingCutoutSideWidth = 10;
 _bridgeOledScreenCoverBaseLength = 33;
 _bridgeOledScreenCoverBaseWidth = 32;
 _bridgeOledScreenCoverBaseDepth = 7;
-_bridgeOledScreenCoverBaseThickness = 2;
+_bridgeOledScreenCoverBaseThickness = 2; //TODO not sure if this is being applied correctly...
 
 //Pico Variables
 _picoBodySizePadding = 0.4;
@@ -180,8 +180,8 @@ _picoHousingBaseDepth = 6.5;
 _picoHousingLidHeight = 10;
 _picoHousingLidBoltCounterSink = 0;
 _picoHousingLidBaseThickness = 2;
-_picoHousingCableCutoutWidth = _picoHousingBaseWidth*(3/5);
-_picoHousingCableCutoutOffset = _picoHousingBaseWidth*(1/5);
+_picoHousingCableCutoutWidth = _picoHousingBaseWidth*(2/5);
+_picoHousingCableCutoutOffset = _picoHousingBaseWidth*(1.5/5);
 _picoHousingPaddingOffsetAdjustment = 0.25;
 
 _picoIntraHousingLengthOffset = _picoHousingLengthEdgePadding-_picoHousingPaddingOffsetAdjustment+1.25;
@@ -226,9 +226,10 @@ _usbcBreakoutMountingInsertCenterToCenter = 20;
 //backplate(_kailhBackplateDepth);
 //housingCoupling(isLeftSideConnector=true, shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
 //housingCouplingBody(shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
+//housingCouplingLid(shouldRenderLeftWireCutout=true, shouldRenderRightWireCutout=true);
 //bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
 //bridgeBackplate(_kailhBackplateDepth);
-//bridgeScreenCover();
+bridgeScreenCover();
 //boltCouplingBlock();
 //oledScreenPunch(_picoHousingLidBaseThickness+2);
 //oledScreenPlateCover(depth=1.5);
@@ -239,7 +240,7 @@ _usbcBreakoutMountingInsertCenterToCenter = 20;
 //picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingStud(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingNutPunchSet();
-picoHousing(renderLid=false, renderBase=true, renderPico=false);
+//picoHousing(renderLid=true, renderBase=false, renderPico=false);
 //picoHousingBase();
 //picoHousingTop();
 //arduinoMicroPunch();
@@ -288,8 +289,8 @@ module keyboardAssembly(switchType)
                 //translate([0,0,backplateOffsetFromHousing])
                 //    backplate(backplateDepth);
 
-                translate([_bridgeLengthPlacement,_bridgeWidthPlacement,0])
-                    bridgeSection(housingDepth, backplateDepth, backplateOffsetFromHousing);
+                //translate([_bridgeLengthPlacement,_bridgeWidthPlacement,0])
+                //    bridgeSection(housingDepth, backplateDepth, backplateOffsetFromHousing);
 
                 translate([_matrixHousingCutoutLengthPlacement,_bridgeWidthPlacement,0])
                     union()
@@ -828,7 +829,7 @@ module boltCouplingBlock()
             }
 }
 
-module housingCouplingLid()
+module housingCouplingLid(shouldRenderLeftWireCutout, shouldRenderRightWireCutout)
 {
     difference()
     {
@@ -836,8 +837,19 @@ module housingCouplingLid()
             rotate([0, 180, 0])
                 housingSubModule(_couplingLength, _couplingWidth, _couplingHousingLidHeight, _couplingHousingLidBaseThickness, apply_to="z");
 
+        picoCableCutoutDepth = 2;
+        couplingHousingCableCutoutOffset = 11;
+        couplingHousingCableCutoutWidth = 30;
+        if (shouldRenderLeftWireCutout)
+            translate([-1, couplingHousingCableCutoutOffset, -1])
+                cube([_housingWallThickness+2, couplingHousingCableCutoutWidth, picoCableCutoutDepth+1]);
+        if (shouldRenderRightWireCutout)
+            translate([(_housingCouplingTotalHalfWidth*2)-_housingWallThickness-1, couplingHousingCableCutoutOffset, -1])
+                cube([_housingWallThickness+2, couplingHousingCableCutoutWidth, picoCableCutoutDepth+1]);
+
+
         // Lid attachement nut set
-        translate([_couplingInsetNutSetLengthOffset,_couplingInsetNutSetWidthOffset,_couplingBaseDepth])
+        translate([_couplingInsetNutSetLengthOffset,_couplingInsetNutSetWidthOffset,_couplingBaseDepth+1])
             couplingLidAttachmentNutPunchSet();
     }
 }
@@ -1006,9 +1018,11 @@ module picoHousingTop()
                         riserBackplateBoltPunch(_picoHousingLidBaseThickness);
                 }
 
-                // cutout to bring in matrix row/col wires
-                picoCableCutoutDepth = 1.5;
+                // cutouts to bring in matrix row/col wires
+                picoCableCutoutDepth = 2;
                 translate([-1, _picoHousingCableCutoutOffset, -1])
+                    cube([_housingWallThickness+2, _picoHousingCableCutoutWidth, picoCableCutoutDepth+1]);
+                translate([_picoHousingBaseLength-_housingWallThickness-1, _picoHousingCableCutoutOffset, -1])
                     cube([_housingWallThickness+2, _picoHousingCableCutoutWidth, picoCableCutoutDepth+1]);
 
                 //Screen cutout
@@ -1017,32 +1031,6 @@ module picoHousingTop()
                 translate([oledLengthOffset, _picoHousingBaseWidth-oledWidthOffsetFromTop, _picoHousingLidHeight-_picoHousingLidBaseThickness-1])
                     oledScreenPunch(_picoHousingLidBaseThickness+2);
             }
-
-            //TRRS port holder
-            union()
-            {
-                trrsPortWallHeight = _trrsBodyDepth;
-                trrsCutoutTolerance = 0.1;
-                trrsShimThickness = _trrsWedgeDepth;
-                translate([trrsPortTotalLengthOffset-_trrsWallThickness-trrsShimThickness, trrsPortTotalWidthOffset, _picoHousingLidHeight-_picoHousingLidBaseThickness-trrsPortWallHeight])
-                    difference()
-                    {
-                        cube([_trrsBodyLength+(_trrsWallThickness*2)+trrsShimThickness, _trrsBodyWidth+(_trrsWallThickness*2), trrsPortWallHeight]);
-                        translate([_trrsWallThickness-trrsCutoutTolerance, _trrsWallThickness-trrsCutoutTolerance, -1])
-                            cube([_trrsBodyLength+trrsCutoutTolerance+trrsShimThickness, _trrsBodyWidth+trrsCutoutTolerance, trrsPortWallHeight+2]);
-                    }
-            }
-        }
-
-        //TRRS port hole punch
-        trrsPortCountsinkDepth = 1.5;
-        translate([trrsPortTotalLengthOffset-0.1, trrsPortTotalWidthOffset+_trrsWallThickness, _picoHousingLidHeight-_picoHousingLidBaseThickness-_trrsBodyDepth])
-        {
-            trrsBodyPunch();
-            //TRRS countersink punch
-            translate([_trrsBodyLength+trrsPortCountsinkDepth, _trrsBodyWidth/2, _trrsBodyDepth/2])
-                rotate([0, 90, 0])
-                    cylinder(r=4, h=trrsPortCountsinkDepth+2, $fn=100);
         }
     }
 }
