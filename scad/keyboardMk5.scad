@@ -164,7 +164,7 @@ _bridgeGridEtchingCutoutSideWidth = 10;
 _bridgeOledScreenCoverBaseLength = 33;
 _bridgeOledScreenCoverBaseWidth = 32;
 _bridgeOledScreenCoverBaseDepth = 7;
-_bridgeOledScreenCoverBaseThickness = 2; //TODO not sure if this is being applied correctly...
+_bridgeOledScreenCoverBaseThickness = 2;
 
 //Pico Variables
 _picoBodySizePadding = 0.4;
@@ -228,8 +228,8 @@ _usbcBreakoutMountingInsertCenterToCenter = 20;
 //housingCouplingBody(shouldRenderRamp=true, shouldRenderLid=true, shouldRenderBase=true);
 //housingCouplingLid(shouldRenderLeftWireCutout=true, shouldRenderRightWireCutout=true);
 //bridgeSection(_kailhHousingBodyDepth, _kailhBackplateDepth, _kailhBackplateOffsetFromHousing);
-//bridgeBackplate(_kailhBackplateDepth);
-bridgeScreenCover();
+bridgeBackplate(_kailhBackplateDepth);
+//bridgeScreenCover();
 //boltCouplingBlock();
 //oledScreenPunch(_picoHousingLidBaseThickness+2);
 //oledScreenPlateCover(depth=1.5);
@@ -683,12 +683,16 @@ module bridgeHousing(housingDepth)
 module bridgeBackplate(backplateDepth)
 {
     difference()
-    //union()
     {
         roundedCube([_bridgeBackplateLength, _bridgeBackplateWidth, backplateDepth], radius=_backplateRoundingRadius, apply_to="zmax");
         translate([0, 0, backplateDepth-_bridgeGridEtchingDepth])
             gridEtching(_bridgeGridEtchingRowCount, _bridgeGridEtchingColumnCount, _bridgeGridEtchingSideLength, _bridgeGridEtchingSideWidth, _bridgeGridEtchingDepth+1, _bridgeGridEtchingCutoutSideLength, _bridgeGridEtchingCutoutSideWidth);
 
+        // Center screen wiring cutout
+        translate([(_bridgeGridEtchingSideLength*3), (_bridgeGridEtchingSideWidth*1), -1])
+            cube([_bridgeGridEtchingSideLength, _bridgeGridEtchingSideWidth, backplateDepth*2]);
+
+        // Bolt holes
         translate([0, 0, -1])
         {
             riserBridgeBackplateBoltPunchSet(backplateDepth);
