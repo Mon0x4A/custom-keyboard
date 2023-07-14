@@ -49,16 +49,18 @@ int main(void)
         // TODO TEMP TEST Set up I2C as peripheral
         //i2c_switch_state_transmitter_init();
 
+        // Init local/native switch handling
+        switch_state_set_pressed_callback(press_handler_on_switch_press);
+        switch_state_set_released_callback(release_handler_on_switch_release);
+
+#if IS_SPLIT_KEYBOARD
         // Join I2C bus as controller
         peripheral_switch_state_init();
 
-        // Init press handling
-        switch_state_set_pressed_callback(press_handler_on_switch_press);
-        peripheral_switch_state_set_pressed_callback(press_handler_on_switch_press);
-
-        // Init release handling
-        switch_state_set_released_callback(release_handler_on_switch_release);
+        // Init peripheral switch state handling.
         peripheral_switch_state_set_released_callback(release_handler_on_switch_release);
+        peripheral_switch_state_set_pressed_callback(press_handler_on_switch_press);
+#endif
 
         // Primary side run loop
         while (1)
@@ -69,11 +71,13 @@ int main(void)
             // Update LED state.
             led_blinking_task();
 
-            // Update phyiscal switch state.
+            // Update local, phyiscal switch state.
             switch_state_task();
 
-            // Update non-native (peripheral) switch state.
+#if IS_SPLIT_KEYBOARD
+            // Update non-native (peripheral), phyiscal switch state.
             peripheral_switch_state_task();
+#endif
 
             // Update reported keyboard state.
             hid_task();
