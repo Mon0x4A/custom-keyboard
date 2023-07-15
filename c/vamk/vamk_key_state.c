@@ -6,12 +6,15 @@
 #include "vamk_layer_info.h"
 #include "vamk_types.h"
 
+///Static Constants
+static const uint8_t AUTO_RELEASE_REPORT_QUANTITY = 15;
+
 ///Static Global Variables
 //TODO these properties should be made volatile if timer/alarm release
 //code gets added.
 static uint8_t _current_hid_report_codes[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 static uint8_t _current_report_code_quantity = 0;
-static bool _code_has_single_report_lifetime[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
+static uint8_t _code_report_lifetime_countdown[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 static uint8_t _current_modifier = 0;
 
 static uint8_t _current_layer = 0;
@@ -25,7 +28,7 @@ static bool contains_hid_report_code(uint8_t hid_keycode)
     return false;
 }
 
-static void insert_hid_report_code(struct hid_keycode_container_t keycode_container, bool release_on_next_report)
+static void insert_hid_report_code(struct hid_keycode_container_t keycode_container, bool set_auto_release_countdown)
 {
     // If this did not initialize correctly, something has gone wrong.
     hard_assert(keycode_container.has_valid_contents);
@@ -40,7 +43,7 @@ static void insert_hid_report_code(struct hid_keycode_container_t keycode_contai
         if (_current_hid_report_codes[i] == 0)
         {
             _current_hid_report_codes[i] = keycode_container.hid_keycode;
-            _code_has_single_report_lifetime[i] = release_on_next_report;
+            _code_report_lifetime_countdown[i] = set_auto_release_countdown ? AUTO_RELEASE_REPORT_QUANTITY : 0;
             _current_modifier = keycode_container.modifier;
             break;
         }
@@ -55,7 +58,7 @@ static void remove_hid_report_code(uint8_t hid_keycode)
         if (_current_hid_report_codes[i] == hid_keycode)
         {
             _current_hid_report_codes[i] = 0;
-            _code_has_single_report_lifetime[i] = false;
+            _code_report_lifetime_countdown[i] = 0; //false;
             _current_modifier = 0;
         }
     }
@@ -69,13 +72,17 @@ struct key_report_t key_state_build_hid_report(void)
         key_report_to_send.keycodes[i] = _current_hid_report_codes[i];
     key_report_to_send.modifier = _current_modifier;
 
-    // Now that we've build the report, remove the single report keys.
+    // Now that we've built the report, handle any countdowns.
     for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
     {
-        if(_code_has_single_report_lifetime[i])
+        if(_code_report_lifetime_countdown[i] > 1)
+            _code_report_lifetime_countdown[i]--;
+
+        if(_code_report_lifetime_countdown[i] == 1)
         {
+            // We've reached the end of our countdown.
             _current_hid_report_codes[i] = 0;
-            _code_has_single_report_lifetime[i] = false;
+            _code_report_lifetime_countdown[i] = 0;
             _current_modifier = 0;
         }
     }
@@ -93,9 +100,9 @@ void key_state_set_current_layer_index(uint8_t layer_index)
     _current_layer = layer_index;
 }
 
-void key_state_press(struct hid_keycode_container_t keycode_container, bool release_on_next_report)
+void key_state_press(struct hid_keycode_container_t keycode_container, bool auto_release)
 {
-    insert_hid_report_code(keycode_container, release_on_next_report);
+    insert_hid_report_code(keycode_container, auto_release);
 }
 
 void key_state_release(uint8_t hid_keycode)
