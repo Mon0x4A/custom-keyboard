@@ -36,14 +36,14 @@
 #define ENABLE_SERIAL_LOGGING 1
 #define ENABLE_KEYBOARD_COMMANDS 1
 
-#define IS_SPLIT_KEYBOARD 1
+#define IS_SPLIT_KEYBOARD 0
 static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
 
 #define LAYER_COUNT 3
 
-/// Split Keyboard Config
-//=======================
 #if IS_SPLIT_KEYBOARD
+    /// Split Keyboard Config
+    //=======================
     #define IS_PRIMARY_KEYBOARD_SIDE 1
     static const keyboard_side_t CURRENT_KEYBOARD_SIDE = RIGHT_SIDE;
     static const keyboard_side_t OPPOSITE_KEYBOARD_SIDE = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? RIGHT_SIDE : LEFT_SIDE;
@@ -173,24 +173,24 @@ static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
     #define COLUMN_COUNT 14
     #define ROW_COUNT 3
 
-    static const uint8_t ROW_0_PIN = 18;
+    static const uint8_t ROW_0_PIN = 20;
     static const uint8_t ROW_1_PIN = 19;
-    static const uint8_t ROW_2_PIN = 20;
+    static const uint8_t ROW_2_PIN = 18;
 
-    static const uint8_t COL_0_PIN = 12;
-    static const uint8_t COL_1_PIN = 6;
+    static const uint8_t COL_0_PIN = 6;
+    static const uint8_t COL_1_PIN = 8;
     static const uint8_t COL_2_PIN = 11;
-    static const uint8_t COL_3_PIN = 7;
+    static const uint8_t COL_3_PIN = 9;
     static const uint8_t COL_4_PIN = 10;
-    static const uint8_t COL_5_PIN = 8;
-    static const uint8_t COL_6_PIN = 9;
-    static const uint8_t COL_7_PIN = 12;
-    static const uint8_t COL_8_PIN = 6;
-    static const uint8_t COL_9_PIN = 11;
-    static const uint8_t COL_10_PIN = 7;
-    static const uint8_t COL_11_PIN = 10;
-    static const uint8_t COL_12_PIN = 8;
-    static const uint8_t COL_13_PIN = 9;
+    static const uint8_t COL_5_PIN = 7;
+    static const uint8_t COL_6_PIN = 12;
+    static const uint8_t COL_7_PIN = 16;
+    static const uint8_t COL_8_PIN = 27;
+    static const uint8_t COL_9_PIN = 21;
+    static const uint8_t COL_10_PIN = 22;
+    static const uint8_t COL_11_PIN = 17;
+    static const uint8_t COL_12_PIN = 26;
+    static const uint8_t COL_13_PIN = 28;
 
     static const uint8_t ROWS[ROW_COUNT] = { ROW_0_PIN, ROW_1_PIN, ROW_2_PIN };
     static const uint8_t COLS[COLUMN_COUNT] =
