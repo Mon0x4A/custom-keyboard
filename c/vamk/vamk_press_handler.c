@@ -2,17 +2,21 @@
 #include <stdbool.h>
 #include "pico/stdlib.h"
 #include "vamk_config.h"
+#include "vamk_key_helper.h"
 #include "vamk_key_state.h"
+#include "vamk_keyboard_state.h"
 #include "vamk_layer_info.h"
 #include "vamk_press_handler.h"
 #include "vamk_tap_handler.h"
 #include "vamk_types.h"
 
 ///Global Variables
+static bool _has_chord_action_been_performed = false;
 
 ///Function Declarations
 
 ///Static (Private) Functions
+
 //#include "hardware/timer.h"
 ////TODO this timer code could be very useful for key events
 //// Timer example code - This example fires off the callback after 2000ms
@@ -26,7 +30,7 @@
 ///Public Functions
 void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
 {
-    uint8_t current_layer = key_state_get_current_layer_index();
+    uint8_t current_layer = keyboard_state_get_current_layer_index();
 
     tap_handler_on_switch_press(row, col, current_layer, keyboard_side);
 
@@ -36,6 +40,8 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     // If we are receiving invalid codes, something has gone
     // programatically wrong with the layers.
     hard_assert(code_container.has_valid_contents);
+
+    keyboard_state_set_has_chord_action_been_performed(!key_helper_is_modifier_keycode(code_container));
 
     //TODO single tap action handling
     //TODO double tap action handling
@@ -48,12 +54,12 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     {
         case KC_LM1:
             should_report_code = false;
-            key_state_set_current_layer_index(1);
+            keyboard_state_set_current_layer_index(1);
             printf("Entering layer 1\n");
             break;
         case KC_LM2:
             should_report_code = false;
-            key_state_set_current_layer_index(2);
+            keyboard_state_set_current_layer_index(2);
             printf("Entering layer 2\n");
             break;
         case KC_NULL:

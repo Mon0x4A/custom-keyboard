@@ -23,10 +23,10 @@
 #define KC_LM3 0xA8 //the TinyUSB API.
 #define KC_LM4 0xA9 //
 #define KC_LM5 0xAA //The reserved codes are 0xA5-0xDF
-#define KC_LM6 0xAA
-#define KC_LM7 0xAB
-#define KC_LM8 0xAC
-#define KC_LM9 0xAD
+#define KC_LM6 0xAB
+#define KC_LM7 0xAC
+#define KC_LM8 0xAD
+#define KC_LM9 0xAE
 
 #define KC_REPEAT 0xC0 //Also a repurposed reserved TinyUSB code.
 

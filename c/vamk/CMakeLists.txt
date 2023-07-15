@@ -30,7 +30,9 @@ add_executable(vamk vamk.c )
 target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/vamk.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_i2c_switch_state_transmitter.c
+        ${CMAKE_CURRENT_LIST_DIR}/vamk_key_helper.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_key_state.c
+        ${CMAKE_CURRENT_LIST_DIR}/vamk_keyboard_state.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_layer_info.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_peripheral_switch_state.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_press_handler.c

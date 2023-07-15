@@ -90,16 +90,6 @@ struct key_report_t key_state_build_hid_report(void)
     return key_report_to_send;
 }
 
-uint8_t key_state_get_current_layer_index(void)
-{
-    return _current_layer;
-}
-
-void key_state_set_current_layer_index(uint8_t layer_index)
-{
-    _current_layer = layer_index;
-}
-
 void key_state_press(struct hid_keycode_container_t keycode_container, bool auto_release)
 {
     insert_hid_report_code(keycode_container, auto_release);

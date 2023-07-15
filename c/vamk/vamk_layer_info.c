@@ -81,7 +81,7 @@ static struct layer_index_value_container_t get_base_value_at(
     return index_value_container;
 }
 
-struct layer_index_value_container_t get_tap_value_at(
+static struct layer_index_value_container_t get_tap_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
     struct layer_index_value_container_t index_value_container;
@@ -155,8 +155,7 @@ static struct hid_keycode_container_t build_code_container(struct layer_index_va
     return code_container;
 }
 
-
-///Public Functions
+///Extern Functions
 struct hid_keycode_container_t layer_info_get_base_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
@@ -170,3 +169,4 @@ struct hid_keycode_container_t layer_info_get_tap_keycode_at(
     struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, keyboard_side);
     return build_code_container(layer_value);
 }
+
