@@ -79,7 +79,8 @@ bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_ind
 
     // Calc the interval and convert to milliseconds
     uint64_t elapsed_interval_ms = (absolute_time_diff_us((*key_down_at), get_absolute_time()))/1000;
-    if (elapsed_interval_ms <= TAP_ACTION_TIMEOUT_MS)
+    if (elapsed_interval_ms <= TAP_ACTION_TIMEOUT_MS
+        && elapsed_interval_ms > TAP_ACTION_TIMEIN_MS)
     {
         key_state_press(code_container, true);
         return true;
