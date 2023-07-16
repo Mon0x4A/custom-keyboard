@@ -203,9 +203,9 @@ static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
     ///================
     static const uint8_t L0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     {
-        { HID_KEY_CONTROL_LEFT, 'q', 'w', 'e', 'r', 't', KC_LM1,             KC_LM1,              'y', 'u', 'i', 'o', 'p', HID_KEY_CONTROL_RIGHT },
-        { KC_NULL,              'a', 's', 'd', 'f', 'g', KC_LM2,             KC_LM2,              'h', 'j', 'k', 'l', ';', KC_NULL },
-        { KC_NULL,              'z', 'x', 'c', 'v', 'b', HID_KEY_SHIFT_LEFT, HID_KEY_SHIFT_RIGHT, 'n', 'm', ',', '.', '/', KC_NULL },
+        { HID_KEY_CONTROL_RIGHT, 'q', 'w', 'e', 'r', 't', KC_LM1,             KC_LM1,              'y', 'u', 'i', 'o', 'p', HID_KEY_CONTROL_RIGHT },
+        { KC_NULL,               'a', 's', 'd', 'f', 'g', KC_LM2,             KC_LM2,              'h', 'j', 'k', 'l', ';', KC_NULL },
+        { KC_NULL,               'z', 'x', 'c', 'v', 'b', HID_KEY_SHIFT_LEFT, HID_KEY_SHIFT_RIGHT, 'n', 'm', ',', '.', '/', KC_NULL },
     };
 
     static const bool L0_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
