@@ -9,6 +9,7 @@
 #include "vamk_press_handler.h"
 #include "vamk_tap_handler.h"
 #include "vamk_types.h"
+#include "tusb.h"
 
 ///Global Variables
 static bool _has_chord_action_been_performed = false;
@@ -43,10 +44,7 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
 
     keyboard_state_set_has_chord_action_been_performed(!key_helper_is_modifier_keycode(code_container));
 
-    //TODO single tap action handling
     //TODO double tap action handling
-    //TODO else notify chord action performed
-
     //TODO record repeat state
 
     bool should_report_code = true;
@@ -54,33 +52,34 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     {
         case KC_LM1:
             should_report_code = false;
-            keyboard_state_set_current_layer_index(1);
+            keyboard_state_set_is_layer_modifier_pressed(1, true);
             printf("Entering layer 1\n");
             break;
         case KC_LM2:
             should_report_code = false;
-            keyboard_state_set_current_layer_index(2);
+            keyboard_state_set_is_layer_modifier_pressed(2, true);
             printf("Entering layer 2\n");
+            break;
+        //TODO handle the other layers, maybe with a helper method to convert to index?
+        case HID_KEY_ALT_LEFT:
+        case HID_KEY_ALT_RIGHT:
+            break;
+        case HID_KEY_GUI_LEFT:
+        case HID_KEY_GUI_RIGHT:
+            break;
+        case HID_KEY_CONTROL_LEFT:
+        case HID_KEY_CONTROL_RIGHT:
+            break;
+        case HID_KEY_SHIFT_LEFT:
+        case HID_KEY_SHIFT_RIGHT:
             break;
         case KC_NULL:
         //HID_KEY_NONE as well
             // Nothing to do if we hit a null code.
             should_report_code = false;
             break;
-        //case KEY_LEFT_ALT:
-        //case KEY_RIGHT_ALT:
-        //    break;
-        //case KEY_LEFT_GUI:
-        //case KEY_RIGHT_GUI:
-        //    break;
-        //case KEY_LEFT_CTRL:
-        //case KEY_RIGHT_CTRL:
-        //    break;
-        //case KEY_LEFT_SHIFT:
-        //case KEY_RIGHT_SHIFT:
-        //    break;
-        //default:
-        //    break;
+        default:
+            break;
     }
 
     if (ENABLE_KEYBOARD_COMMANDS && should_report_code)

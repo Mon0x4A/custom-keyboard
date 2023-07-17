@@ -40,6 +40,7 @@
 static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
 
 #define LAYER_COUNT 3
+#define MAX_LAYER_COUNT 10
 
 #if IS_SPLIT_KEYBOARD
     /// Split Keyboard Config
@@ -203,9 +204,9 @@ static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
     ///================
     static const uint8_t L0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     {
-        { HID_KEY_CONTROL_RIGHT, 'q', 'w', 'e', 'r', 't', KC_LM1,             KC_LM1,              'y', 'u', 'i', 'o', 'p', HID_KEY_CONTROL_RIGHT },
-        { KC_NULL,               'a', 's', 'd', 'f', 'g', KC_LM2,             KC_LM2,              'h', 'j', 'k', 'l', ';', KC_NULL },
-        { KC_NULL,               'z', 'x', 'c', 'v', 'b', HID_KEY_SHIFT_LEFT, HID_KEY_SHIFT_RIGHT, 'n', 'm', ',', '.', '/', KC_NULL },
+        { HID_KEY_CONTROL_LEFT, 'q', 'w', 'e', 'r', 't', KC_LM1,             KC_LM1,              'y', 'u', 'i', 'o', 'p', HID_KEY_CONTROL_RIGHT },
+        { KC_NULL,              'a', 's', 'd', 'f', 'g', KC_LM2,             KC_LM2,              'h', 'j', 'k', 'l', ';', KC_NULL },
+        { KC_NULL,              'z', 'x', 'c', 'v', 'b', HID_KEY_SHIFT_LEFT, HID_KEY_SHIFT_RIGHT, 'n', 'm', ',', '.', '/', KC_NULL },
     };
 
     static const bool L0_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
@@ -230,9 +231,9 @@ static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
 
     static const uint8_t L2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     {
-        { HID_KEY_GUI_LEFT, '`', '0', '1', '2', '3', KC_LM1,              KC_LM1,              '&', '*', '(', ')', '=',  HID_KEY_GUI_RIGHT },
-        { KC_NULL,          '@', '$', '4', '5', '6', KC_LM2,              KC_LM2,              '-', '_', '{', '}', '\'', KC_NULL },
-        { KC_NULL,          '<', '>', '7', '8', '9', HID_KEY_SHIFT_RIGHT, HID_KEY_SHIFT_RIGHT, '+', '!', '[', ']', '\\', KC_NULL },
+        { HID_KEY_GUI_LEFT, '`', '0', '1', '2', '3', KC_LM1,             KC_LM1,              '&', '*', '(', ')', '=',  HID_KEY_GUI_RIGHT },
+        { KC_NULL,          '@', '$', '4', '5', '6', KC_LM2,             KC_LM2,              '-', '_', '{', '}', '\'', KC_NULL },
+        { KC_NULL,          '<', '>', '7', '8', '9', HID_KEY_SHIFT_LEFT, HID_KEY_SHIFT_RIGHT, '+', '!', '[', ']', '\\', KC_NULL },
     };
     static const bool L2_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
     {

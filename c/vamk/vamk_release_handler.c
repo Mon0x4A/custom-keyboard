@@ -1,6 +1,7 @@
 ///Imports
 #include "pico/stdlib.h"
 #include "vamk_config.h"
+#include "vamk_key_helper.h"
 #include "vamk_key_state.h"
 #include "vamk_keyboard_state.h"
 #include "vamk_keyboard_state.h"
@@ -8,6 +9,7 @@
 #include "vamk_release_handler.h"
 #include "vamk_tap_handler.h"
 #include "vamk_types.h"
+#include "tusb.h"
 
 ///Global Variables
 
@@ -33,33 +35,33 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side
     {
         case KC_LM1:
             need_remove_code_from_report = false;
-            keyboard_state_set_current_layer_index(0);
+            keyboard_state_set_is_layer_modifier_pressed(1, false);
             printf("Entering layer 0\n");
             break;
         case KC_LM2:
             need_remove_code_from_report = false;
-            keyboard_state_set_current_layer_index(0);
+            keyboard_state_set_is_layer_modifier_pressed(2, false);
             printf("Entering layer 0\n");
+            break;
+        case HID_KEY_ALT_LEFT:
+        case HID_KEY_ALT_RIGHT:
+            break;
+        case HID_KEY_GUI_LEFT:
+        case HID_KEY_GUI_RIGHT:
+            break;
+        case HID_KEY_CONTROL_LEFT:
+        case HID_KEY_CONTROL_RIGHT:
+            break;
+        case HID_KEY_SHIFT_LEFT:
+        case HID_KEY_SHIFT_RIGHT:
             break;
         case KC_NULL:
         //HID_KEY_NONE as well
             // Nothing to do if we hit a null code.
             need_remove_code_from_report = false;
             break;
-        //case KEY_LEFT_ALT:
-        //case KEY_RIGHT_ALT:
-        //    break;
-        //case KEY_LEFT_GUI:
-        //case KEY_RIGHT_GUI:
-        //    break;
-        //case KEY_LEFT_CTRL:
-        //case KEY_RIGHT_CTRL:
-        //    break;
-        //case KEY_LEFT_SHIFT:
-        //case KEY_RIGHT_SHIFT:
-        //    break;
-        //default:
-        //    break;
+        default:
+            break;
     }
 
     for (int i = 0; i < LAYER_COUNT; i++)
