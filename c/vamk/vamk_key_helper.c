@@ -1,4 +1,3 @@
-
 ///Imports
 #include "vamk_config.h"
 #include "vamk_key_helper.h"
@@ -8,7 +7,6 @@
 #include "tusb.h"
 
 ///Static Global Variables
-///Local Definitions
 ///Static Functions
 ///Extern Functions
 bool key_helper_is_modifier_keycode(struct hid_keycode_container_t code_container)

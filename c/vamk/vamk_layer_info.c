@@ -6,13 +6,13 @@
 #include "vamk_types.h"
 #include "tusb.h"
 
-///Static Variables
+///Static Global Variables
 // TinyUSB provided lookup of ascii keycodes (literal chars) to the HID_* codes
 // The [128][1] array is the char byte keys and the [128][0] array is a bool if shift
 // should be applied to print it.
 static const uint8_t _ASCII_CHAR_TO_HID_KEYCODE [128][2] = { HID_ASCII_TO_KEYCODE };
 
-///Private Declarations
+///Local Declarations
 struct layer_index_value_container_t
 {
     uint8_t layer_index_value;
@@ -20,7 +20,7 @@ struct layer_index_value_container_t
     bool has_valid_contents;
 };
 
-///Static (Private) Functions
+///Static Functions
 static struct layer_index_value_container_t get_base_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {

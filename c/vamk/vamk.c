@@ -106,7 +106,7 @@ int main(void)
     return 0;
 }
 
-///Static (Private/Local) Functions
+///Static Functions
 static void send_hid_report(uint8_t report_id, uint32_t btn)
 {
     (void) report_id;
@@ -158,6 +158,7 @@ static void hid_task(void)
         return;
     start_ms += interval_ms;
 
+    //TODO remove this code that references 'btn'
     uint32_t const btn = board_button_read();
 
     // Remote wakeup
@@ -193,8 +194,9 @@ static void led_blinking_task(void)
     led_state = 1 - led_state;
 }
 
-///Public Functions
+///Extern Functions
 
+//TODO refactor this into its own file.
 // BEGIN TinyUSB Device Callbacks -----------------------------------------+
 // Invoked when device is mounted
 void tud_mount_cb(void)

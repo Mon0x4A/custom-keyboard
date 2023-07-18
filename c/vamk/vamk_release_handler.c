@@ -11,13 +11,11 @@
 #include "vamk_types.h"
 #include "tusb.h"
 
-///Global Variables
+///Static Global Variables
 
-///Function Declarations
+///Static Functions
 
-///Static (Private) Functions
-
-///Public Functions
+///Extern Functions
 void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
 {
     uint8_t current_layer = keyboard_state_get_current_layer_index();
@@ -27,8 +25,6 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side
 
     struct hid_keycode_container_t code_container =
         layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);
-
-    //TODO record repeat state - do this inside key_state
 
     bool need_remove_code_from_report = true;
     switch (code_container.hid_keycode)

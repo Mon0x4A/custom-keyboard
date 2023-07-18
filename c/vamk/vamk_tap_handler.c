@@ -45,8 +45,7 @@ static void mark_key_down_time(int16_t row, int16_t col, keyboard_side_t keyboar
         (*key_down_ptr) = get_absolute_time();
 }
 
-
-///Extern Methods
+///Extern Functions
 void tap_handler_on_switch_press(uint16_t row, uint16_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
     struct hid_keycode_container_t code_container =

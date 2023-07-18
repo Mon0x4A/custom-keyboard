@@ -11,13 +11,10 @@
 #include "vamk_types.h"
 #include "tusb.h"
 
-///Global Variables
+///Static Global Variables
 static bool _has_chord_action_been_performed = false;
 
-///Function Declarations
-
-///Static (Private) Functions
-
+///Static Functions
 //#include "hardware/timer.h"
 ////TODO this timer code could be very useful for key events
 //// Timer example code - This example fires off the callback after 2000ms
@@ -28,7 +25,7 @@ static bool _has_chord_action_been_performed = false;
 //    return 0;
 //}
 
-///Public Functions
+///Extern Functions
 void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
 {
     uint8_t current_layer = keyboard_state_get_current_layer_index();
@@ -45,7 +42,6 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     keyboard_state_set_has_chord_action_been_performed(!key_helper_is_modifier_keycode(code_container));
 
     //TODO double tap action handling
-    //TODO record repeat state
 
     bool should_report_code = true;
     switch (code_container.hid_keycode)
@@ -85,6 +81,7 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     if (ENABLE_KEYBOARD_COMMANDS && should_report_code)
     {
         key_state_press(code_container, false);
+        //TODO record repeat state - do this inside keyboard_state
     }
 
     if (ENABLE_SERIAL_LOGGING && should_report_code)

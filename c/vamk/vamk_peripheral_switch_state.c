@@ -6,7 +6,7 @@
 #include "vamk_peripheral_switch_state.h"
 #include "vamk_types.h"
 
-///Global Variables
+///Static Global Variables
 static uint8_t _peripheral_switch_matrix_curr[ROW_COUNT][COLUMN_COUNT] = {0};
 static uint8_t _peripheral_switch_matrix_prev[ROW_COUNT][COLUMN_COUNT] = {0};
 
@@ -14,7 +14,7 @@ static uint8_t _peripheral_switch_matrix_prev[ROW_COUNT][COLUMN_COUNT] = {0};
 static switch_pressed_callback_t _pressed_callback = NULL;
 static switch_released_callback_t _released_callback = NULL;
 
-///Static (Private) Functions
+///Static Functions
 static void read_matrix_state(void)
 {
     // Request the peripheral I2C device for matrix state.
@@ -88,7 +88,7 @@ static void print_matrix_state(void)
     report_id++;
 }
 
-///Public Functions
+///Extern Functions
 void peripheral_switch_state_init(void)
 {
     //Set up this device as I2C controller.

@@ -1,4 +1,3 @@
-// Protect from multiple includes
 #ifndef VAMK_PERIPHERAL_SWITCH_STATE_H
 #define VAMK_PERIPHERAL_SWITCH_STATE_H
 
