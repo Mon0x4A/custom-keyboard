@@ -240,9 +240,10 @@ _usbcBreakoutMountingInsertCenterToCenter = 20;
 //picoMountingStudSet(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingStud(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingNutPunchSet();
-picoHousing(renderLid=true, renderBase=false, renderPico=false);
+//picoHousing(renderLid=true, renderBase=false, renderPico=false);
 //picoHousingBase();
 //picoHousingTop();
+usbcClampBar();
 //arduinoMicroPunch();
 //kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
 //kailhKeyCapTop(_key1_25uWidth, _key1uWidth, _kailhKeyCapDepth);
@@ -1206,6 +1207,32 @@ module picoModel()
     translate([_picoBodyLength/2, _picoBodyWidth/2, _picoBodyDepth/2])
         rotate([90, 0, 0])
             import("../resources/stl/Raspberry-Pi-Pico-R3.stl");
+}
+
+module usbcClampBar()
+{
+    _usbcClampBarLength = _usbcBreakoutMountingInsertCenterToCenter;
+    _usbcClampBarWidth = _m2BoltHoleDiameter + 3;
+    _usbcClampBarDepth = 2.5;
+    difference()
+    {
+        union()
+        {
+            cube([_usbcClampBarLength, _usbcClampBarWidth, _usbcClampBarDepth]);
+            translate([0, _usbcClampBarWidth/2, 0])
+                cylinder(r=_usbcClampBarWidth/2, h=_usbcClampBarDepth, $fn=100);
+            translate([_usbcClampBarLength, _usbcClampBarWidth/2, 0])
+                cylinder(r=_usbcClampBarWidth/2, h=_usbcClampBarDepth, $fn=100);
+            //TODO make a tab for more gripping surface area
+        }
+        translate([0, _usbcClampBarWidth/2, 0])
+        {
+            translate([0, 0, -1])
+                cylinder(r=_m2BoltHoleRadius, h=_usbcClampBarDepth+2, $fn=100);
+            translate([_usbcBreakoutMountingInsertCenterToCenter, 0, -1])
+                cylinder(r=_m2BoltHoleRadius, h=_usbcClampBarDepth+2, $fn=100);
+        }
+    }
 }
 
 //Punches
