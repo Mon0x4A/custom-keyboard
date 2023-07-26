@@ -273,7 +273,7 @@ static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
 
 ///I2C Config
 //===========
-#define I2C_CLOCK_SPEED 10000 //Khz
+#define I2C_CLOCK_SPEED 400*1000 //Khz
 
 #define I2C_CONTROLLER_PORT i2c0
 #define I2C_CONTROLLER_SDA_PIN 4

@@ -16,6 +16,7 @@
 #include "bsp/board.h"
 
 // Project Imports
+#include "ssd1306_i2c_api.h"
 #include "vamk_config.h"
 #include "vamk_i2c_switch_state_transmitter.h"
 #include "vamk_key_state.h"
@@ -28,7 +29,7 @@
 ///Static Variables
 static led_blink_pattern_t _led_mode = NOT_MOUNTED;
 
-///Function Declarations
+///Static Functions
 static void led_blinking_task(void);
 static void hid_task(void);
 
@@ -44,10 +45,24 @@ int main(void)
     // Physical switch logic initialization call.
     switch_state_init();
 
+    i2c_init(i2c0, I2C_CLOCK_SPEED);
+    gpio_set_function(I2C_CONTROLLER_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(I2C_CONTROLLER_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(I2C_CONTROLLER_SDA_PIN);
+    gpio_pull_up(I2C_CONTROLLER_SCL_PIN);
+
     if (IS_PRIMARY_KEYBOARD_SIDE)
     {
         // TODO TEMP TEST Set up I2C as peripheral
         //i2c_switch_state_transmitter_init();
+
+        //ssd1306_init();
+        //struct render_area_t area = ssd1306_build_default_full_render_area_for_display();
+        //uint8_t buffer[SSD1306_BUF_LEN] = {0};
+        //ssd1306_buffer_set_pixel(buffer, 5, 5, true);
+        //ssd1306_buffer_set_pixel(buffer, 10, 10, true);
+        //ssd1306_clear_display();
+        //ssd1306_render(buffer, &area);
 
         // Init local/native switch handling
         switch_state_set_pressed_callback(press_handler_on_switch_press);
