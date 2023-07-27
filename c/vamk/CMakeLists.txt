@@ -28,6 +28,7 @@ pico_sdk_init()
 add_executable(vamk vamk.c )
 
 target_sources(vamk PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/ssd1306_buffer_helper.c
         ${CMAKE_CURRENT_LIST_DIR}/ssd1306_i2c_api.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_i2c_switch_state_transmitter.c
