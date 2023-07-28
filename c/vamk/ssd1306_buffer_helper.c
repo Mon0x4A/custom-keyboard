@@ -1,13 +1,54 @@
 ///Imports
 #include <stdlib.h>
+#include <string.h>
 #include "pico/stdlib.h"
+#include <ctype.h>
 
+#include "ssd1306_buffer_helper.h"
 #include "ssd1306_config.h"
 
 ///Static Global Variables
 ///Local Definitions
 ///Static Functions
+static inline int get_font_index(uint8_t ch) {
+    if (ch >= 'A' && ch <='Z') {
+        return  ch - 'A' + 1;
+    }
+    else if (ch >= '0' && ch <='9') {
+        return  ch - '0' + 27;
+    }
+    else return  0; // Not got that char so space.
+}
+
 ///Extern Functions
+void ssd1306_buffer_write_char(uint8_t *buf, int16_t x, int16_t y, uint8_t ch)
+{
+    if (x > SSD1306_WIDTH - 8 || y > SSD1306_HEIGHT - 8)
+        return;
+
+    // For the moment, only write on Y row boundaries (every 8 vertical pixels)
+    y = y/8;
+
+    ch = toupper(ch);
+    int idx = get_font_index(ch);
+    int fb_idx = y * 128 + x;
+
+    for (int i=0;i<8;i++) {
+        buf[fb_idx++] = DEFAULT_FONT[idx * 8 + i];
+    }
+}
+
+void ssd1306_buffer_write_string(uint8_t *buf, int16_t x, int16_t y, char *str) {
+    // Cull out any string off the screen
+    if (x > SSD1306_WIDTH - 8 || y > SSD1306_HEIGHT - 8)
+        return;
+
+    while (*str) {
+        ssd1306_buffer_write_char(buf, x, y, *str++);
+        x+=8;
+    }
+}
+
 void ssd1306_buffer_set_pixel(uint8_t *buf, int x, int y, bool on)
 {
     assert(x >= 0 && x < SSD1306_WIDTH && y >= 0 && y < SSD1306_HEIGHT);
