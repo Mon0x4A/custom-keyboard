@@ -20,6 +20,7 @@
 #include "ssd1306_buffer_helper.h"
 #include "ssd1306_i2c_api.h"
 #include "vamk_config.h"
+#include "vamk_display_state.h"
 #include "vamk_i2c_switch_state_transmitter.h"
 #include "vamk_key_state.h"
 #include "vamk_peripheral_switch_state.h"
@@ -51,38 +52,6 @@ static void led_blinking_task(void)
     board_led_write(led_state);
     // Toggle LED state
     led_state = 1 - led_state;
-}
-
-static void display_firmware_information(void)
-{
-    struct render_area_t area = ssd1306_build_default_full_render_area_for_display();
-    uint8_t buffer[SSD1306_BUF_LEN] = {0};
-    //15 character max per line with this font
-    char *text[] = {
-        "vok-sl mk iii",
-        " ",
-        "vamk firmware",
-        "alpha v0.1",
-        "rpi pico",
-        " ",
-        "Hamlund MFG",
-        "2023",
-    };
-
-    int y = 0;
-    const int x_left_padding = 5;
-    for (int i = 0 ; i < count_of(text); i++)
-    {
-        ssd1306_buffer_write_string(buffer, x_left_padding, y, text[i]);
-        y += DEFAUL_FONT_ROW_HEIGHT_PX;
-    }
-
-    //ssd1306_buffer_set_pixel(buffer, 5, 5, true);
-    //ssd1306_buffer_set_pixel(buffer, 10, 10, true);
-    ssd1306_clear_display();
-    ssd1306_render(buffer, &area);
-
-    _display_main_loop_iteration_timeout = DISPLAY_POLL_ITERATION_TIMEOUT;
 }
 
 static void send_hid_report(uint8_t report_id, uint32_t btn)
@@ -124,19 +93,13 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
 
     // Update the prev report
     keyboard_report_prev = keyboard_report_curr;
-
-    // Refresh our display
-    if (_display_main_loop_iteration_timeout == 0)
-        display_firmware_information();
-    else
-        _display_main_loop_iteration_timeout = DISPLAY_POLL_ITERATION_TIMEOUT;
 }
 
-static bool hid_task(void)
+static void hid_task(void)
 {
     static uint32_t start_ms = 0;
     if (board_millis() - start_ms < SWITCH_POLLING_INTERVAL_MS)
-        return false;
+        return;
     start_ms += SWITCH_POLLING_INTERVAL_MS;
 
     //TODO remove this code that references 'btn'
@@ -153,8 +116,6 @@ static bool hid_task(void)
     {
         send_hid_report(REPORT_ID_KEYBOARD, btn);
     }
-
-    return true;
 }
 
 
@@ -182,7 +143,7 @@ int main(void)
         //i2c_switch_state_transmitter_init();
 
         ssd1306_init();
-        display_firmware_information();
+        display_reset_sleep_timeout();
 
         // Init local/native switch handling
         switch_state_set_pressed_callback(press_handler_on_switch_press);
@@ -213,17 +174,11 @@ int main(void)
             // Update non-native (peripheral), phyiscal switch state.
             peripheral_switch_state_task();
 #endif
-
             // Update reported keyboard state.
-            bool reached_poll_interval = hid_task();
-            if (_display_main_loop_iteration_timeout == 0)
-            {
-                ssd1306_clear_display();
-            }
-            else if (reached_poll_interval && _display_main_loop_iteration_timeout > 0)
-            {
-                _display_main_loop_iteration_timeout--;
-            }
+            hid_task();
+
+            // Update the display state.
+            display_task();
         }
     }
     else

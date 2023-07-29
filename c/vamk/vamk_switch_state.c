@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "hardware/gpio.h"
 #include "vamk_config.h"
+#include "vamk_display_state.h"
 #include "vamk_switch_state.h"
 #include "vamk_types.h"
 
@@ -65,6 +66,9 @@ static void fire_callback_events(void)
                 if (switchCurrPress == SWITCH_PRESSED_VALUE &&
                     switchPrevPress == SWITCH_NOT_PRESSED_VALUE)
                 {
+                    // Wake our display on any key press.
+                    display_reset_sleep_timeout();
+
                     // We started pressing a key.
                     if (_pressed_callback != NULL)
                         _pressed_callback(i, j, CURRENT_KEYBOARD_SIDE);
