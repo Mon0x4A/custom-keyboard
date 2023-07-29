@@ -9,6 +9,7 @@
 #define SSD1306_HEIGHT              OLED_SCREEN_HEIGHT
 #define SSD1306_WIDTH               OLED_SCREEN_WIDTH
 
+
 //TODO this may need to be an parameter... (or multiple)
 #define SSD1306_I2C_ADDR            _u(0x3C)
 

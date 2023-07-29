@@ -6,6 +6,7 @@
 #include "ssd1306_config.h"
 
 ///Constants
+#define DEFAUL_FONT_ROW_HEIGHT_PX 8
 
 static const uint8_t DEFAULT_FONT[] = {
 0x0,  0x0,  0x0,   0x0,   0x0,   0x0,   0x0,   0x0,
@@ -46,6 +47,7 @@ static const uint8_t DEFAULT_FONT[] = {
 0x36, 0x49, 0x49,  0x49,  0x49,  0x49,  0x36,  0x0,
 0x6,  0x9,  0x9,   0x9,   0x9,   0x9,   0x7f,  0x0,
 };
+
 ///Function Definitions
 void ssd1306_buffer_set_pixel(uint8_t *buf, int x, int y, bool on);
 void ssd1306_buffer_draw_line(uint8_t *buf, int x0, int y0, int x1, int y1, bool on);

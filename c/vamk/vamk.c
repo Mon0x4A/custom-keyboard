@@ -30,117 +30,61 @@
 
 ///Static Variables
 static led_blink_pattern_t _led_mode = NOT_MOUNTED;
+static uint32_t _display_main_loop_iteration_timeout = 0;
 
 ///Static Functions
-static void led_blinking_task(void);
-static void hid_task(void);
-
-///ENTRY POINT
-int main(void)
+static void led_blinking_task(void)
 {
-    // Required pico utils initialization call.
-    stdio_init_all();
-    // Required board utils initialization call.
-    board_init();
-    // TinyUSB required initialization call.
-    tusb_init();
-    // Physical switch logic initialization call.
-    switch_state_init();
+    static uint32_t start_ms = 0;
+    static bool led_state = false;
 
-    i2c_init(i2c1, I2C_CLOCK_SPEED);
-    gpio_set_function(I2C_CONTROLLER_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(I2C_CONTROLLER_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(I2C_CONTROLLER_SDA_PIN);
-    gpio_pull_up(I2C_CONTROLLER_SCL_PIN);
+    // LED blink is disabled if set to zero.
+    if (!_led_mode)
+        return;
 
-    if (IS_PRIMARY_KEYBOARD_SIDE)
-    {
-        // TODO TEMP TEST Set up I2C as peripheral
-        //i2c_switch_state_transmitter_init();
+    // Blink every interval ms
+    if (board_millis() - start_ms < _led_mode)
+        return;
 
-        ssd1306_init();
-        struct render_area_t area = ssd1306_build_default_full_render_area_for_display();
-        uint8_t buffer[SSD1306_BUF_LEN] = {0};
-        //15 character max per line with this font
-        char *text[] = {
-            "vok sl mk iii",
-            " ",
-            "vamk firmware",
-            "alpha v0.1",
-            "rpi pico",
-            " ",
-            "Hamlund MFG",
-            "2023",
-        };
+    start_ms += _led_mode;
 
-        int y = 0;
-        for (int i = 0 ;i < count_of(text); i++) {
-            ssd1306_buffer_write_string(buffer, 5, y, text[i]);
-            y+=8;
-        }
-        //ssd1306_buffer_set_pixel(buffer, 5, 5, true);
-        //ssd1306_buffer_set_pixel(buffer, 10, 10, true);
-        ssd1306_clear_display();
-        ssd1306_render(buffer, &area);
-
-        // Init local/native switch handling
-        switch_state_set_pressed_callback(press_handler_on_switch_press);
-        switch_state_set_released_callback(release_handler_on_switch_release);
-
-#if IS_SPLIT_KEYBOARD
-        // Join I2C bus as controller
-        peripheral_switch_state_init();
-
-        // Init peripheral switch state handling.
-        peripheral_switch_state_set_released_callback(release_handler_on_switch_release);
-        peripheral_switch_state_set_pressed_callback(press_handler_on_switch_press);
-#endif
-
-        // Primary side run loop
-        while (1)
-        {
-            // TinyUSB device task required to be called every iteration.
-            tud_task();
-
-            // Update LED state.
-            led_blinking_task();
-
-            // Update local, phyiscal switch state.
-            switch_state_task();
-
-#if IS_SPLIT_KEYBOARD
-            // Update non-native (peripheral), phyiscal switch state.
-            peripheral_switch_state_task();
-#endif
-
-            // Update reported keyboard state.
-            hid_task();
-        }
-    }
-    else
-    {
-        // Set up I2C as peripheral
-        i2c_switch_state_transmitter_init();
-
-        switch_state_set_pressed_callback(i2c_switch_state_on_switch_pressed);
-        switch_state_set_released_callback(i2c_switch_state_on_switch_released);
-
-        // Peripheral side run loop
-        bool led_is_on = false;
-        while (1)
-        {
-            // Keep our local switch state up to date.
-            switch_state_task();
-
-            sleep_ms(10);
-            board_led_write(1);
-        }
-    }
-
-    return 0;
+    board_led_write(led_state);
+    // Toggle LED state
+    led_state = 1 - led_state;
 }
 
-///Static Functions
+static void display_firmware_information(void)
+{
+    struct render_area_t area = ssd1306_build_default_full_render_area_for_display();
+    uint8_t buffer[SSD1306_BUF_LEN] = {0};
+    //15 character max per line with this font
+    char *text[] = {
+        "vok-sl mk iii",
+        " ",
+        "vamk firmware",
+        "alpha v0.1",
+        "rpi pico",
+        " ",
+        "Hamlund MFG",
+        "2023",
+    };
+
+    int y = 0;
+    const int x_left_padding = 5;
+    for (int i = 0 ; i < count_of(text); i++)
+    {
+        ssd1306_buffer_write_string(buffer, x_left_padding, y, text[i]);
+        y += DEFAUL_FONT_ROW_HEIGHT_PX;
+    }
+
+    //ssd1306_buffer_set_pixel(buffer, 5, 5, true);
+    //ssd1306_buffer_set_pixel(buffer, 10, 10, true);
+    ssd1306_clear_display();
+    ssd1306_render(buffer, &area);
+
+    _display_main_loop_iteration_timeout = DISPLAY_POLL_ITERATION_TIMEOUT;
+}
+
 static void send_hid_report(uint8_t report_id, uint32_t btn)
 {
     (void) report_id;
@@ -180,17 +124,20 @@ static void send_hid_report(uint8_t report_id, uint32_t btn)
 
     // Update the prev report
     keyboard_report_prev = keyboard_report_curr;
+
+    // Refresh our display
+    if (_display_main_loop_iteration_timeout == 0)
+        display_firmware_information();
+    else
+        _display_main_loop_iteration_timeout = DISPLAY_POLL_ITERATION_TIMEOUT;
 }
 
-static void hid_task(void)
+static bool hid_task(void)
 {
-    // Init poll interval (ms)
-    const uint32_t interval_ms = 10;
     static uint32_t start_ms = 0;
-
-    if (board_millis() - start_ms < interval_ms)
-        return;
-    start_ms += interval_ms;
+    if (board_millis() - start_ms < SWITCH_POLLING_INTERVAL_MS)
+        return false;
+    start_ms += SWITCH_POLLING_INTERVAL_MS;
 
     //TODO remove this code that references 'btn'
     uint32_t const btn = board_button_read();
@@ -206,29 +153,101 @@ static void hid_task(void)
     {
         send_hid_report(REPORT_ID_KEYBOARD, btn);
     }
+
+    return true;
 }
 
-static void led_blinking_task(void)
-{
-    static uint32_t start_ms = 0;
-    static bool led_state = false;
-
-    // LED blink is disabled if set to zero.
-    if (!_led_mode)
-        return;
-
-    // Blink every interval ms
-    if (board_millis() - start_ms < _led_mode)
-        return;
-
-    start_ms += _led_mode;
-
-    board_led_write(led_state);
-    // Toggle LED state
-    led_state = 1 - led_state;
-}
 
 ///Extern Functions
+int main(void)
+{
+    // Required pico utils initialization call.
+    stdio_init_all();
+    // Required board utils initialization call.
+    board_init();
+    // TinyUSB required initialization call.
+    tusb_init();
+    // Physical switch logic initialization call.
+    switch_state_init();
+
+    i2c_init(i2c1, I2C_CLOCK_SPEED);
+    gpio_set_function(I2C_CONTROLLER_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(I2C_CONTROLLER_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(I2C_CONTROLLER_SDA_PIN);
+    gpio_pull_up(I2C_CONTROLLER_SCL_PIN);
+
+    if (IS_PRIMARY_KEYBOARD_SIDE)
+    {
+        // TODO TEMP TEST Set up I2C as peripheral
+        //i2c_switch_state_transmitter_init();
+
+        ssd1306_init();
+        display_firmware_information();
+
+        // Init local/native switch handling
+        switch_state_set_pressed_callback(press_handler_on_switch_press);
+        switch_state_set_released_callback(release_handler_on_switch_release);
+
+#if IS_SPLIT_KEYBOARD
+        // Join I2C bus as controller
+        peripheral_switch_state_init();
+
+        // Init peripheral switch state handling.
+        peripheral_switch_state_set_released_callback(release_handler_on_switch_release);
+        peripheral_switch_state_set_pressed_callback(press_handler_on_switch_press);
+#endif
+
+        // Primary side run loop
+        while (1)
+        {
+            // TinyUSB device task required to be called every iteration.
+            tud_task();
+
+            // Update LED state.
+            led_blinking_task();
+
+            // Update local, phyiscal switch state.
+            switch_state_task();
+
+#if IS_SPLIT_KEYBOARD
+            // Update non-native (peripheral), phyiscal switch state.
+            peripheral_switch_state_task();
+#endif
+
+            // Update reported keyboard state.
+            bool reached_poll_interval = hid_task();
+            if (_display_main_loop_iteration_timeout == 0)
+            {
+                ssd1306_clear_display();
+            }
+            else if (reached_poll_interval && _display_main_loop_iteration_timeout > 0)
+            {
+                _display_main_loop_iteration_timeout--;
+            }
+        }
+    }
+    else
+    {
+        // Set up I2C as peripheral
+        i2c_switch_state_transmitter_init();
+
+        switch_state_set_pressed_callback(i2c_switch_state_on_switch_pressed);
+        switch_state_set_released_callback(i2c_switch_state_on_switch_released);
+
+        // Peripheral side run loop
+        bool led_is_on = false;
+        while (1)
+        {
+            // Keep our local switch state up to date.
+            switch_state_task();
+
+            sleep_ms(10);
+            board_led_write(1);
+        }
+    }
+
+    return 0;
+}
 
 //TODO refactor this into its own file.
 // BEGIN TinyUSB Device Callbacks -----------------------------------------+
