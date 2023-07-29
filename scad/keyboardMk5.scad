@@ -1213,24 +1213,31 @@ module usbcClampBar()
 {
     _usbcClampBarLength = _usbcBreakoutMountingInsertCenterToCenter;
     _usbcClampBarWidth = _m2BoltHoleDiameter + 3;
-    _usbcClampBarDepth = 2.5;
+    _usbcClampBarDepth = 2;
+    _usbcClampBarExtraWasherDepth = 1.25;
+    _clampBarBoltAttachDepth = _usbcClampBarDepth + _usbcClampBarExtraWasherDepth;
+    _usbcClampBarTabLength = 10;
+    _usbcClampBarTabWidth = 4;
     difference()
     {
         union()
         {
             cube([_usbcClampBarLength, _usbcClampBarWidth, _usbcClampBarDepth]);
             translate([0, _usbcClampBarWidth/2, 0])
-                cylinder(r=_usbcClampBarWidth/2, h=_usbcClampBarDepth, $fn=100);
+                cylinder(r=_usbcClampBarWidth/2, h=_clampBarBoltAttachDepth, $fn=100);
             translate([_usbcClampBarLength, _usbcClampBarWidth/2, 0])
-                cylinder(r=_usbcClampBarWidth/2, h=_usbcClampBarDepth, $fn=100);
-            //TODO make a tab for more gripping surface area
+                cylinder(r=_usbcClampBarWidth/2, h=_clampBarBoltAttachDepth, $fn=100);
+
+            //tab
+            translate([(_usbcBreakoutMountingInsertCenterToCenter - _usbcClampBarTabLength)/2, _usbcClampBarWidth, 0])
+                cube([_usbcClampBarTabLength, _usbcClampBarTabWidth, _usbcClampBarDepth]);
         }
         translate([0, _usbcClampBarWidth/2, 0])
         {
             translate([0, 0, -1])
-                cylinder(r=_m2BoltHoleRadius, h=_usbcClampBarDepth+2, $fn=100);
+                cylinder(r=_m2BoltHoleRadius, h=_clampBarBoltAttachDepth+2, $fn=100);
             translate([_usbcBreakoutMountingInsertCenterToCenter, 0, -1])
-                cylinder(r=_m2BoltHoleRadius, h=_usbcClampBarDepth+2, $fn=100);
+                cylinder(r=_m2BoltHoleRadius, h=_clampBarBoltAttachDepth+2, $fn=100);
         }
     }
 }
