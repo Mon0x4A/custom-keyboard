@@ -39,7 +39,8 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     // programatically wrong with the layers.
     hard_assert(code_container.has_valid_contents);
 
-    keyboard_state_set_has_chord_action_been_performed(!key_helper_is_modifier_keycode(code_container));
+    keyboard_state_set_has_chord_action_been_performed(
+        !key_helper_is_modifier_keycode_container(code_container));
 
     //TODO double tap action handling
 
@@ -81,7 +82,7 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     if (ENABLE_KEYBOARD_COMMANDS && should_report_code)
     {
         key_state_press(code_container, false);
-        //TODO record repeat state - do this inside keyboard_state
+        keyboard_state_set_repeat_state(code_container);
     }
 
     if (ENABLE_SERIAL_LOGGING && should_report_code)

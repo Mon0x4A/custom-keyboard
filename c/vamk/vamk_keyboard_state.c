@@ -2,7 +2,10 @@
 #include "stdbool.h"
 #include "pico/stdlib.h"
 #include "vamk_config.h"
+#include "vamk_key_helper.h"
+#include "vamk_key_state.h"
 #include "vamk_keyboard_state.h"
+#include "vamk_types.h"
 
 ///Static Constants
 static const uint8_t DEFAULT_LAYER_INDEX = 0;
@@ -13,10 +16,19 @@ static uint8_t _last_pressed_layer_index = 0;
 
 static int8_t _quant_layer_mod_pressed[MAX_LAYER_COUNT] = {0};
 
+static struct hid_keycode_container_t _repeat_code = {0};
+static uint8_t _repeat_modifiers[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
+
 ///Static Functions
 static int imax(int a, int b)
 {
     return a > b ? a : b;
+}
+
+static void clear_repeat_modifers(void)
+{
+    for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
+        _repeat_modifiers[i] = 0;
 }
 
 ///Extern Functions
@@ -66,5 +78,52 @@ bool keyboard_state_get_has_chord_action_been_performed(void)
 void keyboard_state_set_has_chord_action_been_performed(bool has_chord_action_been_performed)
 {
     _has_chord_action_been_performed = has_chord_action_been_performed;
+}
+
+void keyboard_state_set_repeat_state(struct hid_keycode_container_t hid_repeat_code)
+{
+    hard_assert(hid_repeat_code.has_valid_contents);
+    _repeat_code = hid_repeat_code;
+
+    // Grab the curret hid report state and search for modifiers.
+    struct key_report_t report_preview = key_state_preview_hid_report();
+
+    clear_repeat_modifers();
+    uint8_t current_repeat_arr_index = 0;
+    for (uint8_t i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
+    {
+        uint8_t curr_report_hid_keycode = report_preview.keycodes[i];
+        if (key_helper_is_modifier_keycode(curr_report_hid_keycode))
+        {
+            // Record any modifiers we find.
+            _repeat_modifiers[current_repeat_arr_index] = curr_report_hid_keycode;
+            current_repeat_arr_index++;
+        }
+    }
+}
+
+void keyboard_state_send_repeat_state(void)
+{
+    if (!_repeat_code.has_valid_contents)
+        return;
+
+    for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
+    {
+        if(_repeat_modifiers[i] == 0)
+            continue;
+
+        // Send each valid modifier we recorded.
+        struct hid_keycode_container_t modifier_code =
+        {
+            .hid_keycode = _repeat_modifiers[i],
+            .modifier = 0,
+            .has_valid_contents = true
+        };
+        key_state_press(modifier_code, true);
+    }
+
+    // Send our original repeat code. This has to be done last
+    // so the new codes in the report are processed in order.
+    key_state_press(_repeat_code, true);
 }
 

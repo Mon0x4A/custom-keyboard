@@ -65,12 +65,21 @@ static void remove_hid_report_code(uint8_t hid_keycode)
 }
 
 ///Global Functions
-struct key_report_t key_state_build_hid_report(void)
+struct key_report_t key_state_preview_hid_report(void)
 {
     struct key_report_t key_report_to_send;
+
     for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
         key_report_to_send.keycodes[i] = _current_hid_report_codes[i];
+
     key_report_to_send.modifier = _current_modifier;
+
+    return key_report_to_send;
+}
+
+struct key_report_t key_state_build_hid_report(void)
+{
+    struct key_report_t key_report_to_send = key_state_preview_hid_report();
 
     // Now that we've built the report, handle any countdowns.
     for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)

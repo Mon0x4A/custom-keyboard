@@ -5,6 +5,7 @@
 #include "hardware/timer.h"
 #include "vamk_config.h"
 #include "vamk_key_state.h"
+#include "vamk_keyboard_state.h"
 #include "vamk_layer_info.h"
 #include "vamk_tap_handler.h"
 #include "vamk_types.h"
@@ -67,11 +68,6 @@ bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_ind
         // We do not need to handle this event.
         return false;
 
-    //TODO support REPEAT
-    if (code_container.hid_keycode == KC_REPEAT)
-        // Suppress repeat calls for now.
-        return true;
-
     absolute_time_t *key_down_at = get_key_down_time_pointer(row, col, keyboard_side);
     if (key_down_at == NULL)
         return false;
@@ -81,7 +77,16 @@ bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_ind
     if (elapsed_interval_ms <= TAP_ACTION_TIMEOUT_MS
         && elapsed_interval_ms > TAP_ACTION_TIMEIN_MS)
     {
-        key_state_press(code_container, true);
+        // We met our interval requirement and now need to handle the code.
+        switch (code_container.hid_keycode)
+        {
+            case KC_REPEAT:
+                keyboard_state_send_repeat_state();
+                break;
+            default:
+                key_state_press(code_container, true);
+                break;
+        }
         return true;
     }
 

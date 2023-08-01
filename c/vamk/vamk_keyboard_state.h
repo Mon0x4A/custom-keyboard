@@ -14,4 +14,6 @@ bool keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_l
 bool keyboard_state_get_has_chord_action_been_performed(void);
 void keyboard_state_set_has_chord_action_been_performed(bool has_chord_action_been_performed);
 
+void keyboard_state_set_repeat_state(struct hid_keycode_container_t repeat_code);
+void keyboard_state_send_repeat_state(void);
 #endif
