@@ -39,8 +39,11 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     // programatically wrong with the layers.
     hard_assert(code_container.has_valid_contents);
 
-    keyboard_state_set_has_chord_action_been_performed(
-        !key_helper_is_modifier_keycode_container(code_container));
+    bool is_modifier_code = key_helper_is_modifier_keycode_container(code_container);
+
+    // If we are handling a non-modifier press then any chord we were
+    // pressing has now been completed.
+    keyboard_state_set_has_chord_action_been_performed(!is_modifier_code);
 
     //TODO double tap action handling
 
@@ -82,7 +85,9 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     if (ENABLE_KEYBOARD_COMMANDS && should_report_code)
     {
         key_state_press(code_container, false);
-        keyboard_state_set_repeat_state(code_container);
+
+        if (!is_modifier_code)
+            keyboard_state_set_repeat_state(code_container);
     }
 
     if (ENABLE_SERIAL_LOGGING && should_report_code)
