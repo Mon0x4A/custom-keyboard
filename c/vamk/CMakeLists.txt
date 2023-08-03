@@ -29,7 +29,9 @@ add_executable(vamk vamk.c )
 
 # Add any subdirectories
 target_include_directories(vamk PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/display)
+        ${CMAKE_CURRENT_LIST_DIR}/display
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling
+        ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config)
 
 target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_buffer_helper.c
@@ -37,17 +39,16 @@ target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/display/vamk_display_state.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_i2c_switch_state_transmitter.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_key_helper.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_key_state.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_keyboard_state.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_helper.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_state.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_keyboard_state.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_layer_info.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_peripheral_switch_state.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_press_handler.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_release_handler.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_switch_state.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_tap_handler.c
-        # Seems to be required to get the TinyUSB binaries to use local config
-        ${CMAKE_CURRENT_LIST_DIR}/usb_descriptors.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_press_handler.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_release_handler.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_switch_state.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_tap_handler.c
+        ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
         )
 
 pico_set_program_name(vamk "vamk")
