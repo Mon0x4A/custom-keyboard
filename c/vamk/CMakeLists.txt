@@ -32,8 +32,8 @@ target_include_directories(vamk PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/display)
 
 target_sources(vamk PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/ssd1306_buffer_helper.c
-        ${CMAKE_CURRENT_LIST_DIR}/ssd1306_i2c_api.c
+        ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_buffer_helper.c
+        ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_i2c_api.c
         ${CMAKE_CURRENT_LIST_DIR}/display/vamk_display_state.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_i2c_switch_state_transmitter.c
