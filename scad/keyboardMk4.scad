@@ -98,17 +98,6 @@ _kailhBackplateDepth = 3;
 _kailhHousingBodyDepth = 10;
 _kailhBackplateRiserHeight = 2;
 _kailhBackplateOffsetFromHousing = _housingBaseThickness + _kailhBackplateRiserHeight;
-_kailhKeyCapDepth = 2.5;
-
-//Keycap Variables
-_keyCapSpacingOffset = 0.5;
-_keyCapWallThickness = 2;
-_keyCapRoundingRadius = 3;
-
-_keyCap1uLength = _key1uLength - _keyCapSpacingOffset;
-_keyCap1uWidth = _key1uWidth - _keyCapSpacingOffset;
-_keyCap1_25uLength = _key1_25uLength - _keyCapSpacingOffset;
-_keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 
 //Pico Variables
 _picoBodySizePadding = 0.4;
@@ -175,9 +164,6 @@ keyboard(KAILH_SWITCH_TYPE, isLeftSide=true);
 //picoHousingBase();
 //picoHousingTop();
 //arduinoMicroPunch();
-//kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
-//kailhKeyCapTop(_key1_25uWidth, _key1uWidth, _kailhKeyCapDepth);
-//kailhKeycapShank();
 
 /// MAIN END ///
 module keyboard(switchType, isLeftSide)
@@ -667,94 +653,6 @@ module picoHousingTop()
             translate([_trrsBodyLength+trrsPortCountsinkDepth, _trrsBodyWidth/2, _trrsBodyDepth/2])
                 rotate([0, 90, 0])
                     cylinder(r=4, h=trrsPortCountsinkDepth+2, $fn=100);
-        }
-    }
-}
-
-module kailhKeyCapTop(length, width, depth)
-{
-    capInterfaceShankCenterToCenter = 6.25;
-    capInterfaceShankWidth = 3.3;
-    capInterfaceShankDepth = 1.5;
-    capInterfaceShankLength = 1.9;
-    totalCapInterfaceLength = capInterfaceShankCenterToCenter+capInterfaceShankLength;
-
-    difference()
-    {
-        union()
-        {
-            difference()
-            {
-                baseCapDepth = 20;
-                // form the base cap
-                difference()
-                {
-                    roundedCube(size=[length, width, baseCapDepth], radius = _keyCapRoundingRadius, apply_to="zmin");
-                    cutoutCubeSize = [length-(_keyCapWallThickness*2), width-(_keyCapWallThickness*2), baseCapDepth];
-                    translate([_keyCapWallThickness, _keyCapWallThickness, _keyCapWallThickness])
-                        roundedCube(size=cutoutCubeSize, radius = _keyCapRoundingRadius, apply_to="zmin");
-                }
-                //cut to the desired depth
-                translate([-1,-1,depth])
-                    cube([length+2,width+2, baseCapDepth]);
-            }
-
-            // bar to thicken shank interface area
-            thickeningBarLengthPadding = 3;
-            thickeningBarWidthPadding = 6;
-            thickeningBarLength = length-thickeningBarLengthPadding*2;
-            thickeningBarWidth = width-thickeningBarWidthPadding*2;
-            translate([(length-thickeningBarLength)/2, (width-thickeningBarWidth)/2, 0])
-                cube([thickeningBarLength, thickeningBarWidth, depth]);
-        }
-
-        //cut out the interface for the shank
-        translate([(length-totalCapInterfaceLength)/2,(width-capInterfaceShankWidth)/2, depth-capInterfaceShankDepth])
-            union()
-            {
-                cube([capInterfaceShankLength,capInterfaceShankWidth,capInterfaceShankDepth+1]);
-                translate([capInterfaceShankCenterToCenter,0,0])
-                    cube([capInterfaceShankLength,capInterfaceShankWidth,capInterfaceShankDepth+1]);
-            }
-    }
-}
-
-module kailhKeycapShank()
-{
-    printingTolerance = 0.05;
-    switchInterfaceShankLength = 4.25;
-    switchInterfaceShankWidth = 1.20 - printingTolerance;
-    switchInterfaceShankDepth = 3 - printingTolerance;
-    switchInterfaceShankCenterToCenter = 5.70;
-    capInterfaceShankLength = 1.5;
-    capInterfaceShankWidth = 1.5-printingTolerance;
-    capInterfaceShankDepth = switchInterfaceShankDepth-printingTolerance;
-    capInterfaceShankCenterToCenter = 6.25;
-    shankInterfaceConnectorLength = 1.25;
-    shankInterfaceConnectorWidth = 12;
-    shankInterfaceConnectorDepth = switchInterfaceShankDepth;
-
-    union()
-    {
-        //Cap interface
-        translate([0,0,0])
-            cube([capInterfaceShankLength, capInterfaceShankWidth, capInterfaceShankDepth]);
-        translate([0,capInterfaceShankCenterToCenter,0])
-            cube([capInterfaceShankLength, capInterfaceShankWidth, capInterfaceShankDepth]);
-
-        //Interface connector
-        shankInterfaceCenteringWidth = ((capInterfaceShankCenterToCenter+capInterfaceShankWidth)-shankInterfaceConnectorWidth)/2;
-        translate([capInterfaceShankLength,shankInterfaceCenteringWidth,0])
-            cube([shankInterfaceConnectorLength, shankInterfaceConnectorWidth, shankInterfaceConnectorDepth]);
-
-        //Switch interface
-        centeringWidth = ((shankInterfaceConnectorWidth-(switchInterfaceShankCenterToCenter+switchInterfaceShankWidth))/2)+shankInterfaceCenteringWidth;
-        translate([0,centeringWidth,0])
-        {
-            translate([capInterfaceShankLength+shankInterfaceConnectorLength,0,0])
-                cube([switchInterfaceShankLength, switchInterfaceShankWidth, switchInterfaceShankDepth]);
-            translate([capInterfaceShankLength+shankInterfaceConnectorLength, switchInterfaceShankCenterToCenter,0])
-                cube([switchInterfaceShankLength, switchInterfaceShankWidth, switchInterfaceShankDepth]);
         }
     }
 }
