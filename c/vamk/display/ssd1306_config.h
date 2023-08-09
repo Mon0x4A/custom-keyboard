@@ -1,13 +1,15 @@
 #ifndef SSD1306_CONFIG_H
 #define SSD1306_CONFIG_H
 ///Imports
+#include "vamk_display_config.h"
 #include "vamk_config.h"
+
 ///Constants
 // Define the size of the display we have attached. This can vary, make sure you
 // have the right size defined or the output will look rather odd!
 // Code has been tested on 128x32 and 128x64 OLED displays
-#define SSD1306_HEIGHT              OLED_SCREEN_HEIGHT
-#define SSD1306_WIDTH               OLED_SCREEN_WIDTH
+#define SSD1306_HEIGHT              DISPLAY_SCREEN_HEIGHT
+#define SSD1306_WIDTH               DISPLAY_SCREEN_WIDTH
 
 
 //TODO this may need to be an parameter... (or multiple)

@@ -4,6 +4,7 @@
 #include "hardware/timer.h"
 
 #include "vamk_config.h"
+#include "vamk_display_config.h"
 #include "vamk_display_state.h"
 #include "ssd1306_buffer_helper.h"
 #include "ssd1306_i2c_api.h"

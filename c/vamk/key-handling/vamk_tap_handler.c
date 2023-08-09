@@ -4,6 +4,7 @@
 #include "time.h"
 #include "hardware/timer.h"
 #include "vamk_config.h"
+#include "vamk_keymap_config.h"
 #include "vamk_key_state.h"
 #include "vamk_keyboard_state.h"
 #include "vamk_layer_info.h"

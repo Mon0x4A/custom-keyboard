@@ -19,6 +19,7 @@
 #include "ssd1306_config.h"
 #include "ssd1306_buffer_helper.h"
 #include "ssd1306_i2c_api.h"
+#include "vamk_keymap_config.h"
 #include "vamk_config.h"
 #include "vamk_display_state.h"
 #include "vamk_i2c_switch_state_transmitter.h"

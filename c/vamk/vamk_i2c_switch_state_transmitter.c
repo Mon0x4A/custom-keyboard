@@ -6,6 +6,7 @@
 #include "bsp/board.h"
 #include "hardware/i2c.h"
 #include "vamk_i2c_switch_state_transmitter.h"
+#include "vamk_keymap_config.h"
 #include "vamk_config.h"
 #include "vamk_types.h"
 

@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "hardware/i2c.h"
+#include "vamk_keymap_config.h"
 #include "vamk_config.h"
 #include "vamk_peripheral_switch_state.h"
 #include "vamk_types.h"

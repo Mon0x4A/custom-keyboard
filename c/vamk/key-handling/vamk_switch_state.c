@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "hardware/gpio.h"
 #include "vamk_config.h"
+#include "vamk_keymap_config.h"
 #include "vamk_display_state.h"
 #include "vamk_switch_state.h"
 #include "vamk_types.h"

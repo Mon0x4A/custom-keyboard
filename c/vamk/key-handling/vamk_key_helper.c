@@ -1,5 +1,6 @@
 ///Imports
 #include "vamk_config.h"
+#include "vamk_keymap_config.h"
 #include "vamk_key_helper.h"
 #include "vamk_types.h"
 
