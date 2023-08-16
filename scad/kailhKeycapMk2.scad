@@ -2,6 +2,8 @@
 KEY_1U_MODIFIER = 1;
 KEY_1_25U_MODIFIER = 1.25;
 
+ROUNDING_FACE_NUMBER = 50;
+
 //Variables
 _switchLength = 15;
 _switchWidth = 15;
@@ -16,7 +18,7 @@ _key1uWidth = (_switchWidth*KEY_1U_MODIFIER)+(_switchPaddingWidth*2);
 _key1_25uLength = (_switchLength*KEY_1U_MODIFIER)+(_switchPaddingLength*2);
 _key1_25uWidth = (_switchWidth*KEY_1_25U_MODIFIER)+(_switchPaddingWidth*2);
 
-_keyCapSpacingOffset = 0.5;
+_keyCapSpacingOffset = 1.2;
 _keyCapWallThickness = 2;
 _keyCapRoundingRadius = 3;
 
@@ -25,14 +27,25 @@ _keyCap1uWidth = _key1uWidth - _keyCapSpacingOffset;
 _keyCap1_25uLength = _key1_25uLength - _keyCapSpacingOffset;
 _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 
-_capInterfaceShankCenterToCenter = 6.25;
+// Note: This is setting that might have to be tweaked depending
+// on the printer's resolution. Lower the number for tighter gaps.
+_capInterfaceGapTolerance = 0.125;
+_switchInterfaceGapTolerance = 0.05;
 
+_switchInterfaceShankLength = 4.00;
+_switchInterfaceShankWidth = 1.20 - _switchInterfaceGapTolerance;
+_switchInterfaceShankDepth = 3 - _switchInterfaceGapTolerance;
+_switchInterfaceShankCenterToCenter = 5.70;
+_capInterfaceConnectorLength = 1.25;
+_capInterfaceConnectorWidth = 12;
+_capInterfaceConnectorDepth = _switchInterfaceShankDepth;
+_capInterfaceConnectorCutoutDepth = _capInterfaceConnectorDepth;
 
 /// MAIN START ///
 
-kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
-//kailhKeyCapTop(_key1_25uWidth, _key1uWidth, _kailhKeyCapDepth);
-//kailhKeycapShank();
+//kailhKeyCapTop(_keyCap1uLength, _keyCap1uWidth, _kailhKeyCapDepth);
+//kailhKeyCapTop(_keyCap1_25uWidth, _keyCap1uWidth, _kailhKeyCapDepth);
+kailhKeycapShank();
 
 /// MAIN END ///
 
@@ -40,11 +53,6 @@ kailhKeyCapTop(_key1uLength, _key1uWidth, _kailhKeyCapDepth);
 //Bodies
 module kailhKeyCapTop(length, width, depth)
 {
-    shankInterfaceWidth = 3.3;
-    shankInterfaceCutoutDepth = 1.5;
-    shankInterfaceLength = 1.9;
-    totalCapInterfaceLength = _capInterfaceShankCenterToCenter+shankInterfaceLength;
-
     difference()
     {
         union()
@@ -76,54 +84,32 @@ module kailhKeyCapTop(length, width, depth)
         }
 
         // Cut out the interface for the shank
-        translate([(length-totalCapInterfaceLength)/2,(width-shankInterfaceWidth)/2, depth-shankInterfaceCutoutDepth])
+        translate([((length-_capInterfaceConnectorWidth-_capInterfaceGapTolerance)/2)-_switchInterfaceGapTolerance,((width-_capInterfaceConnectorDepth-_capInterfaceGapTolerance)/2)-_switchInterfaceGapTolerance, depth-_capInterfaceConnectorLength])
             union()
             {
-                cube([shankInterfaceLength,shankInterfaceWidth,shankInterfaceCutoutDepth+1]);
-                translate([_capInterfaceShankCenterToCenter,0,0])
-                    cube([shankInterfaceLength,shankInterfaceWidth,shankInterfaceCutoutDepth+1]);
+                cube([_capInterfaceConnectorWidth+(_capInterfaceGapTolerance*2), _capInterfaceConnectorDepth+(_capInterfaceGapTolerance*2), _capInterfaceConnectorLength+1]);
             }
     }
 }
 
 module kailhKeycapShank()
 {
-    // Note: This is setting that might have to be tweaked depending
-    // on the printer's resolution. Lower the number for tighter gaps.
-    printingGapTolerance = 0.05;
-
-    switchInterfaceShankLength = 2.75;
-    switchInterfaceShankWidth = 1.20 - printingGapTolerance;
-    switchInterfaceShankDepth = 3 - printingGapTolerance;
-    switchInterfaceShankCenterToCenter = 5.70;
-    capInterfaceShankLength = 1.5;
-    capInterfaceShankWidth = 1.5-printingGapTolerance;
-    capInterfaceShankDepth = switchInterfaceShankDepth-printingGapTolerance;
-    shankInterfaceConnectorLength = 1.25;
-    shankInterfaceConnectorWidth = 12;
-    shankInterfaceConnectorDepth = switchInterfaceShankDepth;
 
     union()
     {
-        //Cap interface
-        translate([0,0,0])
-            cube([capInterfaceShankLength, capInterfaceShankWidth, capInterfaceShankDepth]);
-        translate([0,_capInterfaceShankCenterToCenter,0])
-            cube([capInterfaceShankLength, capInterfaceShankWidth, capInterfaceShankDepth]);
-
         //Interface connector
-        shankInterfaceCenteringWidth = ((_capInterfaceShankCenterToCenter+capInterfaceShankWidth)-shankInterfaceConnectorWidth)/2;
-        translate([capInterfaceShankLength,shankInterfaceCenteringWidth,0])
-            cube([shankInterfaceConnectorLength, shankInterfaceConnectorWidth, shankInterfaceConnectorDepth]);
+        capInterfaceCenteringWidth = (_switchInterfaceShankCenterToCenter-_capInterfaceConnectorWidth)/2;
+        translate([0,capInterfaceCenteringWidth,0])
+            cube([_capInterfaceConnectorLength, _capInterfaceConnectorWidth, _capInterfaceConnectorDepth]);
 
         //Switch interface
-        centeringWidth = ((shankInterfaceConnectorWidth-(switchInterfaceShankCenterToCenter+switchInterfaceShankWidth))/2)+shankInterfaceCenteringWidth;
+        centeringWidth = ((_capInterfaceConnectorWidth-(_switchInterfaceShankCenterToCenter+_switchInterfaceShankWidth))/2)+capInterfaceCenteringWidth;
         translate([0,centeringWidth,0])
         {
-            translate([capInterfaceShankLength+shankInterfaceConnectorLength,0,0])
-                cube([switchInterfaceShankLength, switchInterfaceShankWidth, switchInterfaceShankDepth]);
-            translate([capInterfaceShankLength+shankInterfaceConnectorLength, switchInterfaceShankCenterToCenter,0])
-                cube([switchInterfaceShankLength, switchInterfaceShankWidth, switchInterfaceShankDepth]);
+            translate([_capInterfaceConnectorLength,0,0])
+                cube([_switchInterfaceShankLength, _switchInterfaceShankWidth, _switchInterfaceShankDepth]);
+            translate([_capInterfaceConnectorLength, _switchInterfaceShankCenterToCenter,0])
+                cube([_switchInterfaceShankLength, _switchInterfaceShankWidth, _switchInterfaceShankDepth]);
         }
     }
 }
@@ -169,7 +155,7 @@ module roundedCube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "a
                             (apply_to == "ymin" && y_at == "min") || (apply_to == "ymax" && y_at == "max") ||
                             (apply_to == "zmin" && z_at == "min") || (apply_to == "zmax" && z_at == "max")
                         ) {
-                            sphere(r = radius, $fn=20);
+                            sphere(r = radius, $fn=ROUNDING_FACE_NUMBER);
                         } else {
                             rotate =
                                 (apply_to == "xmin" || apply_to == "xmax" || apply_to == "x") ? [0, 90, 0] : (
@@ -177,7 +163,7 @@ module roundedCube(size = [1, 1, 1], center = false, radius = 0.5, apply_to = "a
                                 [0, 0, 0]
                             );
                             rotate(a = rotate)
-                            cylinder(h = diameter, r = radius, center = true, $fn=20);
+                            cylinder(h = diameter, r = radius, center = true, $fn=ROUNDING_FACE_NUMBER);
                         }
                     }
                 }
