@@ -171,3 +171,11 @@ struct hid_keycode_container_t layer_info_get_tap_keycode_at(
     return build_code_container(layer_value);
 }
 
+struct hid_keycode_container_t layer_info_get_hold_delay_keycode_at(
+    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+{
+    //Holds on any layer will return the base layer 0.
+    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, 0, keyboard_side);
+    return build_code_container(layer_value);
+}
+

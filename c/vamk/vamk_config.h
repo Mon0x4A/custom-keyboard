@@ -28,6 +28,7 @@ static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
 #define TAP_ACTION_TIMEOUT_MS 200 //ms
 #define TAP_ACTION_TIMEIN_MS 20 //ms
 
+#define HOLD_DELAY_THRESHOLD_MS TAP_ACTION_TIMEOUT_MS+1
 
 ///I2C Config
 //===========

@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include "pico/stdlib.h"
 #include "vamk_config.h"
+#include "vamk_hold_delay_handler.h"
 #include "vamk_keymap_config.h"
 #include "vamk_key_helper.h"
 #include "vamk_key_state.h"
@@ -13,18 +14,7 @@
 #include "tusb.h"
 
 ///Static Global Variables
-static bool _has_chord_action_been_performed = false;
 
-///Static Functions
-//#include "hardware/timer.h"
-////TODO this timer code could be very useful for key events
-//// Timer example code - This example fires off the callback after 2000ms
-//add_alarm_in_ms(2000, alarm_callback, NULL, false);
-//// And the callback:
-//int64_t alarm_callback(alarm_id_t id, void *user_data) {
-//    // Put your timeout handler code in here
-//    return 0;
-//}
 
 ///Extern Functions
 void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
@@ -32,6 +22,7 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     uint8_t current_layer = keyboard_state_get_current_layer_index();
 
     tap_handler_on_switch_press(row, col, current_layer, keyboard_side);
+    hold_delay_handler_on_switch_press(row, col, current_layer, keyboard_side);
 
     struct hid_keycode_container_t code_container =
         layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);

@@ -1,6 +1,7 @@
 ///Imports
 #include "pico/stdlib.h"
 #include "vamk_config.h"
+#include "vamk_hold_delay_handler.h"
 #include "vamk_keymap_config.h"
 #include "vamk_key_helper.h"
 #include "vamk_key_state.h"
@@ -23,6 +24,8 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side
 
     if (!keyboard_state_get_has_chord_action_been_performed())
         tap_handler_on_switch_release(row, col, current_layer, keyboard_side);
+
+    hold_delay_handler_on_switch_release(row, col, current_layer, keyboard_side);
 
     struct hid_keycode_container_t code_container =
         layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);
