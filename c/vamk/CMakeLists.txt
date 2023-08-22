@@ -46,6 +46,7 @@ target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/vamk_layer_info.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk_peripheral_switch_state.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_press_handler.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_press_helper.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_release_handler.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_switch_state.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_tap_handler.c

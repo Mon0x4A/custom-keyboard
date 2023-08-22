@@ -9,6 +9,7 @@
 #include "vamk_hold_delay_handler.h"
 #include "vamk_keymap_config.h"
 #include "vamk_layer_info.h"
+#include "vamk_press_helper.h"
 #include "vamk_types.h"
 
 ///Static Constants
@@ -43,12 +44,18 @@ static volatile bool* get_callback_should_handle(uint16_t row, uint16_t col, key
 
 static int64_t delay_callback(alarm_id_t id, void *callback_params)
 {
+    (void) id;
     struct delay_callback_params_t *callback_params_ptr = callback_params;
     if (*callback_params_ptr->should_handle_ptr)
     {
         printf(">>DELAY CALLBACK FIRED %d,%d\n", callback_params_ptr->row, callback_params_ptr->col);
-        //TODO fetch our keycode and send that to the handling function.
-        //printf("%d", keycode_container.hid_keycode);
+        struct hid_keycode_container_t keycode_container = layer_info_get_hold_delay_keycode_at(
+            callback_params_ptr->row,
+            callback_params_ptr->col,
+            0, //TODO implement layering for hold delay
+            callback_params_ptr->keyboard_side);
+
+        press_helper_keycode_press(keycode_container, true);
     }
 
     // Handling has been completed.

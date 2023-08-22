@@ -8,6 +8,7 @@
 #include "vamk_key_state.h"
 #include "vamk_keyboard_state.h"
 #include "vamk_layer_info.h"
+#include "vamk_press_helper.h"
 #include "vamk_tap_handler.h"
 #include "vamk_types.h"
 
@@ -78,18 +79,8 @@ bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_ind
     if (elapsed_interval_ms <= TAP_ACTION_TIMEOUT_MS
         && elapsed_interval_ms > TAP_ACTION_TIMEIN_MS)
     {
-        // We met our interval requirement and now need to handle the code.
-        switch (code_container.hid_keycode)
-        {
-            //TODO need to handle the non-reporting keycodes here too.
-            case KC_REPEAT:
-                keyboard_state_send_repeat_state();
-                break;
-            default:
-                key_state_press(code_container, true);
-                keyboard_state_set_repeat_state(code_container);
-                break;
-        }
+        // We met our interval requirement.
+        press_helper_keycode_press(code_container, true);
         return true;
     }
 

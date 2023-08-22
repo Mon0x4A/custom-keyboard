@@ -48,7 +48,6 @@ static void insert_hid_report_code(struct hid_keycode_container_t keycode_contai
             break;
         }
     }
-
 }
 
 static void remove_hid_report_code(uint8_t hid_keycode)
