@@ -12,40 +12,42 @@
 #include "vamk_tap_handler.h"
 #include "vamk_types.h"
 
+///Local Declarations
+struct tap_event_params_t
+{
+    absolute_time_t key_down_time;
+    struct modifier_collection_t modifiers_at_key_down[HID_REPORT_KEYCODE_ARRAY_LENGTH];
+};
+
 ///Static Global Variables
-static absolute_time_t _since_key_down_left[ROW_COUNT][COLUMN_COUNT] = {0};
-static absolute_time_t _since_key_down_right[ROW_COUNT][COLUMN_COUNT] = {0};
+static struct tap_event_params_t _key_down_params_left[ROW_COUNT][COLUMN_COUNT] = {0};
+static struct tap_event_params_t _key_down_params_right[ROW_COUNT][COLUMN_COUNT] = {0};
 
-///Static Methods
-//static int64_t tap_timeout_alarm_callback(alarm_id_t id, void *user_data)
-//{
-//    (void) id;
-//
-//    if (user_data != NULL)
-//    {
-//        bool *should_fire_index = (bool*)user_data;
-//        (*should_fire_index) = 0;
-//    }
-//}
-
-static absolute_time_t* get_key_down_time_pointer(int16_t row, int16_t col, keyboard_side_t keyboard_side)
+///Static Functions
+static struct tap_event_params_t* get_key_down_params_pointer(int16_t row, int16_t col, keyboard_side_t keyboard_side)
 {
     switch (keyboard_side)
     {
         case LEFT_SIDE:
-            return &_since_key_down_left[row][col];
+            return &_key_down_params_left[row][col];
         case RIGHT_SIDE:
-            return &_since_key_down_right[row][col];
+            return &_key_down_params_right[row][col];
         default:
             return NULL;
     }
 }
 
-static void mark_key_down_time(int16_t row, int16_t col, keyboard_side_t keyboard_side)
+static void mark_key_down(int16_t row, int16_t col, keyboard_side_t keyboard_side)
 {
-    absolute_time_t *key_down_ptr = get_key_down_time_pointer(row, col, keyboard_side);
-    if (key_down_ptr != NULL)
-        (*key_down_ptr) = get_absolute_time();
+    struct tap_event_params_t *key_down_params_ptr = get_key_down_params_pointer(row, col, keyboard_side);
+
+    if (key_down_params_ptr == NULL)
+        return;
+
+    key_down_params_ptr->key_down_time = get_absolute_time();
+    struct modifier_collection_t current_modifiers = keyboard_state_get_currently_pressed_modifiers();
+    (*key_down_params_ptr->modifiers_at_key_down).modifier_count = current_modifiers.modifier_count;
+    memcpy(&(*key_down_params_ptr->modifiers_at_key_down).modifiers, &current_modifiers.modifiers, HID_REPORT_KEYCODE_ARRAY_LENGTH);
 }
 
 ///Extern Functions
@@ -58,7 +60,7 @@ void tap_handler_on_switch_press(uint16_t row, uint16_t col, uint8_t layer_index
         // We do not need to handle this event.
         return;
 
-    mark_key_down_time(row, col, keyboard_side);
+    mark_key_down(row, col, keyboard_side);
 }
 
 bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
@@ -70,17 +72,32 @@ bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_ind
         // We do not need to handle this event.
         return false;
 
-    absolute_time_t *key_down_at = get_key_down_time_pointer(row, col, keyboard_side);
-    if (key_down_at == NULL)
+    struct tap_event_params_t *key_down_params = get_key_down_params_pointer(row, col, keyboard_side);
+    if (key_down_params == NULL)
         return false;
 
     // Calc the interval and convert to milliseconds
-    uint64_t elapsed_interval_ms = (absolute_time_diff_us((*key_down_at), get_absolute_time()))/1000;
+    uint64_t elapsed_interval_ms = (absolute_time_diff_us(key_down_params->key_down_time, get_absolute_time()))/1000;
     if (elapsed_interval_ms <= TAP_ACTION_TIMEOUT_MS
         && elapsed_interval_ms > TAP_ACTION_TIMEIN_MS)
     {
         // We met our interval requirement.
-        press_helper_keycode_press(code_container, true);
+        for (int i = 0; i < (*key_down_params->modifiers_at_key_down).modifier_count; i++)
+        {
+            if ((*key_down_params->modifiers_at_key_down).modifiers[i] == 0)
+                continue;
+
+            // Send any modifiers that were present at key down time.
+            struct hid_keycode_container_t modifier_code =
+            {
+                .hid_keycode = (*key_down_params->modifiers_at_key_down).modifiers[i],
+                .modifier = 0,
+                .has_valid_contents = true
+            };
+            press_helper_keycode_press(modifier_code, false, true);
+        }
+        // Send the keycode for our tap event.
+        press_helper_keycode_press(code_container, true, false);
         return true;
     }
 

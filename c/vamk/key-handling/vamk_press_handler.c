@@ -29,5 +29,5 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     struct hid_keycode_container_t code_container =
         layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);
 
-    press_helper_keycode_press(code_container, false);
+    press_helper_keycode_press(code_container, false, false);
 }

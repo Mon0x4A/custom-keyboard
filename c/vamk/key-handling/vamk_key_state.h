@@ -17,7 +17,7 @@ struct key_report_t
 ///Function Declarations
 struct key_report_t key_state_preview_hid_report(void);
 struct key_report_t key_state_build_hid_report(void);
-void key_state_press(struct hid_keycode_container_t keycode_container, bool release_on_next_report);
+void key_state_press(struct hid_keycode_container_t keycode_container, bool should_auto_release, bool should_release_on_next_report);
 void key_state_release(uint8_t hid_keycode);
 
 #endif

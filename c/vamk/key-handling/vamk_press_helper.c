@@ -14,7 +14,8 @@
 ///Local Declarations
 ///Static Functions
 ///Extern Functions
-void press_helper_keycode_press(struct hid_keycode_container_t keycode_container, bool should_auto_release)
+void press_helper_keycode_press(struct hid_keycode_container_t keycode_container,
+    bool should_auto_release, bool should_release_on_next_report)
 {
     // If we are receiving invalid codes, something has gone
     // programatically wrong.
@@ -70,7 +71,7 @@ void press_helper_keycode_press(struct hid_keycode_container_t keycode_container
 
     if (ENABLE_KEYBOARD_COMMANDS && should_report_code)
     {
-        key_state_press(keycode_container, should_auto_release);
+        key_state_press(keycode_container, should_auto_release, should_release_on_next_report);
 
         if (!is_modifier_code)
             keyboard_state_set_repeat_state(keycode_container);

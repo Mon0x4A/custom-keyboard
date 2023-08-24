@@ -82,13 +82,28 @@ void keyboard_state_set_has_chord_action_been_performed(bool has_chord_action_be
 
 bool keyboard_state_is_any_modifier_pressed(void)
 {
-    struct key_report_t current_report = key_state_preview_hid_report();
-    for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
+    struct modifier_collection_t current_modifiers = keyboard_state_get_currently_pressed_modifiers();
+    return current_modifiers.modifier_count != 0;
+}
+struct modifier_collection_t keyboard_state_get_currently_pressed_modifiers(void)
+{
+    // Grab the curret hid report state and search for modifiers.
+    struct key_report_t report_preview = key_state_preview_hid_report();
+
+    struct modifier_collection_t current_modifiers_container = {0};
+    uint8_t current_insertion_index = 0;
+    for (uint8_t i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
     {
-        if (key_helper_is_modifier_keycode(current_report.keycodes[i]))
-            return true;
+        uint8_t curr_report_hid_keycode = report_preview.keycodes[i];
+        if (key_helper_is_modifier_keycode(curr_report_hid_keycode))
+        {
+            // Record any modifiers we find.
+            current_modifiers_container.modifiers[current_insertion_index] = curr_report_hid_keycode;
+            current_insertion_index++;
+            current_modifiers_container.modifier_count = current_insertion_index;
+        }
     }
-    return false;
+    return current_modifiers_container;
 }
 
 void keyboard_state_set_repeat_state(struct hid_keycode_container_t hid_repeat_code)
@@ -96,21 +111,9 @@ void keyboard_state_set_repeat_state(struct hid_keycode_container_t hid_repeat_c
     hard_assert(hid_repeat_code.has_valid_contents);
     _repeat_code = hid_repeat_code;
 
-    // Grab the curret hid report state and search for modifiers.
-    struct key_report_t report_preview = key_state_preview_hid_report();
-
     clear_repeat_modifers();
-    uint8_t current_repeat_arr_index = 0;
-    for (uint8_t i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
-    {
-        uint8_t curr_report_hid_keycode = report_preview.keycodes[i];
-        if (key_helper_is_modifier_keycode(curr_report_hid_keycode))
-        {
-            // Record any modifiers we find.
-            _repeat_modifiers[current_repeat_arr_index] = curr_report_hid_keycode;
-            current_repeat_arr_index++;
-        }
-    }
+    struct modifier_collection_t current_modifiers = keyboard_state_get_currently_pressed_modifiers();
+    memcpy(&_repeat_modifiers, &current_modifiers.modifiers, HID_REPORT_KEYCODE_ARRAY_LENGTH);
 }
 void keyboard_state_send_repeat_state(void)
 {
@@ -129,11 +132,11 @@ void keyboard_state_send_repeat_state(void)
             .modifier = 0,
             .has_valid_contents = true
         };
-        key_state_press(modifier_code, true);
+        key_state_press(modifier_code, true, true);
     }
 
     // Send our original repeat code. This has to be done last
     // so the new codes in the report are processed in order.
-    key_state_press(_repeat_code, true);
+    key_state_press(_repeat_code, true, false);
 }
 

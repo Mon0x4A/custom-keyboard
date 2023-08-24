@@ -62,7 +62,7 @@ static int64_t delay_callback(alarm_id_t id, void *callback_params)
             0, //TODO implement layering for hold delay
             callback_params_ptr->keyboard_side);
 
-        press_helper_keycode_press(keycode_container, true);
+        press_helper_keycode_press(keycode_container, true, false);
     }
 
     // Handling has been completed.

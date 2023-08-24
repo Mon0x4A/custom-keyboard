@@ -8,6 +8,7 @@
 ///Constants
 
 ///Function Definitions
-void press_helper_keycode_press(struct hid_keycode_container_t keycode_container, bool should_auto_release);
+void press_helper_keycode_press(struct hid_keycode_container_t keycode_container,
+    bool should_auto_release, bool should_release_on_next_report);
 
 #endif
