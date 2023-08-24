@@ -5,7 +5,14 @@
 ///Imports
 #include <stdbool.h>
 #include "pico/stdlib.h"
-#include "vamk_types.h"
+#include "vamk_layer_info.h"
+
+///Type Declarations
+struct key_report_t
+{
+    uint8_t keycodes[6];
+    uint8_t modifier;
+};
 
 ///Function Declarations
 struct key_report_t key_state_preview_hid_report(void);

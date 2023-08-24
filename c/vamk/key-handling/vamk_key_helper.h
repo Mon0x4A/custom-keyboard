@@ -3,7 +3,7 @@
 
 ///Imports
 #include "vamk_config.h"
-#include "vamk_types.h"
+#include "vamk_layer_info.h"
 #include "stdbool.h"
 #include "tusb.h"
 
