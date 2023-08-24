@@ -138,58 +138,58 @@ int main(void)
     gpio_pull_up(I2C_CONTROLLER_SDA_PIN);
     gpio_pull_up(I2C_CONTROLLER_SCL_PIN);
 
-    i2c_init(I2C_IO_EXPANDER_BUS, I2C_CLOCK_SPEED);
-    gpio_set_function(I2C_IO_EXPANDER_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(I2C_IO_EXPANDER_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(I2C_IO_EXPANDER_SDA_PIN);
-    gpio_pull_up(I2C_IO_EXPANDER_SCL_PIN);
-
-    //NOTE: Despite being a byte large, we assume the I2C address is only 7bits.
-    //uint8_t bit_shifted_expander_address = IO_EXPANDER_ADDRESS << 1;
-    uint8_t expander_address_with_write_flag = IO_EXPANDER_ADDRESS;
-    uint8_t expander_address_with_read_flag = IO_EXPANDER_ADDRESS & 0x01;
-
-    const uint8_t gpio_a_register_address = 0x12;
-    const uint8_t gpio_b_register_address = 0x13;
-    const uint8_t iodir_a_register_address = 0x00;
-    const uint8_t iodir_b_register_address = 0x01;
-    const uint8_t gppu_a_register_address = 0x0C;
-    const uint8_t gppu_b_register_address = 0x0D;
-
-#define REGISTER_VALUE_REQUEST_LENGTH 2
-    const uint8_t register_value_request[REGISTER_VALUE_REQUEST_LENGTH] =
-    {
-        expander_address_with_write_flag,
-        gpio_a_register_address
-    };
-
-    // To get a register value byte, write the device address and then the
-    // register you want to start retrieving data from.
-    int8_t written_byte_count = i2c_write_blocking(
-        I2C_IO_EXPANDER_BUS, expander_address_with_write_flag, &iodir_a_register_address, 1, false);
-
-    // Then invoke a read with the number of register bytes you want. 22 will get you all registers.
-    uint8_t read_buffer[IO_EXPANDER_REGISTER_COUNT];
-    uint8_t read_byte_count = i2c_read_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, read_buffer, IO_EXPANDER_REGISTER_COUNT, false);
-    printf("%d\n", read_byte_count);
-
-    // Attempt to turn on all pullup resistor for GPIO_A_2
-    const uint8_t gppu_a_on_request[2] =
-    {
-        gppu_a_register_address,
-        0x02
-    };
-    written_byte_count = i2c_write_blocking(
-        I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, gppu_a_on_request, 2, false);
-
-    // To get a register value byte, write the device address and then the
-    // register you want to start retrieving data from.
-    written_byte_count = i2c_write_blocking(
-        I2C_IO_EXPANDER_BUS, expander_address_with_write_flag, &iodir_a_register_address, 1, false);
-
-    // Then invoke a read with the number of register bytes you want. 21 will get you all registers.
-    read_byte_count = i2c_read_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, read_buffer, IO_EXPANDER_REGISTER_COUNT, false);
-    printf("%d\n", read_byte_count);
+//    i2c_init(I2C_IO_EXPANDER_BUS, I2C_CLOCK_SPEED);
+//    gpio_set_function(I2C_IO_EXPANDER_SDA_PIN, GPIO_FUNC_I2C);
+//    gpio_set_function(I2C_IO_EXPANDER_SCL_PIN, GPIO_FUNC_I2C);
+//    gpio_pull_up(I2C_IO_EXPANDER_SDA_PIN);
+//    gpio_pull_up(I2C_IO_EXPANDER_SCL_PIN);
+//
+//    //NOTE: Despite being a byte large, we assume the I2C address is only 7bits.
+//    //uint8_t bit_shifted_expander_address = IO_EXPANDER_ADDRESS << 1;
+//    uint8_t expander_address_with_write_flag = IO_EXPANDER_ADDRESS;
+//    uint8_t expander_address_with_read_flag = IO_EXPANDER_ADDRESS & 0x01;
+//
+//    const uint8_t gpio_a_register_address = 0x12;
+//    const uint8_t gpio_b_register_address = 0x13;
+//    const uint8_t iodir_a_register_address = 0x00;
+//    const uint8_t iodir_b_register_address = 0x01;
+//    const uint8_t gppu_a_register_address = 0x0C;
+//    const uint8_t gppu_b_register_address = 0x0D;
+//
+//#define REGISTER_VALUE_REQUEST_LENGTH 2
+//    const uint8_t register_value_request[REGISTER_VALUE_REQUEST_LENGTH] =
+//    {
+//        expander_address_with_write_flag,
+//        gpio_a_register_address
+//    };
+//
+//    // To get a register value byte, write the device address and then the
+//    // register you want to start retrieving data from.
+//    int8_t written_byte_count = i2c_write_blocking(
+//        I2C_IO_EXPANDER_BUS, expander_address_with_write_flag, &iodir_a_register_address, 1, false);
+//
+//    // Then invoke a read with the number of register bytes you want. 22 will get you all registers.
+//    uint8_t read_buffer[IO_EXPANDER_REGISTER_COUNT];
+//    uint8_t read_byte_count = i2c_read_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, read_buffer, IO_EXPANDER_REGISTER_COUNT, false);
+//    printf("%d\n", read_byte_count);
+//
+//    // Attempt to turn on all pullup resistor for GPIO_A_2
+//    const uint8_t gppu_a_on_request[2] =
+//    {
+//        gppu_a_register_address,
+//        0x02
+//    };
+//    written_byte_count = i2c_write_blocking(
+//        I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, gppu_a_on_request, 2, false);
+//
+//    // To get a register value byte, write the device address and then the
+//    // register you want to start retrieving data from.
+//    written_byte_count = i2c_write_blocking(
+//        I2C_IO_EXPANDER_BUS, expander_address_with_write_flag, &iodir_a_register_address, 1, false);
+//
+//    // Then invoke a read with the number of register bytes you want. 21 will get you all registers.
+//    read_byte_count = i2c_read_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, read_buffer, IO_EXPANDER_REGISTER_COUNT, false);
+//    printf("%d\n", read_byte_count);
 
     if (IS_PRIMARY_KEYBOARD_SIDE)
     {

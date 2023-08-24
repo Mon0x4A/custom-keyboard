@@ -22,7 +22,7 @@ void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t k
     uint8_t current_layer = keyboard_state_get_current_layer_index();
 
     tap_handler_on_switch_press(row, col, current_layer, keyboard_side);
-    //hold_delay_handler_on_switch_press(row, col, current_layer, keyboard_side);
+    hold_delay_handler_on_switch_press(row, col, current_layer, keyboard_side);
     //TODO double tap action handling
 
     struct hid_keycode_container_t code_container =

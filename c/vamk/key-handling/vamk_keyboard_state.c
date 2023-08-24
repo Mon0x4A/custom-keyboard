@@ -13,6 +13,7 @@ static const uint8_t DEFAULT_LAYER_INDEX = 0;
 
 ///Static Global Variables
 static bool _has_chord_action_been_performed = false;
+static bool _is_waiting_for_chord_action = false;
 static uint8_t _last_pressed_layer_index = 0;
 
 static int8_t _quant_layer_mod_pressed[MAX_LAYER_COUNT] = {0};
@@ -56,8 +57,7 @@ bool keyboard_state_get_is_layer_modifier_pressed(uint8_t layer_index)
 {
     return _quant_layer_mod_pressed[layer_index] > 0;
 }
-
-bool keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_layer_modifier_pressed)
+void keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_layer_modifier_pressed)
 {
     if (is_layer_modifier_pressed)
     {
@@ -75,10 +75,20 @@ bool keyboard_state_get_has_chord_action_been_performed(void)
 {
     return _has_chord_action_been_performed;
 }
-
 void keyboard_state_set_has_chord_action_been_performed(bool has_chord_action_been_performed)
 {
     _has_chord_action_been_performed = has_chord_action_been_performed;
+}
+
+bool keyboard_state_is_any_modifier_pressed(void)
+{
+    struct key_report_t current_report = key_state_preview_hid_report();
+    for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
+    {
+        if (key_helper_is_modifier_keycode(current_report.keycodes[i]))
+            return true;
+    }
+    return false;
 }
 
 void keyboard_state_set_repeat_state(struct hid_keycode_container_t hid_repeat_code)
@@ -102,7 +112,6 @@ void keyboard_state_set_repeat_state(struct hid_keycode_container_t hid_repeat_c
         }
     }
 }
-
 void keyboard_state_send_repeat_state(void)
 {
     if (!_repeat_code.has_valid_contents)

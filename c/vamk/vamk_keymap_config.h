@@ -99,6 +99,9 @@
     };
     static const bool L_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
 
+    static const uint8_t L_HOLD_DELAY_KEYS[ROW_COUNT][COLUMN_COUNT] = {0};
+    static const bool L_HOLD_DELAY_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
+
     static const uint8_t R0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     {
         { KC_LM1,              'y', 'u', 'i', 'o', 'p', HID_KEY_CONTROL_RIGHT },
@@ -145,6 +148,9 @@
         { KC_NULL,           KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
     };
     static const bool R_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
+
+    static const uint8_t R_HOLD_DELAY_KEYS[ROW_COUNT][COLUMN_COUNT] = {0};
+    static const bool R_HOLD_DELAY_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
 #endif
 
 #if !IS_SPLIT_KEYBOARD
@@ -187,23 +193,23 @@
     ///================
     static const uint8_t L0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     {
-        { HID_KEY_CONTROL_LEFT, 'q', 'w', 'e', 'r', 't', KC_LM1,             KC_LM1,              'y', 'u', 'i', 'o', 'p', HID_KEY_CONTROL_RIGHT },
-        { KC_NULL,              'a', 's', 'd', 'f', 'g', KC_LM2,             KC_LM2,              'h', 'j', 'k', 'l', ';', KC_NULL },
-        { KC_NULL,              'z', 'x', 'c', 'v', 'b', HID_KEY_SHIFT_LEFT, HID_KEY_SHIFT_RIGHT, 'n', 'm', ',', '.', '/', KC_NULL },
+        { HID_KEY_CONTROL_LEFT, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_LM1,              KC_LM1,              KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_CONTROL_RIGHT },
+        { KC_NULL,              KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_LM2,              KC_LM2,              KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+        { KC_NULL,              KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_SHIFT_RIGHT, HID_KEY_SHIFT_RIGHT, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
     };
 
     static const bool L0_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
     {
-        { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
-        { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
-        { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     };
 
     static const uint8_t L1_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     {
-        { HID_KEY_ALT_LEFT, HID_KEY_F1, HID_KEY_F4, HID_KEY_F7, HID_KEY_F10, KC_NULL, KC_LM1,             KC_LM1,              HID_KEY_HOME,         HID_KEY_PAGE_DOWN,  HID_KEY_PAGE_UP,  HID_KEY_END,         HID_KEY_DELETE, HID_KEY_ALT_RIGHT },
-        { KC_NULL,          HID_KEY_F2, HID_KEY_F5, HID_KEY_F8, HID_KEY_F11, KC_NULL, KC_LM2,             KC_LM2,              HID_KEY_ARROW_LEFT,   HID_KEY_ARROW_DOWN, HID_KEY_ARROW_UP, HID_KEY_ARROW_RIGHT, KC_NULL,        KC_NULL },
-        { KC_NULL,          HID_KEY_F3, HID_KEY_F6, HID_KEY_F9, HID_KEY_F12, KC_NULL, HID_KEY_SHIFT_LEFT, HID_KEY_SHIFT_RIGHT, HID_KEY_PRINT_SCREEN, KC_NULL,            KC_NULL,          KC_NULL,             KC_NULL,        KC_NULL },
+        { HID_KEY_ALT_LEFT, HID_KEY_F1, HID_KEY_F4, HID_KEY_F7, HID_KEY_F10, KC_NULL, KC_LM1,              KC_LM1,              HID_KEY_HOME,         HID_KEY_PAGE_DOWN,  HID_KEY_PAGE_UP,  HID_KEY_END,         HID_KEY_DELETE, HID_KEY_ALT_RIGHT },
+        { KC_NULL,          HID_KEY_F2, HID_KEY_F5, HID_KEY_F8, HID_KEY_F11, KC_NULL, KC_LM2,              KC_LM2,              HID_KEY_ARROW_LEFT,   HID_KEY_ARROW_DOWN, HID_KEY_ARROW_UP, HID_KEY_ARROW_RIGHT, KC_NULL,        KC_NULL },
+        { KC_NULL,          HID_KEY_F3, HID_KEY_F6, HID_KEY_F9, HID_KEY_F12, KC_NULL, HID_KEY_SHIFT_RIGHT, HID_KEY_SHIFT_RIGHT, HID_KEY_PRINT_SCREEN, KC_NULL,            KC_NULL,          KC_NULL,             KC_NULL,        KC_NULL },
     };
     static const bool L1_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
     {
@@ -214,28 +220,54 @@
 
     static const uint8_t L2_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] =
     {
-        { HID_KEY_GUI_LEFT, '`', '0', '1', '2', '3', KC_LM1,             KC_LM1,              '&', '*', '(', ')', '=',  HID_KEY_GUI_RIGHT },
-        { KC_NULL,          '@', '$', '4', '5', '6', KC_LM2,             KC_LM2,              '-', '_', '{', '}', '\'', KC_NULL },
-        { KC_NULL,          '<', '>', '7', '8', '9', HID_KEY_SHIFT_LEFT, HID_KEY_SHIFT_RIGHT, '+', '!', '[', ']', '\\', KC_NULL },
+        { HID_KEY_GUI_LEFT, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_LM1,              KC_LM1,              KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_GUI_RIGHT },
+        { KC_NULL,          KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_LM2,              KC_LM2,              KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+        { KC_NULL,          KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_SHIFT_RIGHT, HID_KEY_SHIFT_RIGHT, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
     };
     static const bool L2_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
+    {
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    };
+
+    static const uint8_t L0_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
+    {
+        { HID_KEY_ESCAPE, 'q', 'w', 'e', 'r', 't', HID_KEY_TAB,   KC_REPEAT,         'y', 'u', 'i', 'o', 'p', HID_KEY_ENTER },
+        { KC_NULL,        'a', 's', 'd', 'f', 'g', HID_KEY_SPACE, HID_KEY_BACKSPACE, 'h', 'j', 'k', 'l', ';', KC_NULL },
+        { KC_NULL,        'z', 'x', 'c', 'v', 'b', KC_NULL,       KC_NULL,           'n', 'm', ',', '.', '/', KC_NULL },
+    };
+    static const bool L0_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
     {
         { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
         { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
         { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
     };
 
-    static const uint8_t L_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
+    static const uint8_t L1_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] =
     {
-        { HID_KEY_ESCAPE,  KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_TAB,   KC_REPEAT,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_ENTER },
-        { KC_NULL,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_SPACE, HID_KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
-        { KC_NULL,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL,       KC_NULL,           KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+        { HID_KEY_ESCAPE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_TAB,   KC_REPEAT,         KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_ENTER },
+        { KC_NULL,        KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, HID_KEY_SPACE, HID_KEY_BACKSPACE, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
+        { KC_NULL,        KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL,       KC_NULL,           KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL, KC_NULL },
     };
-    static const bool L_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
+    static const bool L1_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
     {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+    };
+
+    static const uint8_t L_HOLD_DELAY_KEYS[ROW_COUNT][COLUMN_COUNT] =
+    {
+        { KC_NULL, '`', '0', '1', '2', '3', KC_NULL, KC_NULL, '&', '*', '(', ')', '=',  KC_NULL },
+        { KC_NULL, '@', '$', '4', '5', '6', KC_NULL, KC_NULL, '-', '_', '{', '}', '\'', KC_NULL },
+        { KC_NULL, '<', '>', '7', '8', '9', KC_NULL, KC_NULL, '+', '!', '[', ']', '\\', KC_NULL },
+    };
+    static const bool L_HOLD_DELAY_IS_ASCII[ROW_COUNT][COLUMN_COUNT] =
+    {
+        { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
+        { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
+        { 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0 },
     };
 
     static const uint8_t R0_BASE_KEYCODES[ROW_COUNT][COLUMN_COUNT] = {0};
@@ -246,6 +278,8 @@
     static const bool R2_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
     static const uint8_t R_TAP_KEYS[ROW_COUNT][COLUMN_COUNT] = {0};
     static const bool R_TAP_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
+    static const uint8_t R_HOLD_DELAY_KEYS[ROW_COUNT][COLUMN_COUNT] = {0};
+    static const bool R_HOLD_DELAY_IS_ASCII[ROW_COUNT][COLUMN_COUNT] = {0};
 #endif
 
 ///Function Definitions

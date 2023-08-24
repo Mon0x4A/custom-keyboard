@@ -69,6 +69,7 @@ static struct layer_index_value_container_t get_base_value_at(
             break;
     }
 
+    //TODO make this into a function
     if (layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
     {
         index_value_container.has_valid_contents = false;
@@ -92,12 +93,23 @@ static struct layer_index_value_container_t get_tap_value_at(
     switch (layer_index)
     {
         case 0:
-        case 1:
         case 2:
             if (keyboard_side == LEFT_SIDE)
             {
-                tap_layer_array_ptr = &L_TAP_KEYS;
-                is_ascii_array_ptr = &L_TAP_IS_ASCII;
+                tap_layer_array_ptr = &L0_TAP_KEYS;
+                is_ascii_array_ptr = &L0_TAP_IS_ASCII;
+            }
+            else if (keyboard_side == RIGHT_SIDE)
+            {
+                tap_layer_array_ptr = &R_TAP_KEYS;
+                is_ascii_array_ptr = &R_TAP_IS_ASCII;
+            }
+            break;
+        case 1:
+            if (keyboard_side == LEFT_SIDE)
+            {
+                tap_layer_array_ptr = &L1_TAP_KEYS;
+                is_ascii_array_ptr = &L1_TAP_IS_ASCII;
             }
             else if (keyboard_side == RIGHT_SIDE)
             {
@@ -107,6 +119,7 @@ static struct layer_index_value_container_t get_tap_value_at(
             break;
     }
 
+    //TODO make this into a function
     if (tap_layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
     {
         index_value_container.has_valid_contents = false;
@@ -114,6 +127,45 @@ static struct layer_index_value_container_t get_tap_value_at(
     }
 
     index_value_container.layer_index_value = (*tap_layer_array_ptr)[row][col];
+    index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
+    index_value_container.has_valid_contents = true;
+
+    return index_value_container;
+}
+
+static struct layer_index_value_container_t get_delay_hold_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+{
+    struct layer_index_value_container_t index_value_container;
+
+    const uint8_t (*delay_hold_layer_array_ptr)[ROW_COUNT][COLUMN_COUNT] = NULL;
+    const bool (*is_ascii_array_ptr)[ROW_COUNT][COLUMN_COUNT] = NULL;
+    switch (layer_index)
+    {
+        case 0:
+        case 1:
+        case 2:
+            if (keyboard_side == LEFT_SIDE)
+            {
+                delay_hold_layer_array_ptr = &L_HOLD_DELAY_KEYS;
+                is_ascii_array_ptr = &L_HOLD_DELAY_IS_ASCII;
+            }
+            else if (keyboard_side == RIGHT_SIDE)
+            {
+                delay_hold_layer_array_ptr = &R_HOLD_DELAY_KEYS;
+                is_ascii_array_ptr = &R_HOLD_DELAY_IS_ASCII;
+            }
+            break;
+    }
+
+    //TODO make this into a function
+    if (delay_hold_layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
+    {
+        index_value_container.has_valid_contents = false;
+        return index_value_container;
+    }
+
+    index_value_container.layer_index_value = (*delay_hold_layer_array_ptr)[row][col];
     index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
     index_value_container.has_valid_contents = true;
 
@@ -174,8 +226,7 @@ struct hid_keycode_container_t layer_info_get_tap_keycode_at(
 struct hid_keycode_container_t layer_info_get_hold_delay_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    //Holds on any layer will return the base layer 0.
-    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, 0, keyboard_side);
+    struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, keyboard_side);
     return build_code_container(layer_value);
 }
 

@@ -15,20 +15,26 @@
 ///Static Constants
 
 ///Local Declarations
+struct callback_event_t
+{
+    alarm_id_t event_id;
+    bool should_handle:1;
+};
+
 struct delay_callback_params_t
 {
     uint16_t row;
     uint16_t col;
     keyboard_side_t keyboard_side;
-    volatile bool *should_handle_ptr;
+    volatile struct callback_event_t *current_event_ptr;
 };
 
 ///Static Global Variables
-static volatile bool _l_delay_callback_should_handle[ROW_COUNT][COLUMN_COUNT] = {0};
-static volatile bool _r_delay_callback_should_handle[ROW_COUNT][COLUMN_COUNT] = {0};
+static volatile struct callback_event_t _l_delay_callback_should_handle[ROW_COUNT][COLUMN_COUNT] = {0};
+static volatile struct callback_event_t _r_delay_callback_should_handle[ROW_COUNT][COLUMN_COUNT] = {0};
 
 ///Static Functions
-static volatile bool* get_callback_should_handle(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
+static volatile struct callback_event_t* get_current_callback_event(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
 {
     switch (keyboard_side)
     {
@@ -44,9 +50,11 @@ static volatile bool* get_callback_should_handle(uint16_t row, uint16_t col, key
 
 static int64_t delay_callback(alarm_id_t id, void *callback_params)
 {
-    (void) id;
     struct delay_callback_params_t *callback_params_ptr = callback_params;
-    if (*callback_params_ptr->should_handle_ptr)
+    // We only handle this event if the most recent event shares the same id
+    // and has not been handled already.
+    volatile struct callback_event_t *current_event_ptr = callback_params_ptr->current_event_ptr;
+    if (((current_event_ptr->event_id) == id) && (current_event_ptr->should_handle))
     {
         printf(">>DELAY CALLBACK FIRED %d,%d\n", callback_params_ptr->row, callback_params_ptr->col);
         struct hid_keycode_container_t keycode_container = layer_info_get_hold_delay_keycode_at(
@@ -59,7 +67,6 @@ static int64_t delay_callback(alarm_id_t id, void *callback_params)
     }
 
     // Handling has been completed.
-    (*callback_params_ptr->should_handle_ptr) = false;
     free(callback_params_ptr);
 
     return 0;
@@ -72,18 +79,19 @@ void hold_delay_handler_on_switch_press(uint16_t row, uint16_t col, uint8_t laye
     callback_params_ptr->row = row;
     callback_params_ptr->col = col;
     callback_params_ptr->keyboard_side = keyboard_side;
-    callback_params_ptr->should_handle_ptr = get_callback_should_handle(row, col, keyboard_side);
-
-    (*callback_params_ptr->should_handle_ptr) = true;
+    callback_params_ptr->current_event_ptr = get_current_callback_event(row, col, keyboard_side);
 
     // Start a timer with the intent to handle the action later.
-    alarm_id_t timerId = add_alarm_in_ms(HOLD_DELAY_THRESHOLD_MS, delay_callback, (void*)callback_params_ptr, false);
+    alarm_id_t event_id = add_alarm_in_ms(HOLD_DELAY_THRESHOLD_MS, delay_callback, (void*)callback_params_ptr, false);
+
+    callback_params_ptr->current_event_ptr->event_id = event_id;
+    callback_params_ptr->current_event_ptr->should_handle = true;
 }
 
 void hold_delay_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
     // If the key has been released, we have either already handled
     // the event, or setting to false will prevent it from executing.
-    volatile bool *should_handle_ptr = get_callback_should_handle(row, col, keyboard_side);
-    (*should_handle_ptr) = false;
+    volatile struct callback_event_t *current_event_ptr = get_current_callback_event(row, col, keyboard_side);
+    current_event_ptr->should_handle = false;
 }
