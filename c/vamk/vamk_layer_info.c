@@ -22,6 +22,26 @@ struct layer_index_value_container_t
 };
 
 ///Static Functions
+static struct layer_index_value_container_t build_layer_index_value_from(
+    uint8_t row,
+    uint8_t col,
+    const uint8_t (*layer_array_ptr)[ROW_COUNT][COLUMN_COUNT],
+    const bool (*is_ascii_array_ptr)[ROW_COUNT][COLUMN_COUNT])
+{
+    struct layer_index_value_container_t index_value_container;
+    if (layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
+    {
+        index_value_container.has_valid_contents = false;
+        return index_value_container;
+    }
+
+    index_value_container.layer_index_value = (*layer_array_ptr)[row][col];
+    index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
+    index_value_container.has_valid_contents = true;
+
+    return index_value_container;
+}
+
 static struct layer_index_value_container_t get_base_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
@@ -69,18 +89,7 @@ static struct layer_index_value_container_t get_base_value_at(
             break;
     }
 
-    //TODO make this into a function
-    if (layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
-    {
-        index_value_container.has_valid_contents = false;
-        return index_value_container;
-    }
-
-    index_value_container.layer_index_value = (*layer_array_ptr)[row][col];
-    index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
-    index_value_container.has_valid_contents = true;
-
-    return index_value_container;
+    return build_layer_index_value_from(row, col, layer_array_ptr, is_ascii_array_ptr);
 }
 
 static struct layer_index_value_container_t get_tap_value_at(
@@ -119,18 +128,7 @@ static struct layer_index_value_container_t get_tap_value_at(
             break;
     }
 
-    //TODO make this into a function
-    if (tap_layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
-    {
-        index_value_container.has_valid_contents = false;
-        return index_value_container;
-    }
-
-    index_value_container.layer_index_value = (*tap_layer_array_ptr)[row][col];
-    index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
-    index_value_container.has_valid_contents = true;
-
-    return index_value_container;
+    return build_layer_index_value_from(row, col, tap_layer_array_ptr, is_ascii_array_ptr);
 }
 
 static struct layer_index_value_container_t get_delay_hold_value_at(
@@ -158,18 +156,7 @@ static struct layer_index_value_container_t get_delay_hold_value_at(
             break;
     }
 
-    //TODO make this into a function
-    if (delay_hold_layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
-    {
-        index_value_container.has_valid_contents = false;
-        return index_value_container;
-    }
-
-    index_value_container.layer_index_value = (*delay_hold_layer_array_ptr)[row][col];
-    index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
-    index_value_container.has_valid_contents = true;
-
-    return index_value_container;
+    return build_layer_index_value_from(row, col, delay_hold_layer_array_ptr, is_ascii_array_ptr);
 }
 
 static struct hid_keycode_container_t build_code_container(struct layer_index_value_container_t layer_value)
