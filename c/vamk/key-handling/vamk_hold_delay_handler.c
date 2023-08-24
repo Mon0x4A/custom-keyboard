@@ -56,7 +56,6 @@ static int64_t delay_callback(alarm_id_t id, void *callback_params)
     volatile struct callback_event_t *current_event_ptr = callback_params_ptr->current_event_ptr;
     if (((current_event_ptr->event_id) == id) && (current_event_ptr->should_handle))
     {
-        printf(">>DELAY CALLBACK FIRED %d,%d\n", callback_params_ptr->row, callback_params_ptr->col);
         struct hid_keycode_container_t keycode_container = layer_info_get_hold_delay_keycode_at(
             callback_params_ptr->row,
             callback_params_ptr->col,
