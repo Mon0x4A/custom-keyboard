@@ -44,7 +44,7 @@ _thumbBackplateLength = (_key1_25uLength * _thumbBackplateColumnCount);
 _thumbBackplateWidth = (_key1_25uWidth * _thumbBackplateRowCount);
 
 _housingWallThickness = 4.5;
-_housingBaseThickness = 3;
+_housingBaseThickness = 3.5;
 _housingBackplateCutoutPadding = 1.25;
 _housingBodyRoundingRadius = 4;
 
@@ -88,11 +88,11 @@ _riserCutoutDiameter = 3.6;
 _riserCutoutRadius = _riserCutoutDiameter/2;
 _riserCutoutDepth = 4;
 
-_backplateRiserHeight = 2;
+_backplateRiserHeight = 2.5;
 
 // MX Switch Variables
-_mxBackplateDepth = 5;
-_mxHousingBodyDepth = 12;
+_mxBackplateDepth = 6;
+_mxHousingBodyDepth = 8 + _housingBaseThickness + _backplateRiserHeight;
 _mxBackplateOffsetFromHousing = _housingBaseThickness + _backplateRiserHeight;
 
 // Kailh Switch Variables
@@ -148,10 +148,11 @@ _picoWidthPlacment = 24.5;
 // Comment in this mirror statement to make any right-hand parts.
 //mirror([1,0,0])
 
-keyboard(MX_SWITCH_TYPE, isLeftSide=true);
+//keyboard(MX_SWITCH_TYPE, isLeftSide=true);
 //wristRest();
 //housing(_kailhHousingBodyDepth);
-//backplate(_kailhBackplateDepth);
+backplate(_mxBackplateDepth);
+//keyUnit(_key1uLength, _key1uWidth, _mxBackplateDepth);
 //oledScreenPunch(_picoHousingLidBaseThickness+2);
 //oledScreenPlateCover(depth=1.5);
 //oledScreenFrame();
@@ -441,8 +442,8 @@ module backplate(backplateDepth)
                 backplateSubModule(_thumbBackplateRowCount, _thumbBackplateColumnCount, _key1_25uLength, _key1_25uWidth, backplateDepth);
         }
 
-        backplateBoltCountersinkDepth = 2;
-        translate([0,0,_housingBaseThickness-1-backplateBoltCountersinkDepth])
+        backplateBoltCountersinkDepth = 1.5;
+        translate([0,0,_housingBaseThickness-backplateBoltCountersinkDepth])
             riserBackplateBoltPunchSet(backplateDepth);
     }
 }

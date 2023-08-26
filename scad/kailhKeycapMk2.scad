@@ -29,12 +29,12 @@ _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
 
 // Note: This is setting that might have to be tweaked depending
 // on the printer's resolution. Lower the number for tighter gaps.
-_capInterfaceGapTolerance = 0.125;
+_capInterfaceGapTolerance = 0.07;
 _switchInterfaceGapTolerance = 0.05;
 
 _switchInterfaceShankLength = 4.00;
 _switchInterfaceShankWidth = 1.20 - _switchInterfaceGapTolerance;
-_switchInterfaceShankDepth = 3 - _switchInterfaceGapTolerance;
+_switchInterfaceShankDepth = 3.2 - _switchInterfaceGapTolerance;
 _switchInterfaceShankCenterToCenter = 5.70;
 _capInterfaceConnectorLength = 1.25;
 _capInterfaceConnectorWidth = 12;
@@ -43,9 +43,9 @@ _capInterfaceConnectorCutoutDepth = _capInterfaceConnectorDepth;
 
 /// MAIN START ///
 
-//kailhKeyCapTop(_keyCap1uLength, _keyCap1uWidth, _kailhKeyCapDepth);
+kailhKeyCapTop(_keyCap1uLength, _keyCap1uWidth, _kailhKeyCapDepth);
 //kailhKeyCapTop(_keyCap1_25uWidth, _keyCap1uWidth, _kailhKeyCapDepth);
-kailhKeycapShank();
+//kailhKeycapShank();
 
 /// MAIN END ///
 
