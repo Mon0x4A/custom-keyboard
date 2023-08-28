@@ -143,15 +143,42 @@ _picoInsetNutSetWidthOffset = ((_picoHousingBaseWidth-_picoNutInsertWidthCenterT
 _picoLengthPlacment = _key1uWidth*(6)+1.3;
 _picoWidthPlacment = 24.5;
 
+_electronicsHousingLengthEdgePadding = 7;
+_electronicsHousingWidthEdgePadding = 3.5;
+_electronicsHousingBaseLength = 30 + (_electronicsHousingLengthEdgePadding*2);
+_electronicsHousingBaseWidth = _picoBodyWidth + (_electronicsHousingWidthEdgePadding*2);
+_electronicsHousingBaseDepth = 6.5;
+_electronicsHousingLidHeight = 10;
+_electronicsHousingLidBoltCounterSink = 0;
+_electronicsHousingLidBaseThickness = 2;
+_electronicsHousingCableCutoutWidth = _electronicsHousingBaseWidth*(3/5);
+_electronicsHousingCableCutoutOffset = _electronicsHousingBaseWidth*(1/5);
+_electronicsHousingPaddingOffsetAdjustment = 0.25;
+
+_electronicsInsetNutCutoutDepth = 3;
+_electronicsNutInsertLengthCenterToCenter = 36;
+_electronicsNutInsertWidthCenterToCenter = 50.5;
+_electronicsNutSetOffsetAdjustment = 0.5;
+_electronicsInsetNutSetLengthOffset = ((_electronicsHousingBaseLength-_electronicsNutInsertLengthCenterToCenter)/2)+_electronicsNutSetOffsetAdjustment;
+_electronicsInsetNutSetWidthOffset = ((_electronicsHousingBaseWidth-_electronicsNutInsertWidthCenterToCenter)/2)+_electronicsNutSetOffsetAdjustment;
+
+_ioExpanderCutoutLength = 9.6 + 0.2;
+_ioExpanderCutoutWidth = 35.3 + 0.2;
+_ioExpanderCutoutDepth = 3.5;
+
+_usbBreakoutBoardSideLength = 17.2;
+_usbBreakoutMountsCenterToCenter = 12;
+_usbBreakoutCutoutDepth = 1.5;
+
 /// MAIN START ///
 
 // Comment in this mirror statement to make any right-hand parts.
 //mirror([1,0,0])
 
-//keyboard(MX_SWITCH_TYPE, isLeftSide=true);
+keyboard(MX_SWITCH_TYPE, isLeftSide=true);
 //wristRest();
 //housing(_kailhHousingBodyDepth);
-backplate(_mxBackplateDepth);
+//backplate(_mxBackplateDepth);
 //keyUnit(_key1uLength, _key1uWidth, _mxBackplateDepth);
 //oledScreenPunch(_picoHousingLidBaseThickness+2);
 //oledScreenPlateCover(depth=1.5);
@@ -163,6 +190,7 @@ backplate(_mxBackplateDepth);
 //picoMountingStud(_picoMountingStudHeight,_picoMountingStudInsetDepth);
 //picoMountingNutPunchSet();
 //picoHousing(renderLid=true, renderBase=false, renderPico=false);
+//electronicsHousing(renderLid=false, renderBase=true, renderPartMockups=false);
 //picoHousingBase();
 //picoHousingTop();
 //arduinoMicroPunch();
@@ -172,16 +200,16 @@ module keyboard(switchType, isLeftSide)
 {
     if (isLeftSide)
     {
-        keyboardAssembly(switchType);
+        keyboardAssembly(switchType, isLeftSide);
     }
     else
     {
         mirror([1,0,0])
-            keyboardAssembly(switchType);
+            keyboardAssembly(switchType, isLeftSide);
     }
 }
 
-module keyboardAssembly(switchType)
+module keyboardAssembly(switchType, isLeftSide)
 {
     backplateDepth = (switchType == MX_SWITCH_TYPE) ? _mxBackplateDepth : _kailhBackplateDepth;
     backplateOffsetFromHousing = (switchType == MX_SWITCH_TYPE) ? _mxBackplateOffsetFromHousing : _kailhBackplateOffsetFromHousing;
@@ -203,28 +231,38 @@ module keyboardAssembly(switchType)
                     translate([-_housingWallThickness*3, -_housingWallThickness*3, housingDepth-housingTopTrimAmount])
                         cube([housingTopTrimBlockLength, housingTopTrimBlockWidth, housingDepth]);
                 }
-                translate([0,0,backplateOffsetFromHousing])
-                    backplate(backplateDepth);
-                ////pico enclosure
-                //translate([_picoLengthPlacment,_picoWidthPlacment,0])
-                //    union()
-                //    {
-                //        picoHousing(renderLid=true, renderBase=true, renderPico=false);
-                //        picoHousingBodyJointWidth = 64.40;
-                //        picoHousingBodyJointLength = 28.70;
-                //        picoHousingBodyJointDepth = 2;
-                //        jointLengthOffset = -7;
-                //        jointWidthOffset = -7;
-                //        // Smoothing for joint seam.
-                //        translate([jointLengthOffset, jointWidthOffset, 0])
-                //            difference()
-                //            {
-                //                roundedCube(size=[picoHousingBodyJointLength, picoHousingBodyJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
-                //                cutoutEdgePadding = 5;
-                //                translate([-cutoutEdgePadding,-cutoutEdgePadding, picoHousingBodyJointDepth])
-                //                    cube([picoHousingBodyJointLength+(cutoutEdgePadding*2), picoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
-                //            }
-                //    }
+                //translate([0,0,backplateOffsetFromHousing])
+                //    backplate(backplateDepth);
+                //pico enclosure
+                translate([_picoLengthPlacment,_picoWidthPlacment,0])
+                {
+                    union()
+                    {
+                        picoHousingBodyJointWidth = 64.40;
+                        picoHousingBodyJointLength = 28.70;
+                        picoHousingBodyJointDepth = 2;
+                        jointLengthOffset = -7;
+                        jointWidthOffset = -7;
+                        // Smoothing for joint seam.
+                        translate([jointLengthOffset, jointWidthOffset, 0])
+                            difference()
+                            {
+                                roundedCube(size=[picoHousingBodyJointLength, picoHousingBodyJointWidth, housingDepth], radius=_housingBodyRoundingRadius, apply_to="all");
+                                cutoutEdgePadding = 5;
+                                translate([-cutoutEdgePadding,-cutoutEdgePadding, picoHousingBodyJointDepth])
+                                    cube([picoHousingBodyJointLength+(cutoutEdgePadding*2), picoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
+                            }
+
+                        if (isLeftSide)
+                        {
+                            electronicsHousing(renderLid=false, renderBase=true, renderPartMockups=false);
+                        }
+                        else
+                        {
+                            picoHousing(renderLid=true, renderBase=true, renderPico=false);
+                        }
+                    }
+                }
             }
             if (backplateSupportHeight < _riserCutoutDepth)
             {
@@ -549,7 +587,7 @@ module picoHousingBase()
 
             // Lid attachement nut set
             translate([_picoInsetNutSetLengthOffset,_picoInsetNutSetWidthOffset,_picoHousingBaseDepth-_picoInsetNutCutoutDepth])
-                lidAttachmentNutPunchSet();
+                picoLidAttachmentNutPunchSet();
             // Pico cutout
             translate([_picoIntraHousingLengthOffset, _picoIntraHousingWidthOffset, _picoHousingBaseDepth-_picoCutoutDepth])
                 picoPunch(_picoCutoutDepth+1);
@@ -658,6 +696,123 @@ module picoHousingTop()
     }
 }
 
+module electronicsHousing(renderLid, renderBase, renderPartMockups)
+{
+    union()
+    {
+        if (renderBase)
+            electronicsHousingBase(renderPartMockups);
+        if (renderLid)
+            translate([0, 0, _picoHousingBaseDepth])
+                electronicsHousingTop();
+    }
+}
+
+module electronicsHousingTop()
+{
+    difference()
+    {
+        union()
+        {
+            difference()
+            {
+                translate([_picoHousingBaseLength-1, 0, _picoHousingLidHeight])
+                    rotate([0, 180, 0])
+                        housingSubModule(_picoHousingBaseLength-(_housingBodyRoundingRadius*2), _picoHousingBaseWidth-(_housingBodyRoundingRadius*2), _picoHousingLidHeight, _picoHousingLidBaseThickness, apply_to="z");
+
+                // bolt attachements from the top into the housing bottom
+                translate([_picoInsetNutSetLengthOffset-_picoHousingPaddingOffsetAdjustment, _picoInsetNutSetWidthOffset, _picoHousingLidHeight-_picoHousingLidBoltCounterSink])
+                {
+                    translate([0, 0, 0])
+                        riserBackplateBoltPunch(_picoHousingLidBaseThickness);
+                    translate([_picoNutInsertLengthCenterToCenter, 0, 0])
+                        riserBackplateBoltPunch(_picoHousingLidBaseThickness);
+                    translate([0, _picoNutInsertWidthCenterToCenter, 0])
+                        riserBackplateBoltPunch(_picoHousingLidBaseThickness);
+                    translate([_picoNutInsertLengthCenterToCenter, _picoNutInsertWidthCenterToCenter, 0])
+                        riserBackplateBoltPunch(_picoHousingLidBaseThickness);
+                }
+
+                // cutout to bring in matrix row/col wires
+                picoCableCutoutDepth = 1.5;
+                translate([-1, _picoHousingCableCutoutOffset, -1])
+                    cube([_housingWallThickness+2, _picoHousingCableCutoutWidth, picoCableCutoutDepth+1]);
+            }
+        }
+    }
+}
+
+module electronicsHousingBase(renderUsbBreakout)
+{
+    union()
+    {
+        usbBreakoutLengthOffset = _electronicsHousingBaseLength-_usbBreakoutBoardSideLength-5.5;
+        usbBreakoutWidthOffset = (_electronicsHousingBaseWidth-_usbBreakoutBoardSideLength)/2;
+        difference()
+        {
+            difference()
+            {
+                arbitraryDepth = 10;
+                housingSubModule(_electronicsHousingBaseLength-(_housingBodyRoundingRadius*2), _electronicsHousingBaseWidth-(_housingBodyRoundingRadius*2), arbitraryDepth, _electronicsHousingBaseDepth);
+                translate([0,0,_electronicsHousingBaseDepth])
+                    cube([_electronicsHousingBaseLength+(_housingWallThickness*2), _electronicsHousingBaseWidth+(_housingWallThickness*2), arbitraryDepth]);
+            }
+
+            //Lid attachement nut set
+            translate([_electronicsInsetNutSetLengthOffset,_electronicsInsetNutSetWidthOffset,_electronicsHousingBaseDepth-_electronicsInsetNutCutoutDepth])
+                electronicsLidAttachmentNutPunchSet();
+
+            //TODO make new variables for all this stuff
+            //TODO i/o expander cutout
+            //TODO usb cutout
+
+            // I/0 expander cutout
+            _ioExpanderLengthOffsetFromLeft = 8;
+            translate([_ioExpanderLengthOffsetFromLeft, (_electronicsHousingBaseWidth-_ioExpanderCutoutWidth)/2, 0])
+            {
+                translate([0, 0, _electronicsHousingBaseDepth-_ioExpanderCutoutDepth])
+                    cube([_ioExpanderCutoutLength, _ioExpanderCutoutWidth, _ioExpanderCutoutDepth+1]);
+
+                // Inset nut cutouts
+                _ioExpanderInsetNutOffsetFromEdge = 4;
+                _ioExpanderInsetNutCenterToCenter = _ioExpanderCutoutWidth + (_ioExpanderInsetNutOffsetFromEdge*2);
+                _ioExpanderInsetNutCutoutDepth = 3;
+                translate([_ioExpanderCutoutLength/2, -_ioExpanderInsetNutOffsetFromEdge, _electronicsHousingBaseDepth-_ioExpanderInsetNutCutoutDepth])
+                {
+                    cylinder(r=_insetNutCutoutRadius, h=_electronicsHousingBaseDepth, $fn=100);
+                    translate([0, _ioExpanderInsetNutCenterToCenter, 0])
+                        cylinder(r=_insetNutCutoutRadius, h=_electronicsHousingBaseDepth, $fn=100);
+                }
+            }
+
+            translate([usbBreakoutLengthOffset, usbBreakoutWidthOffset, 0])
+            {
+                translate([0, 0, _electronicsHousingBaseDepth-_usbBreakoutCutoutDepth])
+                    cube([_usbBreakoutBoardSideLength, _usbBreakoutBoardSideLength, _usbBreakoutCutoutDepth+1]);
+                _usbBreakoutInsetNutCutoutDepth = 3;
+                _usbBreakoutInsetNutCutoutLengthOffset = 6.70;
+                _usbBreakoutInsetNutCutoutWidthOffset = 2.59;
+                translate([_usbBreakoutInsetNutCutoutLengthOffset, _usbBreakoutInsetNutCutoutWidthOffset, _electronicsHousingBaseDepth-_usbBreakoutCutoutDepth-_usbBreakoutInsetNutCutoutDepth])
+                {
+                    cylinder(r=_insetNutCutoutRadius, h=_electronicsHousingBaseDepth, $fn=100);
+                    translate([0, _usbBreakoutMountsCenterToCenter, 0])
+                        cylinder(r=_insetNutCutoutRadius, h=_electronicsHousingBaseDepth, $fn=100);
+                }
+            }
+
+            // Cable ramp cutout
+            picoCableRampAngle = 42;
+            translate([-_electronicsHousingBaseDepth*1.5, _picoHousingCableCutoutOffset, 0])
+                rotate([0, picoCableRampAngle, 0])
+                    cube([_electronicsHousingBaseDepth, _picoHousingCableCutoutWidth, _electronicsHousingBaseDepth*3]);
+        }
+
+        if (renderUsbBreakout)
+            translate([usbBreakoutLengthOffset, usbBreakoutWidthOffset, _electronicsHousingBaseDepth-_usbBreakoutCutoutDepth])
+                usbBreakoutBoardMockup();
+    }
+}
+
 module trrsWedgeBlock()
 {
     difference()
@@ -739,6 +894,37 @@ module picoModel()
             import("../resources/stl/Raspberry-Pi-Pico-R3.stl");
 }
 
+module usbBreakoutBoardMockup()
+{
+    usbBreakoutBoardSideLength = _usbBreakoutBoardSideLength;//17.2;
+    usbBreakoutBoardDepth = 2;
+
+    usbPlugLength = 14.8; // Flange included.
+    usbPlugWidth = 14.3;
+    usbPlugDepth = 7.1; // Flange included.
+
+    usbPlugOffsetFromBoard = 1; // Board to lower plug flange edge.
+    usbPlugInsetIntoBoard = 8.4;
+
+    usbBreakoutMountsCenterToCenter = 12;
+
+    translate([usbBreakoutBoardSideLength, 0, 0])
+        rotate([0, 0, 90])
+            difference()
+            {
+                union()
+                {
+                    cube([usbBreakoutBoardSideLength, usbBreakoutBoardSideLength, usbBreakoutBoardDepth]);
+
+                    translate([(usbBreakoutBoardSideLength-usbPlugLength)/2, -(usbPlugLength-usbPlugInsetIntoBoard), usbBreakoutBoardDepth + usbPlugOffsetFromBoard])
+                        cube([usbPlugLength, usbPlugWidth, usbPlugDepth]);
+                }
+
+                translate([(usbBreakoutBoardSideLength-_usbBreakoutMountsCenterToCenter)/2, 10.5, -1])
+                    usbBreakoutMountingPunch(usbBreakoutBoardDepth+2);
+            }
+}
+
 //Punches
 module picoPunch(depth)
 {
@@ -748,7 +934,7 @@ module picoPunch(depth)
     }
 }
 
-module lidAttachmentNutPunchSet()
+module picoLidAttachmentNutPunchSet()
 {
     translate([0,0,0])
         lidAttachmentNutPunch();
@@ -757,6 +943,18 @@ module lidAttachmentNutPunchSet()
     translate([0,_picoNutInsertWidthCenterToCenter,0])
         lidAttachmentNutPunch();
     translate([_picoNutInsertLengthCenterToCenter,_picoNutInsertWidthCenterToCenter,0])
+        lidAttachmentNutPunch();
+}
+
+module electronicsLidAttachmentNutPunchSet()
+{
+    translate([0,0,0])
+        lidAttachmentNutPunch();
+    translate([_electronicsNutInsertLengthCenterToCenter,0,0])
+        lidAttachmentNutPunch();
+    translate([0,_electronicsNutInsertWidthCenterToCenter,0])
+        lidAttachmentNutPunch();
+    translate([_electronicsNutInsertLengthCenterToCenter,_electronicsNutInsertWidthCenterToCenter,0])
         lidAttachmentNutPunch();
 }
 
@@ -853,6 +1051,25 @@ module trrsBodyPunch()
         translate([_trrsBodyLength, _trrsBodyWidth/2, _trrsBodyDepth/2])
             rotate([0, 90, 0])
                 cylinder(r=(_trrsBodyDepth/2)+trrsConnectorTolerance,h=trrsConnectorDepth, $fn=100);
+    }
+}
+
+module usbBreakoutMountingPunch(depth)
+{
+    union()
+    {
+        m3BoltPunch(depth);
+
+        translate([_usbBreakoutMountsCenterToCenter, 0, 0])
+            m3BoltPunch(depth);
+    }
+}
+
+module m3BoltPunch(depth)
+{
+    union()
+    {
+        cylinder(r=_m3BoltHoleRadius, h=depth, $fn=100);
     }
 }
 
