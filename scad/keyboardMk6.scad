@@ -143,8 +143,8 @@ _picoInsetNutSetWidthOffset = ((_picoHousingBaseWidth-_picoNutInsertWidthCenterT
 _picoLengthPlacment = _key1uWidth*(6)+1.3;
 _picoWidthPlacment = 24.5;
 
-_electronicsHousingLengthEdgePadding = 7;
-_electronicsHousingWidthEdgePadding = 3.5;
+_electronicsHousingLengthEdgePadding = _picoHousingLengthEdgePadding;
+_electronicsHousingWidthEdgePadding = _picoHousingWidthEdgePadding;
 _electronicsHousingBaseLength = 30 + (_electronicsHousingLengthEdgePadding*2);
 _electronicsHousingBaseWidth = _picoBodyWidth + (_electronicsHousingWidthEdgePadding*2);
 _electronicsHousingBaseDepth = 6.5;
@@ -168,14 +168,14 @@ _ioExpanderCutoutDepth = 3.5;
 
 _usbBreakoutBoardSideLength = 17.2;
 _usbBreakoutMountsCenterToCenter = 12;
-_usbBreakoutCutoutDepth = 1.5;
+_usbBreakoutCutoutDepth = 2.5;
 
 /// MAIN START ///
 
 // Comment in this mirror statement to make any right-hand parts.
 //mirror([1,0,0])
 
-keyboard(MX_SWITCH_TYPE, isLeftSide=true);
+keyboard(MX_SWITCH_TYPE, isLeftSide=true, isPicoSide=false);
 //wristRest();
 //housing(_kailhHousingBodyDepth);
 //backplate(_mxBackplateDepth);
@@ -196,20 +196,20 @@ keyboard(MX_SWITCH_TYPE, isLeftSide=true);
 //arduinoMicroPunch();
 
 /// MAIN END ///
-module keyboard(switchType, isLeftSide)
+module keyboard(switchType, isLeftSide, isPicoSide)
 {
     if (isLeftSide)
     {
-        keyboardAssembly(switchType, isLeftSide);
+        keyboardAssembly(switchType, isPicoSide);
     }
     else
     {
         mirror([1,0,0])
-            keyboardAssembly(switchType, isLeftSide);
+            keyboardAssembly(switchType, isPicoSide);
     }
 }
 
-module keyboardAssembly(switchType, isLeftSide)
+module keyboardAssembly(switchType, isPicoSide)
 {
     backplateDepth = (switchType == MX_SWITCH_TYPE) ? _mxBackplateDepth : _kailhBackplateDepth;
     backplateOffsetFromHousing = (switchType == MX_SWITCH_TYPE) ? _mxBackplateOffsetFromHousing : _kailhBackplateOffsetFromHousing;
@@ -238,8 +238,8 @@ module keyboardAssembly(switchType, isLeftSide)
                 {
                     union()
                     {
-                        picoHousingBodyJointWidth = 64.40;
-                        picoHousingBodyJointLength = 28.70;
+                        picoHousingBodyJointWidth = 66.40;
+                        picoHousingBodyJointLength = 29.70;
                         picoHousingBodyJointDepth = 2;
                         jointLengthOffset = -7;
                         jointWidthOffset = -7;
@@ -253,14 +253,10 @@ module keyboardAssembly(switchType, isLeftSide)
                                     cube([picoHousingBodyJointLength+(cutoutEdgePadding*2), picoHousingBodyJointWidth+(cutoutEdgePadding*2), housingDepth]);
                             }
 
-                        if (isLeftSide)
-                        {
-                            electronicsHousing(renderLid=false, renderBase=true, renderPartMockups=false);
-                        }
-                        else
-                        {
+                        if (isPicoSide)
                             picoHousing(renderLid=true, renderBase=true, renderPico=false);
-                        }
+                        else
+                            electronicsHousing(renderLid=false, renderBase=true, renderPartMockups=false);
                     }
                 }
             }
@@ -746,8 +742,10 @@ module electronicsHousingBase(renderUsbBreakout)
 {
     union()
     {
-        usbBreakoutLengthOffset = _electronicsHousingBaseLength-_usbBreakoutBoardSideLength-5.5;
-        usbBreakoutWidthOffset = (_electronicsHousingBaseWidth-_usbBreakoutBoardSideLength)/2;
+        _usbBreakoutCutoutSideTolerance = 0.25;
+        _usbBreakoutCutoutSideLength = _usbBreakoutBoardSideLength + _usbBreakoutCutoutSideTolerance;
+        usbBreakoutLengthOffset = _electronicsHousingBaseLength-_usbBreakoutCutoutSideLength-5.5;
+        usbBreakoutWidthOffset = (_electronicsHousingBaseWidth-_usbBreakoutCutoutSideLength)/2;
         difference()
         {
             difference()
@@ -761,10 +759,6 @@ module electronicsHousingBase(renderUsbBreakout)
             //Lid attachement nut set
             translate([_electronicsInsetNutSetLengthOffset,_electronicsInsetNutSetWidthOffset,_electronicsHousingBaseDepth-_electronicsInsetNutCutoutDepth])
                 electronicsLidAttachmentNutPunchSet();
-
-            //TODO make new variables for all this stuff
-            //TODO i/o expander cutout
-            //TODO usb cutout
 
             // I/0 expander cutout
             _ioExpanderLengthOffsetFromLeft = 8;
@@ -787,10 +781,12 @@ module electronicsHousingBase(renderUsbBreakout)
 
             translate([usbBreakoutLengthOffset, usbBreakoutWidthOffset, 0])
             {
-                translate([0, 0, _electronicsHousingBaseDepth-_usbBreakoutCutoutDepth])
-                    cube([_usbBreakoutBoardSideLength, _usbBreakoutBoardSideLength, _usbBreakoutCutoutDepth+1]);
-                _usbBreakoutInsetNutCutoutDepth = 3;
-                _usbBreakoutInsetNutCutoutLengthOffset = 6.70;
+                _usbBreakoutCutoutSideTolerance = 0.3;
+                _usbBreakoutCutoutSideLength = _usbBreakoutBoardSideLength + _usbBreakoutCutoutSideTolerance;
+                translate([-_usbBreakoutCutoutSideTolerance/2, -_usbBreakoutCutoutSideTolerance/2, _electronicsHousingBaseDepth-_usbBreakoutCutoutDepth])
+                    cube([_usbBreakoutCutoutSideLength, _usbBreakoutCutoutSideLength, _usbBreakoutCutoutDepth+1]);
+                _usbBreakoutInsetNutCutoutDepth = 2.5;
+                _usbBreakoutInsetNutCutoutLengthOffset = 5.5; // NOTE: Purposfully does not line up perfectly with breakout mockup
                 _usbBreakoutInsetNutCutoutWidthOffset = 2.59;
                 translate([_usbBreakoutInsetNutCutoutLengthOffset, _usbBreakoutInsetNutCutoutWidthOffset, _electronicsHousingBaseDepth-_usbBreakoutCutoutDepth-_usbBreakoutInsetNutCutoutDepth])
                 {
