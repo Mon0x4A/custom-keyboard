@@ -35,6 +35,7 @@
     #define COLUMN_COUNT 7
     #define ROW_COUNT 3
 
+    //TODO separate these out for the io expander pins
     static const uint8_t ROW_0_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 20 : 18;
     static const uint8_t ROW_1_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 19 : 19;
     static const uint8_t ROW_2_PIN = CURRENT_KEYBOARD_SIDE == LEFT_SIDE ? 18 : 20;

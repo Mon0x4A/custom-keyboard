@@ -7,6 +7,14 @@
 #include "vamk_peripheral_switch_state.h"
 #include "vamk_types.h"
 
+///Static Global Constants
+const uint8_t GPIO_A_REGISTER_ADDRESS = 0x12;
+const uint8_t GPIO_B_REGISTER_ADDRESS = 0x13;
+const uint8_t IODIR_A_REGISTER_ADDRESS = 0x00;
+const uint8_t IODIR_B_REGISTER_ADDRESS = 0x01;
+const uint8_t GPPU_A_REGISTER_ADDRESS = 0x0C;
+const uint8_t GPPU_B_REGISTER_ADDRESS = 0x0D;
+
 ///Static Global Variables
 static uint8_t _peripheral_switch_matrix_curr[ROW_COUNT][COLUMN_COUNT] = {0};
 static uint8_t _peripheral_switch_matrix_prev[ROW_COUNT][COLUMN_COUNT] = {0};
@@ -18,18 +26,28 @@ static switch_released_callback_t _released_callback = NULL;
 ///Static Functions
 static void read_matrix_state(void)
 {
-    // Request the peripheral I2C device for matrix state.
-    uint8_t read_buffer[I2C_TRANSMISSION_SIZE];
-    uint8_t read_count = i2c_read_blocking(
-        I2C_CONTROLLER_PORT, PERIPHERAL_KEYBOARD_ADDRESS, read_buffer, I2C_TRANSMISSION_SIZE, true);
+    // To get a register value byte, write the device address and then the
+    // register you want to start retrieving data from.
+    const uint8_t REGISTER_WRITE_REQUEST_LENGTH = 1;
+    const bool DO_NOT_SEND_STOP = false;
+    int8_t written_byte_count = i2c_write_blocking(
+        I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, &GPIO_A_REGISTER_ADDRESS,
+        REGISTER_WRITE_REQUEST_LENGTH, DO_NOT_SEND_STOP);
 
-    // Do not attempt to process a malformed message.
-    if (read_count != I2C_TRANSMISSION_SIZE)
-        return;
+    // Request N number of registries to be returned since each is 1 byte.
+    // Values will start from the register previously written.
+    const uint8_t REGISTER_READ_BYTE_REQUEST_COUNT = 2;
+    uint8_t read_buffer[REGISTER_READ_BYTE_REQUEST_COUNT];
+    uint8_t read_count = i2c_read_blocking(
+        I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, read_buffer, REGISTER_READ_BYTE_REQUEST_COUNT, DO_NOT_SEND_STOP);
+
+    //TODO assert that read_count == 2?
+
+    //TODO we need to map each register value to an index value
 
     // Break out the sequential buffer contents.
-    for (int i = 0; i < I2C_TRANSMISSION_SIZE; i++)
-        _peripheral_switch_matrix_curr[i/COLUMN_COUNT][i%COLUMN_COUNT] = read_buffer[i];
+    //for (int i = 0; i < I2C_TRANSMISSION_SIZE; i++)
+    //    _peripheral_switch_matrix_curr[i/COLUMN_COUNT][i%COLUMN_COUNT] = read_buffer[i];
 }
 
 static void update_prev_matrix(void)
@@ -92,16 +110,19 @@ static void print_matrix_state(void)
 ///Extern Functions
 void peripheral_switch_state_init(void)
 {
-    //Set up this device as I2C controller.
-    gpio_init(I2C_CONTROLLER_SDA_PIN);
-    gpio_set_function(I2C_CONTROLLER_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(I2C_CONTROLLER_SDA_PIN);
+    //Set up this device as the I2C controller for the
+    //I/O expander bus.
+    i2c_init(I2C_IO_EXPANDER_BUS, I2C_CLOCK_SPEED);
 
-    gpio_init(I2C_CONTROLLER_SCL_PIN);
-    gpio_set_function(I2C_CONTROLLER_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(I2C_CONTROLLER_SCL_PIN);
+    gpio_init(I2C_IO_EXPANDER_SDA_PIN);
+    gpio_set_function(I2C_IO_EXPANDER_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(I2C_IO_EXPANDER_SDA_PIN);
 
-    i2c_init(I2C_CONTROLLER_PORT, I2C_CLOCK_SPEED);
+    gpio_init(I2C_IO_EXPANDER_SCL_PIN);
+    gpio_set_function(I2C_IO_EXPANDER_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(I2C_IO_EXPANDER_SCL_PIN);
+
+    //TODO init the expander I/0 pins and pullup resistors
 
     //Load the default switch state into each array.
     read_matrix_state();
