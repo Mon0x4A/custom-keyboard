@@ -56,13 +56,15 @@ static int64_t delay_callback(alarm_id_t id, void *callback_params)
     volatile struct callback_event_t *current_event_ptr = callback_params_ptr->current_event_ptr;
     if (((current_event_ptr->event_id) == id) && (current_event_ptr->should_handle))
     {
+        //TODO utilize modifier collection and layer from the callback params
+        //TODO make handling for sendind a keycode with a modifier collection more portable
         struct hid_keycode_container_t keycode_container = layer_info_get_hold_delay_keycode_at(
             callback_params_ptr->row,
             callback_params_ptr->col,
             0, //TODO implement layering for hold delay
             callback_params_ptr->keyboard_side);
 
-        press_helper_keycode_press(keycode_container, true, false);
+        press_helper_momentary_press(keycode_container);
     }
 
     // Handling has been completed.

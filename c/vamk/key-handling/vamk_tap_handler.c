@@ -65,6 +65,10 @@ void tap_handler_on_switch_press(uint16_t row, uint16_t col, uint8_t layer_index
 
 bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
+    struct tap_event_params_t *key_down_params_ptr = get_key_down_params_pointer(row, col, keyboard_side);
+    if (key_down_params_ptr == NULL)
+        return false;
+
     struct hid_keycode_container_t code_container =
         layer_info_get_tap_keycode_at(row, col, layer_index, keyboard_side);
 
@@ -72,32 +76,12 @@ bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_ind
         // We do not need to handle this event.
         return false;
 
-    struct tap_event_params_t *key_down_params = get_key_down_params_pointer(row, col, keyboard_side);
-    if (key_down_params == NULL)
-        return false;
-
     // Calc the interval and convert to milliseconds
-    uint64_t elapsed_interval_ms = (absolute_time_diff_us(key_down_params->key_down_time, get_absolute_time()))/1000;
+    uint64_t elapsed_interval_ms = (absolute_time_diff_us(key_down_params_ptr->key_down_time, get_absolute_time()))/1000;
     if (elapsed_interval_ms <= TAP_ACTION_TIMEOUT_MS
         && elapsed_interval_ms > TAP_ACTION_TIMEIN_MS)
     {
-        // We met our interval requirement.
-        for (int i = 0; i < (*key_down_params->modifiers_at_key_down).modifier_count; i++)
-        {
-            if ((*key_down_params->modifiers_at_key_down).modifiers[i] == 0)
-                continue;
-
-            // Send any modifiers that were present at key down time.
-            struct hid_keycode_container_t modifier_code =
-            {
-                .hid_keycode = (*key_down_params->modifiers_at_key_down).modifiers[i],
-                .modifier = 0,
-                .has_valid_contents = true
-            };
-            press_helper_keycode_press(modifier_code, false, true);
-        }
-        // Send the keycode for our tap event.
-        press_helper_keycode_press(code_container, true, false);
+        press_helper_momentary_press_with_modifiers(code_container, (*key_down_params_ptr->modifiers_at_key_down));
         return true;
     }
 

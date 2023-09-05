@@ -3,6 +3,8 @@
 
 ///Imports
 #include "vamk_types.h"
+#include "vamk_layer_info.h"
+
 #include "stdbool.h"
 #include "pico/stdlib.h"
 
