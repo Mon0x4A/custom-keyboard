@@ -14,8 +14,7 @@
 static const uint8_t _ASCII_CHAR_TO_HID_KEYCODE [128][2] = { HID_ASCII_TO_KEYCODE };
 
 ///Local Declarations
-typedef const uint8_t (*keycode_array_ptr_t)[ROW_COUNT][COLUMN_COUNT];
-typedef const bool (*is_ascii_array_ptr_t)[ROW_COUNT][COLUMN_COUNT];
+typedef const struct keycode_definition_t (*keycode_definition_array_ptr_t)[ROW_COUNT][COLUMN_COUNT];
 
 struct layer_index_value_container_t
 {
@@ -28,18 +27,17 @@ struct layer_index_value_container_t
 static struct layer_index_value_container_t build_layer_index_value_from(
     uint8_t row,
     uint8_t col,
-    const keycode_array_ptr_t layer_array_ptr,
-    const is_ascii_array_ptr_t is_ascii_array_ptr)
+    const keycode_definition_array_ptr_t keycode_definition_array_ptr)
 {
     struct layer_index_value_container_t index_value_container = {0};
-    if (layer_array_ptr == NULL || is_ascii_array_ptr == NULL)
+    if (keycode_definition_array_ptr == NULL)
     {
         index_value_container.has_valid_contents = false;
         return index_value_container;
     }
 
-    index_value_container.layer_index_value = (*layer_array_ptr)[row][col];
-    index_value_container.needs_ascii_translation = (*is_ascii_array_ptr)[row][col];
+    index_value_container.layer_index_value = (*keycode_definition_array_ptr)[row][col].keycode;
+    index_value_container.needs_ascii_translation = (*keycode_definition_array_ptr)[row][col].is_ascii;
     index_value_container.has_valid_contents = true;
 
     return index_value_container;
@@ -48,118 +46,107 @@ static struct layer_index_value_container_t build_layer_index_value_from(
 static struct layer_index_value_container_t get_base_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    struct layer_index_value_container_t index_value_container = {0};
-
-    keycode_array_ptr_t base_layer_array_ptr = NULL;
-    is_ascii_array_ptr_t is_ascii_array_ptr = NULL;
+    keycode_definition_array_ptr_t base_layer_definitions_ptr = NULL;
     switch (layer_index)
     {
+// These are defined as two separate if statements intentionally such that
+// compilation errors will occur if both or neither are set to true.
+#if IS_UNIFIED_KEYBOARD
+        case 0:
+            base_layer_definitions_ptr = &L0_BASE_KEYCODES;
+            break;
+        case 1:
+            base_layer_definitions_ptr = &L1_BASE_KEYCODES;
+            break;
+        case 2:
+            base_layer_definitions_ptr = &L2_BASE_KEYCODES;
+            break;
+#endif
+#if IS_SPLIT_KEYBOARD
         case 0:
             if (keyboard_side == LEFT_SIDE)
-            {
-                base_layer_array_ptr = &L0_BASE_KEYCODES;
-                is_ascii_array_ptr = &L0_IS_ASCII;
-            }
+                base_layer_definitions_ptr = &L0_BASE_KEYCODES;
             else if (keyboard_side == RIGHT_SIDE)
-            {
-                base_layer_array_ptr = &R0_BASE_KEYCODES;
-                is_ascii_array_ptr = &R0_IS_ASCII;
-            }
+                base_layer_definitions_ptr = &R0_BASE_KEYCODES;
             break;
         case 1:
             if (keyboard_side == LEFT_SIDE)
-            {
-                base_layer_array_ptr = &L1_BASE_KEYCODES;
-                is_ascii_array_ptr = &L1_IS_ASCII;
-            }
+                base_layer_definitions_ptr = &L1_BASE_KEYCODES;
             else if (keyboard_side == RIGHT_SIDE)
-            {
-                base_layer_array_ptr = &R1_BASE_KEYCODES;
-                is_ascii_array_ptr = &R1_IS_ASCII;
-            }
+                base_layer_definitions_ptr = &R1_BASE_KEYCODES;
             break;
         case 2:
             if (keyboard_side == LEFT_SIDE)
-            {
-                base_layer_array_ptr = &L2_BASE_KEYCODES;
-                is_ascii_array_ptr = &L2_IS_ASCII;
-            }
+                base_layer_definitions_ptr = &L2_BASE_KEYCODES;
             else if (keyboard_side == RIGHT_SIDE)
-            {
-                base_layer_array_ptr = &R2_BASE_KEYCODES;
-                is_ascii_array_ptr = &R2_IS_ASCII;
-            }
+                base_layer_definitions_ptr = &R2_BASE_KEYCODES;
             break;
+#endif
     }
-
-    return build_layer_index_value_from(row, col, base_layer_array_ptr, is_ascii_array_ptr);
+    return build_layer_index_value_from(row, col, base_layer_definitions_ptr);
 }
 
 static struct layer_index_value_container_t get_tap_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    struct layer_index_value_container_t index_value_container = {0};
-
-    keycode_array_ptr_t tap_layer_array_ptr = NULL;
-    is_ascii_array_ptr_t is_ascii_array_ptr = NULL;
+    keycode_definition_array_ptr_t tap_layer_definitions_ptr = NULL;
     switch (layer_index)
     {
+#if IS_UNIFIED_KEYBOARD
         case 0:
+        // TODO 2 will not be required here once tap registers layer on event start
+        case 2:
+            tap_layer_definitions_ptr = &L0_TAP_KEYS;
+            break;
+        case 1:
+            tap_layer_definitions_ptr = &L1_TAP_KEYS;
+            break;
+#endif
+#if IS_SPLIT_KEYBOARD
+        case 0:
+        // TODO 2 will not be required here once tap registers layer on event start
         case 2:
             if (keyboard_side == LEFT_SIDE)
-            {
-                tap_layer_array_ptr = &L0_TAP_KEYS;
-                is_ascii_array_ptr = &L0_TAP_IS_ASCII;
-            }
+                tap_layer_definitions_ptr = &L0_TAP_KEYS;
             else if (keyboard_side == RIGHT_SIDE)
-            {
-                tap_layer_array_ptr = &R_TAP_KEYS;
-                is_ascii_array_ptr = &R_TAP_IS_ASCII;
-            }
+                tap_layer_definitions_ptr = &R0_TAP_KEYS;
             break;
         case 1:
             if (keyboard_side == LEFT_SIDE)
-            {
-                tap_layer_array_ptr = &L1_TAP_KEYS;
-                is_ascii_array_ptr = &L1_TAP_IS_ASCII;
-            }
+                tap_layer_definitions_ptr = &L1_TAP_KEYS;
             else if (keyboard_side == RIGHT_SIDE)
-            {
-                tap_layer_array_ptr = &R_TAP_KEYS;
-                is_ascii_array_ptr = &R_TAP_IS_ASCII;
-            }
+                tap_layer_definitions_ptr = &R1_TAP_KEYS;
             break;
+#endif
     }
-
-    return build_layer_index_value_from(row, col, tap_layer_array_ptr, is_ascii_array_ptr);
+    return build_layer_index_value_from(row, col, tap_layer_definitions_ptr);
 }
 
 static struct layer_index_value_container_t get_delay_hold_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    struct layer_index_value_container_t index_value_container = {0};
-
-    keycode_array_ptr_t delay_hold_layer_array_ptr = NULL;
-    is_ascii_array_ptr_t is_ascii_array_ptr = NULL;
+    keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = NULL;
     switch (layer_index)
     {
+#if IS_UNIFIED_KEYBOARD
+        case 0:
+        case 1:
+        case 2:
+            delay_hold_layer_definitions_ptr = &L_HOLD_DELAY_KEYS;
+            break;
+#endif
+#if IS_SPLIT_KEYBOARD
         case 0:
         case 1:
         case 2:
             if (keyboard_side == LEFT_SIDE)
-            {
-                delay_hold_layer_array_ptr = &L_HOLD_DELAY_KEYS;
-                is_ascii_array_ptr = &L_HOLD_DELAY_IS_ASCII;
-            }
+                delay_hold_layer_definitions_ptr = &L_HOLD_DELAY_KEYS;
             else if (keyboard_side == RIGHT_SIDE)
-            {
-                delay_hold_layer_array_ptr = &R_HOLD_DELAY_KEYS;
-                is_ascii_array_ptr = &R_HOLD_DELAY_IS_ASCII;
-            }
+                delay_hold_layer_definitions_ptr = &R_HOLD_DELAY_KEYS;
             break;
+#endif
     }
-
-    return build_layer_index_value_from(row, col, delay_hold_layer_array_ptr, is_ascii_array_ptr);
+    return build_layer_index_value_from(row, col, delay_hold_layer_definitions_ptr);
 }
 
 static struct hid_keycode_container_t build_code_container(struct layer_index_value_container_t layer_value)

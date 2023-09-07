@@ -20,7 +20,8 @@
 #define ENABLE_KEYBOARD_COMMANDS 1
 
 #define IS_SPLIT_KEYBOARD 0
-static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
+#define IS_UNIFIED_KEYBOARD 1
+//static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
 
 
 /// Key Behavior Config
