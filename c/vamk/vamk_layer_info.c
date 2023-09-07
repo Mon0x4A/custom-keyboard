@@ -94,8 +94,6 @@ static struct layer_index_value_container_t get_tap_value_at(
     {
 #if IS_UNIFIED_KEYBOARD
         case 0:
-        // TODO 2 will not be required here once tap registers layer on event start
-        case 2:
             tap_layer_definitions_ptr = &L0_TAP_KEYS;
             break;
         case 1:
@@ -104,8 +102,6 @@ static struct layer_index_value_container_t get_tap_value_at(
 #endif
 #if IS_SPLIT_KEYBOARD
         case 0:
-        // TODO 2 will not be required here once tap registers layer on event start
-        case 2:
             if (keyboard_side == LEFT_SIDE)
                 tap_layer_definitions_ptr = &L0_TAP_KEYS;
             else if (keyboard_side == RIGHT_SIDE)
