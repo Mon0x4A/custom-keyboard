@@ -76,7 +76,7 @@ static int64_t delay_callback(alarm_id_t id, void *callback_params)
 ///Extern Functions
 void hold_delay_handler_on_switch_press(uint16_t row, uint16_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    struct delay_callback_params_t *callback_params_ptr = malloc(sizeof(callback_params_ptr));
+    struct delay_callback_params_t *callback_params_ptr = malloc(sizeof(struct delay_callback_params_t));
     callback_params_ptr->row = row;
     callback_params_ptr->col = col;
     callback_params_ptr->keyboard_side = keyboard_side;
