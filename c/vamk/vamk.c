@@ -22,7 +22,6 @@
 #include "vamk_keymap_config.h"
 #include "vamk_config.h"
 #include "vamk_display_state.h"
-#include "vamk_i2c_switch_state_transmitter.h"
 #include "vamk_key_state.h"
 #include "vamk_peripheral_switch_state.h"
 #include "vamk_press_handler.h"
@@ -191,8 +190,8 @@ int main(void)
     read_byte_count = i2c_read_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, read_buffer, IO_EXPANDER_REGISTER_COUNT, false);
     printf("%d\n", read_byte_count);
 
-    if (IS_PRIMARY_KEYBOARD_SIDE)
-    {
+    //if (IS_PRIMARY_KEYBOARD_SIDE)
+    //{
         // TODO TEMP TEST Set up I2C as peripheral
         //i2c_switch_state_transmitter_init();
 
@@ -234,26 +233,26 @@ int main(void)
             // Update the display state.
             display_task();
         }
-    }
-    else
-    {
-        // Set up I2C as peripheral
-        i2c_switch_state_transmitter_init();
+    //}
+    //else
+    //{
+    //    // Set up I2C as peripheral
+    //    i2c_switch_state_transmitter_init();
 
-        switch_state_set_pressed_callback(i2c_switch_state_on_switch_pressed);
-        switch_state_set_released_callback(i2c_switch_state_on_switch_released);
+    //    switch_state_set_pressed_callback(i2c_switch_state_on_switch_pressed);
+    //    switch_state_set_released_callback(i2c_switch_state_on_switch_released);
 
-        // Peripheral side run loop
-        bool led_is_on = false;
-        while (1)
-        {
-            // Keep our local switch state up to date.
-            switch_state_task();
+    //    // Peripheral side run loop
+    //    bool led_is_on = false;
+    //    while (1)
+    //    {
+    //        // Keep our local switch state up to date.
+    //        switch_state_task();
 
-            sleep_ms(10);
-            board_led_write(1);
-        }
-    }
+    //        sleep_ms(10);
+    //        board_led_write(1);
+    //    }
+    //}
 
     return 0;
 }

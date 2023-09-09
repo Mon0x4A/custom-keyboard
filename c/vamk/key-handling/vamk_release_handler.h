@@ -5,6 +5,6 @@
 #include "pico/stdlib.h"
 
 ///Function Declarations
-void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side_t keyboard_side);
+void release_handler_on_switch_release(uint16_t row, uint16_t col, key_event_source_identifier_t keyboard_side);
 
 #endif

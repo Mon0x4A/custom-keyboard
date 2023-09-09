@@ -6,6 +6,6 @@
 #include "vamk_types.h"
 
 ///Function Declarations
-void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t keyboard_side);
+void press_handler_on_switch_press(uint16_t row, uint16_t col, key_event_source_identifier_t keyboard_side);
 
 #endif

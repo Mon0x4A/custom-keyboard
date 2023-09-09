@@ -27,6 +27,7 @@ struct layer_index_value_container_t
 static struct layer_index_value_container_t build_layer_index_value_from(
     uint8_t row,
     uint8_t col,
+    key_event_source_identifier_t key_event_source,
     const keycode_definition_array_ptr_t keycode_definition_array_ptr)
 {
     struct layer_index_value_container_t index_value_container = {0};
@@ -36,22 +37,40 @@ static struct layer_index_value_container_t build_layer_index_value_from(
         return index_value_container;
     }
 
-    index_value_container.layer_index_value = (*keycode_definition_array_ptr)[row][col].keycode;
-    index_value_container.needs_ascii_translation = (*keycode_definition_array_ptr)[row][col].is_ascii;
+    uint8_t key_definition_array_row = row;
+    uint8_t key_definition_array_col = col;
+
+#if IS_SPLIT_KEYBOARD
+    // Determine if a row/col offset is necessary to index the correctly
+    // key definition.
+    switch (key_event_source)
+    {
+        case CONTROLLER_IDENTIFIER:
+            if (CONTROLLER_IS_RIGHT_SIDE)
+                key_definition_array_col += COLUMN_COUNT;
+            break;
+        case PERIPHERAL_IDENTIFIER:
+            if (CONTROLLER_IS_LEFT_SIDE)
+                key_definition_array_col += COLUMN_COUNT;
+            break;
+    }
+#endif
+
+    index_value_container.layer_index_value =
+        (*keycode_definition_array_ptr)[key_definition_array_row][key_definition_array_col].keycode;
+    index_value_container.needs_ascii_translation =
+        (*keycode_definition_array_ptr)[key_definition_array_row][key_definition_array_col].is_ascii;
     index_value_container.has_valid_contents = true;
 
     return index_value_container;
 }
 
 static struct layer_index_value_container_t get_base_value_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
     keycode_definition_array_ptr_t base_layer_definitions_ptr = NULL;
     switch (layer_index)
     {
-// These are defined as two separate if statements intentionally such that
-// compilation errors will occur if both or neither are set to true.
-#if IS_UNIFIED_KEYBOARD
         case 0:
             base_layer_definitions_ptr = &L0_BASE_KEYCODES;
             break;
@@ -61,88 +80,39 @@ static struct layer_index_value_container_t get_base_value_at(
         case 2:
             base_layer_definitions_ptr = &L2_BASE_KEYCODES;
             break;
-#endif
-#if IS_SPLIT_KEYBOARD
-        case 0:
-            if (keyboard_side == LEFT_SIDE)
-                base_layer_definitions_ptr = &L0_BASE_KEYCODES;
-            else if (keyboard_side == RIGHT_SIDE)
-                base_layer_definitions_ptr = &R0_BASE_KEYCODES;
-            break;
-        case 1:
-            if (keyboard_side == LEFT_SIDE)
-                base_layer_definitions_ptr = &L1_BASE_KEYCODES;
-            else if (keyboard_side == RIGHT_SIDE)
-                base_layer_definitions_ptr = &R1_BASE_KEYCODES;
-            break;
-        case 2:
-            if (keyboard_side == LEFT_SIDE)
-                base_layer_definitions_ptr = &L2_BASE_KEYCODES;
-            else if (keyboard_side == RIGHT_SIDE)
-                base_layer_definitions_ptr = &R2_BASE_KEYCODES;
-            break;
-#endif
     }
-    return build_layer_index_value_from(row, col, base_layer_definitions_ptr);
+    return build_layer_index_value_from(row, col, key_event_source, base_layer_definitions_ptr);
 }
 
 static struct layer_index_value_container_t get_tap_value_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
     keycode_definition_array_ptr_t tap_layer_definitions_ptr = NULL;
     switch (layer_index)
     {
-#if IS_UNIFIED_KEYBOARD
         case 0:
             tap_layer_definitions_ptr = &L0_TAP_KEYS;
             break;
         case 1:
             tap_layer_definitions_ptr = &L1_TAP_KEYS;
             break;
-#endif
-#if IS_SPLIT_KEYBOARD
-        case 0:
-            if (keyboard_side == LEFT_SIDE)
-                tap_layer_definitions_ptr = &L0_TAP_KEYS;
-            else if (keyboard_side == RIGHT_SIDE)
-                tap_layer_definitions_ptr = &R0_TAP_KEYS;
-            break;
-        case 1:
-            if (keyboard_side == LEFT_SIDE)
-                tap_layer_definitions_ptr = &L1_TAP_KEYS;
-            else if (keyboard_side == RIGHT_SIDE)
-                tap_layer_definitions_ptr = &R1_TAP_KEYS;
-            break;
-#endif
     }
-    return build_layer_index_value_from(row, col, tap_layer_definitions_ptr);
+    return build_layer_index_value_from(row, col, key_event_source, tap_layer_definitions_ptr);
 }
 
 static struct layer_index_value_container_t get_delay_hold_value_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
     keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = NULL;
     switch (layer_index)
     {
-#if IS_UNIFIED_KEYBOARD
         case 0:
         case 1:
         case 2:
             delay_hold_layer_definitions_ptr = &L_HOLD_DELAY_KEYS;
             break;
-#endif
-#if IS_SPLIT_KEYBOARD
-        case 0:
-        case 1:
-        case 2:
-            if (keyboard_side == LEFT_SIDE)
-                delay_hold_layer_definitions_ptr = &L_HOLD_DELAY_KEYS;
-            else if (keyboard_side == RIGHT_SIDE)
-                delay_hold_layer_definitions_ptr = &R_HOLD_DELAY_KEYS;
-            break;
-#endif
     }
-    return build_layer_index_value_from(row, col, delay_hold_layer_definitions_ptr);
+    return build_layer_index_value_from(row, col, key_event_source, delay_hold_layer_definitions_ptr);
 }
 
 static struct hid_keycode_container_t build_code_container(struct layer_index_value_container_t layer_value)
@@ -183,23 +153,23 @@ static struct hid_keycode_container_t build_code_container(struct layer_index_va
 
 ///Extern Functions
 struct hid_keycode_container_t layer_info_get_base_keycode_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, keyboard_side);
+    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, key_event_source);
     return build_code_container(layer_value);
 }
 
 struct hid_keycode_container_t layer_info_get_tap_keycode_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-    struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, keyboard_side);
+    struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, key_event_source);
     return build_code_container(layer_value);
 }
 
 struct hid_keycode_container_t layer_info_get_hold_delay_keycode_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-    struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, keyboard_side);
+    struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, key_event_source);
     return build_code_container(layer_value);
 }
 

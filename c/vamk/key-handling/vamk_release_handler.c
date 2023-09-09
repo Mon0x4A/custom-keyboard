@@ -18,7 +18,7 @@
 ///Static Functions
 
 ///Extern Functions
-void release_handler_on_switch_release(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
+void release_handler_on_switch_release(uint16_t row, uint16_t col, key_event_source_identifier_t keyboard_side)
 {
     uint8_t current_layer = keyboard_state_get_current_layer_index();
 

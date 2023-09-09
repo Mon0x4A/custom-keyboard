@@ -14,15 +14,15 @@ typedef enum led_blink_pattern_ms
     SUSPENDED = 2500,
 } led_blink_pattern_t;
 
-typedef enum keyboard_side
+typedef enum key_event_source_identifier
 {
-    LEFT_SIDE = 42,
-    RIGHT_SIDE = 69,
-} keyboard_side_t;
+    CONTROLLER_IDENTIFIER = 42,
+    PERIPHERAL_IDENTIFIER = 69,
+} key_event_source_identifier_t;
 
 ///Function Pointers
-typedef void (*switch_pressed_callback_t)(uint16_t row, uint16_t col, keyboard_side_t keyboard_side);
-typedef void (*switch_released_callback_t)(uint16_t row, uint16_t col, keyboard_side_t keyboard_side);
+typedef void (*switch_pressed_callback_t)(uint16_t row, uint16_t col, key_event_source_identifier_t key_event_source);
+typedef void (*switch_released_callback_t)(uint16_t row, uint16_t col, key_event_source_identifier_t key_event_source);
 
 ///Structures
 //struct macro_key_instruction_unit_t

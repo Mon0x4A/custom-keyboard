@@ -38,7 +38,6 @@ target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_i2c_api.c
         ${CMAKE_CURRENT_LIST_DIR}/display/vamk_display_state.c
         ${CMAKE_CURRENT_LIST_DIR}/vamk.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_i2c_switch_state_transmitter.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_hold_delay_handler.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_helper.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_state.c

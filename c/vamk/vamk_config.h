@@ -21,7 +21,10 @@
 
 #define IS_SPLIT_KEYBOARD 0
 #define IS_UNIFIED_KEYBOARD 1
-//static const bool IS_UNIFIED_KEYBOARD = IS_SPLIT_KEYBOARD ? false : true;
+
+#if IS_SPLIT_KEYBOARD && IS_UNIFIED_KEYBOARD
+#error "Must define either split OR unified configuration"
+#endif
 
 
 /// Key Behavior Config

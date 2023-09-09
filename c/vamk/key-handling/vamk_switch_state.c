@@ -12,7 +12,6 @@
 static uint8_t _switch_matrix_curr[ROW_COUNT][COLUMN_COUNT] = {0};
 static uint8_t _switch_matrix_prev[ROW_COUNT][COLUMN_COUNT] = {0};
 
-//TODO these need to accept a side and this class will pass the CURRENT_KEYBOARD_SIDE
 static switch_pressed_callback_t _pressed_callback = NULL;
 static switch_released_callback_t _released_callback = NULL;
 
@@ -72,13 +71,13 @@ static void fire_callback_events(void)
 
                     // We started pressing a key.
                     if (_pressed_callback != NULL)
-                        _pressed_callback(i, j, CURRENT_KEYBOARD_SIDE);
+                        _pressed_callback(i, j, CONTROLLER_IDENTIFIER);
                 }
                 else
                 {
                     // We released a key.
                     if (_released_callback != NULL)
-                        _released_callback(i, j, CURRENT_KEYBOARD_SIDE);
+                        _released_callback(i, j, CONTROLLER_IDENTIFIER);
                 }
             }
         }

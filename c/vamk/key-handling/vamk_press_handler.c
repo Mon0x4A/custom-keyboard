@@ -17,7 +17,7 @@
 ///Static Global Variables
 
 ///Extern Functions
-void press_handler_on_switch_press(uint16_t row, uint16_t col, keyboard_side_t keyboard_side)
+void press_handler_on_switch_press(uint16_t row, uint16_t col, key_event_source_identifier_t keyboard_side)
 {
     uint8_t current_layer = keyboard_state_get_current_layer_index();
 
