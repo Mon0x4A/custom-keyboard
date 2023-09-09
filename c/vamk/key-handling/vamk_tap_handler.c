@@ -21,6 +21,7 @@ struct tap_event_params_t
 };
 
 ///Static Global Variables
+//TODO replace with hashmap
 static struct tap_event_params_t _key_down_params_left[ROW_COUNT][COLUMN_COUNT] = {0};
 static struct tap_event_params_t _key_down_params_right[ROW_COUNT][COLUMN_COUNT] = {0};
 
