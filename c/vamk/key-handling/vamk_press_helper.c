@@ -6,15 +6,17 @@
 #include "vamk_key_helper.h"
 #include "vamk_key_state.h"
 #include "vamk_keyboard_state.h"
+#include "vamk_layer_info.h"
 #include "vamk_press_handler.h"
 #include "vamk_press_helper.h"
 #include "vamk_types.h"
 #include "tusb.h"
+
 ///Static Global Variables
 ///Local Declarations
+
 ///Static Functions
-///Extern Functions
-void press_helper_keycode_press(struct hid_keycode_container_t keycode_container,
+static void keycode_press_internal(struct hid_keycode_container_t keycode_container,
     bool should_auto_release, bool should_release_on_next_report)
 {
     // If we are receiving invalid codes, something has gone
@@ -81,4 +83,45 @@ void press_helper_keycode_press(struct hid_keycode_container_t keycode_container
     {
         printf("Keycode value pressed: %u\n", keycode_container.hid_keycode);
     }
+}
+
+///Extern Functions
+void press_helper_key_press(struct hid_keycode_container_t keycode_container)
+{
+    keycode_press_internal(keycode_container, false, false);
+}
+
+void press_helper_momentary_press_with_modifiers(struct hid_keycode_container_t keycode_container,
+    struct modifier_collection_t modifiers_collection)
+{
+    hard_assert(keycode_container.has_valid_contents);
+
+    for (int i = 0; i < modifiers_collection.modifier_count; i++)
+    {
+        uint8_t modifier_code = modifiers_collection.modifiers[i];
+        if (modifier_code == KC_NULL)
+            continue;
+        if (!key_helper_is_modifier_keycode(modifier_code))
+            continue;
+
+        struct hid_keycode_container_t modifier_code_container =
+        {
+            .hid_keycode = modifier_code,
+            .modifier = 0,
+            .has_valid_contents = true
+        };
+        press_helper_single_report_press(modifier_code_container);
+    }
+
+    press_helper_momentary_press(keycode_container);
+}
+
+void press_helper_momentary_press(struct hid_keycode_container_t keycode_container)
+{
+    keycode_press_internal(keycode_container, true, false);
+}
+
+void press_helper_single_report_press(struct hid_keycode_container_t keycode_container)
+{
+    keycode_press_internal(keycode_container, false, true);
 }

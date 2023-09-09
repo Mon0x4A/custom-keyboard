@@ -7,6 +7,7 @@
 #include "hardware/timer.h"
 #include "vamk_config.h"
 #include "vamk_hold_delay_handler.h"
+#include "vamk_keyboard_state.h"
 #include "vamk_keymap_config.h"
 #include "vamk_layer_info.h"
 #include "vamk_press_helper.h"
@@ -23,13 +24,13 @@ struct callback_event_t
 
 struct delay_callback_params_t
 {
-    uint16_t row;
-    uint16_t col;
-    keyboard_side_t keyboard_side;
+    struct hid_keycode_container_t keycode_container;
+    struct modifier_collection_t modifiers_at_key_down;
     volatile struct callback_event_t *current_event_ptr;
 };
 
 ///Static Global Variables
+//TODO replace with queue
 static volatile struct callback_event_t _l_delay_callback_should_handle[ROW_COUNT][COLUMN_COUNT] = {0};
 static volatile struct callback_event_t _r_delay_callback_should_handle[ROW_COUNT][COLUMN_COUNT] = {0};
 
@@ -56,13 +57,7 @@ static int64_t delay_callback(alarm_id_t id, void *callback_params)
     volatile struct callback_event_t *current_event_ptr = callback_params_ptr->current_event_ptr;
     if (((current_event_ptr->event_id) == id) && (current_event_ptr->should_handle))
     {
-        struct hid_keycode_container_t keycode_container = layer_info_get_hold_delay_keycode_at(
-            callback_params_ptr->row,
-            callback_params_ptr->col,
-            0, //TODO implement layering for hold delay
-            callback_params_ptr->keyboard_side);
-
-        press_helper_keycode_press(keycode_container, true, false);
+        press_helper_momentary_press(callback_params_ptr->keycode_container);
     }
 
     // Handling has been completed.
@@ -74,11 +69,14 @@ static int64_t delay_callback(alarm_id_t id, void *callback_params)
 ///Extern Functions
 void hold_delay_handler_on_switch_press(uint16_t row, uint16_t col, uint8_t layer_index, keyboard_side_t keyboard_side)
 {
-    struct delay_callback_params_t *callback_params_ptr = malloc(sizeof(callback_params_ptr));
-    callback_params_ptr->row = row;
-    callback_params_ptr->col = col;
-    callback_params_ptr->keyboard_side = keyboard_side;
-    callback_params_ptr->current_event_ptr = get_current_callback_event(row, col, keyboard_side);
+    struct delay_callback_params_t *callback_params_ptr = malloc(sizeof(struct delay_callback_params_t));
+    hard_assert(callback_params_ptr != NULL);
+
+    callback_params_ptr->keycode_container = layer_info_get_hold_delay_keycode_at(row, col, layer_index, keyboard_side);
+    callback_params_ptr->modifiers_at_key_down = keyboard_state_get_currently_pressed_modifiers();
+
+    volatile struct callback_event_t *event_ptr = get_current_callback_event(row, col, keyboard_side);
+    callback_params_ptr->current_event_ptr = event_ptr;
 
     // Start a timer with the intent to handle the action later.
     alarm_id_t event_id = add_alarm_in_ms(HOLD_DELAY_THRESHOLD_MS, delay_callback, (void*)callback_params_ptr, false);
