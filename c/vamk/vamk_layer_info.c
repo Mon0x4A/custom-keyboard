@@ -91,6 +91,7 @@ static struct layer_index_value_container_t get_tap_value_at(
     switch (layer_index)
     {
         case 0:
+        case 2:
             tap_layer_definitions_ptr = &L0_TAP_KEYS;
             break;
         case 1:
