@@ -1,2 +1,4 @@
 # Ignore all cmake/make build directories
 **/build/*
+
+**/kicad/**/*-backup*/*
