@@ -2,3 +2,4 @@
 **/build/*
 
 **/kicad/**/*-backup*/*
+**/kicad/**/*.lck
