@@ -1,6 +1,7 @@
 //Constants
 KEY_1U_MODIFIER = 1;
 KEY_1_25U_MODIFIER = 1.25;
+KEY_1_5U_MODIFIER = 1.5;
 
 ROUNDING_FACE_NUMBER = 50;
 
@@ -17,6 +18,8 @@ _key1uLength = (_switchLength*KEY_1U_MODIFIER)+(_switchPaddingLength*2);
 _key1uWidth = (_switchWidth*KEY_1U_MODIFIER)+(_switchPaddingWidth*2);
 _key1_25uLength = (_switchLength*KEY_1U_MODIFIER)+(_switchPaddingLength*2);
 _key1_25uWidth = (_switchWidth*KEY_1_25U_MODIFIER)+(_switchPaddingWidth*2);
+_key1_5uLength = (_switchLength*KEY_1U_MODIFIER)+(_switchPaddingLength*2);
+_key1_5uWidth = (_switchWidth*KEY_1_5U_MODIFIER)+(_switchPaddingWidth*2);
 
 _keyCapSpacingOffset = 1.2;
 _keyCapWallThickness = 2;
@@ -26,6 +29,8 @@ _keyCap1uLength = _key1uLength - _keyCapSpacingOffset;
 _keyCap1uWidth = _key1uWidth - _keyCapSpacingOffset;
 _keyCap1_25uLength = _key1_25uLength - _keyCapSpacingOffset;
 _keyCap1_25uWidth = _key1_25uWidth - _keyCapSpacingOffset;
+_keyCap1_5uLength = _key1_5uLength - _keyCapSpacingOffset;
+_keyCap1_5uWidth = _key1_5uWidth - _keyCapSpacingOffset;
 
 // Note: This is setting that might have to be tweaked depending
 // on the printer's resolution. Lower the number for tighter gaps.
@@ -43,9 +48,10 @@ _capInterfaceConnectorCutoutDepth = _capInterfaceConnectorDepth;
 
 /// MAIN START ///
 
-kailhKeyCapTop(_keyCap1uLength, _keyCap1uWidth, _kailhKeyCapDepth);
+//kailhKeyCapTop(_keyCap1uLength, _keyCap1uWidth, _kailhKeyCapDepth);
 //kailhKeyCapTop(_keyCap1_25uWidth, _keyCap1uWidth, _kailhKeyCapDepth);
-//kailhKeycapShank();
+//kailhKeyCapTop(_keyCap1_5uWidth, _keyCap1uWidth, _kailhKeyCapDepth);
+kailhKeycapShank();
 
 /// MAIN END ///
 
