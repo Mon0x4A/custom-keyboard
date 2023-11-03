@@ -131,11 +131,11 @@ int main(void)
     // Physical switch logic initialization call.
     switch_state_init();
 
-    i2c_init(i2c1, I2C_CLOCK_SPEED);
-    gpio_set_function(I2C_CONTROLLER_SDA_PIN, GPIO_FUNC_I2C);
-    gpio_set_function(I2C_CONTROLLER_SCL_PIN, GPIO_FUNC_I2C);
-    gpio_pull_up(I2C_CONTROLLER_SDA_PIN);
-    gpio_pull_up(I2C_CONTROLLER_SCL_PIN);
+    i2c_init(I2C_DISPLAY_BUS, I2C_CLOCK_SPEED);
+    gpio_set_function(I2C_DISPLAY_SDA_PIN, GPIO_FUNC_I2C);
+    gpio_set_function(I2C_DISPLAY_SCL_PIN, GPIO_FUNC_I2C);
+    gpio_pull_up(I2C_DISPLAY_SDA_PIN);
+    gpio_pull_up(I2C_DISPLAY_SCL_PIN);
 
     ssd1306_init();
     display_reset_sleep_timeout();

@@ -22,9 +22,18 @@
 #define IS_SPLIT_KEYBOARD 0
 #define IS_UNIFIED_KEYBOARD 1
 
-#if IS_SPLIT_KEYBOARD && IS_UNIFIED_KEYBOARD
+#if IS_SPLIT_KEYBOARD && IS_UNIFIED_KEYBOARD || !(IS_SPLIT_KEYBOARD || IS_UNIFIED_KEYBOARD)
 #error "Must define either split OR unified configuration"
 #endif
+
+#define IS_VOK_SL_MODEL 1
+#define IS_QLP_MODEL 0
+
+#if IS_VOK_SL_MODEL && IS_QLP_MODEL || !(IS_VOK_SL_MODEL || IS_QLP_MODEL)
+#error "Must define singluar, valid keyboard model"
+#endif
+
+#define IS_QLP_REV0 0
 
 
 /// Key Behavior Config
@@ -46,9 +55,15 @@
 #define I2C_IO_EXPANDER_SDA_PIN 4
 #define I2C_IO_EXPANDER_SCL_PIN 5
 
-#define I2C_PERIPHERAL_PORT i2c0
-#define I2C_PERIPHERAL_SDA_PIN 4
-#define I2C_PERIPHERAL_SCL_PIN 5
+#if IS_QLP_MODEL && IS_QLP_REV0
+    #define I2C_DISPLAY_BUS i2c0
+    #define I2C_DISPLAY_SDA_PIN 8
+    #define I2C_DISPLAY_SCL_PIN 5
+#else
+    #define I2C_DISPLAY_BUS i2c1
+    #define I2C_DISPLAY_SDA_PIN 14
+    #define I2C_DISPLAY_SCL_PIN 15
+#endif
 
 static const uint8_t I2C_TRANSMISSION_SIZE = 3*7; //ROW_COUNT*COLUMN_COUNT;
 

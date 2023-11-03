@@ -8,6 +8,7 @@
 
 #include "ssd1306_i2c_api.h"
 #include "ssd1306_buffer_helper.h"
+#include "ssd1306_i2c_api.h"
 
 ///Static Global Variables
 
@@ -23,7 +24,7 @@ static void send_command(uint8_t command)
     //TODO submit appropriate two wire reference in place of 'i2c_default'
     //TODO actually we should make this a parameter of i2c_inst_t*.
     //i2c_write_blocking(i2c_default, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), transmission_buffer, 2, false);
-    i2c_write_blocking(i2c1, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), transmission_buffer, 2, false);
+    i2c_write_blocking(I2C_DISPLAY_BUS, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), transmission_buffer, 2, false);
 }
 
 static void send_command_list(uint8_t *command_buffer, int buffer_command_count)
@@ -47,7 +48,7 @@ static void send_buffer(uint8_t buffer[], int buffer_length)
     memcpy(temp_buf+1, buffer, buffer_length);
 
     //i2c_write_blocking(i2c_default, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), temp_buf, buffer_length + 1, false);
-    i2c_write_blocking(i2c1, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), temp_buf, buffer_length + 1, false);
+    i2c_write_blocking(I2C_DISPLAY_BUS, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), temp_buf, buffer_length + 1, false);
 
     free(temp_buf);
 }
