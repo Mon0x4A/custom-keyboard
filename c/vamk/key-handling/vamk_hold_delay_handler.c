@@ -74,6 +74,8 @@ void hold_delay_handler_on_switch_press(uint16_t row, uint16_t col, uint8_t laye
 
     callback_params_ptr->keycode_container = layer_info_get_hold_delay_keycode_at(row, col, layer_index, key_event_source);
     callback_params_ptr->modifiers_at_key_down = keyboard_state_get_currently_pressed_modifiers();
+    if (!callback_params_ptr->keycode_container.has_valid_contents)
+        return;
 
     volatile struct callback_event_t *event_ptr = get_current_callback_event(row, col, key_event_source);
     callback_params_ptr->current_event_ptr = event_ptr;

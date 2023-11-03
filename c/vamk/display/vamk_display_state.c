@@ -20,7 +20,7 @@ static void display_show_firmware_information(void)
     uint8_t buffer[SSD1306_BUF_LEN] = {0};
     //15 character max per line with this font
     char *text[] = {
-        "vok-sl mk iii",
+        "qlp-22 mk i",
         " ",
         "vamk firmware",
         "alpha v0.1",

@@ -26,14 +26,14 @@
 #error "Must define either split OR unified configuration"
 #endif
 
-#define IS_VOK_SL_MODEL 1
-#define IS_QLP_MODEL 0
+#define IS_VOK_SL_MODEL 0
+#define IS_QLP_MODEL 1
 
 #if IS_VOK_SL_MODEL && IS_QLP_MODEL || !(IS_VOK_SL_MODEL || IS_QLP_MODEL)
 #error "Must define singluar, valid keyboard model"
 #endif
 
-#define IS_QLP_REV0 0
+#define IS_QLP_REV0 1
 
 
 /// Key Behavior Config

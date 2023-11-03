@@ -35,15 +35,40 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, key_event_sou
     bool need_remove_code_from_report = true;
     switch (code_container.hid_keycode)
     {
+        case KC_LM0:
+            need_remove_code_from_report = false;
+            keyboard_state_set_is_layer_modifier_pressed(0, false);
+            printf("Leaving layer 0\n");
+            break;
         case KC_LM1:
             need_remove_code_from_report = false;
             keyboard_state_set_is_layer_modifier_pressed(1, false);
-            printf("Entering layer 0\n");
+            printf("Leaving layer 1\n");
             break;
         case KC_LM2:
             need_remove_code_from_report = false;
             keyboard_state_set_is_layer_modifier_pressed(2, false);
-            printf("Entering layer 0\n");
+            printf("Leaving layer 2\n");
+            break;
+        case KC_LM3:
+            need_remove_code_from_report = false;
+            keyboard_state_set_is_layer_modifier_pressed(3, false);
+            printf("Leaving layer 3\n");
+            break;
+        case KC_LM4:
+            need_remove_code_from_report = false;
+            keyboard_state_set_is_layer_modifier_pressed(4, false);
+            printf("Leaving layer 4\n");
+            break;
+        case KC_LM5:
+            need_remove_code_from_report = false;
+            keyboard_state_set_is_layer_modifier_pressed(5, false);
+            printf("Leaving layer 5\n");
+            break;
+        case KC_LM6:
+            need_remove_code_from_report = false;
+            keyboard_state_set_is_layer_modifier_pressed(6, false);
+            printf("Leaving layer 6\n");
             break;
         case HID_KEY_ALT_LEFT:
         case HID_KEY_ALT_RIGHT:

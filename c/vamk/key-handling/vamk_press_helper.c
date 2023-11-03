@@ -35,6 +35,11 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
     bool should_report_code = true;
     switch (keycode_container.hid_keycode)
     {
+        case KC_LM0:
+            should_report_code = false;
+            keyboard_state_set_is_layer_modifier_pressed(0, true);
+            printf("Entering layer 0\n");
+            break;
         case KC_LM1:
             should_report_code = false;
             keyboard_state_set_is_layer_modifier_pressed(1, true);
@@ -44,6 +49,26 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
             should_report_code = false;
             keyboard_state_set_is_layer_modifier_pressed(2, true);
             printf("Entering layer 2\n");
+            break;
+        case KC_LM3:
+            should_report_code = false;
+            keyboard_state_set_is_layer_modifier_pressed(3, true);
+            printf("Entering layer 3\n");
+            break;
+        case KC_LM4:
+            should_report_code = false;
+            keyboard_state_set_is_layer_modifier_pressed(4, true);
+            printf("Entering layer 4\n");
+            break;
+        case KC_LM5:
+            should_report_code = false;
+            keyboard_state_set_is_layer_modifier_pressed(5, true);
+            printf("Entering layer 5\n");
+            break;
+        case KC_LM6:
+            should_report_code = false;
+            keyboard_state_set_is_layer_modifier_pressed(6, true);
+            printf("Entering layer 6\n");
             break;
         //TODO handle the other layers, maybe with a helper method to convert to index?
         case KC_REPEAT:

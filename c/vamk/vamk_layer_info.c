@@ -15,6 +15,8 @@ static const uint8_t _ASCII_CHAR_TO_HID_KEYCODE [128][2] = { HID_ASCII_TO_KEYCOD
 
 ///Local Declarations
 typedef const struct keycode_definition_t (*keycode_definition_array_ptr_t)[ROW_COUNT][COLUMN_COUNT];
+typedef const keycode_definition_array_ptr_t (*keycode_array_result_function_ptr_t)(
+    uint8_t row, uint8_t col, uint8_t layer_index);
 
 struct layer_index_value_container_t
 {
@@ -24,6 +26,133 @@ struct layer_index_value_container_t
 };
 
 ///Static Functions
+#if IS_VOK_SL_MODEL
+static const keycode_definition_array_ptr_t get_vok_sl_base_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t base_layer_definitions_ptr = NULL;
+    switch (layer_index)
+    {
+        case 0:
+            base_layer_definitions_ptr = &L0_BASE_KEYCODES;
+            break;
+        case 1:
+            base_layer_definitions_ptr = &L1_BASE_KEYCODES;
+            break;
+        case 2:
+            base_layer_definitions_ptr = &L2_BASE_KEYCODES;
+            break;
+    }
+    return base_layer_definitions_ptr;
+}
+static const keycode_definition_array_ptr_t get_vok_sl_tap_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t tap_layer_definitions_ptr = NULL;
+    switch (layer_index)
+    {
+        case 0:
+        case 2:
+            tap_layer_definitions_ptr = &L0_TAP_KEYS;
+            break;
+        case 1:
+            tap_layer_definitions_ptr = &L1_TAP_KEYS;
+            break;
+    }
+    return tap_layer_definitions_ptr;
+}
+static const keycode_definition_array_ptr_t get_vok_sl_delay_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = null;
+    switch (layer_index)
+    {
+        case 0:
+        case 1:
+        case 2:
+            delay_hold_layer_definitions_ptr = &l_hold_delay_keys;
+            break;
+    }
+    return delay_hold_layer_definitions_ptr;
+}
+#endif
+
+#if IS_QLP_MODEL
+static const keycode_definition_array_ptr_t get_qlp_base_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t base_layer_definitions_ptr = NULL;
+    switch (layer_index)
+    {
+        case 0:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+            base_layer_definitions_ptr = &L0_BASE_KEYCODES;
+            break;
+        case 1:
+            base_layer_definitions_ptr = &L1_BASE_KEYCODES;
+            break;
+        case 2:
+            base_layer_definitions_ptr = &L2_BASE_KEYCODES;
+            break;
+    }
+    return base_layer_definitions_ptr;
+}
+static const keycode_definition_array_ptr_t get_qlp_tap_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t tap_layer_definitions_ptr = NULL;
+    switch (layer_index)
+    {
+        case 0:
+        case 2:
+            tap_layer_definitions_ptr = &L0_TAP_KEYCODES;
+            break;
+        case 1:
+            tap_layer_definitions_ptr = &L1_TAP_KEYCODES;
+            break;
+        case 3:
+            tap_layer_definitions_ptr = &L3_TAP_KEYCODES;
+            break;
+        case 4:
+            tap_layer_definitions_ptr = &L4_TAP_KEYCODES;
+            break;
+        case 5:
+            tap_layer_definitions_ptr = &L5_TAP_KEYCODES;
+            break;
+        case 6:
+            tap_layer_definitions_ptr = &L6_TAP_KEYCODES;
+            break;
+    }
+    return tap_layer_definitions_ptr;
+}
+static const keycode_definition_array_ptr_t get_qlp_delay_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = NULL;
+    switch (layer_index)
+    {
+        case 0:
+        case 2:
+        case 5:
+        case 6:
+            delay_hold_layer_definitions_ptr = &L0_HOLD_DELAY_KEYCODES;
+            break;
+        case 1:
+            break;
+        case 3:
+            delay_hold_layer_definitions_ptr = &L3_HOLD_DELAY_KEYCODES;
+            break;
+        case 4:
+            delay_hold_layer_definitions_ptr = &L4_HOLD_DELAY_KEYCODES;
+            break;
+    }
+    return delay_hold_layer_definitions_ptr;
+}
+#endif
+
 static struct layer_index_value_container_t build_layer_index_value_from(
     uint8_t row,
     uint8_t col,
@@ -66,53 +195,26 @@ static struct layer_index_value_container_t build_layer_index_value_from(
 }
 
 static struct layer_index_value_container_t get_base_value_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source,
+    keycode_array_result_function_ptr_t base_value_layer_function_ptr)
 {
-    keycode_definition_array_ptr_t base_layer_definitions_ptr = NULL;
-    switch (layer_index)
-    {
-        case 0:
-            base_layer_definitions_ptr = &L0_BASE_KEYCODES;
-            break;
-        case 1:
-            base_layer_definitions_ptr = &L1_BASE_KEYCODES;
-            break;
-        case 2:
-            base_layer_definitions_ptr = &L2_BASE_KEYCODES;
-            break;
-    }
+    keycode_definition_array_ptr_t base_layer_definitions_ptr = (*base_value_layer_function_ptr)(row, col, layer_index);
     return build_layer_index_value_from(row, col, key_event_source, base_layer_definitions_ptr);
 }
 
 static struct layer_index_value_container_t get_tap_value_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source,
+    keycode_array_result_function_ptr_t tap_value_layer_function_ptr)
 {
-    keycode_definition_array_ptr_t tap_layer_definitions_ptr = NULL;
-    switch (layer_index)
-    {
-        case 0:
-        case 2:
-            tap_layer_definitions_ptr = &L0_TAP_KEYS;
-            break;
-        case 1:
-            tap_layer_definitions_ptr = &L1_TAP_KEYS;
-            break;
-    }
+    keycode_definition_array_ptr_t tap_layer_definitions_ptr = (*tap_value_layer_function_ptr)(row, col, layer_index);
     return build_layer_index_value_from(row, col, key_event_source, tap_layer_definitions_ptr);
 }
 
 static struct layer_index_value_container_t get_delay_hold_value_at(
-    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
+    uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source,
+    keycode_array_result_function_ptr_t delay_value_layer_function_ptr)
 {
-    keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = NULL;
-    switch (layer_index)
-    {
-        case 0:
-        case 1:
-        case 2:
-            delay_hold_layer_definitions_ptr = &L_HOLD_DELAY_KEYS;
-            break;
-    }
+    keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = (*delay_value_layer_function_ptr)(row, col, layer_index);
     return build_layer_index_value_from(row, col, key_event_source, delay_hold_layer_definitions_ptr);
 }
 
@@ -156,21 +258,39 @@ static struct hid_keycode_container_t build_code_container(struct layer_index_va
 struct hid_keycode_container_t layer_info_get_base_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, key_event_source);
+#if IS_VOK_SL_MODEL
+    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, key_event_source,
+        &get_vok_sl_base_value_at);
+#elif IS_QLP_MODEL
+    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, key_event_source,
+        &get_qlp_base_value_at);
+#endif
     return build_code_container(layer_value);
 }
 
 struct hid_keycode_container_t layer_info_get_tap_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-    struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, key_event_source);
+#if IS_VOK_SL_MODEL
+    struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, key_event_source,
+        &get_vok_sl_tap_value_at);
+#elif IS_QLP_MODEL
+    struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, key_event_source,
+        &get_qlp_tap_value_at);
+#endif
     return build_code_container(layer_value);
 }
 
 struct hid_keycode_container_t layer_info_get_hold_delay_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-    struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, key_event_source);
+#if IS_VOK_SL_MODEL
+    struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, key_event_source,
+        &get_vok_sl_delay_value_at);
+#elif IS_QLP_MODEL
+    struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, key_event_source,
+        &get_qlp_delay_value_at);
+#endif
     return build_code_container(layer_value);
 }
 
