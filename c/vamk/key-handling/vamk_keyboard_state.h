@@ -17,6 +17,7 @@ struct modifier_collection_t
 
 ///Function Definitions
 uint8_t keyboard_state_get_current_layer_index(void);
+uint8_t keyboard_state_clear_sticky_layer(void);
 bool keyboard_state_get_is_layer_modifier_pressed(uint8_t layer_index);
 void keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_layer_modifier_pressed);
 

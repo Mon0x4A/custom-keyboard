@@ -25,6 +25,11 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
 
     bool is_modifier_code = key_helper_is_modifier_keycode_container(keycode_container);
 
+    // If we are not hitting another layer and have a valid code, remove
+    // any layer caching.
+    if (!is_modifier_code && keycode_container.hid_keycode != KC_NULL)
+        keyboard_state_clear_sticky_layer();
+
     // If we are handling a non-modifier press then any chord we were
     // pressing has now been completed.
     keyboard_state_set_has_chord_action_been_performed(

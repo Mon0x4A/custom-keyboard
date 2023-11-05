@@ -44,3 +44,23 @@ bool key_helper_is_modifier_keycode_container(struct hid_keycode_container_t cod
     hard_assert(code_container.has_valid_contents);
     return key_helper_is_modifier_keycode(code_container.hid_keycode);
 }
+
+bool key_helper_is_layer_keycode(uint8_t keycode)
+{
+    switch (keycode)
+    {
+        case KC_LM0:
+        case KC_LM1:
+        case KC_LM2:
+        case KC_LM3:
+        case KC_LM4:
+        case KC_LM5:
+        case KC_LM6:
+        case KC_LM7:
+        case KC_LM8:
+        case KC_LM9:
+            return true;
+        default:
+            return false;
+    }
+}

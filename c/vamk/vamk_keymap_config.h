@@ -16,21 +16,28 @@ struct keycode_definition_t
 ///Constants
 #define KC_NULL 0x00 //Same as HID_KEY_NONE
 
-#define KC_LM0 0xA5 //Layer keycodes. These are reserved codes
-#define KC_LM1 0xA6 //in TinyUSB that we've repurposed to represent
-#define KC_LM2 0xA7 //layers locally. They should not be sent into
-#define KC_LM3 0xA8 //the TinyUSB API.
-#define KC_LM4 0xA9 //
-#define KC_LM5 0xAA //The reserved codes are 0xA5-0xDF
-#define KC_LM6 0xAB
-#define KC_LM7 0xAC
-#define KC_LM8 0xAD
-#define KC_LM9 0xAE
+#define KC_LM_DEFAULT 0xA5
+#define KC_LM0 0xA6 //Layer keycodes. These are reserved codes
+#define KC_LM1 0xA7 //in TinyUSB that we've repurposed to represent
+#define KC_LM2 0xA8 //layers locally. They should not be sent into
+#define KC_LM3 0xA9 //the TinyUSB API.
+#define KC_LM4 0xAA //
+#define KC_LM5 0xAB //The reserved codes are 0xA5-0xDF
+#define KC_LM6 0xAC
+#define KC_LM7 0xAD
+#define KC_LM8 0xAE
+#define KC_LM9 0xAF
 
 #define KC_REPEAT 0xC0 //Also a repurposed reserved TinyUSB code.
 
 #define LAYER_COUNT 3
 #define MAX_LAYER_COUNT 10
+
+static const bool IS_LAYER_STICKY[MAX_LAYER_COUNT] =
+{
+//  0  1  2  3  4  5  6  7  8  9
+    0, 0, 0, 1, 1, 1, 1, 0, 0, 0
+};
 
 #define CONTROLLER_IS_LEFT_SIDE 1
 #define CONTROLLER_IS_RIGHT_SIDE 0

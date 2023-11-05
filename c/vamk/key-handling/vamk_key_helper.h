@@ -11,4 +11,5 @@
 bool key_helper_is_modifier_keycode(uint8_t hid_keycode);
 bool key_helper_is_modifier_keycode_container(struct hid_keycode_container_t code_container);
 
+bool key_helper_is_layer_keycode(uint8_t keycode);
 #endif

@@ -53,6 +53,12 @@ uint8_t keyboard_state_get_current_layer_index(void)
     return DEFAULT_LAYER_INDEX;
 }
 
+uint8_t keyboard_state_clear_sticky_layer(void)
+{
+    if (IS_LAYER_STICKY[_last_pressed_layer_index])
+        _last_pressed_layer_index = 0;
+}
+
 bool keyboard_state_get_is_layer_modifier_pressed(uint8_t layer_index)
 {
     return _quant_layer_mod_pressed[layer_index] > 0;
@@ -67,7 +73,8 @@ void keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_l
     else
     {
         _quant_layer_mod_pressed[layer_index] = imax(_quant_layer_mod_pressed[layer_index]-1, 0);
-        _last_pressed_layer_index = 0;
+        if (!IS_LAYER_STICKY[layer_index])
+            _last_pressed_layer_index = 0;
     }
 }
 
