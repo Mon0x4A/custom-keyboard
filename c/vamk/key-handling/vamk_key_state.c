@@ -7,7 +7,7 @@
 #include "vamk_types.h"
 
 ///Static Constants
-static const uint8_t AUTO_RELEASE_REPORT_QUANTITY = 15;
+static const uint8_t AUTO_RELEASE_REPORT_QUANTITY = 5;
 
 ///Static Global Variables
 //TODO these properties should be made volatile if timer/alarm release
