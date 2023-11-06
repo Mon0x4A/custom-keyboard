@@ -227,42 +227,42 @@ static const bool IS_LAYER_STICKY[MAX_LAYER_COUNT] =
 
     static const struct keycode_definition_t L1_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},            {KC_NULL,0},            {KC_NULL,0},          {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0} },
         { {HID_KEY_ESCAPE,0}, {HID_KEY_F2,0}, {HID_KEY_F5,0}, {HID_KEY_F8,0}, {HID_KEY_F11,0}, {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_ARROW_LEFT,0}, {HID_KEY_ARROW_DOWN,0}, {HID_KEY_ARROW_UP,0}, {HID_KEY_ARROW_RIGHT,0}, {KC_NULL,0}, {HID_KEY_ENTER,0}},
         { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {HID_KEY_TAB,0}, {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0},  {KC_REPEAT,0},          {KC_NULL,0},          {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0} },
     };
 
     static const struct keycode_definition_t L5_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},              {KC_NULL,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
         { {HID_KEY_ESCAPE,0}, {HID_KEY_F3,0}, {HID_KEY_F6,0}, {HID_KEY_F9,0}, {HID_KEY_F12,0}, {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_PRINT_SCREEN,0}, {KC_NULL,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_ENTER,0}},
         { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {HID_KEY_TAB,0}, {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0},    {KC_REPEAT,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
     };
 
     static const struct keycode_definition_t L6_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},            {KC_NULL,0},           {KC_NULL,0},         {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0} },
         { {HID_KEY_ESCAPE,0}, {HID_KEY_F1,0}, {HID_KEY_F4,0}, {HID_KEY_F7,0}, {HID_KEY_F10,0}, {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_HOME,0},       {HID_KEY_PAGE_DOWN,0}, {HID_KEY_PAGE_UP,0}, {HID_KEY_END,0}, {KC_NULL,0}, {HID_KEY_ENTER,0}},
         { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {HID_KEY_TAB,0}, {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0},  {KC_REPEAT,0},         {KC_NULL,0},         {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0} },
     };
 
     static const struct keycode_definition_t L0_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
         { {HID_KEY_ESCAPE,0}, {'a',1},     {'s',1},     {'d',1},     {'f',1},         {'g',1},            {KC_NULL,0}, {KC_NULL,0}, {'h',1},               {'j',1},       {'k',1},     {'l',1},     {';',1},     {HID_KEY_ENTER,0}},
         { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_TAB,0}, {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0}, {KC_REPEAT,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
     };
 
     static const struct keycode_definition_t L3_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
         { {HID_KEY_ESCAPE,0}, {'z',1},     {'x',1},     {'c',1},     {'v',1},         {'b',1},            {KC_NULL,0}, {KC_NULL,0}, {'n',1},               {'m',1},       {',',1},     {'.',1},     {'/',1},     {HID_KEY_ENTER,0}},
         { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_TAB,0}, {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0}, {KC_REPEAT,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
     };
 
     static const struct keycode_definition_t L4_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
         { {HID_KEY_ESCAPE,0}, {'q',1},     {'w',1},     {'e',1},     {'r',1},         {'t',1},            {KC_NULL,0}, {KC_NULL,0}, {'y',1},               {'u',1},       {'i',1},     {'o',1},     {'p',1},     {HID_KEY_ENTER,0}},
         { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_TAB,0}, {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0}, {KC_REPEAT,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
     };
