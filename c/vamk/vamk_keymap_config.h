@@ -213,7 +213,7 @@ static const bool IS_LAYER_STICKY[MAX_LAYER_COUNT] =
 
     static const struct keycode_definition_t L1_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_LM5,0},  {KC_LM6,0},  {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_LM6,0},  {KC_LM5,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
         { {HID_KEY_ALT_LEFT,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_ALT_RIGHT,0} },
         { {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_LM1,0},  {KC_LM2,0},  {HID_KEY_SHIFT_RIGHT,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0},  {KC_LM1,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
     };

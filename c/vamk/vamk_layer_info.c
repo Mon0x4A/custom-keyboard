@@ -87,11 +87,11 @@ static const keycode_definition_array_ptr_t get_qlp_base_value_at(
         case 0:
         case 3:
         case 4:
-        case 5:
-        case 6:
             base_layer_definitions_ptr = &L0_BASE_KEYCODES;
             break;
         case 1:
+        case 5:
+        case 6:
             base_layer_definitions_ptr = &L1_BASE_KEYCODES;
             break;
         case 2:
