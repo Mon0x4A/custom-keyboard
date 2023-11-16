@@ -22,16 +22,18 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, key_event_sou
 {
     uint8_t current_layer = keyboard_state_get_current_layer_index();
 
+    struct hid_keycode_container_t code_container =
+        layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);
+
     if (!keyboard_state_get_has_chord_action_been_performed())
         tap_handler_on_switch_release(row, col, current_layer, keyboard_side);
-    keyboard_state_set_has_chord_action_been_performed(false);
+
+    bool is_modifier_code = key_helper_is_modifier_keycode_container(code_container);
+    keyboard_state_set_has_chord_action_been_performed(!is_modifier_code);
 
     hold_delay_handler_on_switch_release(row, col, current_layer, keyboard_side);
 
     //TODO need to create a release helper just like the press one.
-    struct hid_keycode_container_t code_container =
-        layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);
-
     bool need_remove_code_from_report = true;
     switch (code_container.hid_keycode)
     {
