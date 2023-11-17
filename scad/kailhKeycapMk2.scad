@@ -21,7 +21,7 @@ _key1_25uWidth = (_switchWidth*KEY_1_25U_MODIFIER)+(_switchPaddingWidth*2);
 _key1_5uLength = (_switchLength*KEY_1U_MODIFIER)+(_switchPaddingLength*2);
 _key1_5uWidth = (_switchWidth*KEY_1_5U_MODIFIER)+(_switchPaddingWidth*2);
 
-_keyCapSpacingOffset = 1.2;
+_keyCapSpacingOffset = 2.5;
 _keyCapWallThickness = 2;
 _keyCapRoundingRadius = 3;
 
@@ -49,9 +49,9 @@ _capInterfaceConnectorCutoutDepth = _capInterfaceConnectorDepth;
 /// MAIN START ///
 
 //kailhKeyCapTop(_keyCap1uLength, _keyCap1uWidth, _kailhKeyCapDepth);
-//kailhKeyCapTop(_keyCap1_25uWidth, _keyCap1uWidth, _kailhKeyCapDepth);
+kailhKeyCapTop(_keyCap1_25uWidth, _keyCap1uWidth, _kailhKeyCapDepth);
 //kailhKeyCapTop(_keyCap1_5uWidth, _keyCap1uWidth, _kailhKeyCapDepth);
-kailhKeycapShank();
+//kailhKeycapShank();
 
 /// MAIN END ///
 
