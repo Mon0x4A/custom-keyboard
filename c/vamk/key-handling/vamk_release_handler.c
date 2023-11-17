@@ -29,7 +29,10 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, key_event_sou
         tap_handler_on_switch_release(row, col, current_layer, keyboard_side);
 
     bool is_modifier_code = key_helper_is_modifier_keycode_container(code_container);
-    keyboard_state_set_has_chord_action_been_performed(!is_modifier_code);
+    if (!is_modifier_code)
+    {
+        keyboard_state_set_has_chord_action_been_performed(false);
+    }
 
     hold_delay_handler_on_switch_release(row, col, current_layer, keyboard_side);
 
