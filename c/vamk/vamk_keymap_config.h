@@ -16,7 +16,6 @@ struct keycode_definition_t
 ///Constants
 #define KC_NULL 0x00 //Same as HID_KEY_NONE
 
-#define KC_LM_DEFAULT 0xA5
 #define KC_LM0 0xA6 //Layer keycodes. These are reserved codes
 #define KC_LM1 0xA7 //in TinyUSB that we've repurposed to represent
 #define KC_LM2 0xA8 //layers locally. They should not be sent into
@@ -127,6 +126,8 @@ static const bool IS_LAYER_STICKY[MAX_LAYER_COUNT] =
         };
     #endif
 
+    /// TODO Need to move the board keymaps into thier own file.
+    /// Also need to get VOK-SL config working again.
     /// Keymaps
     ///================
     static const struct keycode_definition_t L0_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
@@ -204,6 +205,27 @@ static const bool IS_LAYER_STICKY[MAX_LAYER_COUNT] =
 
     /// Keymaps
     ///================
+    static const struct keycode_definition_t NULL_KEYCODE_ARRAY[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
+    {
+        { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},            {KC_NULL,0},            {KC_NULL,0},          {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},            {KC_NULL,0},            {KC_NULL,0},          {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},            {KC_NULL,0},            {KC_NULL,0},          {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0} },
+    };
+
+    static const struct keycode_definition_t L0_CHILD_BASE_LAYER[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
+    {
+        { {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {HID_KEY_CONTROL_LEFT,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_CONTROL_RIGHT,0} },
+        { {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_LM1,0},  {KC_LM2,0},  {HID_KEY_SHIFT_RIGHT,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0},  {KC_LM1,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+    };
+
+    static const struct keycode_definition_t L1_CHILD_BASE_LAYER[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
+    {
+        { {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_LM5,0},  {KC_LM6,0},  {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_LM6,0},  {KC_LM5,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+        { {HID_KEY_CONTROL_LEFT,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_CONTROL_RIGHT,0} },
+        { {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_LM1,0},  {KC_LM2,0},  {HID_KEY_SHIFT_RIGHT,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0},  {KC_LM1,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
+    };
+
     static const struct keycode_definition_t L0_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
         { {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0},             {KC_NULL,0},             {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
@@ -242,7 +264,7 @@ static const bool IS_LAYER_STICKY[MAX_LAYER_COUNT] =
     static const struct keycode_definition_t L6_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
         { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},            {KC_NULL,0},           {KC_NULL,0},         {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0} },
-        { {HID_KEY_ESCAPE,0}, {HID_KEY_F1,0}, {HID_KEY_F4,0}, {HID_KEY_F7,0}, {HID_KEY_F10,0}, {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_HOME,0},       {HID_KEY_PAGE_DOWN,0}, {HID_KEY_PAGE_UP,0}, {HID_KEY_END,0}, {KC_NULL,0}, {HID_KEY_ENTER,0}},
+        { {HID_KEY_ESCAPE,0}, {HID_KEY_F1,0}, {HID_KEY_F4,0}, {HID_KEY_F7,0}, {HID_KEY_F10,0}, {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_HOME,0},       {HID_KEY_PAGE_DOWN,0}, {HID_KEY_PAGE_UP,0}, {HID_KEY_END,0}, {HID_KEY_DELETE,0}, {HID_KEY_ENTER,0}},
         { {KC_NULL,0},        {KC_NULL,0},    {KC_NULL,0},    {KC_NULL,0},    {HID_KEY_TAB,0}, {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0},  {KC_REPEAT,0},         {KC_NULL,0},         {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0} },
     };
 

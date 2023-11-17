@@ -103,6 +103,15 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, key_event_sou
         struct hid_keycode_container_t code_container =
             layer_info_get_base_keycode_at(row, col, i, keyboard_side);
 
+        if (key_helper_is_layer_keycode(code_container.hid_keycode))
+        {
+            keyboard_state_set_is_layer_modifier_pressed(
+                key_helper_get_layer_index_from_layer_keycode(code_container.hid_keycode),
+                false);
+            if (ENABLE_SERIAL_LOGGING)
+                printf("Layer value released: %u\n", code_container.hid_keycode);
+        }
+
         if (ENABLE_KEYBOARD_COMMANDS && need_remove_code_from_report)
             key_state_release(code_container.hid_keycode);
         if (ENABLE_SERIAL_LOGGING && need_remove_code_from_report)

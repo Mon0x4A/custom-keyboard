@@ -64,3 +64,32 @@ bool key_helper_is_layer_keycode(uint8_t keycode)
             return false;
     }
 }
+
+uint8_t key_helper_get_layer_index_from_layer_keycode(uint8_t keycode)
+{
+    switch (keycode)
+    {
+        case KC_LM0:
+            return 0;
+        case KC_LM1:
+            return 1;
+        case KC_LM2:
+            return 2;
+        case KC_LM3:
+            return 3;
+        case KC_LM4:
+            return 4;
+        case KC_LM5:
+            return 5;
+        case KC_LM6:
+            return 6;
+        case KC_LM7:
+            return 7;
+        case KC_LM8:
+            return 8;
+        case KC_LM9:
+            return 9;
+        default:
+            return 0;
+    }
+}

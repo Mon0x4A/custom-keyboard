@@ -70,7 +70,7 @@ static const keycode_definition_array_ptr_t get_vok_sl_delay_value_at(
         case 0:
         case 1:
         case 2:
-            delay_hold_layer_definitions_ptr = &l_hold_delay_keys;
+            delay_hold_layer_definitions_ptr = &L_HOLD_DELAY_KEYS;
             break;
     }
     return delay_hold_layer_definitions_ptr;
@@ -85,14 +85,18 @@ static const keycode_definition_array_ptr_t get_qlp_base_value_at(
     switch (layer_index)
     {
         case 0:
-        case 3:
-        case 4:
             base_layer_definitions_ptr = &L0_BASE_KEYCODES;
             break;
         case 1:
+            base_layer_definitions_ptr = &L1_BASE_KEYCODES;
+            break;
+        case 3:
+        case 4:
+            base_layer_definitions_ptr = &L0_CHILD_BASE_LAYER;
+            break;
         case 5:
         case 6:
-            base_layer_definitions_ptr = &L1_BASE_KEYCODES;
+            base_layer_definitions_ptr = &L1_CHILD_BASE_LAYER;
             break;
         case 2:
             base_layer_definitions_ptr = &L2_BASE_KEYCODES;
@@ -135,12 +139,13 @@ static const keycode_definition_array_ptr_t get_qlp_delay_value_at(
     switch (layer_index)
     {
         case 0:
-        case 2:
-        case 5:
-        case 6:
             delay_hold_layer_definitions_ptr = &L0_HOLD_DELAY_KEYCODES;
             break;
         case 1:
+        case 2:
+        case 5:
+        case 6:
+            delay_hold_layer_definitions_ptr = &NULL_KEYCODE_ARRAY;
             break;
         case 3:
             delay_hold_layer_definitions_ptr = &L3_HOLD_DELAY_KEYCODES;
