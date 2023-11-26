@@ -27,10 +27,4 @@ static const bool IS_LAYER_STICKY[MAX_LAYER_COUNT] =
     0, 0, 0, 1, 1, 1, 1, 0, 0, 0
 };
 
-#define CONTROLLER_IS_LEFT_SIDE 1
-#define CONTROLLER_IS_RIGHT_SIDE 0
-#if (CONTROLLER_IS_LEFT_SIDE && CONTROLLER_IS_RIGHT_SIDE) || !(CONTROLLER_IS_LEFT_SIDE || CONTROLLER_IS_RIGHT_SIDE)
-#error "Controller must be on one (and only one) side in a split configuration"
-#endif
-
 #endif

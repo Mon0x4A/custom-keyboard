@@ -26,6 +26,12 @@
 #error "Must define either split OR unified configuration"
 #endif
 
+#define CONTROLLER_IS_LEFT_SIDE 1
+#define CONTROLLER_IS_RIGHT_SIDE 0
+#if (CONTROLLER_IS_LEFT_SIDE && CONTROLLER_IS_RIGHT_SIDE) || !(CONTROLLER_IS_LEFT_SIDE || CONTROLLER_IS_RIGHT_SIDE)
+#error "Controller must be on one (and only one) side in a split configuration"
+#endif
+
 #define IS_VOK_SL_MODEL 0
 #define IS_QLP_MODEL 1
 
