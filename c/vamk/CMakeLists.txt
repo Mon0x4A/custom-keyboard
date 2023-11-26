@@ -31,6 +31,7 @@ add_executable(vamk vamk.c )
 target_include_directories(vamk PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/display
         ${CMAKE_CURRENT_LIST_DIR}/key-handling
+        ${CMAKE_CURRENT_LIST_DIR}/keymaps
         ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config)
 
 target_sources(vamk PUBLIC

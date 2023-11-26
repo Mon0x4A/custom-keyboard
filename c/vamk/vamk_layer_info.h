@@ -3,6 +3,7 @@
 
 ///Imports
 #include "pico/stdlib.h"
+#include "vamk_keymap_config.h"
 #include "vamk_types.h"
 
 ///Type Declarations
