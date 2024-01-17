@@ -87,6 +87,8 @@ bool tap_handler_on_switch_release(uint16_t row, uint16_t col, uint8_t layer_ind
         && elapsed_interval_ms > TAP_ACTION_TIMEIN_MS)
     {
         press_helper_momentary_press_with_modifiers(code_container, key_down_params_ptr->modifiers_at_key_down);
+        //Clear out the event such that it does not get rehandled without being reinitialized.
+        memset(key_down_params_ptr, 0, sizeof(struct tap_event_params_t));
         return true;
     }
 
