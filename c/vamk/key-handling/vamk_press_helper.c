@@ -30,12 +30,11 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
     if (!is_modifier_code && keycode_container.hid_keycode != KC_NULL)
         keyboard_state_clear_sticky_layer();
 
-    // If we are handling a non-modifier press then any chord we were
-    // pressing has now been completed.
-    if (keycode_container.hid_keycode != KC_NULL)
-        keyboard_state_set_has_chord_action_been_performed(
-            keyboard_state_is_any_modifier_pressed()
-            && !is_modifier_code);
+    // Record if the current, non-mod press was a layer-modded code.
+    if (!is_modifier_code && keyboard_state_is_any_modifier_pressed())
+        keyboard_state_record_last_press_modifiers();
+    else
+        keyboard_state_clear_last_press_modifiers();
 
     bool should_report_code = true;
     switch (keycode_container.hid_keycode)

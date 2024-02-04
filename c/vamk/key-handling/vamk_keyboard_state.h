@@ -24,6 +24,14 @@ void keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_l
 bool keyboard_state_get_has_chord_action_been_performed(void);
 void keyboard_state_set_has_chord_action_been_performed(bool has_chord_action_been_performed);
 
+struct modifier_collection_t keyboard_state_get_last_press_modifiers(void);
+void keyboard_state_record_last_press_modifiers(void);
+void keyboard_state_clear_last_press_modifiers(void);
+
+//TODO modifier helper?
+bool keyboard_state_modifier_collection_contains_keycode(struct modifier_collection_t modifier_collection,
+    uint8_t modifier_keycode);
+
 bool keyboard_state_is_any_modifier_pressed(void);
 struct modifier_collection_t keyboard_state_get_currently_pressed_modifiers(void);
 

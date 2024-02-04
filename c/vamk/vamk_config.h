@@ -45,9 +45,9 @@
 /// Key Behavior Config
 //=====================
 #define TAP_ACTION_TIMEOUT_MS 200 //ms
-#define TAP_ACTION_TIMEIN_MS 20 //ms
+#define TAP_ACTION_TIMEIN_MS 25 //ms
 
-#define HOLD_DELAY_THRESHOLD_MS TAP_ACTION_TIMEOUT_MS+1
+#define HOLD_DELAY_THRESHOLD_MS TAP_ACTION_TIMEOUT_MS+20
 
 ///I2C Config
 //===========

@@ -14,6 +14,7 @@ static const uint8_t DEFAULT_LAYER_INDEX = 0;
 ///Static Global Variables
 static bool _has_chord_action_been_performed = false;
 static bool _is_waiting_for_chord_action = false;
+static struct modifier_collection_t _last_pressed_modifiers = {0};
 static uint8_t _last_pressed_layer_index = 0;
 
 static int8_t _quant_layer_mod_pressed[MAX_LAYER_COUNT] = {0};
@@ -78,13 +79,28 @@ void keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_l
     }
 }
 
-bool keyboard_state_get_has_chord_action_been_performed(void)
+struct modifier_collection_t keyboard_state_get_last_press_modifiers(void)
 {
-    return _has_chord_action_been_performed;
+    return _last_pressed_modifiers;
 }
-void keyboard_state_set_has_chord_action_been_performed(bool has_chord_action_been_performed)
+void keyboard_state_record_last_press_modifiers(void)
 {
-    _has_chord_action_been_performed = has_chord_action_been_performed;
+    _last_pressed_modifiers = keyboard_state_get_currently_pressed_modifiers();
+}
+void keyboard_state_clear_last_press_modifiers(void)
+{
+    memset(&_last_pressed_modifiers, 0, sizeof(struct modifier_collection_t));
+}
+
+bool keyboard_state_modifier_collection_contains_keycode(struct modifier_collection_t modifier_collection,
+    uint8_t modifier_keycode)
+{
+    for (int i = 0; i < modifier_collection.modifier_count; i++)
+    {
+        if (modifier_keycode == modifier_collection.modifiers[i])
+            return true;
+    }
+    return false;
 }
 
 bool keyboard_state_is_any_modifier_pressed(void)

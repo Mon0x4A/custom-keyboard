@@ -25,14 +25,20 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, key_event_sou
     struct hid_keycode_container_t code_container =
         layer_info_get_base_keycode_at(row, col, current_layer, keyboard_side);
 
-    if (!keyboard_state_get_has_chord_action_been_performed())
-        tap_handler_on_switch_release(row, col, current_layer, keyboard_side);
-
     bool is_modifier_code = key_helper_is_modifier_keycode_container(code_container);
-    if (!is_modifier_code)
+    bool should_fire_tap_event = true;
+    if (is_modifier_code)
     {
-        keyboard_state_set_has_chord_action_been_performed(false);
+        //If last press was a layer-modded code and the base keycode here
+        //is that same mod, don't fire a tap release.
+        struct modifier_collection_t last_press_modifiers =
+            keyboard_state_get_last_press_modifiers();
+        should_fire_tap_event = !keyboard_state_modifier_collection_contains_keycode(
+                last_press_modifiers, code_container.hid_keycode);
     }
+
+    if (should_fire_tap_event)
+        tap_handler_on_switch_release(row, col, current_layer, keyboard_side);
 
     hold_delay_handler_on_switch_release(row, col, current_layer, keyboard_side);
 
@@ -103,7 +109,7 @@ void release_handler_on_switch_release(uint16_t row, uint16_t col, key_event_sou
         struct hid_keycode_container_t code_container =
             layer_info_get_base_keycode_at(row, col, i, keyboard_side);
 
-        if (key_helper_is_layer_keycode(code_container.hid_keycode))
+        if (key_helper_is_layer_modifier_keycode(code_container.hid_keycode))
         {
             keyboard_state_set_is_layer_modifier_pressed(
                 key_helper_get_layer_index_from_layer_keycode(code_container.hid_keycode),
