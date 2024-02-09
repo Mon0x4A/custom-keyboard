@@ -47,11 +47,7 @@ static void mark_key_down(int16_t row, int16_t col, uint8_t layer_index, key_eve
         return;
 
     key_down_params_ptr->key_down_time = get_absolute_time();
-
-    struct modifier_collection_t current_modifiers = keyboard_state_get_currently_pressed_modifiers();
-    key_down_params_ptr->modifiers_at_key_down.modifier_count = current_modifiers.modifier_count;
-    memcpy(&(key_down_params_ptr->modifiers_at_key_down.modifiers), &(current_modifiers.modifiers), HID_REPORT_KEYCODE_ARRAY_LENGTH);
-
+    key_down_params_ptr->modifiers_at_key_down = keyboard_state_get_currently_pressed_modifiers();
     key_down_params_ptr->layer_index_at_key_down = layer_index;
 }
 
