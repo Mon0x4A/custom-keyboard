@@ -18,7 +18,7 @@
 ///Unified/Unibody QLP Config
 //================================
 static const uint8_t ROW_0_PIN = 7;
-static const uint8_t ROW_1_PIN = 8;
+static const uint8_t ROW_1_PIN = 3;
 
 static const uint8_t COL_0_PIN = 10;
 static const uint8_t COL_1_PIN = 11;
@@ -69,15 +69,15 @@ static const uint8_t COLS[COLUMN_COUNT] =
 
     static const struct keycode_definition_t L1_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM2,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM5,0},  {KC_LM6,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM6,0},  {KC_LM5,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}                },
-        { {HID_KEY_CONTROL_LEFT,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_CONTROL_RIGHT,0} },
+        { {KC_LM2,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM5,0},  {KC_LM6,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM6,0},  {KC_LM5,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}            },
+        { {HID_KEY_ALT_LEFT,0},     {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_ALT_RIGHT,0} },
     };
 
     //TODO is this not the same as the L0 base keycodes?!
     static const struct keycode_definition_t L2_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM2,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}                },
-        { {HID_KEY_CONTROL_LEFT,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_CONTROL_RIGHT,0} },
+        { {KC_LM2,0},           {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}            },
+        { {HID_KEY_GUI_LEFT,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_GUI_RIGHT,0} },
     };
 
     static const struct keycode_definition_t L1_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =

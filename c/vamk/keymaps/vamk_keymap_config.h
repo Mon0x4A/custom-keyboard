@@ -15,7 +15,7 @@
 
 //TODO this should be under preprocessor logic (above) but for some reason
 //it's not working. This needs to be sorted out.
-#include "qlp_22_rev0_keymap.h"
+#include "qlp_22_rev1_keymap.h"
 
 ///Constants
 #define LAYER_COUNT 3
