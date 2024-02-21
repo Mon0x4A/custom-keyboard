@@ -8,6 +8,7 @@
 
 ///Static Constants
 static const uint8_t AUTO_RELEASE_REPORT_QUANTITY = 5;
+static const uint8_t MINIMAL_REPORT_QUANTITY = 2;
 
 ///Static Global Variables
 //TODO these properties should be made volatile if timer/alarm release
@@ -15,7 +16,6 @@ static const uint8_t AUTO_RELEASE_REPORT_QUANTITY = 5;
 static uint8_t _current_hid_report_codes[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 static uint8_t _current_report_code_quantity = 0;
 static uint8_t _code_report_lifetime_countdown[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
-static bool _single_report_lifetime_flag[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 static uint8_t _current_modifier = 0;
 
 static uint8_t _current_layer = 0;
@@ -30,7 +30,7 @@ static bool contains_hid_report_code(uint8_t hid_keycode)
 }
 
 static void insert_hid_report_code(struct hid_keycode_container_t keycode_container,
-    bool set_auto_release_countdown, bool set_single_report_lifetime)
+    bool set_auto_release_countdown, bool set_minimal_report_lifetime)
 {
     // If this did not initialize correctly, something has gone wrong.
     hard_assert(keycode_container.has_valid_contents);
@@ -45,11 +45,10 @@ static void insert_hid_report_code(struct hid_keycode_container_t keycode_contai
         if (_current_hid_report_codes[i] == 0)
         {
             _current_hid_report_codes[i] = keycode_container.hid_keycode;
-            _single_report_lifetime_flag[i] = false;
             _code_report_lifetime_countdown[i] = 0;
 
-            if (set_single_report_lifetime)
-                _single_report_lifetime_flag[i] = true;
+            if (set_minimal_report_lifetime)
+                _code_report_lifetime_countdown[i] = MINIMAL_REPORT_QUANTITY;
             else if (set_auto_release_countdown)
                 _code_report_lifetime_countdown[i] = AUTO_RELEASE_REPORT_QUANTITY;
 
@@ -66,7 +65,7 @@ static void remove_hid_report_code(uint8_t hid_keycode)
         if (_current_hid_report_codes[i] == hid_keycode)
         {
             _current_hid_report_codes[i] = 0;
-            _code_report_lifetime_countdown[i] = 0; //false;
+            _code_report_lifetime_countdown[i] = 0;
             _current_modifier = 0;
         }
     }
@@ -92,12 +91,6 @@ struct key_report_t key_state_build_hid_report(void)
     // Now that we've built the report, handle any countdowns.
     for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
     {
-        if (_single_report_lifetime_flag[i])
-        {
-            _current_hid_report_codes[i] = 0;
-            _single_report_lifetime_flag[i] = false;
-        }
-
         if (_code_report_lifetime_countdown[i] > 1)
             _code_report_lifetime_countdown[i]--;
 
@@ -114,9 +107,9 @@ struct key_report_t key_state_build_hid_report(void)
 }
 
 void key_state_press(struct hid_keycode_container_t keycode_container,
-    bool should_auto_release, bool should_release_on_next_report)
+    bool should_auto_release, bool should_press_for_minimal_time)
 {
-    insert_hid_report_code(keycode_container, should_auto_release, should_release_on_next_report);
+    insert_hid_report_code(keycode_container, should_auto_release, should_press_for_minimal_time);
 }
 
 void key_state_release(uint8_t hid_keycode)

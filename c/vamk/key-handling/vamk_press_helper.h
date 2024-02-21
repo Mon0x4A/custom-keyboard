@@ -14,6 +14,6 @@ void press_helper_key_press(struct hid_keycode_container_t keycode_container);
 void press_helper_momentary_press_with_modifiers(struct hid_keycode_container_t keycode_container,
     struct modifier_collection_t modifiers_collection);
 void press_helper_momentary_press(struct hid_keycode_container_t keycode_container);
-void press_helper_single_report_press(struct hid_keycode_container_t keycode_container);
+void press_helper_minimal_press(struct hid_keycode_container_t keycode_container);
 
 #endif
