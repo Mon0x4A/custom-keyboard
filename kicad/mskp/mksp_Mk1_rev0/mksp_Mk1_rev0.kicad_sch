@@ -1,0 +1,82 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 317db825-7ec8-42a4-86c9-29de77488848)
+
+  (paper "A4")
+
+  (lib_symbols
+  )
+
+
+  (sheet (at 39.37 30.48) (size 36.83 24.13) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 5e10f522-bda2-47d4-8f22-ab87da492e03)
+    (property "Sheetname" "qlp-22-keypad_L" (at 39.37 29.7684 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "qlp-22-keypad_L.kicad_sch" (at 39.37 55.1946 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "mksp_Mk1_rev0"
+        (path "/317db825-7ec8-42a4-86c9-29de77488848" (page "4"))
+      )
+    )
+  )
+
+  (sheet (at 143.51 90.17) (size 27.94 17.78) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 6eeaa44f-3e3d-4d86-815d-42d0f349cb86)
+    (property "Sheetname" "peripheral-ctrl-board" (at 143.51 89.4584 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "peripheral-ctrl-board.kicad_sch" (at 143.51 108.5346 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "mksp_Mk1_rev0"
+        (path "/317db825-7ec8-42a4-86c9-29de77488848" (page "3"))
+      )
+    )
+  )
+
+  (sheet (at 88.9 88.9) (size 27.94 19.05) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 9a4d8874-164c-4918-b768-ce32cb89a53f)
+    (property "Sheetname" "pi-pico-main-ctrl-board" (at 88.9 88.1884 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "pi-pico-main-ctrl-board.kicad_sch" (at 88.9 108.5346 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "mksp_Mk1_rev0"
+        (path "/317db825-7ec8-42a4-86c9-29de77488848" (page "2"))
+      )
+    )
+  )
+
+  (sheet (at 99.06 27.94) (size 39.37 24.13) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid bcf55edc-6b24-4836-a1e2-aa0a774f766a)
+    (property "Sheetname" "qlp-22-keypad_R" (at 99.06 27.2284 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "qlp-22-keypad_R.kicad_sch" (at 99.06 52.6546 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "mksp_Mk1_rev0"
+        (path "/317db825-7ec8-42a4-86c9-29de77488848" (page "5"))
+      )
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
