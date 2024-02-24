@@ -7,7 +7,6 @@
 #include "vamk_types.h"
 
 ///Static Constants
-static const uint8_t AUTO_RELEASE_REPORT_QUANTITY = 5;
 static const uint8_t MINIMAL_REPORT_QUANTITY = 2;
 
 ///Static Global Variables
@@ -30,7 +29,7 @@ static bool contains_hid_report_code(uint8_t hid_keycode)
 }
 
 static void insert_hid_report_code(struct hid_keycode_container_t keycode_container,
-    bool set_auto_release_countdown, bool set_minimal_report_lifetime)
+    bool should_press_for_minimal_time_and_auto_release)
 {
     // If this did not initialize correctly, something has gone wrong.
     hard_assert(keycode_container.has_valid_contents);
@@ -47,10 +46,8 @@ static void insert_hid_report_code(struct hid_keycode_container_t keycode_contai
             _current_hid_report_codes[i] = keycode_container.hid_keycode;
             _code_report_lifetime_countdown[i] = 0;
 
-            if (set_minimal_report_lifetime)
+            if (should_press_for_minimal_time_and_auto_release)
                 _code_report_lifetime_countdown[i] = MINIMAL_REPORT_QUANTITY;
-            else if (set_auto_release_countdown)
-                _code_report_lifetime_countdown[i] = AUTO_RELEASE_REPORT_QUANTITY;
 
             _current_modifier = keycode_container.modifier;
             break;
@@ -107,9 +104,9 @@ struct key_report_t key_state_build_hid_report(void)
 }
 
 void key_state_press(struct hid_keycode_container_t keycode_container,
-    bool should_auto_release, bool should_press_for_minimal_time)
+    bool should_press_for_minimal_time_and_auto_release)
 {
-    insert_hid_report_code(keycode_container, should_auto_release, should_press_for_minimal_time);
+    insert_hid_report_code(keycode_container, should_press_for_minimal_time_and_auto_release);
 }
 
 void key_state_release(uint8_t hid_keycode)

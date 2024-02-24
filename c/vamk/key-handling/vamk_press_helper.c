@@ -17,7 +17,7 @@
 
 ///Static Functions
 static void keycode_press_internal(struct hid_keycode_container_t keycode_container,
-    bool should_auto_release, bool should_press_for_minimal_time)
+    bool should_press_for_minimal_time_and_auto_release)
 {
     // If we are receiving invalid codes, something has gone
     // programatically wrong.
@@ -102,7 +102,7 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
 
     if (ENABLE_KEYBOARD_COMMANDS && should_report_code)
     {
-        key_state_press(keycode_container, should_auto_release, should_press_for_minimal_time);
+        key_state_press(keycode_container, should_press_for_minimal_time_and_auto_release);
 
         if (!is_modifier_code)
             keyboard_state_set_repeat_state(keycode_container);
@@ -117,7 +117,7 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
 ///Extern Functions
 void press_helper_key_press(struct hid_keycode_container_t keycode_container)
 {
-    keycode_press_internal(keycode_container, false, false);
+    keycode_press_internal(keycode_container, false);
 }
 
 void press_helper_momentary_press_with_modifiers(struct hid_keycode_container_t keycode_container,
@@ -139,7 +139,7 @@ void press_helper_momentary_press_with_modifiers(struct hid_keycode_container_t 
             .modifier = 0,
             .has_valid_contents = true
         };
-        press_helper_minimal_press(modifier_code_container);
+        press_helper_momentary_press(modifier_code_container);
     }
 
     press_helper_momentary_press(keycode_container);
@@ -147,10 +147,5 @@ void press_helper_momentary_press_with_modifiers(struct hid_keycode_container_t 
 
 void press_helper_momentary_press(struct hid_keycode_container_t keycode_container)
 {
-    keycode_press_internal(keycode_container, true, false);
-}
-
-void press_helper_minimal_press(struct hid_keycode_container_t keycode_container)
-{
-    keycode_press_internal(keycode_container, false, true);
+    keycode_press_internal(keycode_container, true);
 }

@@ -13,7 +13,6 @@ static const uint8_t DEFAULT_LAYER_INDEX = 0;
 
 ///Static Global Variables
 static bool _has_chord_action_been_performed = false;
-static bool _is_waiting_for_chord_action = false;
 static struct modifier_collection_t _last_pressed_modifiers = {0};
 static uint8_t _last_pressed_layer_index = 0;
 
@@ -155,11 +154,11 @@ void keyboard_state_send_repeat_state(void)
             .modifier = 0,
             .has_valid_contents = true
         };
-        key_state_press(modifier_code, true, true);
+        key_state_press(modifier_code, true);
     }
 
     // Send our original repeat code. This has to be done last
     // so the new codes in the report are processed in order.
-    key_state_press(_repeat_code, true, false);
+    key_state_press(_repeat_code, true);
 }
 
