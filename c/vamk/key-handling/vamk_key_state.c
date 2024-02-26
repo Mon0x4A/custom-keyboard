@@ -7,7 +7,7 @@
 #include "vamk_types.h"
 
 ///Static Constants
-static const uint8_t MINIMAL_REPORT_QUANTITY = 2;
+static const uint8_t MINIMAL_REPORT_QUANTITY = 3;
 
 ///Static Global Variables
 //TODO these properties should be made volatile if timer/alarm release

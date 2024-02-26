@@ -21,6 +21,7 @@
 #define LAYER_COUNT 3
 #define MAX_LAYER_COUNT 10
 
+//TODO this needs to be moved to each keymap. Why is this here?!
 static const bool IS_LAYER_STICKY[MAX_LAYER_COUNT] =
 {
 //  0  1  2  3  4  5  6  7  8  9
