@@ -247,7 +247,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "mksp_Mk1_rev0.kicad_pro",
+    "filename": "qlp-22_keypad_L_Mk1_rev0.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -324,24 +324,8 @@
   },
   "sheets": [
     [
-      "317db825-7ec8-42a4-86c9-29de77488848",
+      "1ffb0dac-93b1-41ca-affd-8e77a9fa82b3",
       ""
-    ],
-    [
-      "9a4d8874-164c-4918-b768-ce32cb89a53f",
-      "pi-pico-main-ctrl-board"
-    ],
-    [
-      "6eeaa44f-3e3d-4d86-815d-42d0f349cb86",
-      "peripheral-ctrl-board"
-    ],
-    [
-      "5e10f522-bda2-47d4-8f22-ab87da492e03",
-      "qlp-22-keypad_L"
-    ],
-    [
-      "bcf55edc-6b24-4836-a1e2-aa0a774f766a",
-      "qlp-22-keypad_R"
     ]
   ],
   "text_variables": {}
