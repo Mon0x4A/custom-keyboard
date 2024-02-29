@@ -776,7 +776,7 @@
     (pin "1" (uuid 714bd97a-181e-4223-8ca1-60e62c21e5ca))
     (pin "2" (uuid 7980b0e4-1fb9-4d8b-80c9-4f02050b8aed))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D1") (unit 1)
         )
@@ -807,7 +807,7 @@
     (pin "1" (uuid 810c1255-f1d5-4ba4-b642-33619b6c0b3e))
     (pin "2" (uuid 19c62090-f2ff-460b-9733-c0e93b1bd480))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW2") (unit 1)
         )
@@ -838,7 +838,7 @@
     (pin "1" (uuid 79842030-2b50-429b-b311-f98edc8c6e1c))
     (pin "2" (uuid 332fb8e3-dde0-4df2-aa59-2c0f6ffe450a))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW1") (unit 1)
         )
@@ -875,7 +875,7 @@
     (pin "1" (uuid 18240ae6-693b-4f44-84f2-d180fe25e0f7))
     (pin "2" (uuid 02d7a070-2b2d-4545-9990-ecdbabaf8672))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D9") (unit 1)
         )
@@ -906,7 +906,7 @@
     (pin "1" (uuid 09841d62-e9b2-4fa8-ae6d-aa1918dc79a2))
     (pin "2" (uuid 1dce09d0-c3c9-4942-b10d-7296a0885d59))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW7") (unit 1)
         )
@@ -943,7 +943,7 @@
     (pin "1" (uuid 1ba38699-687b-4f14-930f-2195d2dfabb5))
     (pin "2" (uuid 51feba0f-5d03-4d58-95ba-0f855e846121))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D5") (unit 1)
         )
@@ -980,7 +980,7 @@
     (pin "1" (uuid 78724d18-c3e7-4d17-bc52-b302dff1e47f))
     (pin "2" (uuid 7b7e06f0-2ef5-429f-9002-2af9fd902341))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D10") (unit 1)
         )
@@ -1011,7 +1011,7 @@
     (pin "1" (uuid 6b1e2718-d07e-439d-ae60-e8a40874d3d1))
     (pin "2" (uuid 7869e113-e0d6-4568-812c-3cfb095fb300))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW6") (unit 1)
         )
@@ -1048,7 +1048,7 @@
     (pin "1" (uuid eaa352bb-c8f1-416d-a819-46bfbf0aa849))
     (pin "2" (uuid d3cb5476-33ba-4a37-bf4b-3fe9a304d6aa))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D6") (unit 1)
         )
@@ -1085,7 +1085,7 @@
     (pin "1" (uuid 426605e8-7b03-4e3d-9794-980319231910))
     (pin "2" (uuid 2b1af573-54f4-4462-8476-8ec216b11867))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D3") (unit 1)
         )
@@ -1116,7 +1116,7 @@
     (pin "1" (uuid a10c70f4-2706-4b51-a12b-5ba2cbed5cc5))
     (pin "2" (uuid 21977aa3-725b-41a4-a214-99f79a4c2860))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW8") (unit 1)
         )
@@ -1147,7 +1147,7 @@
     (pin "1" (uuid a142e5cd-fe1e-478e-b663-49833fc3aaaf))
     (pin "2" (uuid 465f401f-5ce1-473f-a7f7-42fc3b8c41f0))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW4") (unit 1)
         )
@@ -1178,7 +1178,7 @@
     (pin "1" (uuid f7974dd7-c3b7-4349-b48c-5b9b91b09860))
     (pin "2" (uuid 51f8ebc1-9cc2-47c6-b67f-51cebff74111))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW9") (unit 1)
         )
@@ -1209,7 +1209,7 @@
     (pin "1" (uuid 26f88fdf-4982-48fc-8158-244de8298f12))
     (pin "2" (uuid 4e3135ed-428a-491f-a680-0c477cb7b483))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW10") (unit 1)
         )
@@ -1240,7 +1240,7 @@
     (pin "1" (uuid 1a54b17d-25be-4c33-be9b-197235680329))
     (pin "2" (uuid 3b086cfb-afd7-4fc8-a4ad-e52646589212))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW0") (unit 1)
         )
@@ -1271,7 +1271,7 @@
     (pin "1" (uuid 8bd5a4ca-7463-48a4-b007-c824124d5a7a))
     (pin "2" (uuid eab9476a-48e4-4f3a-9dd5-eb23ef6df8b5))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW3") (unit 1)
         )
@@ -1308,7 +1308,7 @@
     (pin "1" (uuid 38bfd6db-1bb8-471a-b235-51e872b2e6a0))
     (pin "2" (uuid 5c61e5ce-c03c-4e00-aa67-43f784279e7e))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D4") (unit 1)
         )
@@ -1345,7 +1345,7 @@
     (pin "1" (uuid e6b6df79-e2a5-4dbd-b00a-0df5e6b32e1e))
     (pin "2" (uuid b76036f1-006d-4b3b-9459-01b4dc76e653))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D7") (unit 1)
         )
@@ -1386,7 +1386,7 @@
     (pin "8" (uuid 4dff53de-b4ce-4d6b-a9ef-de6fed2aca80))
     (pin "9" (uuid 1c7b0bd3-5371-4c52-9674-659b2b1f7630))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "J1") (unit 1)
         )
@@ -1429,7 +1429,7 @@
     (pin "1" (uuid ca05c7f6-cd9d-4beb-afcd-6aa41ea89f29))
     (pin "2" (uuid ceab96d3-c829-4696-9c8f-f52896436ed2))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D2") (unit 1)
         )
@@ -1466,7 +1466,7 @@
     (pin "1" (uuid bf1f0f7b-02ac-444b-8025-f99572aefb51))
     (pin "2" (uuid 57ecbb66-309d-4f36-aa5a-f3c2133eb7e0))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D0") (unit 1)
         )
@@ -1503,7 +1503,7 @@
     (pin "1" (uuid 49ef2e21-fbbc-491b-991c-e392baf680a0))
     (pin "2" (uuid e44dcd77-6ea0-4280-8f2c-0ce032166b40))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "D8") (unit 1)
         )
@@ -1534,7 +1534,7 @@
     (pin "1" (uuid 7ed8cebe-6157-431c-9827-38204642f8bd))
     (pin "2" (uuid 54adb607-d7c9-46b9-a179-5ada09fc4f70))
     (instances
-      (project "qlp-22_keypad_L_Mk1_rev0"
+      (project "qlp-22_mx_hs_keypad_L_Mk1_rev0"
         (path "/1ffb0dac-93b1-41ca-affd-8e77a9fa82b3"
           (reference "SW5") (unit 1)
         )
