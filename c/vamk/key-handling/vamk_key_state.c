@@ -7,7 +7,8 @@
 #include "vamk_types.h"
 
 ///Static Constants
-static const uint8_t MINIMAL_REPORT_QUANTITY = 2;
+static const uint8_t STANDARD_MINIMAL_REPORT_QUANTITY = 3;
+static const uint8_t SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY = 2;
 
 ///Static Global Variables
 //TODO these properties should be made volatile if timer/alarm release
@@ -47,7 +48,12 @@ static void insert_hid_report_code(struct hid_keycode_container_t keycode_contai
             _code_report_lifetime_countdown[i] = 0;
 
             if (should_press_for_minimal_time_and_auto_release)
-                _code_report_lifetime_countdown[i] = MINIMAL_REPORT_QUANTITY;
+            {
+                bool is_system_modifier_code = key_helper_is_system_modifier_keycode_container(keycode_container);
+                _code_report_lifetime_countdown[i] = is_system_modifier_code
+                    ? SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY
+                    : STANDARD_MINIMAL_REPORT_QUANTITY;
+            }
 
             _current_modifier = keycode_container.modifier;
             break;
