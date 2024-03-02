@@ -3,6 +3,7 @@
 #include "pico/stdlib.h"
 #include "vamk_config.h"
 #include "vamk_key_state.h"
+#include "vamk_key_helper.h"
 #include "vamk_layer_info.h"
 #include "vamk_types.h"
 
