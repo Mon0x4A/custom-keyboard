@@ -26,7 +26,7 @@ struct layer_index_value_container_t
 };
 
 ///Static Functions
-#if IS_VOK_SL_MODEL
+#if IS_VOK_SL_MODEL || IS_SEOK_MODEL
 static const keycode_definition_array_ptr_t get_vok_sl_base_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index)
 {
@@ -64,7 +64,7 @@ static const keycode_definition_array_ptr_t get_vok_sl_tap_value_at(
 static const keycode_definition_array_ptr_t get_vok_sl_delay_value_at(
     uint8_t row, uint8_t col, uint8_t layer_index)
 {
-    keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = null;
+    keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = NULL;
     switch (layer_index)
     {
         case 0:
@@ -263,7 +263,7 @@ static struct hid_keycode_container_t build_code_container(struct layer_index_va
 struct hid_keycode_container_t layer_info_get_base_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-#if IS_VOK_SL_MODEL
+#if IS_VOK_SL_MODEL || IS_SEOK_MODEL
     struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, key_event_source,
         &get_vok_sl_base_value_at);
 #elif IS_QLP_MODEL
@@ -276,7 +276,7 @@ struct hid_keycode_container_t layer_info_get_base_keycode_at(
 struct hid_keycode_container_t layer_info_get_tap_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-#if IS_VOK_SL_MODEL
+#if IS_VOK_SL_MODEL || IS_SEOK_MODEL
     struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, key_event_source,
         &get_vok_sl_tap_value_at);
 #elif IS_QLP_MODEL
@@ -289,7 +289,7 @@ struct hid_keycode_container_t layer_info_get_tap_keycode_at(
 struct hid_keycode_container_t layer_info_get_hold_delay_keycode_at(
     uint8_t row, uint8_t col, uint8_t layer_index, key_event_source_identifier_t key_event_source)
 {
-#if IS_VOK_SL_MODEL
+#if IS_VOK_SL_MODEL || IS_SEOK_MODEL
     struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, key_event_source,
         &get_vok_sl_delay_value_at);
 #elif IS_QLP_MODEL

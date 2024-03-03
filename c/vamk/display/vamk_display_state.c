@@ -46,6 +46,7 @@ static void display_show_firmware_information(void)
 
 static void wake_display(void)
 {
+
     display_show_firmware_information();
     _is_display_on = true;
 }
@@ -53,6 +54,7 @@ static void wake_display(void)
 ///Extern Functions
 void display_task()
 {
+#if IS_I2C_DISPLAY_ENABLED
     if (_is_display_on)
     {
         uint64_t elapsed_interval_ms = (absolute_time_diff_us(_last_display_command, get_absolute_time()))/1000;
@@ -62,13 +64,16 @@ void display_task()
             _is_display_on = false;
         }
     }
+#endif
 }
 
 void display_reset_sleep_timeout(void)
 {
+#if IS_I2C_DISPLAY_ENABLED
     if (!_is_display_on)
         wake_display();
 
     _last_display_command = get_absolute_time();
+#endif
 }
 

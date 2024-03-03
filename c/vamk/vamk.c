@@ -131,6 +131,7 @@ int main(void)
     // Physical switch logic initialization call.
     switch_state_init();
 
+#if IS_I2C_DISPLAY_ENABLED
     i2c_init(I2C_DISPLAY_BUS, I2C_CLOCK_SPEED);
     gpio_set_function(I2C_DISPLAY_SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(I2C_DISPLAY_SCL_PIN, GPIO_FUNC_I2C);
@@ -139,6 +140,7 @@ int main(void)
 
     ssd1306_init();
     display_reset_sleep_timeout();
+#endif
 
     // Init local/native switch handling
     switch_state_set_pressed_callback(press_handler_on_switch_press);
@@ -172,8 +174,10 @@ int main(void)
             // Update reported keyboard state.
             hid_task();
 
+#if IS_I2C_DISPLAY_ENABLED
             // Update the display state.
             display_task();
+#endif
         }
 
     return 0;

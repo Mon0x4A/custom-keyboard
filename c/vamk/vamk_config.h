@@ -33,14 +33,26 @@
 #endif
 
 #define IS_VOK_SL_MODEL 0
-#define IS_QLP_MODEL 1
+#define IS_QLP_MODEL 0
+#define IS_SEOK_MODEL 1
 
-#if IS_VOK_SL_MODEL && IS_QLP_MODEL || !(IS_VOK_SL_MODEL || IS_QLP_MODEL)
+#if IS_VOK_SL_MODEL && (IS_QLP_MODEL || IS_SEOK_MODEL)
+#error "VOK_SL_MODEL has been declared. No other models are allowed."
+#endif
+
+#if IS_QLP_MODEL && (IS_VOK_SL_MODEL || IS_SEOK_MODEL)
+#error "QLP_MODEL has been declared. No other models are allowed."
+#endif
+
+#if IS_SEOK_MODEL && (IS_QLP_MODEL || IS_VOK_SL_MODEL)
+#error "SEOK_MODEL has been declared. No other models are allowed."
+#endif
+
+#if !(IS_VOK_SL_MODEL || IS_QLP_MODEL || IS_SEOK_MODEL)
 #error "Must define singluar, valid keyboard model"
 #endif
 
-#define IS_QLP_REV0 1
-
+#define IS_QLP_REV0 0
 
 /// Key Behavior Config
 //=====================
@@ -60,6 +72,8 @@
 #define I2C_IO_EXPANDER_BUS i2c0
 #define I2C_IO_EXPANDER_SDA_PIN 4
 #define I2C_IO_EXPANDER_SCL_PIN 5
+
+#define IS_I2C_DISPLAY_ENABLED 0
 
 #if IS_QLP_MODEL && IS_QLP_REV0
     #define I2C_DISPLAY_BUS i2c0
