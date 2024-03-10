@@ -6,7 +6,7 @@
 #include "ssd1306_config.h"
 
 ///Constants
-#define DEFAUL_FONT_ROW_HEIGHT_PX 8
+#define DEFAULT_FONT_ROW_HEIGHT_PX 8
 
 static const uint8_t DEFAULT_FONT[] = {
 0x0,  0x0,  0x0,   0x0,   0x0,   0x0,   0x0,   0x0,

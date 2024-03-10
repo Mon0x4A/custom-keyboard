@@ -19,6 +19,8 @@
 #define KC_LM9 0xAF
 
 #define KC_REPEAT 0xC0 //Also a repurposed reserved TinyUSB code.
+#define KC_WIN_IME_TOGGLE 0xC1 //OS+Space: Windows IME toggle shortcut
+#define KC_WIN_ALPHA_SWAP 0xC2 //Alt+Grave: Windows alphabet swap shortcut.
 
 ///Type Declarations
 struct keycode_definition_t

@@ -1,4 +1,3 @@
-// Protect from multiple includes
 #ifndef VAMK_CONFIG_H
 #define VAMK_CONFIG_H
 
@@ -65,32 +64,16 @@
 //===========
 #define I2C_CLOCK_SPEED 400*1000 //Khz
 
-#define I2C_CONTROLLER_PORT i2c1
-#define I2C_CONTROLLER_SDA_PIN 14
-#define I2C_CONTROLLER_SCL_PIN 15
-
 #define I2C_IO_EXPANDER_BUS i2c0
-#define I2C_IO_EXPANDER_SDA_PIN 4
-#define I2C_IO_EXPANDER_SCL_PIN 5
+#define I2C_IO_EXPANDER_SDA_PIN 20
+#define I2C_IO_EXPANDER_SCL_PIN 21
 
-#define IS_I2C_DISPLAY_ENABLED 0
+#define IS_I2C_DISPLAY_ENABLED 1
+#define I2C_DISPLAY_BUS i2c0
+#define I2C_DISPLAY_SDA_PIN 16
+#define I2C_DISPLAY_SCL_PIN 17
 
-#if IS_QLP_MODEL && IS_QLP_REV0
-    #define I2C_DISPLAY_BUS i2c0
-    #define I2C_DISPLAY_SDA_PIN 8
-    #define I2C_DISPLAY_SCL_PIN 5
-#else
-    #define I2C_DISPLAY_BUS i2c1
-    #define I2C_DISPLAY_SDA_PIN 14
-    #define I2C_DISPLAY_SCL_PIN 15
-#endif
-
-static const uint8_t I2C_TRANSMISSION_SIZE = 3*7; //ROW_COUNT*COLUMN_COUNT;
-
-#define CONTROLLER_KEYBOARD_ADDRESS 0x2A
-#define PERIPHERAL_KEYBOARD_ADDRESS 0x45
 #define IO_EXPANDER_ADDRESS 0x20
-
 #define IO_EXPANDER_REGISTER_COUNT 22
 
 //TODO make these addresses conditional on which side is primary?

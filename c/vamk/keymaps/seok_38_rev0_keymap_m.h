@@ -65,20 +65,18 @@ static const struct keycode_definition_t L2_BASE_KEYCODES[KEY_DEFINITION_ROW_COU
 
 static const struct keycode_definition_t L0_TAP_KEYS[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
 {
-    { {'q',1},            {'w',1},     {'e',1},           {'r',1},     {'t',1},         {'y',1},       {'u',1},     {'i',1},               {'o',1},     {'p',1}           },
-    { {'a',1},            {'s',1},     {'d',1},           {'f',1},     {'g',1},         {'h',1},       {'j',1},     {'k',1},               {'l',1},     {';',1}           },
-    { {'z',1},            {'x',1},     {'c',1},           {'v',1},     {'b',1},         {'n',1},       {'m',1},     {',',1},               {'.',1},     {'/',1}           },
-    { {HID_KEY_ESCAPE,0}, {KC_NULL,0}, {HID_KEY_SPACE,0}, {KC_NULL,0}, {HID_KEY_TAB,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0}, {KC_NULL,0}, {HID_KEY_ENTER,0} },
-    //TODO replace tab with IME key
+    { {'q',1},            {'w',1},     {'e',1},           {'r',1},     {'t',1},               {'y',1},               {'u',1},     {'i',1},               {'o',1},     {'p',1}           },
+    { {'a',1},            {'s',1},     {'d',1},           {'f',1},     {'g',1},               {'h',1},               {'j',1},     {'k',1},               {'l',1},     {';',1}           },
+    { {'z',1},            {'x',1},     {'c',1},           {'v',1},     {'b',1},               {'n',1},               {'m',1},     {',',1},               {'.',1},     {'/',1}           },
+    { {HID_KEY_ESCAPE,0}, {KC_NULL,0}, {HID_KEY_SPACE,0}, {KC_NULL,0}, {KC_WIN_IME_TOGGLE,0}, {KC_WIN_ALPHA_SWAP,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0}, {KC_NULL,0}, {HID_KEY_ENTER,0} },
 };
 
 static const struct keycode_definition_t L1_TAP_KEYS[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
 {
-    { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0},       {KC_NULL,0}, {KC_NULL,0},     {KC_NULL,0},   {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0}       },
-    { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0},       {KC_NULL,0}, {KC_NULL,0},     {KC_NULL,0},   {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0}       },
-    { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0},       {KC_NULL,0}, {KC_NULL,0},     {KC_NULL,0},   {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0}       },
-    { {HID_KEY_ESCAPE,0}, {KC_NULL,0}, {HID_KEY_SPACE,0}, {KC_NULL,0}, {HID_KEY_TAB,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0}, {KC_NULL,0}, {HID_KEY_ENTER,0} },
-    //TODO replace tab with IME key
+    { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0},       {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0}       },
+    { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0},       {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0}       },
+    { {KC_NULL,0},        {KC_NULL,0}, {KC_NULL,0},       {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0},           {KC_NULL,0}, {KC_NULL,0}       },
+    { {HID_KEY_ESCAPE,0}, {KC_NULL,0}, {HID_KEY_SPACE,0}, {KC_NULL,0}, {KC_WIN_IME_TOGGLE,0}, {KC_WIN_ALPHA_SWAP,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0}, {KC_NULL,0}, {HID_KEY_ENTER,0} },
 };
 
 static const struct keycode_definition_t L_HOLD_DELAY_KEYS[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =

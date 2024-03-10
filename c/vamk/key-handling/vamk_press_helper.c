@@ -16,6 +16,45 @@
 ///Local Declarations
 
 ///Static Functions
+static void macro_windows_ime_toggle(void)
+{
+    struct hid_keycode_container_t os_mod_container =
+    {
+        .hid_keycode = HID_KEY_GUI_RIGHT,
+        .modifier = 0,
+        .has_valid_contents = 1,
+    };
+    key_state_press(os_mod_container, true);
+
+    struct hid_keycode_container_t space_container =
+    {
+        .hid_keycode = HID_KEY_SPACE,
+        .modifier = 0,
+        .has_valid_contents = 1,
+    };
+    key_state_press(space_container, true);
+}
+
+//TODO refactor macros to their own header file.
+static void macro_windows_alphabet_swap(void)
+{
+    struct hid_keycode_container_t alt_mod_container =
+    {
+        .hid_keycode = HID_KEY_ALT_RIGHT,
+        .modifier = 0,
+        .has_valid_contents = 1,
+    };
+    key_state_press(alt_mod_container, true);
+
+    struct hid_keycode_container_t grave_container =
+    {
+        .hid_keycode = HID_KEY_GRAVE,
+        .modifier = 0,
+        .has_valid_contents = 1,
+    };
+    key_state_press(grave_container, true);
+}
+
 static void keycode_press_internal(struct hid_keycode_container_t keycode_container,
     bool should_press_for_minimal_time_and_auto_release)
 {
@@ -37,6 +76,8 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
         keyboard_state_clear_last_press_modifiers();
 
     bool should_report_code = true;
+    bool is_key_macro_code = false;
+    void (*macro_func_ptr)(void) = NULL;
     switch (keycode_container.hid_keycode)
     {
         case KC_LM0:
@@ -79,6 +120,16 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
             should_report_code = false;
             keyboard_state_send_repeat_state();
             break;
+        case KC_WIN_IME_TOGGLE:
+            should_report_code = false;
+            is_key_macro_code = true;
+            macro_func_ptr = &macro_windows_ime_toggle;
+            break;
+        case KC_WIN_ALPHA_SWAP:
+            should_report_code = false;
+            is_key_macro_code = true;
+            macro_func_ptr = &macro_windows_alphabet_swap;
+            break;
         case HID_KEY_ALT_LEFT:
         case HID_KEY_ALT_RIGHT:
             break;
@@ -106,6 +157,11 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
 
         if (!is_modifier_code)
             keyboard_state_set_repeat_state(keycode_container);
+    }
+    else if (ENABLE_KEYBOARD_COMMANDS && is_key_macro_code)
+    {
+        if (macro_func_ptr != NULL)
+            (*macro_func_ptr);
     }
 
     if (ENABLE_SERIAL_LOGGING && should_report_code)

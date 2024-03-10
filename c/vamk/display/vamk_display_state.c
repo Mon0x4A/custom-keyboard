@@ -20,14 +20,14 @@ static void display_show_firmware_information(void)
     uint8_t buffer[SSD1306_BUF_LEN] = {0};
     //15 character max per line with this font
     char *text[] = {
-        "qlp-22 mk i",
+        "seok-38 mk i",
         " ",
         "vamk firmware",
         "alpha v0.1",
         "rpi pico",
         " ",
         "Hamlund MFG",
-        "2023",
+        "2024",
     };
 
     int y = 0;
@@ -35,7 +35,7 @@ static void display_show_firmware_information(void)
     for (int i = 0 ; i < count_of(text); i++)
     {
         ssd1306_buffer_write_string(buffer, x_left_padding, y, text[i]);
-        y += DEFAUL_FONT_ROW_HEIGHT_PX;
+        y += DEFAULT_FONT_ROW_HEIGHT_PX;
     }
 
     //ssd1306_buffer_set_pixel(buffer, 5, 5, true);

@@ -133,6 +133,8 @@ int main(void)
 
 #if IS_I2C_DISPLAY_ENABLED
     i2c_init(I2C_DISPLAY_BUS, I2C_CLOCK_SPEED);
+    gpio_init(I2C_DISPLAY_SDA_PIN);
+    gpio_init(I2C_DISPLAY_SCL_PIN);
     gpio_set_function(I2C_DISPLAY_SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(I2C_DISPLAY_SCL_PIN, GPIO_FUNC_I2C);
     gpio_pull_up(I2C_DISPLAY_SDA_PIN);
