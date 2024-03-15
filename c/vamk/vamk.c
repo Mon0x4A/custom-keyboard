@@ -163,8 +163,10 @@ int main(void)
             // TinyUSB device task required to be called every iteration.
             tud_task();
 
+#if ENABLE_LED_DEVICE_STATUS_INDICATOR
             // Update LED state.
             led_blinking_task();
+#endif
 
             // Update local, phyiscal switch state.
             switch_state_task();

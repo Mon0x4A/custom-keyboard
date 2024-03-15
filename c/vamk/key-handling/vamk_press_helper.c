@@ -161,7 +161,7 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
     else if (ENABLE_KEYBOARD_COMMANDS && is_key_macro_code)
     {
         if (macro_func_ptr != NULL)
-            (*macro_func_ptr);
+            (*macro_func_ptr)();
     }
 
     if (ENABLE_SERIAL_LOGGING && should_report_code)
