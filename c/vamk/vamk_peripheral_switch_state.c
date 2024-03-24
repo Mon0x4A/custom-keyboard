@@ -8,12 +8,32 @@
 #include "vamk_types.h"
 
 ///Static Global Constants
-const uint8_t GPIO_A_REGISTER_ADDRESS = 0x12;
-const uint8_t GPIO_B_REGISTER_ADDRESS = 0x13;
-const uint8_t IODIR_A_REGISTER_ADDRESS = 0x00;
-const uint8_t IODIR_B_REGISTER_ADDRESS = 0x01;
-const uint8_t GPPU_A_REGISTER_ADDRESS = 0x0C;
-const uint8_t GPPU_B_REGISTER_ADDRESS = 0x0D;
+#define SINGLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 2
+#define DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 3
+
+#define REGISTER_READ_REQUEST_BYTE_LENGTH 1
+#define SINGLE_REGISTER_READ_RECEIPT_BYTE_LENGTH 1
+#define DOUBLE_REGISTER_READ_RECEIPT_BYTE_LENGTH 2
+
+static const uint8_t REGISTER_B_MIN_PIN_NUMBER = 1;
+static const uint8_t REGISTER_B_MAX_PIN_NUMBER = 8;
+
+static const uint8_t REGISTER_A_MIN_PIN_NUMBER = 21;
+static const uint8_t REGISTER_A_MAX_PIN_NUMBER = 28;
+
+static const uint8_t GPIO_A_REGISTER_ADDRESS = 0x12;
+static const uint8_t GPIO_B_REGISTER_ADDRESS = 0x13;
+static const uint8_t IODIR_A_REGISTER_ADDRESS = 0x00;
+static const uint8_t IODIR_B_REGISTER_ADDRESS = 0x01;
+static const uint8_t GPPU_A_REGISTER_ADDRESS = 0x0C;
+static const uint8_t GPPU_B_REGISTER_ADDRESS = 0x0D;
+
+///Static Type Declarations
+struct io_expander_register_value_pair_t
+{
+    uint8_t register_a_value;
+    uint8_t register_b_value;
+};
 
 ///Static Global Variables
 static uint8_t _peripheral_switch_matrix_curr[ROW_COUNT][COLUMN_COUNT] = {0};
@@ -23,32 +43,176 @@ static switch_pressed_callback_t _pressed_callback = NULL;
 static switch_released_callback_t _released_callback = NULL;
 
 ///Static Functions
-static void read_matrix_state(void)
+static bool does_pin_number_belong_to_register_a(uint8_t pin_number)
 {
-    // To get a register value byte, write the device address and then the
-    // register you want to start retrieving data from.
-    const uint8_t REGISTER_WRITE_REQUEST_LENGTH = 1;
+    return pin_number >= REGISTER_A_MIN_PIN_NUMBER && pin_number <= REGISTER_A_MAX_PIN_NUMBER;
+}
+
+static bool does_pin_number_belong_to_register_b(uint8_t pin_number)
+{
+    return pin_number >= REGISTER_B_MIN_PIN_NUMBER && pin_number <= REGISTER_B_MAX_PIN_NUMBER;
+}
+
+static uint8_t get_register_a_bit_index_from_pin_number(uint8_t pin_number)
+{
+    return does_pin_number_belong_to_register_a(pin_number) ? pin_number-21 : -1;
+}
+
+static uint8_t get_register_b_bit_index_from_pin_number(uint8_t pin_number)
+{
+    return does_pin_number_belong_to_register_b(pin_number) ? pin_number-1 : -1;
+}
+
+static void mcp23017_write_single_register_value(uint8_t register_address, uint8_t register_contents)
+{
+    // To write a single register value byte, write the device address (handled by i2c api), then the
+    // register you want to set, followed by the register value. For a total of 3 bytes.
+    const uint8_t write_buffer[SINGLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH] = { register_address, register_contents };
     const bool DO_NOT_SEND_STOP = false;
-    int8_t written_byte_count = i2c_write_blocking(
-        I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, &GPIO_A_REGISTER_ADDRESS,
-        REGISTER_WRITE_REQUEST_LENGTH, DO_NOT_SEND_STOP);
+    int8_t written_byte_count = i2c_write_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
+        write_buffer, SINGLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH, DO_NOT_SEND_STOP);
+}
+
+static void mcp23017_write_double_register_value(uint8_t register_a_address,
+    struct io_expander_register_value_pair_t register_values)
+{
+    // To write a double register value byte, write the device address (handled by i2c api), then the
+    // 'A' register of the pair you want to set, followed by the register A value, the then register B
+    // value. For a total of 4 bytes.
+    const uint8_t write_buffer[DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH] =
+        { register_a_address, register_values.register_a_value, register_values.register_b_value };
+    const bool DO_NOT_SEND_STOP = false;
+    int8_t written_byte_count = i2c_write_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
+        write_buffer, DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH, DO_NOT_SEND_STOP);
+}
+
+static uint8_t mcp23017_read_single_register_value(uint8_t register_address)
+{
+    // To get a register value byte, write the device address (handled by the i2c api) and then the
+    // register you want to start retrieving data from.
+    const bool DO_NOT_SEND_STOP = false;
+    int8_t written_byte_count = i2c_write_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
+        &register_address, REGISTER_READ_REQUEST_BYTE_LENGTH, DO_NOT_SEND_STOP);
 
     // Request N number of registries to be returned since each is 1 byte.
     // Values will start from the register previously written.
+    uint8_t read_buffer[SINGLE_REGISTER_READ_RECEIPT_BYTE_LENGTH] = {0};
+    uint8_t read_count = i2c_read_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
+        read_buffer, SINGLE_REGISTER_READ_RECEIPT_BYTE_LENGTH, DO_NOT_SEND_STOP);
 
-    // Reading two bytes will get us the gpio_a and gpio_b register values.
-    const uint8_t REGISTER_READ_BYTE_REQUEST_COUNT = 2;
-    uint8_t read_buffer[REGISTER_READ_BYTE_REQUEST_COUNT];
-    uint8_t read_count = i2c_read_blocking(
-        I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS, read_buffer, REGISTER_READ_BYTE_REQUEST_COUNT, DO_NOT_SEND_STOP);
+    //TODO warning if read_count is not expected value.
 
-    //TODO assert that read_count == 2?
+    return read_buffer[0];
+}
 
-    //TODO we need to map each register value to an index value
+static struct io_expander_register_value_pair_t mcp23017_read_double_register_value(uint8_t register_a_address)
+{
+    // To get a register value byte, write the device address (handled by the i2c api) and then the
+    // register you want to start retrieving data from.
+    const bool DO_NOT_SEND_STOP = false;
+    int8_t written_byte_count = i2c_write_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
+        &register_a_address, REGISTER_READ_REQUEST_BYTE_LENGTH, DO_NOT_SEND_STOP);
 
-    // Break out the sequential buffer contents.
-    //for (int i = 0; i < I2C_TRANSMISSION_SIZE; i++)
-    //    _peripheral_switch_matrix_curr[i/COLUMN_COUNT][i%COLUMN_COUNT] = read_buffer[i];
+    // Request N number of registries to be returned since each is 1 byte.
+    // Values will start from the register previously written.
+    // Reading two bytes will get us the A and B register values.
+    uint8_t read_buffer[DOUBLE_REGISTER_READ_RECEIPT_BYTE_LENGTH] = {0};
+    uint8_t read_count = i2c_read_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
+        read_buffer, DOUBLE_REGISTER_READ_RECEIPT_BYTE_LENGTH, DO_NOT_SEND_STOP);
+
+    //TODO warning if read_count is not expected value.
+
+    struct io_expander_register_value_pair_t register_value_pair =
+    {
+        .register_a_value = read_buffer[0],
+        .register_b_value = read_buffer[1]
+    };
+    return register_value_pair;
+}
+
+static void set_default_io_expander_state()
+{
+    struct io_expander_register_value_pair_t iodir_register_value_pair = {0};
+    //Set all selected columns to input pins (1). Leave everything else as output (0).
+    for(uint16_t i = 0; i < COLUMN_COUNT; i++)
+    {
+        uint8_t colPinNumber = IO_EXPA_COLS[i];
+        if (does_pin_number_belong_to_register_a(colPinNumber))
+        {
+            uint8_t bit_index = get_register_a_bit_index_from_pin_number(colPinNumber);
+            iodir_register_value_pair.register_a_value |= 1 << bit_index;
+        }
+        else if (does_pin_number_belong_to_register_b)
+        {
+            uint8_t bit_index = get_register_b_bit_index_from_pin_number(colPinNumber);
+            iodir_register_value_pair.register_b_value |= 1 << bit_index;
+        }
+    }
+
+    //Set all selected rows to input pins (1). Leave everything else as output (0).
+    for(uint16_t i = 0; i < ROW_COUNT; i++)
+    {
+        uint8_t rowPinNumber = IO_EXPA_ROWS[i];
+        if (does_pin_number_belong_to_register_a(rowPinNumber))
+        {
+            uint8_t bit_index = get_register_a_bit_index_from_pin_number(rowPinNumber);
+            iodir_register_value_pair.register_a_value |= 1 << bit_index;
+        }
+        else if (does_pin_number_belong_to_register_b)
+        {
+            uint8_t bit_index = get_register_b_bit_index_from_pin_number(rowPinNumber);
+            iodir_register_value_pair.register_b_value |= 1 << bit_index;
+        }
+    }
+
+    // We can use the same values here to set all the columns to pullup.
+    struct io_expander_register_value_pair_t gppu_register_value_pair = iodir_register_value_pair;
+
+    mcp23017_write_double_register_value(IODIR_A_REGISTER_ADDRESS, iodir_register_value_pair);
+    mcp23017_write_double_register_value(GPPU_A_REGISTER_ADDRESS, gppu_register_value_pair);
+}
+
+static void read_matrix_state(void)
+{
+    for (uint16_t row = 0; row < ROW_COUNT; row++)
+    {
+        uint8_t rowPinNumber = IO_EXPA_ROWS[row];
+        struct io_expander_register_value_pair_t initial_iodir_values = mcp23017_read_double_register_value(
+            IODIR_A_REGISTER_ADDRESS);
+        struct io_expander_register_value_pair_t row_output_no_pullup_values = initial_iodir_values;
+
+        if (does_pin_number_belong_to_register_a(rowPinNumber))
+        {
+            uint8_t bit_index = get_register_a_bit_index_from_pin_number(rowPinNumber);
+            row_output_no_pullup_values.register_a_value ^= 1 << bit_index;
+        }
+        else if (does_pin_number_belong_to_register_b)
+        {
+            uint8_t bit_index = get_register_b_bit_index_from_pin_number(rowPinNumber);
+            row_output_no_pullup_values.register_b_value ^= 1 << bit_index;
+        }
+
+        mcp23017_write_double_register_value(IODIR_A_REGISTER_ADDRESS, row_output_no_pullup_values);
+        mcp23017_write_double_register_value(GPPU_A_REGISTER_ADDRESS, row_output_no_pullup_values);
+
+        struct io_expander_register_value_pair_t gpio_values = mcp23017_read_double_register_value(GPIO_A_REGISTER_ADDRESS);
+        for (uint16_t col = 0; col < COLUMN_COUNT; col++)
+        {
+            uint8_t colPinNumber = IO_EXPA_COLS[col];
+            if (does_pin_number_belong_to_register_a(colPinNumber))
+            {
+                uint8_t bit_index = get_register_a_bit_index_from_pin_number(colPinNumber);
+                _peripheral_switch_matrix_curr[row][col] = (gpio_values.register_a_value >> bit_index) & 1;
+            }
+            else if (does_pin_number_belong_to_register_b)
+            {
+                uint8_t bit_index = get_register_b_bit_index_from_pin_number(colPinNumber);
+                _peripheral_switch_matrix_curr[row][col] = (gpio_values.register_b_value >> bit_index) & 1;
+            }
+        }
+
+        set_default_io_expander_state();
+    }
 }
 
 static void update_prev_matrix(void)
@@ -111,6 +275,9 @@ static void print_matrix_state(void)
 ///Extern Functions
 void peripheral_switch_state_init(void)
 {
+    //TODO need to implement a way to skip one of the gpio inits
+    //if the display and expander are on the same bus
+
     //Set up this device as the I2C controller for the
     //I/O expander bus.
     i2c_init(I2C_IO_EXPANDER_BUS, I2C_CLOCK_SPEED);
@@ -123,7 +290,7 @@ void peripheral_switch_state_init(void)
     gpio_set_function(I2C_IO_EXPANDER_SCL_PIN, GPIO_FUNC_I2C);
     gpio_pull_up(I2C_IO_EXPANDER_SCL_PIN);
 
-    //TODO init the expander I/0 pins and pullup resistors
+    set_default_io_expander_state();
 
     //Load the default switch state into each array.
     read_matrix_state();
@@ -133,18 +300,6 @@ void peripheral_switch_state_init(void)
 void peripheral_switch_state_task(void)
 {
     read_matrix_state();
-    //static bool just_pressed = false;
-    ////sleep_ms(100);
-    //if (!just_pressed)
-    //{
-    //    _peripheral_switch_matrix_curr[0][5] = 1;
-    //    just_pressed = true;
-    //}
-    //else
-    //{
-    //    _peripheral_switch_matrix_curr[0][5] = 0;
-    //    just_pressed = false;
-    //}
 
     fire_callback_events();
 

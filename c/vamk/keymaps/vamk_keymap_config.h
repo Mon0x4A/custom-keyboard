@@ -17,7 +17,7 @@
 //it's not working. This needs to be sorted out.
 //#include "qlp_22_rev1_keymap.h"
 
-#include "seok_38_rev0_keymap_m.h"
+#include "mskp_qlp_rev0_keymap.h"
 
 ///Constants
 #define LAYER_COUNT 3

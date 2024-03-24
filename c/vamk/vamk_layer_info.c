@@ -14,7 +14,8 @@
 static const uint8_t _ASCII_CHAR_TO_HID_KEYCODE [128][2] = { HID_ASCII_TO_KEYCODE };
 
 ///Local Declarations
-typedef const struct keycode_definition_t (*keycode_definition_array_ptr_t)[ROW_COUNT][COLUMN_COUNT];
+typedef const struct keycode_definition_t (*keycode_definition_array_ptr_t)
+    [KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT];
 typedef const keycode_definition_array_ptr_t (*keycode_array_result_function_ptr_t)(
     uint8_t row, uint8_t col, uint8_t layer_index);
 
