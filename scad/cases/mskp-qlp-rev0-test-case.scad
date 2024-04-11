@@ -1,8 +1,9 @@
-_is_left_side = false;
+_is_left_side = true;
 
 _basePlateThickness = 4;
 _basePlateWallThickness = 5.5;
 
+// Bottom case
 if (_is_left_side)
 {
     //Keypad
@@ -70,26 +71,32 @@ else
     }
 }
 
-////Keypad/Palm connection
-//translate([50, 37, 0])
-//cube([20, 35, _basePlateThickness]);
-//
-////Palm rest
-//translate([50, -10, 0])
-//{
-//    difference()
-//    {
-//        translate([0, 0, 10])
-//            rotate([0, 0, 180])
-//                import("datahand-palm-rest.stl");
-//        //TODO cut out mounting holes and countersinks
-//    }
-//
-//    translate([2, 0, 0])
-//        linear_extrude(_basePlateThickness)
-//        minkowski()
-//        {
-//            square([60, 90], center=true);
-//            circle(r=2);
-//        }
-//}
+//Mounting Plates
+_mountingPlateThickness = 5;
+
+if (_is_left_side)
+{
+    difference()
+    {
+        linear_extrude(_mountingPlateThickness)
+        import("qlp-22_mx_hs_keypad_L_Mk1_rev0-Edge_Cuts.svg");
+
+        translate([0, 0, -1])
+        linear_extrude(_mountingPlateThickness+2)
+        import("qlp-22_mx_hs_keypad_L_Mk1_rev0-User_2.svg");
+    }
+}
+else
+{
+    difference()
+    {
+        linear_extrude(_mountingPlateThickness)
+        import("qlp-22_mx_hs_keypad_R_Mk1_rev0-Edge_Cuts.svg");
+
+        translate([0, 0, -1])
+        linear_extrude(_mountingPlateThickness+2)
+        import("qlp-22_mx_hs_keypad_R_Mk1_rev0-User_2.svg");
+    }
+}
+
+
