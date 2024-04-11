@@ -1,4 +1,4 @@
-_is_left_side = true;
+_is_left_side = false;
 
 _basePlateThickness = 4;
 _basePlateWallThickness = 5.5;
@@ -74,6 +74,7 @@ else
 //Mounting Plates
 _mountingPlateThickness = 5;
 
+translate([0, 0, 10])
 if (_is_left_side)
 {
     difference()
