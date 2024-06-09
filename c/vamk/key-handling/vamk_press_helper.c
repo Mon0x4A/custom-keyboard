@@ -10,51 +10,13 @@
 #include "vamk_press_handler.h"
 #include "vamk_press_helper.h"
 #include "vamk_types.h"
+#include "win_macros.h"
 #include "tusb.h"
 
 ///Static Global Variables
 ///Local Declarations
 
 ///Static Functions
-static void macro_windows_ime_toggle(void)
-{
-    struct hid_keycode_container_t os_mod_container =
-    {
-        .hid_keycode = HID_KEY_GUI_RIGHT,
-        .modifier = 0,
-        .has_valid_contents = 1,
-    };
-    key_state_press(os_mod_container, true);
-
-    struct hid_keycode_container_t space_container =
-    {
-        .hid_keycode = HID_KEY_SPACE,
-        .modifier = 0,
-        .has_valid_contents = 1,
-    };
-    key_state_press(space_container, true);
-}
-
-//TODO refactor macros to their own header file.
-static void macro_windows_alphabet_swap(void)
-{
-    struct hid_keycode_container_t alt_mod_container =
-    {
-        .hid_keycode = HID_KEY_ALT_RIGHT,
-        .modifier = 0,
-        .has_valid_contents = 1,
-    };
-    key_state_press(alt_mod_container, true);
-
-    struct hid_keycode_container_t grave_container =
-    {
-        .hid_keycode = HID_KEY_GRAVE,
-        .modifier = 0,
-        .has_valid_contents = 1,
-    };
-    key_state_press(grave_container, true);
-}
-
 static void keycode_press_internal(struct hid_keycode_container_t keycode_container,
     bool should_press_for_minimal_time_and_auto_release)
 {
