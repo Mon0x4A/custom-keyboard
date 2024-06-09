@@ -2,12 +2,14 @@
 #include <stddef.h>
 #include <stdio.h>
 #include "hardware/i2c.h"
+#include "time.h"
 #include "vamk_keymap_config.h"
 #include "vamk_config.h"
 #include "vamk_peripheral_switch_state.h"
 #include "vamk_types.h"
 
 ///Static Global Constants
+#define I2C_INSTRUCTION_TIMEOUT_MS 5
 #define SINGLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 2
 #define DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 3
 
@@ -76,6 +78,13 @@ static uint8_t get_register_b_bit_index_from_pin_number(uint8_t pin_number)
     return does_pin_number_belong_to_register_b(pin_number) ? pin_number-1 : -1;
 }
 
+static absolute_time_t build_i2c_timeout(void)
+{
+    absolute_time_t time_base = get_absolute_time();
+    absolute_time_t timeout_target = delayed_by_us(time_base, I2C_INSTRUCTION_TIMEOUT_MS*1000);
+    return timeout_target;
+}
+
 //static void mcp23017_write_single_register_value(uint8_t register_address, uint8_t register_contents)
 //{
 //    // To write a single register value byte, write the device address (handled by i2c api), then the
@@ -95,8 +104,13 @@ static void mcp23017_write_double_register_value(uint8_t register_a_address,
     const uint8_t write_buffer[DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH] =
         { register_a_address, register_values.register_a_value, register_values.register_b_value };
     const bool DO_NOT_SEND_STOP = false;
-    int8_t written_byte_count = i2c_write_blocking(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
-        write_buffer, DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH, DO_NOT_SEND_STOP);
+    int8_t written_byte_count = i2c_write_blocking_until(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
+        write_buffer, DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH, DO_NOT_SEND_STOP, build_i2c_timeout());
+
+    // Retry until we receive a correct written_byte_count
+    if (written_byte_count != DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH)
+        mcp23017_write_double_register_value(register_a_address, register_values);
+    // Implied recursive base case. Place no code below without consideration for this.
 }
 
 //static uint8_t mcp23017_read_single_register_value(uint8_t register_address)
