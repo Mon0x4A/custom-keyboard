@@ -6,17 +6,10 @@
 #include "vamk_types.h"
 #include "tusb.h"
 
-//#if IS_VOK_SL_MODEL
+//TODO Uncomment the desired keymap!
 //#include "vok_sl_rev0_keymap.h"
-//#endif
-
-//#if IS_QLP_MODEL
-//#endif
-
-//TODO this should be under preprocessor logic (above) but for some reason
-//it's not working. This needs to be sorted out.
 //#include "qlp_22_rev1_keymap.h"
-
+//#include "seok_38_rev0_keymap_m.h"
 #include "mskp_qlp_rev0_keymap.h"
 
 ///Constants

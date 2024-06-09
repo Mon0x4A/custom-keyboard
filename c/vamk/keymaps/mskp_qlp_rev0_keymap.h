@@ -85,7 +85,6 @@ static const uint8_t IO_EXPA_COLS[COLUMN_COUNT] =
         { {HID_KEY_ALT_LEFT,0},     {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_ALT_RIGHT,0} },
     };
 
-    //TODO is this not the same as the L0 base keycodes?!
     static const struct keycode_definition_t L2_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
         { {KC_LM2,0},           {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}            },

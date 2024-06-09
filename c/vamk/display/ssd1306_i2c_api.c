@@ -21,9 +21,7 @@ static void send_command(uint8_t command)
     // this "data" can be a command or data to follow up a command
     // Co = 1, D/C = 0 => the driver expects a command
     uint8_t transmission_buffer[2] = { 0x80, command };
-    //TODO submit appropriate two wire reference in place of 'i2c_default'
-    //TODO actually we should make this a parameter of i2c_inst_t*.
-    //i2c_write_blocking(i2c_default, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), transmission_buffer, 2, false);
+
     i2c_write_blocking(I2C_DISPLAY_BUS, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), transmission_buffer, 2, false);
 }
 
@@ -47,7 +45,6 @@ static void send_buffer(uint8_t buffer[], int buffer_length)
     temp_buf[0] = 0x40;
     memcpy(temp_buf+1, buffer, buffer_length);
 
-    //i2c_write_blocking(i2c_default, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), temp_buf, buffer_length + 1, false);
     i2c_write_blocking(I2C_DISPLAY_BUS, (SSD1306_I2C_ADDR & SSD1306_WRITE_MODE), temp_buf, buffer_length + 1, false);
 
     free(temp_buf);
