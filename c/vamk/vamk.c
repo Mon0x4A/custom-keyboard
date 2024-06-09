@@ -8,12 +8,11 @@
 #include "hardware/gpio.h"
 #include "hardware/i2c.h"
 
-// TinyUSB imports
+//// TinyUSB imports
 #include "tusb.h"
+#include "tusb_implementation.h"
 #include "usb_descriptors.h"
-
-// Required to access on-board switch and LED.
-#include "bsp/board.h"
+#include "bsp/board.h" // Required to access board timer.
 
 // Project Imports
 #include "ssd1306_config.h"
@@ -30,32 +29,12 @@
 #include "vamk_types.h"
 
 ///Static Variables
-static led_blink_pattern_t _led_mode = NOT_MOUNTED;
-static uint32_t _display_main_loop_iteration_timeout = 0;
 
 ///Static Functions
-static void led_blinking_task(void)
+static void send_hid_report(uint8_t report_id)
 {
-    static uint32_t start_ms = 0;
-    static bool led_state = false;
-
-    // LED blink is disabled if set to zero.
-    if (!_led_mode)
-        return;
-
-    // Blink every interval ms
-    if (board_millis() - start_ms < _led_mode)
-        return;
-
-    start_ms += _led_mode;
-
-    board_led_write(led_state);
-    // Toggle LED state
-    led_state = 1 - led_state;
-}
-
-static void send_hid_report(uint8_t report_id, uint32_t btn)
-{
+    // Right now we are always assuming we are processing
+    // a keyboard report.
     (void) report_id;
 
     if (!tud_hid_ready())
@@ -102,20 +81,7 @@ static void hid_task(void)
         return;
     start_ms += SWITCH_POLLING_INTERVAL_MS;
 
-    //TODO remove this code that references 'btn'
-    uint32_t const btn = board_button_read();
-
-    // Remote wakeup
-    if (tud_suspended() && btn)
-    {
-        // Wake up host if we are in suspend mode
-        // and REMOTE_WAKEUP feature is enabled by host
-        tud_remote_wakeup();
-    }
-    else
-    {
-        send_hid_report(REPORT_ID_KEYBOARD, btn);
-    }
+    send_hid_report(REPORT_ID_KEYBOARD);
 }
 
 
@@ -149,12 +115,12 @@ int main(void)
     switch_state_set_released_callback(release_handler_on_switch_release);
 
 #if IS_SPLIT_KEYBOARD
-        // Join I2C bus as controller
-        peripheral_switch_state_init();
+    // Join I2C bus as controller
+    peripheral_switch_state_init();
 
-        // Init peripheral switch state handling.
-        peripheral_switch_state_set_released_callback(release_handler_on_switch_release);
-        peripheral_switch_state_set_pressed_callback(press_handler_on_switch_press);
+    // Init peripheral switch state handling.
+    peripheral_switch_state_set_pressed_callback(press_handler_on_switch_press);
+    peripheral_switch_state_set_released_callback(release_handler_on_switch_release);
 #endif
 
         // Primary side run loop
@@ -186,73 +152,3 @@ int main(void)
 
     return 0;
 }
-
-//TODO refactor this into its own file.
-// BEGIN TinyUSB Device Callbacks -----------------------------------------+
-// Invoked when device is mounted
-void tud_mount_cb(void)
-{
-    _led_mode = MOUNTED;
-}
-
-// Invoked when device is unmounted
-void tud_umount_cb(void)
-{
-    _led_mode = NOT_MOUNTED;
-}
-
-// Invoked when usb bus is suspended
-// remote_wakeup_en : if host allow us  to perform remote wakeup
-// Within 7ms, device must draw an average of current less than 2.5 mA from bus
-void tud_suspend_cb(bool remote_wakeup_en)
-{
-    (void) remote_wakeup_en;
-    _led_mode = SUSPENDED;
-}
-
-// Invoked when usb bus is resumed
-void tud_resume_cb(void)
-{
-    _led_mode = MOUNTED;
-}
-
-// Invoked when sent REPORT successfully to host
-// Application can use this to send the next report
-// Note: Implementation required by TinyUSB, even if unused.
-void tud_hid_report_complete_cb(uint8_t instance, uint8_t const* report, uint16_t len)
-{
-    // Not Implemented
-    (void) instance;
-    (void) len;
-    (void) report;
-}
-
-// Invoked when received GET_REPORT control request
-// Application must fill buffer report's content and return its length.
-// Return zero will cause the stack to STALL request
-// Note: Implementation required by TinyUSB, even if unused.
-uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
-{
-    // Not Implemented
-    (void) instance;
-    (void) report_id;
-    (void) report_type;
-    (void) buffer;
-    (void) reqlen;
-
-    return 0;
-}
-
-// Invoked when received SET_REPORT control request or
-// received data on OUT endpoint ( Report ID = 0, Type = 0 )
-// Note: Implementation required by TinyUSB, even if unused.
-void tud_hid_set_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize)
-{
-    // Not Implemented
-    (void) instance;
-    (void) report_id;
-    (void) report_type;
-    (void) buffer;
-    (void) bufsize;
-}
-// END TinyUSB Device Callbacks -----------------------------------------+

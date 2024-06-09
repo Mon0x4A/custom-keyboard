@@ -33,7 +33,8 @@ target_include_directories(vamk PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/key-handling
         ${CMAKE_CURRENT_LIST_DIR}/keymaps
         ${CMAKE_CURRENT_LIST_DIR}/macros
-        ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config)
+        ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config
+        )
 
 target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_buffer_helper.c
@@ -52,6 +53,7 @@ target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_switch_state.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_tap_handler.c
         ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
+        ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/tusb_implementation.c
         )
 
 pico_set_program_name(vamk "vamk")
