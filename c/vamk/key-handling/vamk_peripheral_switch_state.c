@@ -104,13 +104,25 @@ static void mcp23017_write_double_register_value(uint8_t register_a_address,
     const uint8_t write_buffer[DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH] =
         { register_a_address, register_values.register_a_value, register_values.register_b_value };
     const bool DO_NOT_SEND_STOP = false;
-    int8_t written_byte_count = i2c_write_blocking_until(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
+    int8_t i2c_result = i2c_write_blocking_until(I2C_IO_EXPANDER_BUS, IO_EXPANDER_ADDRESS,
         write_buffer, DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH, DO_NOT_SEND_STOP, build_i2c_timeout());
 
-    // Retry until we receive a correct written_byte_count
-    if (written_byte_count != DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH)
+    if (i2c_result == PICO_ERROR_TIMEOUT)
+    {
+        // Retry until we receive a correct written_byte_count
+        printf("[ER_TIMEOUT] Retrying...\n");
         mcp23017_write_double_register_value(register_a_address, register_values);
-    // Implied recursive base case. Place no code below without consideration for this.
+    }
+    else if (i2c_result == PICO_ERROR_GENERIC)
+    {
+        printf("[ER_GENERIC] Retrying...\n");
+        mcp23017_write_double_register_value(register_a_address, register_values);
+    }
+    else if (i2c_result != DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH)
+    {
+        printf("[ER_BYTE_MISMATCH] Retrying...\n");
+        mcp23017_write_double_register_value(register_a_address, register_values);
+    }
 }
 
 //static uint8_t mcp23017_read_single_register_value(uint8_t register_address)
