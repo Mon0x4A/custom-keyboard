@@ -9,7 +9,7 @@
 
 ///Static Constants
 static const uint8_t STANDARD_MINIMAL_REPORT_QUANTITY = 3;
-static const uint8_t SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY = 2;
+static const uint8_t SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY = 3;
 
 ///Static Global Variables
 //TODO these properties should be made volatile if timer/alarm release
