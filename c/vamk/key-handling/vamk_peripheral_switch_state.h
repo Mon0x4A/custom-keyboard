@@ -6,7 +6,10 @@
 
 ///Function Declarations
 void peripheral_switch_state_init(void);
-void peripheral_switch_state_task(void);
+//void peripheral_switch_state_task(void);
+void peripheral_switch_state_task_update(void);
+void peripheral_switch_state_task_process(void);
+void peripheral_switch_state_task_finalize(void);
 void peripheral_switch_state_set_pressed_callback(switch_pressed_callback_t pressed_callback);
 void peripheral_switch_state_set_released_callback(switch_released_callback_t released_callback);
 

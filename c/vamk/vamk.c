@@ -134,12 +134,30 @@ int main(void)
             led_blinking_task();
 #endif
 
-            // Update local, phyiscal switch state.
-            switch_state_task();
+//            // Update local, phyiscal switch state.
+//            switch_state_task();
+//
+//#if IS_SPLIT_KEYBOARD
+//            // Update non-native (peripheral), phyiscal switch state.
+//            peripheral_switch_state_task();
+//#endif
 
+            // Update matrices
+            switch_state_task_update();
 #if IS_SPLIT_KEYBOARD
-            // Update non-native (peripheral), phyiscal switch state.
-            peripheral_switch_state_task();
+            peripheral_switch_state_task_update();
+#endif
+
+            // Handle all keystates
+            switch_state_task_process();
+#if IS_SPLIT_KEYBOARD
+            peripheral_switch_state_task_process();
+#endif
+
+            // Clean up and reset.
+            switch_state_task_finalize();
+#if IS_SPLIT_KEYBOARD
+            peripheral_switch_state_task_finalize();
 #endif
             // Update reported keyboard state.
             hid_task();

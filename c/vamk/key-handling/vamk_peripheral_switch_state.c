@@ -333,12 +333,34 @@ void peripheral_switch_state_init(void)
     update_prev_matrix();
 }
 
-void peripheral_switch_state_task(void)
+//void peripheral_switch_state_task(void)
+//{
+//    read_matrix_state();
+//
+//    fire_callback_events();
+//
+//    update_prev_matrix();
+//
+//    if (SWITCH_TESTING_MODE)
+//    {
+//        //TODO this sleep suspends the USB device. REMOVE WHEN REPORTING IS NEEDED.
+//        //sleep_ms(500);
+//        print_matrix_state();
+//    }
+//}
+
+void peripheral_switch_state_task_update(void)
 {
     read_matrix_state();
+}
 
+void peripheral_switch_state_task_process(void)
+{
     fire_callback_events();
+}
 
+void peripheral_switch_state_task_finalize(void)
+{
     update_prev_matrix();
 
     if (SWITCH_TESTING_MODE)
