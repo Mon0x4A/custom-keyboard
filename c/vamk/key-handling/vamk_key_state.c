@@ -12,8 +12,6 @@ static const uint8_t STANDARD_MINIMAL_REPORT_QUANTITY = 3;
 static const uint8_t SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY = 3;
 
 ///Static Global Variables
-//TODO these properties should be made volatile if timer/alarm release
-//code gets added.
 static uint8_t _current_hid_report_codes[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 static uint8_t _current_report_code_quantity = 0;
 static uint8_t _code_report_lifetime_countdown[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};

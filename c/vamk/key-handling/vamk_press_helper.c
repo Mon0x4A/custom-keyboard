@@ -26,12 +26,11 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
 
     bool is_modifier_code = key_helper_is_modifier_keycode_container(keycode_container);
 
-    // If we are not hitting another layer and have a valid code, remove
-    // any layer caching.
+    // Remove any layer caching if we are resolving a sticky press.
     if (!is_modifier_code && keycode_container.hid_keycode != KC_NULL)
         keyboard_state_clear_sticky_layer();
 
-    // Record if the current, non-mod press was a layer-modded code.
+    // Record modifier state metadata, if applicable.
     if (!is_modifier_code && keyboard_state_is_any_modifier_pressed())
         keyboard_state_record_last_press_modifiers();
     else
@@ -117,6 +116,7 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
     {
         key_state_press(keycode_container, should_press_for_minimal_time_and_auto_release);
 
+        // Record last external operation as repeat metadata.
         if (!is_modifier_code)
             keyboard_state_set_repeat_state(keycode_container);
     }
