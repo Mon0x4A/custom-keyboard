@@ -9,7 +9,7 @@
 #include "vamk_types.h"
 
 ///Static Global Constants
-#define IO_EXPANDER_SLEEP_BUFFER_US 500
+#define IO_EXPANDER_SLEEP_BUFFER_US 100
 #define I2C_INSTRUCTION_TIMEOUT_MS 5
 #define SINGLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 2
 #define DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 3
@@ -99,7 +99,7 @@ static absolute_time_t build_i2c_timeout(void)
 static void mcp23017_write_double_register_value(uint8_t register_a_address,
     struct io_expander_register_value_pair_t register_values)
 {
-    // Sleep briefly to avoid overwhelming the expander with too many write commands.
+    // Sleep briefly to avoid overwhelming the expander with too many commands.
     sleep_us(IO_EXPANDER_SLEEP_BUFFER_US);
 
     // To write a double register value byte, write the device address (handled by i2c api), then the
@@ -151,6 +151,9 @@ static void mcp23017_write_double_register_value(uint8_t register_a_address,
 static struct io_expander_register_value_pair_with_read_state_t mcp23017_read_double_register_value(
     uint8_t register_a_address)
 {
+    // Sleep briefly to avoid overwhelming the expander with too many commands.
+    sleep_us(IO_EXPANDER_SLEEP_BUFFER_US);
+
     // To get a register value byte, write the device address (handled by the i2c api) and then the
     // register you want to start retrieving data from.
     const bool DO_NOT_SEND_STOP = false;
