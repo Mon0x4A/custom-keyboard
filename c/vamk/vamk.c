@@ -84,7 +84,6 @@ static void hid_task(void)
     send_hid_report(REPORT_ID_KEYBOARD);
 }
 
-
 ///Extern Functions
 int main(void)
 {
@@ -141,6 +140,9 @@ int main(void)
 //            // Update non-native (peripheral), phyiscal switch state.
 //            peripheral_switch_state_task();
 //#endif
+
+            // TODO we want to have an alternate eval path for the
+            // macro reporting here.
 
             // Update matrices
             switch_state_task_update();

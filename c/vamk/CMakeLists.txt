@@ -33,6 +33,7 @@ target_include_directories(vamk PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/key-handling
         ${CMAKE_CURRENT_LIST_DIR}/keymaps
         ${CMAKE_CURRENT_LIST_DIR}/macros
+        ${CMAKE_CURRENT_LIST_DIR}/mouse_handling
         ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config
         )
 
@@ -52,6 +53,7 @@ target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_release_handler.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_switch_state.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_tap_handler.c
+        ${CMAKE_CURRENT_LIST_DIR}/mouse-handling/pmw3360_spi_api.c
         ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
         ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/tusb_implementation.c
         )
@@ -63,9 +65,9 @@ pico_enable_stdio_uart(vamk 1)
 pico_enable_stdio_usb(vamk 0)
 
 # Add the standard library to the build
-target_link_libraries(vamk
+target_link_libraries(
+        vamk
         pico_stdlib
-        pico_i2c_slave
         )
 
 # Add the standard include files to the build
@@ -75,9 +77,12 @@ target_include_directories(vamk PUBLIC
 )
 
 # Add any user requested libraries
-target_link_libraries(vamk 
+target_link_libraries(
+        vamk
         hardware_i2c
+        hardware_spi
         hardware_timer
+        pico_i2c_slave
         tinyusb_device
         tinyusb_board
         )

@@ -1,6 +1,6 @@
 ///Imports
 #include <stddef.h>
-#include <stdio.h>
+#include <stdio.h> //TODO remove?
 #include "hardware/i2c.h"
 #include "time.h"
 #include "vamk_keymap_config.h"
@@ -9,7 +9,7 @@
 #include "vamk_types.h"
 
 ///Static Global Constants
-#define IO_EXPANDER_SLEEP_BUFFER_US 100
+#define IO_EXPANDER_SLEEP_BUFFER_US 100 //NOTE: Datasheet says this is min 10us
 #define I2C_INSTRUCTION_TIMEOUT_MS 5
 #define SINGLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 2
 #define DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 3
@@ -24,6 +24,7 @@ static const uint8_t REGISTER_B_MAX_PIN_NUMBER = 8;
 static const uint8_t REGISTER_A_MIN_PIN_NUMBER = 21;
 static const uint8_t REGISTER_A_MAX_PIN_NUMBER = 28;
 
+//TODO make a reusable library for the MCP23017 inter-op
 static const uint8_t GPIO_A_REGISTER_ADDRESS = 0x12;
 static const uint8_t GPIO_B_REGISTER_ADDRESS = 0x13;
 static const uint8_t IODIR_A_REGISTER_ADDRESS = 0x00;

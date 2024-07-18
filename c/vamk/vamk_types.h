@@ -11,6 +11,7 @@ typedef enum key_event_source_identifier
 {
     CONTROLLER_IDENTIFIER = 42,
     PERIPHERAL_IDENTIFIER = 69,
+//TODO refactor this to have an "_e" suffix instead.
 } key_event_source_identifier_t;
 
 ///Function Pointers
