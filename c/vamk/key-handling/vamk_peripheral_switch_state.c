@@ -182,15 +182,15 @@ static void set_default_io_expander_state()
     //Set all selected columns to input pins (1). Leave everything else as output (0).
     for(uint16_t i = 0; i < COLUMN_COUNT; i++)
     {
-        uint8_t colPinNumber = IO_EXPA_COLS[i];
-        if (does_pin_number_belong_to_register_a(colPinNumber))
+        uint8_t col_pin_number = IO_EXPA_COLS[i];
+        if (does_pin_number_belong_to_register_a(col_pin_number))
         {
-            uint8_t bit_index = get_register_a_bit_index_from_pin_number(colPinNumber);
+            uint8_t bit_index = get_register_a_bit_index_from_pin_number(col_pin_number);
             iodir_register_value_pair.register_a_value |= 1 << bit_index;
         }
-        else if (does_pin_number_belong_to_register_b)
+        else if (does_pin_number_belong_to_register_b(col_pin_number))
         {
-            uint8_t bit_index = get_register_b_bit_index_from_pin_number(colPinNumber);
+            uint8_t bit_index = get_register_b_bit_index_from_pin_number(col_pin_number);
             iodir_register_value_pair.register_b_value |= 1 << bit_index;
         }
     }
@@ -198,15 +198,15 @@ static void set_default_io_expander_state()
     //Set all selected rows to input pins (1). Leave everything else as output (0).
     for(uint16_t i = 0; i < ROW_COUNT; i++)
     {
-        uint8_t rowPinNumber = IO_EXPA_ROWS[i];
-        if (does_pin_number_belong_to_register_a(rowPinNumber))
+        uint8_t row_pin_number = IO_EXPA_ROWS[i];
+        if (does_pin_number_belong_to_register_a(row_pin_number))
         {
-            uint8_t bit_index = get_register_a_bit_index_from_pin_number(rowPinNumber);
+            uint8_t bit_index = get_register_a_bit_index_from_pin_number(row_pin_number);
             iodir_register_value_pair.register_a_value |= 1 << bit_index;
         }
-        else if (does_pin_number_belong_to_register_b)
+        else if (does_pin_number_belong_to_register_b(row_pin_number))
         {
-            uint8_t bit_index = get_register_b_bit_index_from_pin_number(rowPinNumber);
+            uint8_t bit_index = get_register_b_bit_index_from_pin_number(row_pin_number);
             iodir_register_value_pair.register_b_value |= 1 << bit_index;
         }
     }
@@ -218,12 +218,14 @@ static void set_default_io_expander_state()
     mcp23017_write_double_register_value(GPPU_A_REGISTER_ADDRESS, gppu_register_value_pair);
 }
 
+// TODO It could be worth experimenting with setting the IODIR of the rows one by one.
 static void read_matrix_state(void)
 {
     for (uint16_t row = 0; row < ROW_COUNT; row++)
     {
-        uint8_t rowPinNumber = IO_EXPA_ROWS[row];
+        uint8_t row_pin_number = IO_EXPA_ROWS[row];
 
+        // TODO replace with a call to get the default state struct? Why read?
         struct io_expander_register_value_pair_with_read_state_t initial_iodir_values =
             mcp23017_read_double_register_value(IODIR_A_REGISTER_ADDRESS);
 
@@ -233,14 +235,14 @@ static void read_matrix_state(void)
             .register_b_value = initial_iodir_values.register_b_value
         };
 
-        if (does_pin_number_belong_to_register_a(rowPinNumber))
+        if (does_pin_number_belong_to_register_a(row_pin_number))
         {
-            uint8_t bit_index = get_register_a_bit_index_from_pin_number(rowPinNumber);
+            uint8_t bit_index = get_register_a_bit_index_from_pin_number(row_pin_number);
             row_output_no_pullup_values.register_a_value ^= 1 << bit_index;
         }
-        else if (does_pin_number_belong_to_register_b)
+        else if (does_pin_number_belong_to_register_b(row_pin_number))
         {
-            uint8_t bit_index = get_register_b_bit_index_from_pin_number(rowPinNumber);
+            uint8_t bit_index = get_register_b_bit_index_from_pin_number(row_pin_number);
             row_output_no_pullup_values.register_b_value ^= 1 << bit_index;
         }
 
@@ -255,15 +257,15 @@ static void read_matrix_state(void)
         {
             for (uint16_t col = 0; col < COLUMN_COUNT; col++)
             {
-                uint8_t colPinNumber = IO_EXPA_COLS[col];
-                if (does_pin_number_belong_to_register_a(colPinNumber))
+                uint8_t col_pin_number = IO_EXPA_COLS[col];
+                if (does_pin_number_belong_to_register_a(col_pin_number))
                 {
-                    uint8_t bit_index = get_register_a_bit_index_from_pin_number(colPinNumber);
+                    uint8_t bit_index = get_register_a_bit_index_from_pin_number(col_pin_number);
                     _peripheral_switch_matrix_curr[row][col] = (gpio_values.register_a_value >> bit_index) & 1;
                 }
-                else if (does_pin_number_belong_to_register_b)
+                else if (does_pin_number_belong_to_register_b(col_pin_number))
                 {
-                    uint8_t bit_index = get_register_b_bit_index_from_pin_number(colPinNumber);
+                    uint8_t bit_index = get_register_b_bit_index_from_pin_number(col_pin_number);
                     _peripheral_switch_matrix_curr[row][col] = (gpio_values.register_b_value >> bit_index) & 1;
                 }
             }

@@ -22,23 +22,26 @@ static void read_matrix_state(void)
     {
         // Pull the row pins LOW. With the INPUT_PULLUP cols high and the diodes pointed
         // toward the rows, we will allow current to flow from Col->Row.
-        uint8_t rowPin = ROWS[row];
-        gpio_set_dir(rowPin, GPIO_OUT);
-        gpio_pull_down(rowPin);
+        uint8_t row_pin = ROWS[row];
+        gpio_set_dir(row_pin, GPIO_OUT);
+        gpio_pull_down(row_pin);
 
         for (uint16_t col = 0; col < COLUMN_COUNT; col++)
         {
             // Attempt connection to the row pin we just pulled down.
             // Should read zero if switch is pressed.
-            uint8_t colPin = COLS[col];
-            gpio_set_dir(colPin, GPIO_IN);
-            gpio_pull_up(colPin);
+            uint8_t col_pin = COLS[col];
+            gpio_set_dir(col_pin, GPIO_IN);
+            gpio_pull_up(col_pin);
+            sleep_us(50);
             _switch_matrix_curr[row][col] = gpio_get(COLS[col]);
+            gpio_pull_down(col_pin);
+            sleep_us(50);
         }
 
         // Disable the row output.
-        gpio_set_dir(rowPin, GPIO_IN);
-        gpio_pull_up(rowPin);
+        gpio_set_dir(row_pin, GPIO_IN);
+        gpio_pull_up(row_pin);
     }
 }
 
@@ -105,14 +108,14 @@ void switch_state_init(void)
     // Init all the row and column gpio pins.
     for(uint16_t i = 0; i < ROW_COUNT; i++)
     {
-        uint8_t rowPin = ROWS[i];
-        gpio_init(rowPin);
+        uint8_t row_pin = ROWS[i];
+        gpio_init(row_pin);
     }
 
     for (uint16_t i = 0; i < COLUMN_COUNT; i++)
     {
-        uint8_t colPin = COLS[i];
-        gpio_init(colPin);
+        uint8_t col_pin = COLS[i];
+        gpio_init(col_pin);
     }
 
     //Load the default switch state into each array.
