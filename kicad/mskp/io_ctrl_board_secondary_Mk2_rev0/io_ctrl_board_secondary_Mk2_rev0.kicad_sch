@@ -6786,7 +6786,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_GH_BM06B-GHS-TBT_1x06-1MP_P1.25mm_Vertical"
 			(at 101.6 157.48 0)
 			(effects
 				(font
@@ -6932,7 +6932,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
 			(at 129.8448 78.74 0)
 			(effects
 				(font
@@ -6999,7 +6999,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_RJ:RJ45_Amphenol_RJHSE538X"
 			(at 71.12 122.555 90)
 			(effects
 				(font
@@ -7490,7 +7490,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_USB:USB_C_Receptacle_GCT_USB4110"
 			(at 72.39 73.66 0)
 			(effects
 				(font
@@ -7581,7 +7581,7 @@
 		(dnp no)
 		(uuid "3c0b5aa2-6a04-464a-a9fa-06764ed7a654")
 		(property "Reference" "C2"
-			(at 107.442 130.556 90)
+			(at 106.68 133.35 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7589,8 +7589,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "C"
-			(at 107.442 133.096 90)
+		(property "Value" "22uF"
+			(at 104.394 136.144 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7598,7 +7598,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
 			(at 106.68 135.5852 0)
 			(effects
 				(font
@@ -7665,7 +7665,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 147.32 90.678 90)
 			(effects
 				(font
@@ -7734,7 +7734,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical"
 			(at 119.38 45.72 0)
 			(effects
 				(font
@@ -7875,7 +7875,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
 			(at 101.2952 85.09 0)
 			(effects
 				(font
@@ -7945,7 +7945,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_GH_SM12B-GHS-TB_1x12-1MP_P1.25mm_Horizontal"
 			(at 208.28 91.44 0)
 			(effects
 				(font
@@ -8044,7 +8044,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
 			(at 138.43 65.7352 0)
 			(effects
 				(font
@@ -8178,7 +8178,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 53.34 113.792 90)
 			(effects
 				(font
@@ -8247,7 +8247,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 53.34 129.032 90)
 			(effects
 				(font
@@ -8382,7 +8382,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_DIP:DIP-28_W7.62mm"
+		(property "Footprint" "Package_DIP:DIP-28_W7.62mm_Socket"
 			(at 181.61 111.76 0)
 			(effects
 				(font
@@ -8530,7 +8530,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 203.2 72.898 90)
 			(effects
 				(font
@@ -8599,7 +8599,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 151.13 99.822 90)
 			(effects
 				(font
@@ -8651,7 +8651,7 @@
 		(dnp no)
 		(uuid "831d5da6-0f87-4ff4-a4b0-8130cdabd2ff")
 		(property "Reference" "C4"
-			(at 115.824 66.548 90)
+			(at 115.824 66.294 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8659,8 +8659,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
-			(at 119.38 62.992 90)
+		(property "Value" "22uF"
+			(at 118.11 63.246 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8668,7 +8668,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
 			(at 115.57 63.8048 0)
 			(effects
 				(font
@@ -8736,7 +8736,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder"
 			(at 213.36 71.12 0)
 			(effects
 				(font
@@ -8805,7 +8805,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal"
 			(at 100.33 45.72 0)
 			(effects
 				(font
@@ -8880,7 +8880,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 151.13 104.902 90)
 			(effects
 				(font
@@ -8930,10 +8930,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "9ac652c3-72f5-4554-90df-995ef59a1ec6")
 		(property "Reference" "C3"
-			(at 128.27 129.5399 0)
+			(at 127 129.286 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8941,8 +8940,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "C"
-			(at 128.27 132.0799 0)
+		(property "Value" "100nF"
+			(at 127 131.826 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8950,7 +8949,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
 			(at 125.4252 134.62 0)
 			(effects
 				(font
@@ -9083,7 +9082,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 134.62 93.218 90)
 			(effects
 				(font
@@ -9283,7 +9282,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 151.13 109.982 90)
 			(effects
 				(font
@@ -9428,7 +9427,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 157.48 98.298 90)
 			(effects
 				(font

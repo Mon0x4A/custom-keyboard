@@ -266,6 +266,126 @@
 				)
 			)
 		)
+		(symbol "Connector:Conn_01x01_Socket"
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x01_Socket"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x01, script generated"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_locked" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_01x01_Socket_1_1"
+				(polyline
+					(pts
+						(xy -1.27 0) (xy -0.508 0)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 0.508)
+					(mid -0.5058 0)
+					(end 0 -0.508)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
 		(symbol "Connector:Conn_01x04_Socket"
 			(pin_names
 				(offset 1.016) hide)
@@ -1532,12 +1652,6 @@
 		(uuid "4ae59b7d-a416-4fad-8b4e-2f0e98d5d2fd")
 	)
 	(junction
-		(at 120.65 86.36)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "52d5a187-9acb-43ba-abf0-778ee910ba7b")
-	)
-	(junction
 		(at 140.97 106.68)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1592,6 +1706,12 @@
 		(uuid "8a1c7ddc-2313-4101-aaa8-db5591621baf")
 	)
 	(junction
+		(at 120.65 86.36)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8a26ff4d-cbd5-447b-898a-9214b57dc6b8")
+	)
+	(junction
 		(at 171.45 104.14)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1632,10 +1752,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "eb3b0550-9a7b-4f39-a2b7-9a882d4ba06d")
-	)
-	(no_connect
-		(at 146.05 111.76)
-		(uuid "8720a500-6d56-4e1a-974e-cb23f7d13be1")
 	)
 	(wire
 		(pts
@@ -1799,6 +1915,16 @@
 	)
 	(wire
 		(pts
+			(xy 123.19 127) (xy 146.05 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2b268b1a-5f0c-46fe-a751-32b6c938b143")
+	)
+	(wire
+		(pts
 			(xy 161.29 73.66) (xy 181.61 73.66)
 		)
 		(stroke
@@ -1866,6 +1992,16 @@
 			(type default)
 		)
 		(uuid "41c25d4c-8d51-4571-bba8-043e0331ed9e")
+	)
+	(wire
+		(pts
+			(xy 113.03 119.38) (xy 123.19 119.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "44026158-b7a2-4d1c-9989-2900dcfc705f")
 	)
 	(wire
 		(pts
@@ -2069,13 +2205,13 @@
 	)
 	(wire
 		(pts
-			(xy 120.65 86.36) (xy 127 86.36)
+			(xy 146.05 127) (xy 146.05 111.76)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "74615fd2-17b6-46ea-8294-42a6e3d01a18")
+		(uuid "731ade0b-b5f8-4bd4-bca8-67196a7c21d3")
 	)
 	(wire
 		(pts
@@ -2289,6 +2425,16 @@
 	)
 	(wire
 		(pts
+			(xy 123.19 119.38) (xy 123.19 127)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b9cc064f-0804-48e9-96f4-e37d9be77715")
+	)
+	(wire
+		(pts
 			(xy 176.53 109.22) (xy 186.69 109.22)
 		)
 		(stroke
@@ -2429,7 +2575,7 @@
 	)
 	(wire
 		(pts
-			(xy 120.65 76.2) (xy 120.65 78.74)
+			(xy 120.65 76.2) (xy 120.65 77.47)
 		)
 		(stroke
 			(width 0)
@@ -2526,6 +2672,26 @@
 			(type default)
 		)
 		(uuid "e4bc3888-c01b-4b8e-8167-d2f211ef9a35")
+	)
+	(wire
+		(pts
+			(xy 120.65 86.36) (xy 127 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e5083aeb-18d6-4444-85a2-4f115089dbd6")
+	)
+	(wire
+		(pts
+			(xy 120.65 85.09) (xy 120.65 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e66f7ac3-6faf-4b2d-81f0-5163c85606ad")
 	)
 	(wire
 		(pts
@@ -2675,7 +2841,7 @@
 		)
 		(uuid "5c2e1e6e-fa04-4dc5-ae6c-2cd412a50266")
 	)
-	(label "VCC"
+	(label "3V3"
 		(at 191.77 86.36 0)
 		(fields_autoplaced yes)
 		(effects
@@ -2752,7 +2918,7 @@
 		)
 		(uuid "a66baafe-9439-45e4-aa89-c4b998ca515e")
 	)
-	(label "VCC"
+	(label "3V3"
 		(at 191.77 104.14 0)
 		(fields_autoplaced yes)
 		(effects
@@ -2819,6 +2985,70 @@
 		(uuid "fcd6b1d7-fa2c-492e-8a1f-56474d5691a4")
 	)
 	(symbol
+		(lib_id "Connector:Conn_01x01_Socket")
+		(at 107.95 119.38 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "07e77114-a63d-4790-83b2-c5ffb834d2ad")
+		(property "Reference" "J5"
+			(at 109.474 114.046 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Alert_pad"
+			(at 112.522 116.332 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical"
+			(at 107.95 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 107.95 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x01, script generated"
+			(at 107.95 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1c78fb90-8994-44ae-8b0f-baa91d19dc9a")
+		)
+		(instances
+			(project "dual_axis_i2c_analog_mouse_Mk1_rev0"
+				(path "/97f8c77d-fcb8-4f12-a3ba-2ac0f737e7f7"
+					(reference "J5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 175.26 86.36 90)
 		(unit 1)
@@ -2828,22 +3058,22 @@
 		(dnp no)
 		(uuid "2bbd6545-4d36-4c87-882f-684c70240183")
 		(property "Reference" "C2"
-			(at 173.228 82.55 90)
+			(at 172.466 82.55 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Value" "C"
-			(at 173.228 85.09 90)
+		(property "Value" "22uF"
+			(at 171.45 84.836 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
 			(at 179.07 85.3948 0)
 			(effects
 				(font
@@ -2893,10 +3123,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "4301fe93-9481-4e25-801d-c125d1e0bd4b")
 		(property "Reference" "D1"
-			(at 179.3875 62.23 0)
+			(at 177.292 64.516 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2904,14 +3133,14 @@
 			)
 		)
 		(property "Value" "LED"
-			(at 179.3875 64.77 0)
+			(at 177.292 67.056 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "LED_SMD:LED_0805_2012Metric_Pad1.15x1.40mm_HandSolder"
 			(at 177.8 69.85 0)
 			(effects
 				(font
@@ -3037,7 +3266,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "10K"
 			(at 138.557 124.587 90)
 			(effects
 				(font
@@ -3046,7 +3275,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 137.16 123.698 90)
 			(effects
 				(font
@@ -3106,7 +3335,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "mouse_input_pads"
+		(property "Value" "mouse_input_JST"
 			(at 187.452 117.856 0)
 			(effects
 				(font
@@ -3115,7 +3344,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_GH_SM06B-GHS-TB_1x06-1MP_P1.25mm_Horizontal"
 			(at 191.77 106.68 0)
 			(effects
 				(font
@@ -3194,7 +3423,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 143.51 88.138 90)
 			(effects
 				(font
@@ -3254,15 +3483,15 @@
 				)
 			)
 		)
-		(property "Value" "I2C_input_controller_pads"
-			(at 101.092 80.01 0)
+		(property "Value" "I2C_controller_pads"
+			(at 103.378 80.01 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical"
 			(at 107.95 86.36 0)
 			(effects
 				(font
@@ -3393,7 +3622,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "10K"
 			(at 138.557 119.507 90)
 			(effects
 				(font
@@ -3402,7 +3631,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 137.16 118.618 90)
 			(effects
 				(font
@@ -3610,10 +3839,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "8d0455db-1691-4000-8957-b8872e14cc0b")
 		(property "Reference" "C3"
-			(at 158.75 78.7399 0)
+			(at 155.448 75.184 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3622,7 +3850,7 @@
 			)
 		)
 		(property "Value" "22uF"
-			(at 158.75 81.2799 0)
+			(at 155.448 77.724 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3630,7 +3858,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
 			(at 155.9052 83.82 0)
 			(effects
 				(font
@@ -3697,7 +3925,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 130.81 93.218 90)
 			(effects
 				(font
@@ -3741,7 +3969,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 120.65 82.55 0)
+		(at 120.65 81.28 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -3749,7 +3977,7 @@
 		(dnp no)
 		(uuid "bb360103-c094-4b2c-b9c4-4ea7b0fcb08c")
 		(property "Reference" "C1"
-			(at 123.444 81.28 0)
+			(at 121.158 78.994 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3757,8 +3985,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "C"
-			(at 123.444 83.82 0)
+		(property "Value" "22uF"
+			(at 121.412 83.566 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3766,8 +3994,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
-			(at 121.6152 86.36 0)
+		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric_Pad1.33x1.80mm_HandSolder"
+			(at 121.6152 85.09 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3776,7 +4004,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 120.65 82.55 0)
+			(at 120.65 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3785,7 +4013,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 120.65 82.55 0)
+			(at 120.65 81.28 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -3826,7 +4054,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "R"
+		(property "Value" "10K"
 			(at 138.557 114.427 90)
 			(effects
 				(font
@@ -3835,7 +4063,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 137.16 109.982 90)
 			(effects
 				(font
@@ -4015,10 +4243,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "dffc8c50-0cec-4e50-8efb-b392414d0d40")
 		(property "Reference" "R1"
-			(at 167.64 63.5 90)
+			(at 167.64 64.516 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4026,14 +4253,14 @@
 			)
 		)
 		(property "Value" "R"
-			(at 167.64 66.04 90)
+			(at 167.132 67.056 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
 			(at 167.64 68.072 90)
 			(effects
 				(font
@@ -4094,7 +4321,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "I2C_input_controller_JST"
+		(property "Value" "I2C_controller_JST"
 			(at 113.284 98.298 0)
 			(effects
 				(font
@@ -4103,7 +4330,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_JST:JST_GH_SM04B-GHS-TB_1x04-1MP_P1.25mm_Horizontal"
 			(at 107.95 104.14 0)
 			(effects
 				(font
@@ -4249,7 +4476,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical"
 			(at 191.77 88.9 0)
 			(effects
 				(font
