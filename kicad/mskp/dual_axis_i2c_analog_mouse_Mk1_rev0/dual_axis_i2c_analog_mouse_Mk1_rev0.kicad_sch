@@ -1676,6 +1676,12 @@
 		(uuid "63a06015-3d2c-47c5-8c37-07650cd9393d")
 	)
 	(junction
+		(at 184.15 99.06)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "66193afb-c105-41ed-8c77-8054ddefc82c")
+	)
+	(junction
 		(at 130.81 116.84)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2025,7 +2031,7 @@
 	)
 	(wire
 		(pts
-			(xy 184.15 83.82) (xy 184.15 101.6)
+			(xy 184.15 83.82) (xy 184.15 99.06)
 		)
 		(stroke
 			(width 0)
@@ -2145,6 +2151,16 @@
 	)
 	(wire
 		(pts
+			(xy 184.15 99.06) (xy 184.15 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5de7f3f8-d051-4e96-8739-ebef117eeacb")
+	)
+	(wire
+		(pts
 			(xy 140.97 106.68) (xy 140.97 111.76)
 		)
 		(stroke
@@ -2242,6 +2258,16 @@
 			(type default)
 		)
 		(uuid "87257e36-3a0a-4114-98f6-51870e92deb6")
+	)
+	(wire
+		(pts
+			(xy 184.15 99.06) (xy 200.66 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8aca2abc-7d4b-4fde-ac05-d0bcca9a604a")
 	)
 	(wire
 		(pts
@@ -2702,6 +2728,16 @@
 			(type default)
 		)
 		(uuid "ed6979a4-982c-48e8-8766-4b9cd1d98306")
+	)
+	(wire
+		(pts
+			(xy 200.66 99.06) (xy 200.66 101.6)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eebb4ad0-4028-4173-80cf-63d5cb3812ed")
 	)
 	(wire
 		(pts
@@ -4037,8 +4073,74 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 200.66 101.6 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c73c0df6-60e0-48bc-a7a8-2e1b369c213b")
+		(property "Reference" "#PWR06"
+			(at 200.66 107.95 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 200.66 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 200.66 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 200.66 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 200.66 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c72d6029-03dd-4afd-88f6-d0aaf87f9001")
+		)
+		(instances
+			(project "dual_axis_i2c_analog_mouse_Mk1_rev0"
+				(path "/97f8c77d-fcb8-4f12-a3ba-2ac0f737e7f7"
+					(reference "#PWR06")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
-		(at 137.16 111.76 270)
+		(at 137.16 111.76 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4046,7 +4148,7 @@
 		(dnp no)
 		(uuid "d19460dc-7621-44c1-b5f1-b31607ed0e3b")
 		(property "Reference" "R4"
-			(at 138.557 111.887 90)
+			(at 135.763 111.633 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4055,7 +4157,7 @@
 			)
 		)
 		(property "Value" "10K"
-			(at 138.557 114.427 90)
+			(at 135.128 114.046 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4064,7 +4166,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
-			(at 137.16 109.982 90)
+			(at 137.16 113.538 90)
 			(effects
 				(font
 					(size 1.27 1.27)
