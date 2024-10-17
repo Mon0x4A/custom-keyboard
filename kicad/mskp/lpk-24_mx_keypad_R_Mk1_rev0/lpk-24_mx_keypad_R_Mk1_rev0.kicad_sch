@@ -1,0 +1,4137 @@
+(kicad_sch
+	(version 20231120)
+	(generator "eeschema")
+	(generator_version "8.0")
+	(uuid "c68f8c48-7a77-4614-8000-a944073bd0c9")
+	(paper "A4")
+	(lib_symbols
+		(symbol "Connector:Conn_01x12_Socket"
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 15.24 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Conn_01x12_Socket"
+				(at 0 -17.78 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Generic connector, single row, 01x12, script generated"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_locked" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "connector"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Connector*:*_1x??_*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Conn_01x12_Socket_1_1"
+				(arc
+					(start 0 -14.732)
+					(mid -0.5058 -15.24)
+					(end 0 -15.748)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -12.192)
+					(mid -0.5058 -12.7)
+					(end 0 -13.208)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -9.652)
+					(mid -0.5058 -10.16)
+					(end 0 -10.668)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -7.112)
+					(mid -0.5058 -7.62)
+					(end 0 -8.128)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -4.572)
+					(mid -0.5058 -5.08)
+					(end 0 -5.588)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 -2.032)
+					(mid -0.5058 -2.54)
+					(end 0 -3.048)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -15.24) (xy -0.508 -15.24)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -12.7) (xy -0.508 -12.7)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -10.16) (xy -0.508 -10.16)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -7.62) (xy -0.508 -7.62)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -5.08) (xy -0.508 -5.08)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 -2.54) (xy -0.508 -2.54)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 0) (xy -0.508 0)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 2.54) (xy -0.508 2.54)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 5.08) (xy -0.508 5.08)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 7.62) (xy -0.508 7.62)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 10.16) (xy -0.508 10.16)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -1.27 12.7) (xy -0.508 12.7)
+					)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 0.508)
+					(mid -0.5058 0)
+					(end 0 -0.508)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 3.048)
+					(mid -0.5058 2.54)
+					(end 0 2.032)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 5.588)
+					(mid -0.5058 5.08)
+					(end 0 4.572)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 8.128)
+					(mid -0.5058 7.62)
+					(end 0 7.112)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 10.668)
+					(mid -0.5058 10.16)
+					(end 0 9.652)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(arc
+					(start 0 13.208)
+					(mid -0.5058 12.7)
+					(end 0 12.192)
+					(stroke
+						(width 0.1524)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 12.7 0)
+					(length 3.81)
+					(name "Pin_1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -10.16 0)
+					(length 3.81)
+					(name "Pin_10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -12.7 0)
+					(length 3.81)
+					(name "Pin_11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -15.24 0)
+					(length 3.81)
+					(name "Pin_12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 10.16 0)
+					(length 3.81)
+					(name "Pin_2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 7.62 0)
+					(length 3.81)
+					(name "Pin_3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 5.08 0)
+					(length 3.81)
+					(name "Pin_4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 2.54 0)
+					(length 3.81)
+					(name "Pin_5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 3.81)
+					(name "Pin_6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -2.54 0)
+					(length 3.81)
+					(name "Pin_7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -5.08 0)
+					(length 3.81)
+					(name "Pin_8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -5.08 -7.62 0)
+					(length 3.81)
+					(name "Pin_9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "Diode:1N4148"
+			(pin_numbers hide)
+			(pin_names hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "1N4148"
+				(at 0 -2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "100V 0.15A standard switching diode, DO-35"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Sim.Device" "D"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "diode"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "D*DO?35*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "1N4148_0_1"
+				(polyline
+					(pts
+						(xy -1.27 1.27) (xy -1.27 -1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 0) (xy -1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "1N4148_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+		(symbol "ScottoKeebs:Placeholder_Switch"
+			(pin_numbers hide)
+			(pin_names
+				(offset 1.016) hide)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "SW"
+				(at 1.27 2.54 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "Switch"
+				(at 0 -1.524 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Push button switch, generic, two pins"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "switch normally-open pushbutton push-button"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Placeholder_Switch_0_1"
+				(circle
+					(center -2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 1.27) (xy 0 3.048)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 1.27) (xy -2.54 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+	(junction
+		(at 214.122 111.252)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0280cba3-c1a8-46cb-886e-f9f66ce42ec5")
+	)
+	(junction
+		(at 146.304 122.682)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "060677c1-087b-4799-b99d-21bdc55e1a12")
+	)
+	(junction
+		(at 160.782 101.092)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "0c3c9109-0e7e-4c0b-9080-8e8bbd84860e")
+	)
+	(junction
+		(at 175.514 101.092)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2be63d1a-fa94-47ff-ab41-7a222e0bc162")
+	)
+	(junction
+		(at 140.208 111.252)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "55cbd74f-2612-4292-bc30-c60c530d418a")
+	)
+	(junction
+		(at 190.246 122.682)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "5ca46bec-1a0e-4aa7-8202-209673db4ceb")
+	)
+	(junction
+		(at 160.782 122.682)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "72cea139-929b-4606-b0eb-be583560c7b4")
+	)
+	(junction
+		(at 175.514 122.682)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "76a94ac7-7157-49df-9801-749bf8578d88")
+	)
+	(junction
+		(at 199.136 111.252)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "86087a6b-3fa5-45a9-8954-4823768a7f9a")
+	)
+	(junction
+		(at 190.246 101.092)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a2ce2cb2-46dc-434f-89cd-61210b9c9c7a")
+	)
+	(junction
+		(at 169.672 111.252)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a80fedc5-2e92-4e61-9428-400a62d585e3")
+	)
+	(junction
+		(at 146.304 101.092)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ae388fda-ff58-40af-8e39-9e95c03ea753")
+	)
+	(junction
+		(at 130.81 101.092)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b6507596-671c-490b-81ff-29e81f95c987")
+	)
+	(junction
+		(at 155.194 111.252)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b7864e3b-988a-49a5-a614-34b5a40f47b0")
+	)
+	(junction
+		(at 184.404 111.252)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "d8e03079-e4f8-4c0c-9b04-9bd0f954498d")
+	)
+	(junction
+		(at 131.318 122.682)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "e3f67659-ff97-48ef-9ea7-13c718c4e7f6")
+	)
+	(no_connect
+		(at 121.92 113.284)
+		(uuid "09229303-63a5-4607-aa07-b10ad8e51797")
+	)
+	(no_connect
+		(at 121.92 110.744)
+		(uuid "135da8b3-f7c4-4728-b752-4b17822b369a")
+	)
+	(no_connect
+		(at 120.396 115.824)
+		(uuid "146abdf7-f95a-4e66-abd7-cf6f94963776")
+	)
+	(no_connect
+		(at 118.872 115.824)
+		(uuid "160796fc-73a7-49c7-998b-573fe0c926f1")
+	)
+	(no_connect
+		(at 184.404 122.682)
+		(uuid "16d4c777-fca7-406f-a8a1-80d85194f653")
+	)
+	(no_connect
+		(at 140.208 122.682)
+		(uuid "2d409c3d-29bf-4467-89b6-48cba6b6a787")
+	)
+	(no_connect
+		(at 118.872 113.284)
+		(uuid "38af8a5e-de3e-4a5b-85b1-9b33665ff949")
+	)
+	(no_connect
+		(at 113.03 100.584)
+		(uuid "4cc3aae3-f662-4f5c-8c92-9c287f435cac")
+	)
+	(no_connect
+		(at 118.618 110.744)
+		(uuid "4eeda1af-7bd0-4f5c-972f-d14cd636054e")
+	)
+	(no_connect
+		(at 120.396 108.204)
+		(uuid "5232b98f-74ba-4bc4-a474-5a04432f1947")
+	)
+	(no_connect
+		(at 121.92 115.824)
+		(uuid "5af62848-81aa-4ec1-b4bd-a76c832097be")
+	)
+	(no_connect
+		(at 113.03 95.504)
+		(uuid "6bceb4d2-fb23-426d-b168-8503d463a36b")
+	)
+	(no_connect
+		(at 184.404 101.092)
+		(uuid "73dea429-2662-4864-b056-d1a0089f8948")
+	)
+	(no_connect
+		(at 120.396 113.284)
+		(uuid "7ac5ca3e-3eeb-476c-aad9-c9c4d8e11405")
+	)
+	(no_connect
+		(at 169.672 101.092)
+		(uuid "7cb2a728-39f5-4f27-b274-5cdf619a35b1")
+	)
+	(no_connect
+		(at 169.672 122.682)
+		(uuid "81b70cf3-0b02-46d1-825f-dd8ee03b9b86")
+	)
+	(no_connect
+		(at 118.872 108.204)
+		(uuid "81f888d8-e174-43f0-9f34-4feceffb60c6")
+	)
+	(no_connect
+		(at 118.872 105.664)
+		(uuid "99f67d6a-02c6-4c98-99a6-392123fea380")
+	)
+	(no_connect
+		(at 199.136 101.092)
+		(uuid "9eb6eed6-c14f-439e-8532-e8e4c6ff36ac")
+	)
+	(no_connect
+		(at 199.136 122.682)
+		(uuid "9ee09b4b-8ce4-48d6-9a0d-5c17137a55f8")
+	)
+	(no_connect
+		(at 113.03 98.044)
+		(uuid "abf2a143-e444-4975-b2ce-ea3d08fa5246")
+	)
+	(no_connect
+		(at 124.968 115.824)
+		(uuid "ac489a50-ebe9-444d-9841-4df6845bf7a3")
+	)
+	(no_connect
+		(at 123.444 115.824)
+		(uuid "c8a41c68-29f2-41b1-8f88-683467a870aa")
+	)
+	(no_connect
+		(at 155.194 101.092)
+		(uuid "c91a0749-5861-4c26-8064-c1f4359a3485")
+	)
+	(no_connect
+		(at 120.396 110.744)
+		(uuid "e0c4038a-cda9-4e5d-851c-b7e447052015")
+	)
+	(no_connect
+		(at 113.03 92.964)
+		(uuid "e1040321-ed92-467c-80a6-345480eb80e8")
+	)
+	(no_connect
+		(at 155.194 122.682)
+		(uuid "ee115d15-2206-4155-84a8-33669d215ebf")
+	)
+	(no_connect
+		(at 123.444 113.284)
+		(uuid "fe144fab-02f2-4ea3-a733-c41e315a2089")
+	)
+	(wire
+		(pts
+			(xy 159.512 111.252) (xy 159.512 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0040ed9d-b134-4f34-b848-784dc9e1082d")
+	)
+	(wire
+		(pts
+			(xy 184.404 111.252) (xy 184.404 129.794)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "04fbd86a-9fdf-440d-8acd-3cf34d32c6c7")
+	)
+	(wire
+		(pts
+			(xy 113.03 110.744) (xy 123.444 110.744)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "05ed043b-6766-4f75-875e-a75dd48aafdc")
+	)
+	(wire
+		(pts
+			(xy 139.446 112.776) (xy 139.446 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "06342201-4c54-4efa-a217-4a5094a2f0c1")
+	)
+	(wire
+		(pts
+			(xy 154.432 98.806) (xy 153.924 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "07ee5acd-093a-4329-85ee-6b14e8fb84c0")
+	)
+	(wire
+		(pts
+			(xy 145.034 90.424) (xy 145.034 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "09cd7cc1-e424-4a37-b826-b4327012d456")
+	)
+	(wire
+		(pts
+			(xy 138.938 98.552) (xy 138.43 98.552)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0a200cbd-488f-4e5c-8697-1904245e372f")
+	)
+	(wire
+		(pts
+			(xy 169.672 90.424) (xy 169.672 111.252)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0e56846d-3b6b-4d6f-af0f-0bb545724398")
+	)
+	(wire
+		(pts
+			(xy 175.514 101.092) (xy 160.782 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "10af5e60-1788-475e-9efd-9fc67630a7fe")
+	)
+	(wire
+		(pts
+			(xy 214.122 133.35) (xy 118.872 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "145fd844-8453-4669-9bbb-4abaae8bfaff")
+	)
+	(wire
+		(pts
+			(xy 128.016 122.682) (xy 128.016 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "16246a07-1791-46bf-b173-b0b1187a8dfa")
+	)
+	(wire
+		(pts
+			(xy 130.81 98.552) (xy 130.81 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "17654f76-a2d1-4e95-81ae-101a05a49d3c")
+	)
+	(wire
+		(pts
+			(xy 197.866 119.634) (xy 198.374 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1c31cd51-2f3c-4f38-889f-19a40dd5ae95")
+	)
+	(wire
+		(pts
+			(xy 214.122 90.424) (xy 214.122 111.252)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1c62a7f0-5f69-4c5e-b6b6-3ff5d3720152")
+	)
+	(wire
+		(pts
+			(xy 118.872 103.124) (xy 118.872 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1dfdcdb0-5fd6-4ad3-b24a-43a44404438c")
+	)
+	(wire
+		(pts
+			(xy 124.46 90.424) (xy 124.46 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "22383891-2b7a-49a4-bf8c-920e8cdb5b58")
+	)
+	(wire
+		(pts
+			(xy 203.962 111.252) (xy 203.962 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "225872c7-9f4d-4273-8dcf-368d229ad0f3")
+	)
+	(wire
+		(pts
+			(xy 205.232 119.634) (xy 205.232 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "25780e5c-0d48-4ca3-99c7-582587f5cdfc")
+	)
+	(wire
+		(pts
+			(xy 140.208 90.17) (xy 140.208 111.252)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "25b4e22f-7884-479e-a1bd-1e0d13a0526e")
+	)
+	(wire
+		(pts
+			(xy 159.512 91.948) (xy 168.91 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "268e2ca5-44fa-4882-ab6a-c4f1339abee7")
+	)
+	(wire
+		(pts
+			(xy 205.232 101.092) (xy 190.246 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2a4544f9-66f5-4e5e-8884-49fc2d780925")
+	)
+	(wire
+		(pts
+			(xy 175.514 98.806) (xy 175.514 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3088305b-5e8a-4c22-8c2c-ba58c61ad0d6")
+	)
+	(wire
+		(pts
+			(xy 184.404 129.794) (xy 121.92 129.794)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "338fea73-7bf8-45ca-9e28-00fa759cb6ab")
+	)
+	(wire
+		(pts
+			(xy 199.136 131.572) (xy 120.396 131.572)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "361685aa-9fb0-4752-a057-f3dfa9c2e071")
+	)
+	(wire
+		(pts
+			(xy 126.492 115.824) (xy 126.492 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "38f9b1f5-aed1-4d27-b740-56236be1eb01")
+	)
+	(wire
+		(pts
+			(xy 160.782 101.092) (xy 146.304 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3d479e0c-67cf-42e1-9928-a5ef3d93a599")
+	)
+	(wire
+		(pts
+			(xy 169.672 127.762) (xy 123.444 127.762)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4138ff7f-0759-4743-b403-f675539a58a3")
+	)
+	(wire
+		(pts
+			(xy 213.106 98.806) (xy 212.852 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "42ef4a5a-d3a5-4c7c-9e12-3a4bc30297df")
+	)
+	(wire
+		(pts
+			(xy 160.782 122.682) (xy 146.304 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "43a7d1d3-3f2d-4923-ac33-b23e9e64a7d7")
+	)
+	(wire
+		(pts
+			(xy 145.034 91.948) (xy 154.432 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "52edab7e-1468-4242-9751-4097073b6085")
+	)
+	(wire
+		(pts
+			(xy 190.246 101.092) (xy 175.514 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5449b3a7-bd6b-4bb5-977d-419c4bbdf4ae")
+	)
+	(wire
+		(pts
+			(xy 214.122 111.252) (xy 214.122 133.35)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "56d5bbb5-ff06-4a22-a7c3-54b3a86c7687")
+	)
+	(wire
+		(pts
+			(xy 174.244 91.948) (xy 183.642 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "589b1ae7-6c20-400f-929f-881ff02d9ada")
+	)
+	(wire
+		(pts
+			(xy 198.374 112.776) (xy 198.374 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "59525644-e225-4886-9e81-9364bb29b60f")
+	)
+	(wire
+		(pts
+			(xy 154.432 112.776) (xy 154.432 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5afa6c71-fcdd-404d-93ae-33b920e6d6e0")
+	)
+	(wire
+		(pts
+			(xy 139.446 119.634) (xy 138.938 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5c6b6a78-5960-4fdc-8161-768e43e7d4f2")
+	)
+	(wire
+		(pts
+			(xy 145.034 111.252) (xy 145.034 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5e2659cb-197d-48d7-8a38-3db362696506")
+	)
+	(wire
+		(pts
+			(xy 127 101.092) (xy 130.81 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "60d98779-717d-4268-8539-fc5c354e1e5a")
+	)
+	(wire
+		(pts
+			(xy 199.136 111.252) (xy 199.136 131.572)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "612f7f5e-f583-4407-a5f7-129ba118c690")
+	)
+	(wire
+		(pts
+			(xy 124.46 90.424) (xy 113.03 90.424)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "627fe78d-95da-4cf4-a501-bd47dce438a7")
+	)
+	(wire
+		(pts
+			(xy 118.872 103.124) (xy 113.03 103.124)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "63334566-85d1-4152-a436-b335f49961ee")
+	)
+	(wire
+		(pts
+			(xy 198.374 98.806) (xy 197.866 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "637a2bc4-f25a-4b05-bcb7-5574869cd2e5")
+	)
+	(wire
+		(pts
+			(xy 168.91 98.806) (xy 168.402 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "655ae192-c790-4b41-a6aa-a63e8f41f159")
+	)
+	(wire
+		(pts
+			(xy 183.642 91.948) (xy 183.642 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "67ce4caf-7c26-4cd9-b9e9-31eb8e6cab28")
+	)
+	(wire
+		(pts
+			(xy 175.514 122.682) (xy 160.782 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6c042da6-f38d-4efa-b41f-4340837b9297")
+	)
+	(wire
+		(pts
+			(xy 113.03 113.284) (xy 124.968 113.284)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6c90ca7f-122f-42e9-8677-fd215ce4fa8a")
+	)
+	(wire
+		(pts
+			(xy 140.208 124.46) (xy 140.208 111.252)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6cd213f7-b82d-4b2d-a023-6ee7df323aa3")
+	)
+	(wire
+		(pts
+			(xy 124.968 125.984) (xy 124.968 113.284)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6f56897c-31a0-44f9-bbab-01b1ed118b70")
+	)
+	(wire
+		(pts
+			(xy 155.194 90.424) (xy 155.194 111.252)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "70cea94d-23c7-4cc7-a793-1ab2f700605a")
+	)
+	(wire
+		(pts
+			(xy 199.136 90.424) (xy 199.136 111.252)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "749fca36-7301-473e-b5ea-c975890a7c1f")
+	)
+	(wire
+		(pts
+			(xy 146.304 122.682) (xy 131.318 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "76f890d0-dcfb-4de1-9037-db742a25ba35")
+	)
+	(wire
+		(pts
+			(xy 128.016 104.14) (xy 124.46 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "76fc41b0-ee6a-4f49-9d9e-5bf0a2893354")
+	)
+	(wire
+		(pts
+			(xy 154.432 91.948) (xy 154.432 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "772154c9-0f4d-43a3-8ee9-7d440f64536b")
+	)
+	(wire
+		(pts
+			(xy 146.304 98.806) (xy 146.304 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7a9e8c44-18a2-46a1-8073-964434355326")
+	)
+	(wire
+		(pts
+			(xy 168.91 91.948) (xy 168.91 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7db48301-1141-4480-8731-4c2ba9a8016c")
+	)
+	(wire
+		(pts
+			(xy 183.642 98.806) (xy 183.134 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "80651627-63dd-4003-959f-8fc40da620c1")
+	)
+	(wire
+		(pts
+			(xy 203.962 91.948) (xy 213.106 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8f31634c-1119-4c67-a710-36453b4837f4")
+	)
+	(wire
+		(pts
+			(xy 203.962 112.776) (xy 213.36 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "90d88b73-7568-4a66-aff4-28ee437d0d67")
+	)
+	(wire
+		(pts
+			(xy 145.034 112.776) (xy 154.432 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "924ee897-4eb6-4455-97a7-97daf687df21")
+	)
+	(wire
+		(pts
+			(xy 198.374 91.948) (xy 198.374 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "92bfdc0d-5c92-4f49-99fa-ff11ab07af68")
+	)
+	(wire
+		(pts
+			(xy 213.106 91.948) (xy 213.106 98.806)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "93a2f744-98ab-457e-b6eb-9ef3c667c0bc")
+	)
+	(wire
+		(pts
+			(xy 188.976 111.252) (xy 188.976 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9560fe76-a3b2-4d46-b14f-c367c1ffc593")
+	)
+	(wire
+		(pts
+			(xy 154.432 119.634) (xy 153.924 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "959fffbc-a5fd-4cdc-9415-916c0e4693ba")
+	)
+	(wire
+		(pts
+			(xy 121.92 108.204) (xy 113.03 108.204)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "95c406d3-c191-4409-9f62-abdaedfb1c50")
+	)
+	(wire
+		(pts
+			(xy 190.246 98.806) (xy 190.246 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "98924e92-914c-40fd-9b77-cdf85be115c0")
+	)
+	(wire
+		(pts
+			(xy 131.318 119.634) (xy 131.318 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9953f61d-76e9-44f4-92c8-38a82d6d51c1")
+	)
+	(wire
+		(pts
+			(xy 174.244 111.252) (xy 174.244 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9d304e01-b372-4fd7-8c6b-9305719daf3d")
+	)
+	(wire
+		(pts
+			(xy 160.782 119.634) (xy 160.782 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a2c65cfc-14fb-4616-8ab7-7afba5cf4f96")
+	)
+	(wire
+		(pts
+			(xy 138.938 91.948) (xy 138.938 98.552)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a824770d-7d54-4872-ab1e-2bc0d7591d47")
+	)
+	(wire
+		(pts
+			(xy 130.81 101.092) (xy 146.304 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a95b832f-9dff-46c8-8f69-941f9228c7c5")
+	)
+	(wire
+		(pts
+			(xy 159.512 112.776) (xy 168.91 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "adcab8cf-51e4-4aa0-b29c-c9aa2d1cf4d7")
+	)
+	(wire
+		(pts
+			(xy 121.92 108.204) (xy 121.92 129.794)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "af1438c4-f7df-4a48-9653-f0219c6d0a65")
+	)
+	(wire
+		(pts
+			(xy 190.246 119.634) (xy 190.246 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b2e17a3d-8c27-47e8-932d-1e00e546627c")
+	)
+	(wire
+		(pts
+			(xy 120.396 105.664) (xy 113.03 105.664)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b4caaf00-a957-4cca-9e15-d7fe564791ac")
+	)
+	(wire
+		(pts
+			(xy 129.54 90.17) (xy 129.54 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b58503e7-90c1-4ee6-a1be-9509b7c667ca")
+	)
+	(wire
+		(pts
+			(xy 123.444 127.762) (xy 123.444 110.744)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b69e65eb-e0a0-4c83-8caf-42b291626351")
+	)
+	(wire
+		(pts
+			(xy 168.91 119.634) (xy 168.402 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bb1c1dfd-6ad3-4503-ae48-50621a3071ee")
+	)
+	(wire
+		(pts
+			(xy 168.91 112.776) (xy 168.91 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bd5c9fce-4854-45bf-bb8d-1a7c485094e5")
+	)
+	(wire
+		(pts
+			(xy 174.244 112.776) (xy 183.642 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bed9434f-bddc-458c-aa55-3b10a678a8f6")
+	)
+	(wire
+		(pts
+			(xy 113.03 115.824) (xy 126.492 115.824)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bfe1452d-690a-4e61-848a-041beaa09d37")
+	)
+	(wire
+		(pts
+			(xy 146.304 119.634) (xy 146.304 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bfe23cc5-6ef4-44f2-82ab-a31cf25609df")
+	)
+	(wire
+		(pts
+			(xy 113.03 87.884) (xy 127 87.884)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c0b4e9bd-abf7-4a6e-a049-d0ce84d999a4")
+	)
+	(wire
+		(pts
+			(xy 174.244 90.424) (xy 174.244 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ca048220-6647-4d4a-9f02-2b948ffae3ff")
+	)
+	(wire
+		(pts
+			(xy 205.232 122.682) (xy 190.246 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cb8e03da-f429-49fb-b765-406ee1f9bdbb")
+	)
+	(wire
+		(pts
+			(xy 130.048 112.776) (xy 139.446 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ce1c0eee-87df-4db8-93e4-8a9b790df964")
+	)
+	(wire
+		(pts
+			(xy 213.36 119.634) (xy 212.852 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cf1acfe9-4675-4fa6-ae02-c8b0c0099a20")
+	)
+	(wire
+		(pts
+			(xy 169.672 111.252) (xy 169.672 127.762)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cf9fb899-29b7-4a42-aa53-89c761f96a9a")
+	)
+	(wire
+		(pts
+			(xy 155.194 125.984) (xy 124.968 125.984)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d28fffe1-8e5a-4832-9a80-cc702ad5886e")
+	)
+	(wire
+		(pts
+			(xy 127 101.092) (xy 127 87.884)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d6d90a47-d393-41c0-bf04-213f8a8e76dc")
+	)
+	(wire
+		(pts
+			(xy 188.976 91.948) (xy 198.374 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d9212efc-5ce1-4ed2-9f65-e1a6b86e338b")
+	)
+	(wire
+		(pts
+			(xy 188.976 112.776) (xy 198.374 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "db63c4fc-0470-4643-8ae6-f61187c9c723")
+	)
+	(wire
+		(pts
+			(xy 205.232 98.806) (xy 205.232 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "de2e3b5e-ced9-4573-9520-400517beb1fb")
+	)
+	(wire
+		(pts
+			(xy 184.404 90.424) (xy 184.404 111.252)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e0df6e7f-9a7e-4523-9b7d-d0adf5be9d23")
+	)
+	(wire
+		(pts
+			(xy 155.194 111.252) (xy 155.194 125.984)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e4c23fe5-885f-4a1b-833d-403caaa7d7a4")
+	)
+	(wire
+		(pts
+			(xy 175.514 119.634) (xy 175.514 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e6ef8112-f5b6-4a87-8043-72a5f48d174c")
+	)
+	(wire
+		(pts
+			(xy 203.962 90.424) (xy 203.962 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e8360d7f-d0ab-406c-a9c5-b3aafe5e1521")
+	)
+	(wire
+		(pts
+			(xy 159.512 90.424) (xy 159.512 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e8ac58a1-716b-4378-91c2-a0070578eb92")
+	)
+	(wire
+		(pts
+			(xy 183.642 112.776) (xy 183.642 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eb62fe98-4476-43c8-9007-5ac57ae066f1")
+	)
+	(wire
+		(pts
+			(xy 131.318 122.682) (xy 128.016 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ecbfbd0b-8c1c-4661-b922-cbae434ff962")
+	)
+	(wire
+		(pts
+			(xy 126.492 124.46) (xy 140.208 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ee5ac155-e52f-411c-ac72-5cc1a5fd769b")
+	)
+	(wire
+		(pts
+			(xy 139.7 90.17) (xy 140.208 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f1bdf3f6-fa2f-43d4-b4fe-cdb7b12b9720")
+	)
+	(wire
+		(pts
+			(xy 213.36 112.776) (xy 213.36 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f236d3b9-6754-4212-af81-dfed5f7a663c")
+	)
+	(wire
+		(pts
+			(xy 183.642 119.634) (xy 183.134 119.634)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f4caee96-184f-4a2b-9f2e-cbe9b75c1076")
+	)
+	(wire
+		(pts
+			(xy 120.396 105.664) (xy 120.396 131.572)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f5d34095-6cd7-4d70-9788-518e05a12376")
+	)
+	(wire
+		(pts
+			(xy 130.048 111.252) (xy 130.048 112.776)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f8dba538-1510-4c87-bc56-d89609396af6")
+	)
+	(wire
+		(pts
+			(xy 160.782 98.806) (xy 160.782 101.092)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f95d1b27-b4eb-4074-b2a6-57acf9ea5f27")
+	)
+	(wire
+		(pts
+			(xy 188.976 90.424) (xy 188.976 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f9d00548-e68d-4948-bd5d-1ed367ed91f2")
+	)
+	(wire
+		(pts
+			(xy 190.246 122.682) (xy 175.514 122.682)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "feb3194b-8ad0-467c-8d64-55025b45e0fb")
+	)
+	(wire
+		(pts
+			(xy 129.54 91.948) (xy 138.938 91.948)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ffdc104e-aa42-4c08-adf9-9b25054c32dc")
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 164.592 90.424 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "05c90c68-f9fc-414d-8c25-68d71293ead0")
+		(property "Reference" "SW3"
+			(at 164.592 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 164.592 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 164.592 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 164.592 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 164.592 90.424 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f3bbf315-bb3f-45c8-aebd-0035bac26adb")
+		)
+		(pin "2"
+			(uuid "c8b7395c-04d8-497d-ac68-865edd13373f")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 209.042 119.634 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0ff97ed0-fc5d-4d8d-ab4b-843580c179bc")
+		(property "Reference" "D12"
+			(at 209.042 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 209.042 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 209.042 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 209.042 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 209.042 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 209.042 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 209.042 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "55328de7-4595-44bf-a435-2b06845b20f6")
+		)
+		(pin "2"
+			(uuid "abf59769-7ebe-4d44-901d-488012ab5c19")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 209.042 111.252 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "12a0b028-d83e-4e4a-9622-6a46c355e65a")
+		(property "Reference" "SW12"
+			(at 209.042 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 209.042 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 209.042 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 209.042 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 209.042 111.252 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b8e0db9c-1018-4211-bd2e-3a7aaaa4384a")
+		)
+		(pin "2"
+			(uuid "1ab8dc4d-4e0d-49fd-9ee8-364ec14a89f2")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 194.056 98.806 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "162d6d14-ae6d-4527-b254-14387d3abbd4")
+		(property "Reference" "D5"
+			(at 194.056 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 194.056 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 194.056 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 194.056 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 194.056 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 194.056 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 194.056 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e264f409-2bfc-4961-851c-7d962aa57862")
+		)
+		(pin "2"
+			(uuid "54ca3d86-ae60-460d-a671-ab00c7860eed")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 164.592 111.252 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "22fe5dee-f2d9-49a1-945b-9761a7a18e4b")
+		(property "Reference" "SW9"
+			(at 164.592 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 164.592 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 164.592 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 164.592 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 164.592 111.252 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5305f4d4-ff7b-49d2-9720-d16a36fc0aeb")
+		)
+		(pin "2"
+			(uuid "cff40aab-f7c5-4bf5-89af-c87150621939")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 179.324 119.634 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "314f6638-8ef6-4684-b7ec-e83c15eff325")
+		(property "Reference" "D10"
+			(at 179.324 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 179.324 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 179.324 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 179.324 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 179.324 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 179.324 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 179.324 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "01801549-93f6-48ea-a32d-28b27ff1944b")
+		)
+		(pin "2"
+			(uuid "187505e8-b40d-4799-bb49-b87edd650673")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 134.62 90.17 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "38682237-a859-4677-9b70-ebc9533c6d6e")
+		(property "Reference" "SW1"
+			(at 134.62 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 134.62 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 134.62 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 134.62 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 134.62 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2af85ed0-617d-4ac2-914d-fd0651903d73")
+		)
+		(pin "2"
+			(uuid "7089c299-fc64-4e85-ba75-b3c844b381a0")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 135.128 119.634 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3f8d6d3f-29cf-4e92-8fcb-3e7fc610d844")
+		(property "Reference" "D7"
+			(at 135.128 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 135.128 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 135.128 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 135.128 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 135.128 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 135.128 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 135.128 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b0df7714-73d6-409e-afc9-1a283a06f533")
+		)
+		(pin "2"
+			(uuid "8833e16b-2813-4bd8-9a6b-637b8b1ac61d")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 150.114 90.424 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6134e4b1-7df8-4ca4-9593-64238eb80ab3")
+		(property "Reference" "SW2"
+			(at 150.114 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 150.114 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 150.114 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 150.114 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 150.114 90.424 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ce28d069-a858-4f51-a85d-f5e6ca35cfbd")
+		)
+		(pin "2"
+			(uuid "3fee5d47-f6b0-4c94-b9f4-faa13e7eafb0")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 194.056 111.252 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "631a7284-8bfa-47d7-a703-0ec465604023")
+		(property "Reference" "SW11"
+			(at 194.056 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 194.056 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 194.056 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 194.056 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 194.056 111.252 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "497b1f22-6e17-4229-ada9-81bdc0986ddc")
+		)
+		(pin "2"
+			(uuid "e08cb604-99af-4c00-b201-a27d2efef776")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 134.62 98.552 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "63ff6da9-9a27-4f98-8200-5343a88a693d")
+		(property "Reference" "D1"
+			(at 134.62 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 134.62 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 134.62 98.552 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 134.62 98.552 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 134.62 98.552 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 134.62 98.552 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 134.62 98.552 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5aac07de-55cf-462e-ae70-c489890239aa")
+		)
+		(pin "2"
+			(uuid "c01fb163-09f6-4175-ac58-33013e71b674")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 164.592 119.634 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "64a40093-058c-46ce-8e48-e734bc4efa6b")
+		(property "Reference" "D9"
+			(at 164.592 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 164.592 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 164.592 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 164.592 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 164.592 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 164.592 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 164.592 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c306b60c-33fc-447e-b6f7-d5bbfb92fc00")
+		)
+		(pin "2"
+			(uuid "c54601c8-868b-476d-98a4-a2947beec578")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 150.114 119.634 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "671374a2-0e61-4b81-9f6e-9e90e58cc0fa")
+		(property "Reference" "D8"
+			(at 150.114 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 150.114 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 150.114 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 150.114 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 150.114 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 150.114 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 150.114 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "367530db-7616-44dd-ab5b-194bd6aa92be")
+		)
+		(pin "2"
+			(uuid "57ba857d-8e6b-40a2-a3b0-3423c878e72c")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x12_Socket")
+		(at 107.95 100.584 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "677708ae-20da-4e07-af4f-7c034f751bd2")
+		(property "Reference" "J1"
+			(at 106.68 100.584 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Conn_01x12_Socket"
+			(at 106.68 103.124 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_GH_SM12B-GHS-TB_1x12-1MP_P1.25mm_Horizontal"
+			(at 107.95 100.584 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 107.95 100.584 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 107.95 100.584 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "578fdc4b-9b32-4730-9004-61336dab3d65")
+		)
+		(pin "10"
+			(uuid "95bf178d-753f-456f-b8e1-ee46e369e094")
+		)
+		(pin "11"
+			(uuid "511d62c6-e039-47cd-bb73-e4a8492f0d16")
+		)
+		(pin "12"
+			(uuid "0e51d2e0-1711-4e98-a9c6-4db6a5f66c9e")
+		)
+		(pin "2"
+			(uuid "4857cf1d-20f0-433c-9f80-a1c8c17977d3")
+		)
+		(pin "3"
+			(uuid "19c8050f-9f3d-4a18-a911-1dae245faca0")
+		)
+		(pin "4"
+			(uuid "6d5ad67b-dfff-4f34-bbeb-686b9d8f954a")
+		)
+		(pin "5"
+			(uuid "75346a00-8373-4596-a9e4-bc554178d06e")
+		)
+		(pin "6"
+			(uuid "afa833ec-c843-4241-9253-a83a89574265")
+		)
+		(pin "7"
+			(uuid "c423e6fa-13cb-4414-ace4-8f2436d24242")
+		)
+		(pin "8"
+			(uuid "85c5bd84-6abe-4572-9fa7-0bdc0821afd8")
+		)
+		(pin "9"
+			(uuid "8a10a043-de9d-4b21-8667-c00df7dac92c")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "J1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 209.042 90.424 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6f6a02a4-aa08-4a7b-88fa-c449f4cccfb8")
+		(property "Reference" "SW6"
+			(at 209.042 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 209.042 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 209.042 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 209.042 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 209.042 90.424 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cccbd79c-7886-4655-9ddc-dbe80d8e8e36")
+		)
+		(pin "2"
+			(uuid "6857b188-187f-4b96-92c2-292635d943b3")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 179.324 111.252 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "805bdd60-54e4-4bac-874d-240b2e46be71")
+		(property "Reference" "SW10"
+			(at 179.324 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 179.324 106.68 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 179.324 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 179.324 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 179.324 111.252 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5faadd5b-82b2-496c-8fe7-afcd6732ff8f")
+		)
+		(pin "2"
+			(uuid "6f96e3a8-3368-4e2f-971e-79e39aa2abaa")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 135.128 111.252 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a715bc8e-273a-4935-8287-9af3e0af3bea")
+		(property "Reference" "SW7"
+			(at 135.128 103.632 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 135.128 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 135.128 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 135.128 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 135.128 111.252 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cf4b3e0f-7e15-4695-924f-cbe01a3603c7")
+		)
+		(pin "2"
+			(uuid "b5556055-6449-4a73-b275-fdaf50290f89")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 194.056 90.424 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "bb8fd5e1-84f8-4f8e-a19e-9edd0ad16da1")
+		(property "Reference" "SW5"
+			(at 194.056 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 194.056 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 194.056 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 194.056 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 194.056 90.424 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "816f0506-0c89-4dd6-95fe-ca90c07b7fd7")
+		)
+		(pin "2"
+			(uuid "a3dd065f-04ba-4f52-830a-f31405358c3d")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 164.592 98.806 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c328d783-dbab-4ce9-a7c4-f0e9bb258527")
+		(property "Reference" "D3"
+			(at 164.592 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 164.592 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 164.592 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 164.592 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 164.592 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 164.592 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 164.592 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f1df47ed-5f6e-4f52-b467-eadf404cc054")
+		)
+		(pin "2"
+			(uuid "d67c5ea6-7b78-42b2-828f-d8db398c384b")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 179.324 98.806 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "c333906f-b410-48f5-8a1b-8359da53b889")
+		(property "Reference" "D4"
+			(at 179.324 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 179.324 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 179.324 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 179.324 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 179.324 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 179.324 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 179.324 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "def86a13-b287-4839-985b-c22b41a97b63")
+		)
+		(pin "2"
+			(uuid "c46907c4-9954-418f-8626-5e374620f7b8")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 179.324 90.424 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d161f379-60bd-4ed9-9d4e-c0f69598e4b7")
+		(property "Reference" "SW4"
+			(at 179.324 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 179.324 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 179.324 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 179.324 85.344 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 179.324 90.424 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "8ffb2592-eb67-431f-a466-cca8d01ff8a3")
+		)
+		(pin "2"
+			(uuid "848d7f50-46cf-4bef-b836-30045762d7e4")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 209.042 98.806 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d81830da-8f09-429f-96e4-07ed54728d3f")
+		(property "Reference" "D6"
+			(at 209.042 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 209.042 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 209.042 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 209.042 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 209.042 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 209.042 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 209.042 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f4e244fa-eb65-4994-8751-5519cd242c07")
+		)
+		(pin "2"
+			(uuid "f4dcecc4-20da-47df-8d66-e0fe4446c17f")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 194.056 119.634 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d95e3557-4c1c-4e5d-99fd-4f137cef0847")
+		(property "Reference" "D11"
+			(at 194.056 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 194.056 116.84 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 194.056 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 194.056 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 194.056 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 194.056 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 194.056 119.634 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "be3bf744-dc39-46f1-a004-96bf32e3ac5a")
+		)
+		(pin "2"
+			(uuid "c33ac15e-2f38-4f37-b990-0ffc1853b257")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D11")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "ScottoKeebs:Placeholder_Switch")
+		(at 150.114 111.252 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f7f48caa-b353-4cc7-8105-d645cdca457c")
+		(property "Reference" "SW8"
+			(at 150.114 103.632 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Switch"
+			(at 150.114 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "ScottoKeebs_Hotswap:Hotswap_MX_1.00u"
+			(at 150.114 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 150.114 106.172 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 150.114 111.252 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "a3942fea-276b-422e-91bb-f3aeef330258")
+		)
+		(pin "2"
+			(uuid "4bfd56fa-fa51-4918-a05a-73296648ca7a")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "SW8")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Diode:1N4148")
+		(at 150.114 98.806 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "fecb1dc6-387d-4f08-8e80-74b63f93f7cd")
+		(property "Reference" "D2"
+			(at 150.114 92.71 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1N4148"
+			(at 150.114 95.25 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_THT:D_DO-35_SOD27_P7.62mm_Horizontal"
+			(at 150.114 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf"
+			(at 150.114 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 150.114 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "D"
+			(at 150.114 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=K 2=A"
+			(at 150.114 98.806 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3d6f50e6-2324-44e9-ae45-4415cfa080af")
+		)
+		(pin "2"
+			(uuid "57bb2608-d48c-482c-8564-ff2246930ce0")
+		)
+		(instances
+			(project "lpk-24_mx_keypad_R_Mk1_rev0"
+				(path "/c68f8c48-7a77-4614-8000-a944073bd0c9"
+					(reference "D2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+)
