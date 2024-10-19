@@ -112,19 +112,19 @@ static const uint8_t IO_EXPA_COLS[COLUMN_COUNT] =
     static const struct keycode_definition_t L0_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
         { {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0} },
-        { {HID_KEY_ESCAPE,0}, {'a',1},     {'s',1},         {'d',1},     {'f',1},     {'g',1},     {'h',1},     {'j',1},     {'k',1},     {'l',1},       {';',1},     {HID_KEY_ENTER,0}     },
+        { {HID_KEY_ESCAPE,0}, {'a',1},     {'r',1},         {'s',1},     {'t',1},     {'g',1},     {'m',1},     {'n',1},     {'e',1},     {'i',1},       {'o',1},     {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L3_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
         { {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0} },
-        { {HID_KEY_ESCAPE,0}, {'z',1},     {'x',1},         {'c',1},     {'v',1},     {'b',1},     {'n',1},     {'m',1},     {',',1},     {'.',1},       {'/',1},     {HID_KEY_ENTER,0}     },
+        { {HID_KEY_ESCAPE,0}, {'z',1},     {'x',1},         {'c',1},     {'d',1},     {'v',1},     {'k',1},     {'h',1},     {',',1},     {'.',1},       {'/',1},     {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L4_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
         { {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0} },
-        { {HID_KEY_ESCAPE,0}, {'q',1},     {'w',1},         {'e',1},     {'r',1},     {'t',1},     {'y',1},     {'u',1},     {'i',1},     {'o',1},       {'p',1},     {HID_KEY_ENTER,0}     },
+        { {HID_KEY_ESCAPE,0}, {'q',1},     {'w',1},         {'f',1},     {'p',1},     {'b',1},     {'j',1},     {'l',1},     {'u',1},     {'y',1},       {';',1},     {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L0_HOLD_DELAY_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
