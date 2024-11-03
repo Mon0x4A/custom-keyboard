@@ -109,7 +109,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW5"
-			(at 0 -8 0)
+			(at -5.675 -7.925 0)
 			(layer "F.SilkS")
 			(uuid "1acf8eef-88c5-4931-95cf-93a8c8928804")
 			(effects
@@ -824,7 +824,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW4"
-			(at 0 -8 0)
+			(at -5.725 -8 0)
 			(layer "F.SilkS")
 			(uuid "bfab7843-99e6-491e-91cc-dc83a9854a62")
 			(effects
@@ -1539,7 +1539,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D2"
-			(at 3.81 -2.12 0)
+			(at 9.225 1.65 0)
 			(layer "F.SilkS")
 			(uuid "8d0408bf-fbcd-4a22-916d-199c1fcc9ebc")
 			(effects
@@ -1848,7 +1848,7 @@
 			(uuid "a690ff49-5415-4d57-98f6-f664efc590d5")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "e05441f7-dda7-482d-8082-e2cee2a31ed8")
 			(effects
@@ -1920,8 +1920,8 @@
 		(at 81 66)
 		(descr "Mounting Hole 2.2mm, M2, ISO14580")
 		(tags "mounting hole 2.2mm m2 iso14580")
-		(property "Reference" "REF**"
-			(at 0 -2.9 0)
+		(property "Reference" "H2"
+			(at -1.4 -3.2 0)
 			(layer "F.SilkS")
 			(uuid "b7081b18-1430-4864-8d60-2409c13b3fb0")
 			(effects
@@ -2028,7 +2028,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D7"
-			(at 3.81 -2.12 0)
+			(at 9.5 -1.7 0)
 			(layer "F.SilkS")
 			(uuid "26dff194-7572-4bae-a6f3-97ae769aef9f")
 			(effects
@@ -2337,7 +2337,7 @@
 			(uuid "d8eee211-297f-4684-809d-84853f5770e3")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "63b40433-b7f2-4945-9cb1-a94fd1adaba5")
 			(effects
@@ -2409,8 +2409,8 @@
 		(at 161.5 119.75)
 		(descr "Mounting Hole 2.2mm, M2, ISO14580")
 		(tags "mounting hole 2.2mm m2 iso14580")
-		(property "Reference" "REF**"
-			(at 0 -2.9 0)
+		(property "Reference" "H4"
+			(at 0.425 -3.325 0)
 			(layer "F.SilkS")
 			(uuid "27dc828c-a636-4df5-86d4-1f798da0192a")
 			(effects
@@ -2517,7 +2517,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW1"
-			(at 0 -8 0)
+			(at -5.875 -8.025 0)
 			(layer "F.SilkS")
 			(uuid "09aff412-7f96-45ca-8250-a8525cf21c14")
 			(effects
@@ -3232,7 +3232,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW7"
-			(at 0 -8 0)
+			(at -5.85 -8.025 0)
 			(layer "F.SilkS")
 			(uuid "6a34199e-cc96-4505-a95c-e515c26e58c5")
 			(effects
@@ -3947,7 +3947,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW6"
-			(at 0 -8 0)
+			(at -5.7 -8.025 0)
 			(layer "F.SilkS")
 			(uuid "d731b84b-a9de-4c30-8eef-3ef6a96afddb")
 			(effects
@@ -4661,8 +4661,8 @@
 		(at 122.2 42.5)
 		(descr "Mounting Hole 2.2mm, M2, ISO14580")
 		(tags "mounting hole 2.2mm m2 iso14580")
-		(property "Reference" "REF**"
-			(at 0 -2.9 0)
+		(property "Reference" "H1"
+			(at -0.875 -3.15 0)
 			(layer "F.SilkS")
 			(uuid "8edf3330-7b3f-464e-b1f4-45eefe1bcb8f")
 			(effects
@@ -4769,7 +4769,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D9"
-			(at 3.81 -2.12 0)
+			(at 7.6 -1.9 0)
 			(layer "F.SilkS")
 			(uuid "118195ed-81fb-4cca-86fc-3bbbdd533249")
 			(effects
@@ -5078,7 +5078,7 @@
 			(uuid "6a4f1e06-0d7b-4019-922d-e44c15100c50")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "ae419645-a968-493b-8ec2-1126cb663304")
 			(effects
@@ -5151,7 +5151,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW2"
-			(at 0 -8 0)
+			(at -5.775 -8.125 0)
 			(layer "F.SilkS")
 			(uuid "a267dd8b-929b-4762-a1aa-c67dc5ad32d5")
 			(effects
@@ -5866,7 +5866,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D4"
-			(at 3.81 -2.12 0)
+			(at 9.4 1.6 0)
 			(layer "F.SilkS")
 			(uuid "4ae79f06-cca5-4147-b141-50febad59c36")
 			(effects
@@ -6175,7 +6175,7 @@
 			(uuid "91900f32-25ae-4b67-8b9b-e1608ede5d2c")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "21079094-d59f-4262-b446-bb7585f8f92a")
 			(effects
@@ -6248,7 +6248,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW9"
-			(at 0 -8 0)
+			(at -5.65 -7.95 0)
 			(layer "F.SilkS")
 			(uuid "1c0bfab1-4db6-47bb-82a0-6dc99475431b")
 			(effects
@@ -6963,7 +6963,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D1"
-			(at 3.81 -2.12 0)
+			(at 9.275 1.65 0)
 			(layer "F.SilkS")
 			(uuid "cf1837fb-a0d1-4399-9a5a-5979d02f9c58")
 			(effects
@@ -7272,7 +7272,7 @@
 			(uuid "80e24734-6239-4c48-afbc-32538e99ecbc")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "03824145-da23-4895-926e-1dd55f3cd386")
 			(effects
@@ -7345,7 +7345,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D8"
-			(at 3.81 -2.12 0)
+			(at 7.8 -2 0)
 			(layer "F.SilkS")
 			(uuid "df5517fb-c3d0-4154-a555-1d5f1dbb66a2")
 			(effects
@@ -7654,7 +7654,7 @@
 			(uuid "8187ec47-f1ee-436a-978d-8f595f3e241b")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "d522f0c6-c493-401c-9f9b-ece41ae87b1a")
 			(effects
@@ -7727,7 +7727,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW10"
-			(at 0 -8 0)
+			(at -5.25 -8.075 0)
 			(layer "F.SilkS")
 			(uuid "9d02f917-f478-45a1-805f-4fb88b5a9958")
 			(effects
@@ -8442,7 +8442,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW3"
-			(at 0 -8 0)
+			(at -5.675 -8.05 0)
 			(layer "F.SilkS")
 			(uuid "ed107093-1b57-484a-b35f-15c45eddaf4d")
 			(effects
@@ -9156,8 +9156,8 @@
 		(at 148.5 77)
 		(descr "Mounting Hole 2.2mm, M2, ISO14580")
 		(tags "mounting hole 2.2mm m2 iso14580")
-		(property "Reference" "REF**"
-			(at 0 -2.9 0)
+		(property "Reference" "H3"
+			(at -3.45 -1.525 0)
 			(layer "F.SilkS")
 			(uuid "fa0887a7-c445-4558-8edb-57214268865a")
 			(effects
@@ -9264,7 +9264,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D6"
-			(at 3.81 -2.12 0)
+			(at 7.8 -1.9 0)
 			(layer "F.SilkS")
 			(uuid "36e35f1d-9f46-478a-b88d-f770d39b808d")
 			(effects
@@ -9573,7 +9573,7 @@
 			(uuid "c738d433-6a33-4e57-b78f-504974f5e09b")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "994f32dc-a1b1-49d2-8e42-255c2de2ba82")
 			(effects
@@ -9646,7 +9646,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D5"
-			(at 3.81 -2.12 0)
+			(at 9.3 1.5 0)
 			(layer "F.SilkS")
 			(uuid "8444d1f4-8d92-4c54-81e8-59a63b7b162f")
 			(effects
@@ -9955,7 +9955,7 @@
 			(uuid "e9f282ce-ee5c-4790-906e-d3c1c6f3dcbe")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "e7c27474-bd24-4e62-afed-5bed3e4155a8")
 			(effects
@@ -10028,7 +10028,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D3"
-			(at 3.81 -2.12 0)
+			(at 9.2 1.5 0)
 			(layer "F.SilkS")
 			(uuid "dee83f60-b232-4b1b-a915-8acfccfabe7e")
 			(effects
@@ -10337,7 +10337,7 @@
 			(uuid "a56a6590-5af2-4806-89a9-092e3d1206a9")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "eae8f749-fa18-4f27-b01b-da652e676291")
 			(effects
@@ -10410,7 +10410,7 @@
 		(descr "keyswitch Hotswap Socket plated holes Keycap 1.00u")
 		(tags "Keyboard Keyswitch Switch Hotswap Socket Plated Relief Cutout Keycap 1.00u")
 		(property "Reference" "SW8"
-			(at 0 -8 0)
+			(at -5.625 -8 0)
 			(layer "F.SilkS")
 			(uuid "b1763f2e-6cc6-47ae-baaa-267044554beb")
 			(effects
@@ -11125,7 +11125,7 @@
 		(descr "Diode, DO-35_SOD27 series, Axial, Horizontal, pin pitch=7.62mm, , length*diameter=4*2mm^2, , http://www.diodes.com/_files/packages/DO-35.pdf")
 		(tags "Diode DO-35_SOD27 series Axial Horizontal pin pitch 7.62mm  length 4mm diameter 2mm")
 		(property "Reference" "D10"
-			(at 3.81 -2.12 0)
+			(at 7.5 -1.8 0)
 			(layer "F.SilkS")
 			(uuid "815d4e0f-6f28-4313-b275-863586dc1b15")
 			(effects
@@ -11434,7 +11434,7 @@
 			(uuid "800bfaf2-2761-4dfb-bb9d-2b49c4f2fc51")
 		)
 		(fp_text user "K"
-			(at 0 -1.8 0)
+			(at -2 0 0)
 			(layer "F.SilkS")
 			(uuid "734c66ac-a2d6-4494-a367-b676ffff14eb")
 			(effects
@@ -11503,11 +11503,11 @@
 	(footprint "Connector_JST:JST_GH_BM12B-GHS-TBT_1x12-1MP_P1.25mm_Vertical"
 		(layer "B.Cu")
 		(uuid "14796bd1-0929-4db5-a800-50b19b78a2cb")
-		(at 148.2 89.375 90)
+		(at 148.4 89.375 90)
 		(descr "JST GH series connector, BM12B-GHS-TBT (http://www.jst-mfg.com/product/pdf/eng/eGH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST GH vertical")
 		(property "Reference" "J1"
-			(at 0 4 270)
+			(at 9.575 -3.1 0)
 			(layer "B.SilkS")
 			(uuid "40b4507e-514d-4bee-b968-698a7c9a1952")
 			(effects
@@ -11519,7 +11519,7 @@
 			)
 		)
 		(property "Value" "Conn_01x12_Socket"
-			(at 0 -4 270)
+			(at 0 -4 -90)
 			(layer "B.Fab")
 			(uuid "63715798-0074-422a-85c8-e07ad1b27a20")
 			(effects
@@ -12215,7 +12215,7 @@
 			(uuid "32ae334b-0f45-45cb-a8e4-0c3a90d34be4")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 1.5 270)
+			(at 0 1.5 -90)
 			(layer "B.Fab")
 			(uuid "59ec490c-0f7c-4602-9379-6a3f194a5518")
 			(effects
@@ -12371,6 +12371,126 @@
 				(xyz 0 0 0)
 			)
 		)
+	)
+	(gr_rect
+		(start 84.925 58.85)
+		(end 99.175 73.1)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "23eaf6b5-9507-4ec6-8f03-643c117ea0f9")
+	)
+	(gr_rect
+		(start 124.925 63.925)
+		(end 139.025 78.025)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "34a7fd93-6223-4418-9b53-785e17ff27fb")
+	)
+	(gr_rect
+		(start 104.95 33.95)
+		(end 119.05 48.05)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "4691e823-6a13-4283-97cf-621c2cc6958b")
+	)
+	(gr_rect
+		(start 144.875 103.85)
+		(end 159.125 118.1)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "80b4d908-c04c-4503-87c4-e3b3c25c8790")
+	)
+	(gr_rect
+		(start 64.9 43.875)
+		(end 79.225 58.2)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "81ed426a-37b3-4576-9787-caf6cb17821a")
+	)
+	(gr_rect
+		(start 64.925 73.95)
+		(end 79.05 88.075)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "977c5de9-e82a-46d8-847c-08f4c5266257")
+	)
+	(gr_rect
+		(start 104.9 53.9)
+		(end 119.125 68.125)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "a5c0cc7e-9c61-4a00-b338-28654446218d")
+	)
+	(gr_rect
+		(start 124.9 83.925)
+		(end 139.075 98.1)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "c5d36407-0e50-4c08-9637-d2c3e138d127")
+	)
+	(gr_rect
+		(start 164.875 108.925)
+		(end 179.075 123.125)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "db56e181-04ce-435f-a153-ebdc2cb778a8")
+	)
+	(gr_rect
+		(start 124.925 43.975)
+		(end 139.15 58.2)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(fill none)
+		(layer "B.SilkS")
+		(uuid "dca7d36e-30da-4f1d-ad24-232983389d29")
+	)
+	(gr_line
+		(start 143.4 81.6)
+		(end 143.4 99.9)
+		(stroke
+			(width 0.3)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "1a444a50-4e02-4a65-a992-2031abccaac4")
 	)
 	(gr_line
 		(start 83 79.5)
@@ -12981,6 +13101,395 @@
 		)
 		(layer "Edge.Cuts")
 		(uuid "fc34e5dc-43bf-4515-966d-30f0b2fd17be")
+	)
+	(gr_text "SW10"
+		(at 128.8 83.5 0)
+		(layer "B.SilkS")
+		(uuid "208f82b1-663a-406f-87df-807038a9cdc8")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW9"
+		(at 127.9 63.7 0)
+		(layer "B.SilkS")
+		(uuid "3365d251-aabb-4460-a51f-1452b6449c37")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW1"
+		(at 147.7 103.6 0)
+		(layer "B.SilkS")
+		(uuid "3f8278f1-10d6-4323-9d29-f976f14c511f")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW6"
+		(at 67.9 73.6 0)
+		(layer "B.SilkS")
+		(uuid "416fabd4-e945-4b02-aa17-2d884cca3d91")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW4"
+		(at 127.8 43.6 0)
+		(layer "B.SilkS")
+		(uuid "4d019785-fcd3-4fca-9fb5-8b0fa4e4ce73")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW7"
+		(at 87.7 58.6 0)
+		(layer "B.SilkS")
+		(uuid "78c0dc81-0bbd-4b73-9bee-403b6fe35db3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW8"
+		(at 107.9 53.6 0)
+		(layer "B.SilkS")
+		(uuid "7c2d1e86-d9bf-4923-8c95-a6401ec4a3f6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW5"
+		(at 67.9 43.6 0)
+		(layer "B.SilkS")
+		(uuid "8c44806a-651a-46a7-b69d-598f2a863ceb")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW3"
+		(at 107.9 33.5 0)
+		(layer "B.SilkS")
+		(uuid "c2f7f401-ee2f-4a8c-ac25-7c2d33c95400")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "SW2"
+		(at 167.775 108.475 0)
+		(layer "B.SilkS")
+		(uuid "c864ce11-cadd-4cea-85af-7b3b260e546c")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "CONTROL BOARD"
+		(at 143 99.4 -90)
+		(layer "B.SilkS")
+		(uuid "d10e64c2-16ab-48a7-ae92-4c50cc776725")
+		(effects
+			(font
+				(size 1 1.5)
+				(thickness 0.1)
+			)
+			(justify left bottom mirror)
+		)
+	)
+	(gr_text "I"
+		(at 143 82.3 90)
+		(layer "F.SilkS")
+		(uuid "4e15af19-44a6-4e35-9754-b2ac97e838db")
+		(effects
+			(font
+				(face "JetBrains Mono Light")
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+		(render_cache "I" 90
+			(polygon
+				(pts
+					(xy 142.83 82.146615) (xy 142.729127 82.146615) (xy 142.729127 81.934124) (xy 141.89919 81.934124)
+					(xy 141.89919 82.146615) (xy 141.798318 82.146615) (xy 141.798318 81.609281) (xy 141.89919 81.609281)
+					(xy 141.89919 81.820307) (xy 142.729127 81.820307) (xy 142.729127 81.609281) (xy 142.83 81.609281)
+				)
+			)
+		)
+	)
+	(gr_text "JLCJLCJLCJLC"
+		(at 122.7 100.1 0)
+		(layer "F.SilkS")
+		(uuid "72ff9f5c-1c1d-43ba-8065-223e22fd34b6")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "10-2024"
+		(at 147.1 100 90)
+		(layer "F.SilkS")
+		(uuid "c1c2cbab-8ac4-415d-94f8-be98d9dd8b40")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "github.com/"
+		(at 148.9 100 90)
+		(layer "F.SilkS")
+		(uuid "c3ad6090-5f89-4f9a-8894-106bba4c17e3")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+				(italic yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "thegreatgramblinham"
+		(at 150.5 96.8 90)
+		(layer "F.SilkS")
+		(uuid "d08d270c-c1cc-42a4-82eb-37a5e0e3ccae")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+				(italic yes)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "Mk"
+		(at 143 84.4 90)
+		(layer "F.SilkS")
+		(uuid "d67f3c5a-64c7-459b-86e4-506ea9d9bc5f")
+		(effects
+			(font
+				(size 1.5 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "MSKP-LPK20-L-MK.1-REV.0"
+		(at 145.5 100 90)
+		(layer "F.SilkS")
+		(uuid "f27c452e-5078-422c-af4f-adbdcf829168")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "LPK20 KEYPAD"
+		(at 143 100 90)
+		(layer "F.SilkS" knockout)
+		(uuid "f6f40225-df59-474c-8c61-ae275966bfc6")
+		(effects
+			(font
+				(face "JetBrains Mono ExtraBold")
+				(size 1.5 1.5)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+		(render_cache "LPK20 KEYPAD" 90
+			(polygon
+				(pts
+					(xy 142.745 99.757466) (xy 141.197477 99.757466) (xy 141.197477 99.440928) (xy 142.467295 99.440928)
+					(xy 142.467295 98.818108) (xy 142.745 98.818108)
+				)
+			)
+			(polygon
+				(pts
+					(xy 141.767305 97.54373) (xy 141.841066 97.559727) (xy 141.90932 97.586389) (xy 141.94486 97.605809)
+					(xy 142.00941 97.653129) (xy 142.0643 97.710824) (xy 142.105442 97.771621) (xy 142.117418 97.793754)
+					(xy 142.146993 97.86471) (xy 142.16689 97.942389) (xy 142.176449 98.017082) (xy 142.1786 98.076587)
+					(xy 142.1786 98.285415) (xy 142.745 98.285415) (xy 142.745 98.601953) (xy 141.197477 98.601953)
+					(xy 141.197477 98.076587) (xy 141.475181 98.076587) (xy 141.475181 98.285415) (xy 141.900896 98.285415)
+					(xy 141.900896 98.076587) (xy 141.89092 98.000965) (xy 141.857861 97.934807) (xy 141.840446 97.91502)
+					(xy 141.776851 97.871894) (xy 141.705004 97.855465) (xy 141.688039 97.854937) (xy 141.613607 97.866437)
+					(xy 141.547242 97.904283) (xy 141.535631 97.91502) (xy 141.492242 97.980445) (xy 141.475712 98.057923)
+					(xy 141.475181 98.076587) (xy 141.197477 98.076587) (xy 141.201324 97.997842) (xy 141.212864 97.924271)
+					(xy 141.235043 97.84769) (xy 141.259026 97.792655) (xy 141.297296 97.728789) (xy 141.348859 97.668024)
+					(xy 141.409938 97.617993) (xy 141.430118 97.605076) (xy 141.502532 97.569914) (xy 141.574068 97.549402)
+					(xy 141.651631 97.53944) (xy 141.688039 97.538398)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.745 97.345324) (xy 141.197477 97.345324) (xy 141.197477 97.028785) (xy 141.807107 97.028785)
+					(xy 141.807107 96.880774) (xy 141.197477 96.623586) (xy 141.197477 96.281769) (xy 141.933136 96.602337)
+					(xy 142.745 96.268946) (xy 142.745 96.61516) (xy 142.084811 96.878942) (xy 142.084811 97.028785)
+					(xy 142.745 97.028785)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.745 96.075872) (xy 142.476454 96.075872) (xy 141.919581 95.533286) (xy 141.860848 95.484267)
+					(xy 141.7982 95.445822) (xy 141.794284 95.443893) (xy 141.722118 95.419009) (xy 141.664225 95.413119)
+					(xy 141.589151 95.421523) (xy 141.521612 95.452108) (xy 141.507055 95.464043) (xy 141.463889 95.528515)
+					(xy 141.451734 95.603262) (xy 141.464372 95.680048) (xy 141.505714 95.744208) (xy 141.509253 95.747609)
+					(xy 141.572574 95.786265) (xy 141.64925 95.800992) (xy 141.667889 95.801465) (xy 141.667889 96.118004)
+					(xy 141.586023 96.112932) (xy 141.51065 96.097718) (xy 141.441767 96.07236) (xy 141.406304 96.05389)
+					(xy 141.342212 96.008438) (xy 141.28778 95.952682) (xy 141.243008 95.886622) (xy 141.235212 95.872173)
+					(xy 141.205637 95.802982) (xy 141.18574 95.727299) (xy 141.17618 95.654576) (xy 141.17403 95.596667)
+					(xy 141.177579 95.523326) (xy 141.190056 95.446783) (xy 141.211517 95.376558) (xy 141.230816 95.333251)
+					(xy 141.270801 95.26805) (xy 141.320232 95.21258) (xy 141.379108 95.166842) (xy 141.392016 95.158862)
+					(xy 141.461475 95.126018) (xy 141.538877 95.105338) (xy 141.615329 95.097127) (xy 141.642243 95.09658)
+					(xy 141.71583 95.101333) (xy 141.795213 95.117762) (xy 141.864517 95.142582) (xy 141.894668 95.156664)
+					(xy 141.962719 95.196228) (xy 142.024669 95.241079) (xy 142.087993 95.295043) (xy 142.144528 95.349738)
+					(xy 142.467295 95.676901) (xy 142.467295 95.079727) (xy 142.745 95.079727)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.029937 94.198174) (xy 142.069057 94.224267) (xy 142.106857 94.288513) (xy 142.111922 94.331612)
+					(xy 142.095178 94.403997) (xy 142.069057 94.438224) (xy 142.001595 94.474408) (xy 141.957316 94.479256)
+					(xy 141.882555 94.463228) (xy 141.84814 94.438224) (xy 141.811956 94.373797) (xy 141.807107 94.331612)
+					(xy 141.823135 94.258081) (xy 141.84814 94.224267) (xy 141.913506 94.188729) (xy 141.957316 94.183967)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.376775 93.830223) (xy 142.454957 93.847253) (xy 142.52634 93.876448) (xy 142.54643 93.887578)
+					(xy 142.607603 93.931284) (xy 142.659688 93.985008) (xy 142.702686 94.04875) (xy 142.710195 94.0627)
+					(xy 142.740914 94.137447) (xy 142.758833 94.211938) (xy 142.767537 94.293269) (xy 142.768447 94.331612)
+					(xy 142.764806 94.406075) (xy 142.752007 94.483935) (xy 142.729991 94.555534) (xy 142.710195 94.59979)
+					(xy 142.669015 94.665958) (xy 142.618747 94.722036) (xy 142.559392 94.768024) (xy 142.54643 94.776011)
+					(xy 142.477086 94.808662) (xy 142.400943 94.82922) (xy 142.326603 94.837383) (xy 142.3006 94.837927)
+					(xy 141.641877 94.837927) (xy 141.56573 94.833029) (xy 141.487649 94.816099) (xy 141.416437 94.787076)
+					(xy 141.396413 94.776011) (xy 141.335082 94.73204) (xy 141.282983 94.67798) (xy 141.240114 94.613831)
+					(xy 141.232648 94.59979) (xy 141.201736 94.524485) (xy 141.183704 94.450103) (xy 141.174945 94.369462)
+					(xy 141.17403 94.331612) (xy 141.451734 94.331612) (xy 141.460138 94.405146) (xy 141.490723 94.472261)
+					(xy 141.502658 94.48695) (xy 141.563108 94.528715) (xy 141.637082 94.542583) (xy 141.642609 94.542637)
+					(xy 142.299867 94.542637) (xy 142.374957 94.53016) (xy 142.436598 94.489345) (xy 142.439818 94.485851)
+					(xy 142.478012 94.418715) (xy 142.490544 94.343591) (xy 142.490743 94.331612) (xy 142.482338 94.258138)
+					(xy 142.451754 94.191242) (xy 142.439818 94.176639) (xy 142.379368 94.134599) (xy 142.305394 94.12064)
+					(xy 142.299867 94.120586) (xy 141.642609 94.120586) (xy 141.567519 94.132902) (xy 141.505878 94.173191)
+					(xy 141.502658 94.176639) (xy 141.464465 94.243226) (xy 141.451933 94.319371) (xy 141.451734 94.331612)
+					(xy 141.17403 94.331612) (xy 141.177693 94.256278) (xy 141.190573 94.177987) (xy 141.212727 94.106535)
+					(xy 141.232648 94.0627) (xy 141.273671 93.996955) (xy 141.323924 93.941227) (xy 141.383408 93.895518)
+					(xy 141.396413 93.887578) (xy 141.465564 93.854734) (xy 141.541584 93.834054) (xy 141.615876 93.825843)
+					(xy 141.641877 93.825296) (xy 142.3006 93.825296)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.745 92.310013) (xy 141.197477 92.310013) (xy 141.197477 91.993475) (xy 141.807107 91.993475)
+					(xy 141.807107 91.845464) (xy 141.197477 91.588276) (xy 141.197477 91.246458) (xy 141.933136 91.567027)
+					(xy 142.745 91.233635) (xy 142.745 91.579849) (xy 142.084811 91.843632) (xy 142.084811 91.993475)
+					(xy 142.745 91.993475)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.745 91.019312) (xy 141.197477 91.019312) (xy 141.197477 90.069696) (xy 141.475181 90.069696)
+					(xy 141.475181 90.709002) (xy 141.807107 90.709002) (xy 141.807107 90.143702) (xy 142.084811 90.143702)
+					(xy 142.084811 90.709002) (xy 142.467295 90.709002) (xy 142.467295 90.069696) (xy 142.745 90.069696)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.745 89.45457) (xy 142.198384 89.45457) (xy 141.197477 89.897871) (xy 141.197477 89.566311)
+					(xy 141.668255 89.372138) (xy 141.74107 89.344661) (xy 141.81316 89.322228) (xy 141.818098 89.320847)
+					(xy 141.889722 89.30198) (xy 141.946325 89.290073) (xy 141.873224 89.273071) (xy 141.818098 89.259298)
+					(xy 141.745761 89.238878) (xy 141.672682 89.213725) (xy 141.668255 89.212037) (xy 141.197477 89.024092)
+					(xy 141.197477 88.694731) (xy 142.198384 89.138032) (xy 142.745 89.138032)
+				)
+			)
+			(polygon
+				(pts
+					(xy 141.767305 87.473109) (xy 141.841066 87.489106) (xy 141.90932 87.515768) (xy 141.94486 87.535188)
+					(xy 142.00941 87.582508) (xy 142.0643 87.640203) (xy 142.105442 87.701) (xy 142.117418 87.723133)
+					(xy 142.146993 87.794089) (xy 142.16689 87.871768) (xy 142.176449 87.94646) (xy 142.1786 88.005966)
+					(xy 142.1786 88.214794) (xy 142.745 88.214794) (xy 142.745 88.531332) (xy 141.197477 88.531332)
+					(xy 141.197477 88.005966) (xy 141.475181 88.005966) (xy 141.475181 88.214794) (xy 141.900896 88.214794)
+					(xy 141.900896 88.005966) (xy 141.89092 87.930344) (xy 141.857861 87.864186) (xy 141.840446 87.844399)
+					(xy 141.776851 87.801273) (xy 141.705004 87.784844) (xy 141.688039 87.784316) (xy 141.613607 87.795816)
+					(xy 141.547242 87.833662) (xy 141.535631 87.844399) (xy 141.492242 87.909824) (xy 141.475712 87.987302)
+					(xy 141.475181 88.005966) (xy 141.197477 88.005966) (xy 141.201324 87.927221) (xy 141.212864 87.85365)
+					(xy 141.235043 87.777069) (xy 141.259026 87.722034) (xy 141.297296 87.658168) (xy 141.348859 87.597403)
+					(xy 141.409938 87.547372) (xy 141.430118 87.534455) (xy 141.502532 87.499293) (xy 141.574068 87.478781)
+					(xy 141.651631 87.468819) (xy 141.688039 87.467777)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.745 86.521092) (xy 142.39329 86.595097) (xy 142.39329 86.962194) (xy 142.745 87.0362) (xy 142.745 87.358967)
+					(xy 141.197477 86.981245) (xy 141.197477 86.778646) (xy 141.483607 86.778646) (xy 141.556149 86.792072)
+					(xy 141.605607 86.800994) (xy 141.678905 86.814427) (xy 141.753168 86.829308) (xy 141.763143 86.831402)
+					(xy 142.135369 86.909438) (xy 142.135369 86.650052) (xy 141.765341 86.723691) (xy 141.690707 86.737934)
+					(xy 141.616556 86.752499) (xy 141.606706 86.754466) (xy 141.532734 86.769136) (xy 141.483607 86.778646)
+					(xy 141.197477 86.778646) (xy 141.197477 86.580443) (xy 142.745 86.198325)
+				)
+			)
+			(polygon
+				(pts
+					(xy 142.327366 84.993131) (xy 142.402309 85.008955) (xy 142.471571 85.035326) (xy 142.507595 85.054535)
+					(xy 142.573026 85.101168) (xy 142.628725 85.158176) (xy 142.670533 85.218355) (xy 142.682718 85.240282)
+					(xy 142.712825 85.310533) (xy 142.733078 85.387333) (xy 142.74281 85.461098) (xy 142.745 85.519818)
+					(xy 142.745 86.019905) (xy 141.197477 86.019905) (xy 141.197477 85.519818) (xy 141.475181 85.519818)
+					(xy 141.475181 85.703367) (xy 142.467295 85.703367) (xy 142.467295 85.519818) (xy 142.455725 85.443453)
+					(xy 142.417648 85.376418) (xy 142.406845 85.364846) (xy 142.342606 85.321456) (xy 142.268996 85.304927)
+					(xy 142.251507 85.304396) (xy 141.688771 85.304396) (xy 141.612546 85.315966) (xy 141.545973 85.354043)
+					(xy 141.534532 85.364846) (xy 141.491931 85.428822) (xy 141.475703 85.502332) (xy 141.475181 85.519818)
+					(xy 141.197477 85.519818) (xy 141.201324 85.442172) (xy 141.212864 85.3697) (xy 141.235043 85.294356)
+					(xy 141.259026 85.240282) (xy 141.297589 85.177302) (xy 141.349681 85.117181) (xy 141.411505 85.067436)
+					(xy 141.43195 85.054535) (xy 141.505194 85.019373) (xy 141.577721 84.998862) (xy 141.656508 84.988899)
+					(xy 141.693534 84.987857) (xy 142.246744 84.987857)
+				)
+			)
+		)
 	)
 	(segment
 		(start 141.375 97.875)
@@ -13694,7 +14203,7 @@
 		(net 8)
 		(uuid "1e68d9b1-370f-4554-9d18-45c554fa735b")
 	)
-	(via
+	(via blind
 		(at 142 95)
 		(size 0.6)
 		(drill 0.3)
