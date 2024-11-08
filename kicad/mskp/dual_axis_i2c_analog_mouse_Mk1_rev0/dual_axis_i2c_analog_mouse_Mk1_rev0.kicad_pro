@@ -481,7 +481,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "i2c_mouse_mk1_exports",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
