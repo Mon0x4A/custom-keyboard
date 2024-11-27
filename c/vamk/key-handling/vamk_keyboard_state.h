@@ -9,12 +9,6 @@
 #include "pico/stdlib.h"
 
 ///Type Declarations
-struct modifier_collection_t
-{
-    uint8_t modifiers[HID_REPORT_KEYCODE_ARRAY_LENGTH];
-    uint8_t modifier_count:3;
-};
-
 ///Function Definitions
 uint8_t keyboard_state_get_current_layer_index(void);
 uint8_t keyboard_state_clear_sticky_layer(void);

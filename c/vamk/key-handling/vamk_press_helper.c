@@ -7,7 +7,6 @@
 #include "vamk_key_state.h"
 #include "vamk_keyboard_state.h"
 #include "vamk_layer_info.h"
-#include "vamk_press_handler.h"
 #include "vamk_press_helper.h"
 #include "vamk_types.h"
 #include "win_macros.h"

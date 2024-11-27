@@ -41,21 +41,21 @@ target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_buffer_helper.c
         ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_i2c_api.c
         ${CMAKE_CURRENT_LIST_DIR}/display/vamk_display_state.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk.c
-        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_hold_delay_handler.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_helper.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_logic.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_state.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_timer.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_keyboard_state.c
-        ${CMAKE_CURRENT_LIST_DIR}/vamk_layer_info.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_peripheral_switch_state.c
-        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_press_handler.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_press_helper.c
-        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_release_handler.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_release_helper.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_switch_state.c
-        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_tap_handler.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_switch_logic.c
         ${CMAKE_CURRENT_LIST_DIR}/mouse-handling/pmw3360_spi_api.c
         ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/usb_descriptors.c
         ${CMAKE_CURRENT_LIST_DIR}/tinyusb-config/tusb_implementation.c
+        ${CMAKE_CURRENT_LIST_DIR}/vamk_layer_info.c
+        ${CMAKE_CURRENT_LIST_DIR}/vamk.c
         )
 
 pico_set_program_name(vamk "vamk")

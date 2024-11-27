@@ -3,7 +3,6 @@
 
 //Imports
 #include "pico/stdlib.h"
-#include "vamk_types.h"
 
 ///General Keyboard Constants
 //===========================

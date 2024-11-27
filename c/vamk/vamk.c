@@ -18,15 +18,16 @@
 #include "ssd1306_config.h"
 #include "ssd1306_buffer_helper.h"
 #include "ssd1306_i2c_api.h"
-#include "vamk_keymap_config.h"
 #include "vamk_config.h"
+#include "vamk_types.h"
+#include "vamk_key_logic.h"
+#include "vamk_switch_logic.h"
+#include "vamk_key_timer.h"
+#include "vamk_keymap_config.h"
+#include "vamk_switch_state.h"
 #include "vamk_display_state.h"
 #include "vamk_key_state.h"
 #include "vamk_peripheral_switch_state.h"
-#include "vamk_press_handler.h"
-#include "vamk_release_handler.h"
-#include "vamk_switch_state.h"
-#include "vamk_types.h"
 
 ///Static Variables
 
@@ -110,17 +111,22 @@ int main(void)
 #endif
 
     // Init local/native switch handling
-    switch_state_set_pressed_callback(press_handler_on_switch_press);
-    switch_state_set_released_callback(release_handler_on_switch_release);
+    switch_state_set_pressed_callback(switch_logic_press_handler);
+    switch_state_set_released_callback(switch_logic_release_handler);
 
 #if IS_SPLIT_KEYBOARD
     // Join I2C bus as controller
     peripheral_switch_state_init();
 
     // Init peripheral switch state handling.
-    peripheral_switch_state_set_pressed_callback(press_handler_on_switch_press);
-    peripheral_switch_state_set_released_callback(release_handler_on_switch_release);
+    peripheral_switch_state_set_pressed_callback(switch_logic_press_handler);
+    peripheral_switch_state_set_released_callback(switch_logic_release_handler);
 #endif
+
+    // Init logic handlers for key gestures
+    key_timer_set_key_down_callback(key_logic_down_handler);
+    key_timer_set_key_up_callback(key_logic_up_handler);
+    key_timer_set_key_delay_callback(key_logic_delay_handler);
 
         // Primary side run loop
         while (1)
