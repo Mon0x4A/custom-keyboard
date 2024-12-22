@@ -486,7 +486,7 @@
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
-      "svg": "",
+      "svg": "../../../scad/cases/lpk20_mk1/",
       "vrml": ""
     },
     "page_layout_descr_file": ""
