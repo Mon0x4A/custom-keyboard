@@ -33,22 +33,11 @@
 #endif
 
 #define IS_VOK_SL_MODEL 0
-#define IS_QLP_MODEL 1
+#define IS_QLP_MODEL 0
 #define IS_SEOK_MODEL 0
+#define IS_LPK_MODEL 1
 
-#if IS_VOK_SL_MODEL && (IS_QLP_MODEL || IS_SEOK_MODEL)
-#error "VOK_SL_MODEL has been declared. No other models are allowed."
-#endif
-
-#if IS_QLP_MODEL && (IS_VOK_SL_MODEL || IS_SEOK_MODEL)
-#error "QLP_MODEL has been declared. No other models are allowed."
-#endif
-
-#if IS_SEOK_MODEL && (IS_QLP_MODEL || IS_VOK_SL_MODEL)
-#error "SEOK_MODEL has been declared. No other models are allowed."
-#endif
-
-#if !(IS_VOK_SL_MODEL || IS_QLP_MODEL || IS_SEOK_MODEL)
+#if !(IS_VOK_SL_MODEL || IS_QLP_MODEL || IS_SEOK_MODEL || IS_LPK_MODEL)
 #error "Must define singluar, valid keyboard model"
 #endif
 

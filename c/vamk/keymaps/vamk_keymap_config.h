@@ -10,10 +10,11 @@
 //#include "vok_sl_rev0_keymap.h"
 //#include "qlp_22_rev1_keymap.h"
 //#include "seok_38_rev0_keymap_m.h"
-#include "mskp_qlp_rev0_keymap.h"
+//#include "mskp_qlp_rev0_keymap.h"
+#include "mskp_lpk20_rev0_keymap.h"
 
 ///Constants
-#define LAYER_COUNT 3
+#define LAYER_COUNT 6
 #define MAX_LAYER_COUNT 10
 
 //TODO This needs to be moved to each of the keymap files

@@ -159,6 +159,85 @@ static const keycode_definition_array_ptr_t get_qlp_delay_value_at(
 }
 #endif
 
+#if IS_LPK_MODEL
+static const keycode_definition_array_ptr_t get_lpk_base_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t base_layer_definitions_ptr = NULL;
+    switch (layer_index)
+    {
+        case 0:
+        case 3:
+        case 4:
+            base_layer_definitions_ptr = &L0_BASE_KEYCODES;
+            break;
+        case 1:
+        case 5:
+        case 6:
+            base_layer_definitions_ptr = &L1_BASE_KEYCODES;
+            break;
+        case 2:
+            base_layer_definitions_ptr = &NULL_KEYCODE_ARRAY;
+            break;
+    }
+    return base_layer_definitions_ptr;
+}
+static const keycode_definition_array_ptr_t get_lpk_tap_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t tap_layer_definitions_ptr = NULL;
+    switch (layer_index)
+    {
+        case 0:
+            tap_layer_definitions_ptr = &L0_TAP_KEYCODES;
+            break;
+        case 1:
+            tap_layer_definitions_ptr = &L1_TAP_KEYCODES;
+            break;
+        case 2:
+            break;
+        case 3:
+            tap_layer_definitions_ptr = &L3_TAP_KEYCODES;
+            break;
+        case 4:
+            tap_layer_definitions_ptr = &L4_TAP_KEYCODES;
+            break;
+        case 5:
+            tap_layer_definitions_ptr = &L5_TAP_KEYCODES;
+            break;
+        case 6:
+            tap_layer_definitions_ptr = &L6_TAP_KEYCODES;
+            break;
+    }
+    return tap_layer_definitions_ptr;
+}
+static const keycode_definition_array_ptr_t get_lpk_delay_value_at(
+    uint8_t row, uint8_t col, uint8_t layer_index)
+{
+    keycode_definition_array_ptr_t delay_hold_layer_definitions_ptr = NULL;
+    switch (layer_index)
+    {
+        case 0:
+            delay_hold_layer_definitions_ptr = &L0_HOLD_DELAY_KEYCODES;
+            break;
+        case 1:
+            delay_hold_layer_definitions_ptr = &L1_HOLD_DELAY_KEYCODES;
+        case 2:
+            break;
+        case 3:
+            delay_hold_layer_definitions_ptr = &L3_HOLD_DELAY_KEYCODES;
+            break;
+        case 4:
+            delay_hold_layer_definitions_ptr = &L4_HOLD_DELAY_KEYCODES;
+            break;
+        case 5:
+        case 6:
+            break;
+    }
+    return delay_hold_layer_definitions_ptr;
+}
+#endif
+
 static struct layer_index_value_container_t build_layer_index_value_from(
     uint8_t row,
     uint8_t col,
@@ -270,6 +349,9 @@ struct hid_keycode_container_t layer_info_get_base_keycode_at(
 #elif IS_QLP_MODEL
     struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, key_event_source,
         &get_qlp_base_value_at);
+#elif IS_LPK_MODEL
+    struct layer_index_value_container_t layer_value = get_base_value_at(row, col, layer_index, key_event_source,
+        &get_lpk_base_value_at);
 #endif
     return build_code_container(layer_value);
 }
@@ -283,6 +365,9 @@ struct hid_keycode_container_t layer_info_get_tap_keycode_at(
 #elif IS_QLP_MODEL
     struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, key_event_source,
         &get_qlp_tap_value_at);
+#elif IS_LPK_MODEL
+    struct layer_index_value_container_t layer_value = get_tap_value_at(row, col, layer_index, key_event_source,
+        &get_lpk_tap_value_at);
 #endif
     return build_code_container(layer_value);
 }
@@ -296,6 +381,9 @@ struct hid_keycode_container_t layer_info_get_hold_delay_keycode_at(
 #elif IS_QLP_MODEL
     struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, key_event_source,
         &get_qlp_delay_value_at);
+#elif IS_LPK_MODEL
+    struct layer_index_value_container_t layer_value = get_delay_hold_value_at(row, col, layer_index, key_event_source,
+        &get_lpk_delay_value_at);
 #endif
     return build_code_container(layer_value);
 }
