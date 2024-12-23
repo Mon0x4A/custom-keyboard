@@ -126,7 +126,7 @@ static const uint8_t IO_EXPA_COLS[COLUMN_COUNT] =
 
     static const struct keycode_definition_t L1_HOLD_DELAY_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0}, {KC_NULL,0},          {KC_NULL,0},          {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},               {KC_NULL,0},           {KC_NULL,0},           {KC_NULL,0} },
+        { {KC_NULL,0},          {HID_KEY_SHIFT_RIGHT,0},  {KC_NULL,0},          {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},           {HID_KEY_SHIFT_RIGHT,0},   {KC_NULL,0}           },
         { {HID_KEY_GUI_LEFT,0}, {HID_KEY_CONTROL_LEFT,0}, {HID_KEY_ALT_LEFT,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_ALT_RIGHT,0}, {HID_KEY_CONTROL_RIGHT,0}, {HID_KEY_GUI_RIGHT,0} },
     };
 #endif
