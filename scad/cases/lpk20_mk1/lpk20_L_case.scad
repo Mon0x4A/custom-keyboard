@@ -185,6 +185,7 @@ union()
 
 module mountingPuckPunch(depth, rad)
 {
+    //NOTE: This is the side distance of the square, not the diagonal distance.
     _puckCenterToCenterDist = 45;
     cylinder(r=rad, h=depth, $fn=100);
     translate([0, _puckCenterToCenterDist, 0])
