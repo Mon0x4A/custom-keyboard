@@ -22,6 +22,8 @@
 #define KC_WIN_IME_TOGGLE 0xC1 //OS+Space: Windows IME toggle shortcut
 #define KC_WIN_ALPHA_SWAP 0xC2 //Alt+Grave: Windows alphabet swap shortcut.
 
+#define KC_KM_TOGGLE 0xD0 //Swap between output ports.
+
 ///Type Declarations
 struct keycode_definition_t
 {

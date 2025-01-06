@@ -90,6 +90,14 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
             is_key_macro_code = true;
             macro_func_ptr = &macro_windows_alphabet_swap;
             break;
+        case KC_KM_TOGGLE:
+            static bool output_state = 0;
+            if (output_state)
+                gpio_pull_up(KM_SWITCH_SELECT_PIN);
+            else
+                gpio_pull_down(KM_SWITCH_SELECT_PIN);
+            output_state ^= 1;
+            break;
         case HID_KEY_ALT_LEFT:
         case HID_KEY_ALT_RIGHT:
             break;

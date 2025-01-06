@@ -45,7 +45,7 @@
 
 /// Key Behavior Config
 //=====================
-#define TAP_ACTION_TIMEOUT_MS 200 //ms
+#define TAP_ACTION_TIMEOUT_MS 150 //ms
 #define TAP_ACTION_TIMEIN_MS 25 //ms
 
 #define HOLD_DELAY_THRESHOLD_MS TAP_ACTION_TIMEOUT_MS+2
@@ -79,4 +79,9 @@
 #define SPI_MOUSE_CS0_PIN 5
 #define SPI_MOUSE_CS1_PIN 5
 
+/// KM Switch Config
+//==================
+#define KM_SWITCH_ENABLED 1
+#define KM_SWITCH_SELECT_PIN 28
+#define KM_SWITCH_SUSPEND_PIN 27
 #endif

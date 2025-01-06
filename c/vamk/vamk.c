@@ -97,6 +97,13 @@ int main(void)
     // Physical switch logic initialization call.
     switch_state_init();
 
+#if KM_SWITCH_ENABLED
+    gpio_init(KM_SWITCH_SELECT_PIN);
+    gpio_init(KM_SWITCH_SUSPEND_PIN);
+    gpio_pull_up(KM_SWITCH_SELECT_PIN);
+    gpio_pull_down(KM_SWITCH_SUSPEND_PIN);
+#endif
+
 #if IS_I2C_DISPLAY_ENABLED
     i2c_init(I2C_DISPLAY_BUS, I2C_CLOCK_SPEED);
     gpio_init(I2C_DISPLAY_SDA_PIN);
