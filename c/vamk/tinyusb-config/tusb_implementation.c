@@ -23,6 +23,7 @@ static led_blink_pattern_e _led_mode = NOT_MOUNTED;
 ///Extern Functions
 void led_blinking_task(void)
 {
+    //TODO led managemnent module
     static uint32_t start_ms = 0;
     static bool led_state = false;
 
@@ -37,6 +38,20 @@ void led_blinking_task(void)
     start_ms += _led_mode;
 
     board_led_write(led_state);
+
+    //if (led_state)
+    //{
+    //    gpio_pull_down(22);
+    //    gpio_pull_down(19);
+    //    gpio_pull_down(18);
+    //}
+    //else
+    //{
+    //    gpio_pull_up(22);
+    //    gpio_pull_up(19);
+    //    gpio_pull_up(18);
+    //}
+
     // Toggle LED state
     led_state = 1 - led_state;
 }

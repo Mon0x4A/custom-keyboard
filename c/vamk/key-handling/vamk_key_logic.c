@@ -54,9 +54,9 @@ void key_logic_up_handler(struct key_event_location_t key_location, struct key_e
 
 void key_logic_delay_handler(struct key_event_location_t key_location, struct key_event_report_t key_event_report)
 {
-    //TODO press helper (momentary) + layer/mod hold until release
     struct hid_keycode_container_t code_container =
-        layer_info_get_hold_delay_keycode_at(key_location.row, key_location.column, key_event_report.layer_index_at_key_down, key_location.key_event_source);
+        layer_info_get_hold_delay_keycode_at(
+            key_location.row, key_location.column, key_event_report.layer_index_at_key_down, key_location.key_event_source);
 
     if (!code_container.has_valid_contents || code_container.hid_keycode == KC_NULL)
         return;

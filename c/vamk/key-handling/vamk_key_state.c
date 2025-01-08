@@ -7,13 +7,12 @@
 #include "vamk_layer_info.h"
 #include "vamk_types.h"
 
-///Static Constants
-static const uint8_t STANDARD_MINIMAL_REPORT_QUANTITY = 3;
-static const uint8_t SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY = 3;
+///Constants
+#define STANDARD_MINIMAL_REPORT_QUANTITY 3
+#define SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY 3
 
 ///Static Global Variables
 static uint8_t _current_hid_report_codes[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
-static uint8_t _current_report_code_quantity = 0;
 static uint8_t _code_report_lifetime_countdown[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 static uint8_t _current_modifier = 0;
 
@@ -95,7 +94,6 @@ struct key_report_t key_state_build_hid_report(void)
     {
         if (_code_report_lifetime_countdown[i] > 1)
             _code_report_lifetime_countdown[i]--;
-
         if (_code_report_lifetime_countdown[i] == 1)
         {
             // We've reached the end of our countdown.

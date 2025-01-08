@@ -41,6 +41,7 @@ target_sources(vamk PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_buffer_helper.c
         ${CMAKE_CURRENT_LIST_DIR}/display/ssd1306_i2c_api.c
         ${CMAKE_CURRENT_LIST_DIR}/display/vamk_display_state.c
+        ${CMAKE_CURRENT_LIST_DIR}/key-handling/mcp23017_i2c_api.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_helper.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_logic.c
         ${CMAKE_CURRENT_LIST_DIR}/key-handling/vamk_key_state.c

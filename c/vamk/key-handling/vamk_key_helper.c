@@ -8,8 +8,6 @@
 #include "stdbool.h"
 #include "tusb.h"
 
-///Static Global Variables
-///Static Functions
 ///Extern Functions
 bool key_helper_is_system_modifier_keycode(uint8_t hid_keycode)
 {

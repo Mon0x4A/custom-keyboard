@@ -104,6 +104,10 @@ int main(void)
     gpio_pull_down(KM_SWITCH_SUSPEND_PIN);
 #endif
 
+    //gpio_init(22);
+    //gpio_init(19);
+    //gpio_init(18);
+
 #if IS_I2C_DISPLAY_ENABLED
     i2c_init(I2C_DISPLAY_BUS, I2C_CLOCK_SPEED);
     gpio_init(I2C_DISPLAY_SDA_PIN);
