@@ -16,7 +16,7 @@ static bool _has_chord_action_been_performed = false;
 static struct modifier_collection_t _last_pressed_modifiers = {0};
 static uint8_t _last_pressed_layer_index = 0;
 
-static int8_t _quant_layer_mod_pressed[MAX_LAYER_COUNT] = {0};
+static volatile int8_t _quant_layer_mod_pressed[MAX_LAYER_COUNT] = {0};
 
 static struct hid_keycode_container_t _repeat_code = {0};
 static uint8_t _repeat_modifiers[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};

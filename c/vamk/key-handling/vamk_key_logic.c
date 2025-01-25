@@ -12,6 +12,16 @@
 ///Static Constants
 ///Static Global Variables
 ///Static Functions
+static bool container_arr_contains(struct hid_keycode_container_t* container_arr, size_t len,
+    struct hid_keycode_container_t value_target)
+{
+    for (int i = 0; i < len; i++)
+        if (((container_arr+i)->hid_keycode == value_target.hid_keycode)
+            && ((container_arr+i)->modifier == value_target.modifier)
+            && ((container_arr+i)->has_valid_contents == value_target.has_valid_contents))
+            return true;
+    return false;
+}
 
 ///Extern Functions
 void key_logic_down_handler(struct key_event_location_t key_location, struct key_event_report_t key_event_report)
@@ -37,18 +47,26 @@ void key_logic_up_handler(struct key_event_location_t key_location, struct key_e
             press_helper_momentary_press_with_modifiers(code_container, key_event_report.modifiers_at_key_down);
     }
 
-    //TODO makes sure we have a valid layer count value here
+    struct hid_keycode_container_t containers_to_release[MAX_LAYER_COUNT*2];
+    uint8_t container_count = 0;
+
     for (int i = 0; i < LAYER_COUNT; i++)
     {
         // Make sure all keycodes at this location across all layers
         // have been removed from the report.
         struct hid_keycode_container_t code_container =
-            layer_info_get_base_keycode_at(key_location.row, key_location.column, key_event_report.layer_index_at_key_down, key_location.key_event_source);
-        release_helper_key_release(code_container);
+            layer_info_get_base_keycode_at(
+                key_location.row, key_location.column, key_event_report.layer_index_at_key_down, key_location.key_event_source);
+        if (!container_arr_contains(containers_to_release, container_count, code_container))
+            containers_to_release[container_count++] = code_container;
 
         code_container =
             layer_info_get_hold_delay_keycode_at(key_location.row, key_location.column, key_event_report.layer_index_at_key_down, key_location.key_event_source);
-        release_helper_key_release(code_container);
+        if (!container_arr_contains(containers_to_release, container_count, code_container))
+            containers_to_release[container_count++] = code_container;
+
+        for (int i = 0; i < container_count; i++)
+            release_helper_key_release(containers_to_release[i]);
     }
 }
 

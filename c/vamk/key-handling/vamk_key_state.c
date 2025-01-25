@@ -9,14 +9,12 @@
 
 ///Constants
 #define STANDARD_MINIMAL_REPORT_QUANTITY 3
-#define SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY 3
+#define SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY 4
 
 ///Static Global Variables
-static uint8_t _current_hid_report_codes[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
-static uint8_t _code_report_lifetime_countdown[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
-static uint8_t _current_modifier = 0;
-
-static uint8_t _current_layer = 0;
+static volatile uint8_t _current_hid_report_codes[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
+static volatile uint8_t _code_report_lifetime_countdown[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
+static volatile uint8_t _current_modifier = 0;
 
 ///Static Functions
 static bool contains_hid_report_code(uint8_t hid_keycode)
