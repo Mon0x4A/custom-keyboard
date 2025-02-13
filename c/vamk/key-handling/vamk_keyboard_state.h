@@ -15,13 +15,6 @@ uint8_t keyboard_state_clear_sticky_layer(void);
 bool keyboard_state_get_is_layer_modifier_pressed(uint8_t layer_index);
 void keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_layer_modifier_pressed);
 
-bool keyboard_state_get_has_chord_action_been_performed(void);
-void keyboard_state_set_has_chord_action_been_performed(bool has_chord_action_been_performed);
-
-struct modifier_collection_t keyboard_state_get_last_press_modifiers(void);
-void keyboard_state_record_last_press_modifiers(void);
-void keyboard_state_clear_last_press_modifiers(void);
-
 //TODO modifier helper?
 bool keyboard_state_modifier_collection_contains_keycode(struct modifier_collection_t modifier_collection,
     uint8_t modifier_keycode);

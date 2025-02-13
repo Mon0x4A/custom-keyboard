@@ -12,13 +12,11 @@
 static const uint8_t DEFAULT_LAYER_INDEX = 0;
 
 ///Static Global Variables
-static bool _has_chord_action_been_performed = false;
-static struct modifier_collection_t _last_pressed_modifiers = {0};
-static uint8_t _last_pressed_layer_index = 0;
+static volatile uint8_t _last_pressed_layer_index = 0;
 
 static volatile int8_t _quant_layer_mod_pressed[MAX_LAYER_COUNT] = {0};
 
-static struct hid_keycode_container_t _repeat_code = {0};
+static volatile struct hid_keycode_container_t _repeat_code = {0};
 static uint8_t _repeat_modifiers[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 
 ///Static Functions
@@ -76,19 +74,6 @@ void keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_l
         if (!IS_LAYER_STICKY[layer_index])
             _last_pressed_layer_index = 0;
     }
-}
-
-struct modifier_collection_t keyboard_state_get_last_press_modifiers(void)
-{
-    return _last_pressed_modifiers;
-}
-void keyboard_state_record_last_press_modifiers(void)
-{
-    _last_pressed_modifiers = keyboard_state_get_currently_pressed_modifiers();
-}
-void keyboard_state_clear_last_press_modifiers(void)
-{
-    memset(&_last_pressed_modifiers, 0, sizeof(struct modifier_collection_t));
 }
 
 bool keyboard_state_modifier_collection_contains_keycode(struct modifier_collection_t modifier_collection,

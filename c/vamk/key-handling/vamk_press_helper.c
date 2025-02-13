@@ -29,12 +29,6 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
     if (!is_modifier_code && keycode_container.hid_keycode != KC_NULL)
         keyboard_state_clear_sticky_layer();
 
-    // Record modifier state metadata, if applicable.
-    if (!is_modifier_code && keyboard_state_is_any_modifier_pressed())
-        keyboard_state_record_last_press_modifiers();
-    else
-        keyboard_state_clear_last_press_modifiers();
-
     bool should_report_code = true;
     bool is_key_macro_code = false;
     void (*macro_func_ptr)(void) = NULL;
