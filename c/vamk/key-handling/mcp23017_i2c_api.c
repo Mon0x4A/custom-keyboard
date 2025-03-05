@@ -6,8 +6,8 @@
 #include "time.h"
 
 ///Static Constants
-#define IO_EXPANDER_SLEEP_BUFFER_US 100 //NOTE: Datasheet says this is min 10us
-#define I2C_INSTRUCTION_TIMEOUT_MS 5
+#define IO_EXPANDER_SLEEP_BUFFER_US 500 //NOTE: Datasheet says this is min 10us
+#define I2C_INSTRUCTION_TIMEOUT_MS 75
 #define SINGLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 2
 #define DOUBLE_REGISTER_WRITE_COMMAND_BYTE_LENGTH 3
 

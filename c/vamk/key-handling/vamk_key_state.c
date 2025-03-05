@@ -8,8 +8,8 @@
 #include "vamk_types.h"
 
 ///Constants
-#define STANDARD_MINIMAL_REPORT_QUANTITY 3
-#define SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY 4
+#define STANDARD_MINIMAL_REPORT_QUANTITY 5
+#define SYSTEM_MODIFIER_MINIMAL_REPORT_QUANTITY 5
 
 ///Static Global Variables
 static volatile uint8_t _current_hid_report_codes[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
