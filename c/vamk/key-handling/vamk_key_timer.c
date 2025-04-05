@@ -89,10 +89,12 @@ static int64_t key_delay_callback(alarm_id_t alarm_id, void *callback_params_key
 {
     struct key_event_location_t *key_event_location_ptr = callback_params_key_location_ptr;
     struct key_down_event_t *key_down_event_ptr = get_key_down_event_pointer(*key_event_location_ptr);
+    struct key_event_report_t event_report = build_event_report(*key_event_location_ptr);
 
     if ((key_down_event_ptr->current_delay_event_timer_id) == alarm_id
         && key_down_event_ptr->is_valid
-        && !key_down_event_ptr->has_been_released)
+        && !key_down_event_ptr->has_been_released
+        && event_report.elapsed_interval_ms >= HOLD_DELAY_THRESHOLD_MS)
     {
         try_invoke_key_delay_callback(*key_event_location_ptr);
     }
