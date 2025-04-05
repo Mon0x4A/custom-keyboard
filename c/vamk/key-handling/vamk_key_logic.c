@@ -51,17 +51,17 @@ void key_logic_up_handler(struct key_event_location_t key_location, struct key_e
         // have been removed from the report.
         struct hid_keycode_container_t code_container =
             layer_info_get_base_keycode_at(
-                key_location.row, key_location.column, key_event_report.layer_index_at_key_down, key_location.key_event_source);
+                key_location.row, key_location.column, i, key_location.key_event_source);
         if (should_add_container(code_container) && !container_arr_contains(containers_to_release, container_count, code_container))
             containers_to_release[container_count++] = code_container;
 
         code_container =
-            layer_info_get_hold_delay_keycode_at(key_location.row, key_location.column, key_event_report.layer_index_at_key_down, key_location.key_event_source);
+            layer_info_get_hold_delay_keycode_at(key_location.row, key_location.column, i, key_location.key_event_source);
         if (should_add_container(code_container) && !container_arr_contains(containers_to_release, container_count, code_container))
             containers_to_release[container_count++] = code_container;
 
         code_container =
-            layer_info_get_tap_keycode_at(key_location.row, key_location.column, key_event_report.layer_index_at_key_down, key_location.key_event_source);
+            layer_info_get_tap_keycode_at(key_location.row, key_location.column, i, key_location.key_event_source);
         if (should_add_container(code_container) && !container_arr_contains(containers_to_release, container_count, code_container))
             containers_to_release[container_count++] = code_container;
     }
