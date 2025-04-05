@@ -60,7 +60,7 @@ static const uint8_t IO_EXPA_COLS[COLUMN_COUNT] =
 
     static const struct keycode_definition_t L0_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0}, {KC_NULL,0}, {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0}, {KC_NULL,0}, {KC_LM3,0},  {KC_LM4,0},  {HID_KEY_CONTROL_LEFT,0}, {HID_KEY_CONTROL_RIGHT,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_NULL,0}, {KC_NULL,0} },
         { {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
     };
 
