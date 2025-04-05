@@ -19,7 +19,7 @@ static switch_pressed_callback_t _pressed_callback = NULL;
 static switch_released_callback_t _released_callback = NULL;
 
 ///Static Functions
-static void set_default_io_expander_state()
+static struct io_expander_register_value_pair_s build_default_io_expander_iodir_state(void)
 {
     struct io_expander_register_value_pair_s iodir_register_value_pair = {0};
     //Set all selected columns to input pins (1). Leave everything else as output (0).
@@ -54,6 +54,12 @@ static void set_default_io_expander_state()
         }
     }
 
+    return iodir_register_value_pair;
+}
+
+static void set_default_io_expander_state()
+{
+    struct io_expander_register_value_pair_s iodir_register_value_pair = build_default_io_expander_iodir_state();
     // We can use the same values here to set all the columns to pullup.
     struct io_expander_register_value_pair_s gppu_register_value_pair = iodir_register_value_pair;
 
@@ -68,9 +74,8 @@ static void read_matrix_state(void)
     {
         uint8_t row_pin_number = IO_EXPA_ROWS[row];
 
-        // TODO replace with a call to get the default state struct? Why read?
-        struct io_expander_register_value_pair_with_read_state_s initial_iodir_values =
-            mcp23017_read_double_register_value(IODIR_A_REGISTER_ADDRESS);
+        struct io_expander_register_value_pair_s initial_iodir_values =
+            build_default_io_expander_iodir_state();
 
         struct io_expander_register_value_pair_s row_output_no_pullup_values =
         {

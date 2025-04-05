@@ -8,6 +8,9 @@
 #include "vamk_switch_state.h"
 #include "vamk_types.h"
 
+///Constants
+#define ROW_COL_CYCLE_DELAY_US 200
+
 ///Static Global Variables
 static uint8_t _switch_matrix_curr[ROW_COUNT][COLUMN_COUNT] = {0};
 static uint8_t _switch_matrix_prev[ROW_COUNT][COLUMN_COUNT] = {0};
@@ -33,10 +36,11 @@ static void read_matrix_state(void)
             uint8_t col_pin = COLS[col];
             gpio_set_dir(col_pin, GPIO_IN);
             gpio_pull_up(col_pin);
-            sleep_us(50);
+            sleep_us(ROW_COL_CYCLE_DELAY_US);
+
             _switch_matrix_curr[row][col] = gpio_get(COLS[col]);
             gpio_pull_down(col_pin);
-            sleep_us(50);
+            sleep_us(ROW_COL_CYCLE_DELAY_US);
         }
 
         // Disable the row output.
