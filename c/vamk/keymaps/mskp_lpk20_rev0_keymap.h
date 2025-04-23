@@ -50,6 +50,14 @@ static const uint8_t IO_EXPA_COLS[COLUMN_COUNT] =
     IO_EXPA_COL_3_PIN, IO_EXPA_COL_4_PIN,
 };
 
+//Delay Timers (ms)
+static const uint16_t DELAY_TIMER_OVERRIDES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
+{
+    { 150, 100, 0, 0, 0, 0, 0, 0, 100, 150 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+};
+
+
     /// Keymaps
     ///================
     static const struct keycode_definition_t NULL_KEYCODE_ARRAY[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =

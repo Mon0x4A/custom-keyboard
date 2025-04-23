@@ -45,7 +45,7 @@
 
 /// Key Behavior Config
 //=====================
-#define TAP_ACTION_TIMEOUT_MS 150 //ms
+#define TAP_ACTION_TIMEOUT_MS 250 //ms
 #define TAP_ACTION_TIMEIN_MS 25 //ms
 
 #define HOLD_DELAY_THRESHOLD_MS TAP_ACTION_TIMEOUT_MS+5

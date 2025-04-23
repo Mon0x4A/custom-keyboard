@@ -9,7 +9,7 @@
 #include "vamk_types.h"
 
 ///Constants
-#define ROW_COL_CYCLE_DELAY_US 200
+#define ROW_COL_CYCLE_DELAY_US 125
 
 ///Static Global Variables
 static uint8_t _switch_matrix_curr[ROW_COUNT][COLUMN_COUNT] = {0};

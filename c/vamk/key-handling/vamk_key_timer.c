@@ -89,12 +89,10 @@ static int64_t key_delay_callback(alarm_id_t alarm_id, void *callback_params_key
 {
     struct key_event_location_t *key_event_location_ptr = callback_params_key_location_ptr;
     struct key_down_event_t *key_down_event_ptr = get_key_down_event_pointer(*key_event_location_ptr);
-    struct key_event_report_t event_report = build_event_report(*key_event_location_ptr);
 
     if ((key_down_event_ptr->current_delay_event_timer_id) == alarm_id
         && key_down_event_ptr->is_valid
-        && !key_down_event_ptr->has_been_released
-        && event_report.elapsed_interval_ms >= HOLD_DELAY_THRESHOLD_MS)
+        && !key_down_event_ptr->has_been_released)
     {
         try_invoke_key_delay_callback(*key_event_location_ptr);
     }
@@ -123,7 +121,12 @@ void key_timer_mark_key_down(struct key_event_location_t key_location, uint8_t l
     *alarm_callback_key_location_ptr = key_location;
 
     // Start a timer with the intent to handle the action later.
-    alarm_id_t event_id = add_alarm_in_ms(HOLD_DELAY_THRESHOLD_MS, key_delay_callback, (void*)alarm_callback_key_location_ptr, false);
+
+    uint16_t col_index = key_location.key_event_source == PERIPHERAL_IDENTIFIER
+        ? key_location.column + COLUMN_COUNT : key_location.column;
+    uint16_t timer_override = DELAY_TIMER_OVERRIDES[key_location.row][col_index];
+    uint16_t timer_duration = timer_override == 0 ? HOLD_DELAY_THRESHOLD_MS : timer_override;
+    alarm_id_t event_id = add_alarm_in_ms(timer_duration, key_delay_callback, (void*)alarm_callback_key_location_ptr, false);
 
     key_down_event_ptr->current_delay_event_timer_id = event_id;
     key_down_event_ptr->has_been_released = false;
