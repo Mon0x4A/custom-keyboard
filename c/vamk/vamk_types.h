@@ -15,7 +15,6 @@ typedef enum key_event_source_identifier
 //TODO refactor this to have an "_e" suffix instead.
 } key_event_source_identifier_t;
 
-
 ///Structures
 struct key_event_location_t
 {

@@ -51,6 +51,7 @@ static const uint8_t IO_EXPA_COLS[COLUMN_COUNT] =
 };
 
 //Delay Timers (ms)
+//TODO this needs to be implemented for each of the keymaps
 static const uint16_t DELAY_TIMER_OVERRIDES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
 {
     { 150, 100, 0, 0, 0, 0, 0, 0, 100, 150 },
@@ -68,7 +69,7 @@ static const uint16_t DELAY_TIMER_OVERRIDES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINI
 
     static const struct keycode_definition_t L0_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0}, {KC_NULL,0}, {KC_LM3,0},  {KC_LM4,0},  {HID_KEY_CONTROL_LEFT,0}, {HID_KEY_CONTROL_RIGHT,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0}, {KC_NULL,0}, {KC_LM3_L,0},  {KC_LM4_L,0},  {HID_KEY_CONTROL_LEFT,0}, {HID_KEY_CONTROL_RIGHT,0}, {KC_LM4_R,0},  {KC_LM3_R,0},  {KC_NULL,0}, {KC_NULL,0} },
         { {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
     };
 
@@ -92,25 +93,25 @@ static const uint16_t DELAY_TIMER_OVERRIDES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINI
 
     static const struct keycode_definition_t L0_HOLD_DELAY_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM1,0}, {HID_KEY_SHIFT_RIGHT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM1 ,0} },
+        { {KC_LM1_L,0}, {HID_KEY_SHIFT_RIGHT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM1_R,0} },
         { {'@',1},    {'$',1},                   {'4',1},     {'5',1},     {'6',1},     {'-',1},     {'_',1},     {'{',1},     {'}',1},                 {'\'',1},   },
     };
 
     static const struct keycode_definition_t L3_HOLD_DELAY_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM1,0}, {HID_KEY_SHIFT_RIGHT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM1 ,0} },
+        { {KC_LM1_L,0}, {HID_KEY_SHIFT_RIGHT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM1_R,0} },
         { {'<',1},    {'>',1},                   {'7',1},     {'8',1},     {'9',1},     {'+',1},     {'!',1},     {'[',1},     {']',1},       {'\\',1},              },
     };
 
     static const struct keycode_definition_t L4_HOLD_DELAY_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM1,0}, {HID_KEY_SHIFT_RIGHT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM1 ,0} },
+        { {KC_LM1_L,0}, {HID_KEY_SHIFT_RIGHT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM1_R,0} },
         { {'`',1},    {'0',1},                   {'1',1},     {'2',1},     {'3',1},     {'&',1},     {'*',1},     {'(',1},     {')',1},       {'=',1},              },
     };
 
     static const struct keycode_definition_t L1_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0}, {KC_NULL,0}, {KC_LM5,0},  {KC_LM6,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM6,0},  {KC_LM5,0},  {KC_NULL,0}, {KC_NULL,0} },
+        { {KC_NULL,0}, {KC_NULL,0}, {KC_LM5_L,0},  {KC_LM6_L,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM6_R,0},  {KC_LM5_R,0},  {KC_NULL,0}, {KC_NULL,0} },
         { {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0} },
     };
 

@@ -36,16 +36,26 @@ bool key_helper_is_layer_modifier_keycode(uint8_t keycode)
 {
     switch (keycode)
     {
-        case KC_LM0:
-        case KC_LM1:
-        case KC_LM2:
-        case KC_LM3:
-        case KC_LM4:
-        case KC_LM5:
-        case KC_LM6:
-        case KC_LM7:
-        case KC_LM8:
-        case KC_LM9:
+        case KC_LM0_L:
+        case KC_LM1_L:
+        case KC_LM2_L:
+        case KC_LM3_L:
+        case KC_LM4_L:
+        case KC_LM5_L:
+        case KC_LM6_L:
+        case KC_LM7_L:
+        case KC_LM8_L:
+        case KC_LM9_L:
+        case KC_LM0_R:
+        case KC_LM1_R:
+        case KC_LM2_R:
+        case KC_LM3_R:
+        case KC_LM4_R:
+        case KC_LM5_R:
+        case KC_LM6_R:
+        case KC_LM7_R:
+        case KC_LM8_R:
+        case KC_LM9_R:
             return true;
         default:
             return false;
@@ -72,25 +82,35 @@ uint8_t key_helper_get_layer_index_from_layer_keycode(uint8_t keycode)
 {
     switch (keycode)
     {
-        case KC_LM0:
+        case KC_LM0_L:
+        case KC_LM0_R:
             return 0;
-        case KC_LM1:
+        case KC_LM1_L:
+        case KC_LM1_R:
             return 1;
-        case KC_LM2:
+        case KC_LM2_L:
+        case KC_LM2_R:
             return 2;
-        case KC_LM3:
+        case KC_LM3_L:
+        case KC_LM3_R:
             return 3;
-        case KC_LM4:
+        case KC_LM4_L:
+        case KC_LM4_R:
             return 4;
-        case KC_LM5:
+        case KC_LM5_L:
+        case KC_LM5_R:
             return 5;
-        case KC_LM6:
+        case KC_LM6_L:
+        case KC_LM6_R:
             return 6;
-        case KC_LM7:
+        case KC_LM7_L:
+        case KC_LM7_R:
             return 7;
-        case KC_LM8:
+        case KC_LM8_L:
+        case KC_LM8_R:
             return 8;
-        case KC_LM9:
+        case KC_LM9_L:
+        case KC_LM9_R:
             return 9;
         default:
             return 0;

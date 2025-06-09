@@ -15,41 +15,6 @@ static void keycode_release_internal(struct hid_keycode_container_t keycode_cont
     bool need_remove_code_from_report = true;
     switch (keycode_container.hid_keycode)
     {
-        case KC_LM0:
-            need_remove_code_from_report = false;
-            keyboard_state_set_is_layer_modifier_pressed(0, false);
-            printf("Leaving layer 0\n");
-            break;
-        case KC_LM1:
-            need_remove_code_from_report = false;
-            keyboard_state_set_is_layer_modifier_pressed(1, false);
-            printf("Leaving layer 1\n");
-            break;
-        case KC_LM2:
-            need_remove_code_from_report = false;
-            keyboard_state_set_is_layer_modifier_pressed(2, false);
-            printf("Leaving layer 2\n");
-            break;
-        case KC_LM3:
-            need_remove_code_from_report = false;
-            keyboard_state_set_is_layer_modifier_pressed(3, false);
-            printf("Leaving layer 3\n");
-            break;
-        case KC_LM4:
-            need_remove_code_from_report = false;
-            keyboard_state_set_is_layer_modifier_pressed(4, false);
-            printf("Leaving layer 4\n");
-            break;
-        case KC_LM5:
-            need_remove_code_from_report = false;
-            keyboard_state_set_is_layer_modifier_pressed(5, false);
-            printf("Leaving layer 5\n");
-            break;
-        case KC_LM6:
-            need_remove_code_from_report = false;
-            keyboard_state_set_is_layer_modifier_pressed(6, false);
-            printf("Leaving layer 6\n");
-            break;
         case HID_KEY_ALT_LEFT:
         case HID_KEY_ALT_RIGHT:
             break;
@@ -73,9 +38,9 @@ static void keycode_release_internal(struct hid_keycode_container_t keycode_cont
 
     if (key_helper_is_layer_modifier_keycode(keycode_container.hid_keycode))
     {
-        keyboard_state_set_is_layer_modifier_pressed(
-            key_helper_get_layer_index_from_layer_keycode(keycode_container.hid_keycode),
-            false);
+        keyboard_state_set_is_layer_keycode_pressed(keycode_container.hid_keycode, false);
+        need_remove_code_from_report = false;
+        printf("Leaving layer %d\n", key_helper_get_layer_index_from_layer_keycode(keycode_container.hid_keycode));
         if (ENABLE_SERIAL_LOGGING)
             printf("Layer value released: %u\n", keycode_container.hid_keycode);
     }

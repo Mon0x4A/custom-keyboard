@@ -34,42 +34,6 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
     void (*macro_func_ptr)(void) = NULL;
     switch (keycode_container.hid_keycode)
     {
-        case KC_LM0:
-            should_report_code = false;
-            keyboard_state_set_is_layer_modifier_pressed(0, true);
-            printf("Entering layer 0\n");
-            break;
-        case KC_LM1:
-            should_report_code = false;
-            keyboard_state_set_is_layer_modifier_pressed(1, true);
-            printf("Entering layer 1\n");
-            break;
-        case KC_LM2:
-            should_report_code = false;
-            keyboard_state_set_is_layer_modifier_pressed(2, true);
-            printf("Entering layer 2\n");
-            break;
-        case KC_LM3:
-            should_report_code = false;
-            keyboard_state_set_is_layer_modifier_pressed(3, true);
-            printf("Entering layer 3\n");
-            break;
-        case KC_LM4:
-            should_report_code = false;
-            keyboard_state_set_is_layer_modifier_pressed(4, true);
-            printf("Entering layer 4\n");
-            break;
-        case KC_LM5:
-            should_report_code = false;
-            keyboard_state_set_is_layer_modifier_pressed(5, true);
-            printf("Entering layer 5\n");
-            break;
-        case KC_LM6:
-            should_report_code = false;
-            keyboard_state_set_is_layer_modifier_pressed(6, true);
-            printf("Entering layer 6\n");
-            break;
-        //TODO handle the other layers, maybe with a helper method to convert to index?
         case KC_REPEAT:
             should_report_code = false;
             keyboard_state_send_repeat_state();
@@ -111,6 +75,13 @@ static void keycode_press_internal(struct hid_keycode_container_t keycode_contai
             break;
         default:
             break;
+    }
+
+    if (key_helper_is_layer_modifier_keycode(keycode_container.hid_keycode))
+    {
+        keyboard_state_set_is_layer_keycode_pressed(keycode_container.hid_keycode, true);
+        should_report_code = false;
+        printf("Entering layer %d\n", key_helper_get_layer_index_from_layer_keycode(keycode_container.hid_keycode));
     }
 
     if (ENABLE_KEYBOARD_COMMANDS && should_report_code)

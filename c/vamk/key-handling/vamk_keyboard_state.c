@@ -9,22 +9,26 @@
 #include "vamk_types.h"
 
 ///Static Constants
+#define LAYER_MOD_VARIANT_COUNT 2
+#define RIGHT_LAYER_MOD_BITMASK 0b00010000
+
 static const uint8_t DEFAULT_LAYER_INDEX = 0;
+
+///Static Types
+struct layer_mod_state_container_s
+{
+    bool is_right_variant_pressed:1;
+    bool is_left_variant_pressed:1;
+};
 
 ///Static Global Variables
 static volatile uint8_t _last_pressed_layer_index = 0;
-
-static volatile int8_t _quant_layer_mod_pressed[MAX_LAYER_COUNT] = {0};
+static volatile struct layer_mod_state_container_s _layer_mod_state[MAX_LAYER_COUNT] = {0};
 
 static volatile struct hid_keycode_container_t _repeat_code = {0};
 static uint8_t _repeat_modifiers[HID_REPORT_KEYCODE_ARRAY_LENGTH] = {0};
 
 ///Static Functions
-static int imax(int a, int b)
-{
-    return a > b ? a : b;
-}
-
 static void clear_repeat_modifers(void)
 {
     for (int i = 0; i < HID_REPORT_KEYCODE_ARRAY_LENGTH; i++)
@@ -43,7 +47,7 @@ uint8_t keyboard_state_get_current_layer_index(void)
     // layer queue in the future.
     for (uint8_t i = MAX_LAYER_COUNT-1; i > 0; i--)
     {
-        if (keyboard_state_get_is_layer_modifier_pressed(i))
+        if (keyboard_state_get_is_layer_index_pressed(i))
             return i;
     }
 
@@ -57,23 +61,30 @@ uint8_t keyboard_state_clear_sticky_layer(void)
         _last_pressed_layer_index = 0;
 }
 
-bool keyboard_state_get_is_layer_modifier_pressed(uint8_t layer_index)
+bool keyboard_state_get_is_layer_index_pressed(uint8_t layer_index)
 {
-    return _quant_layer_mod_pressed[layer_index] > 0;
+    return _layer_mod_state[layer_index].is_right_variant_pressed ||
+        _layer_mod_state[layer_index].is_left_variant_pressed;
 }
-void keyboard_state_set_is_layer_modifier_pressed(uint8_t layer_index, bool is_layer_modifier_pressed)
+void keyboard_state_set_is_layer_keycode_pressed(uint8_t layer_keycode, bool is_layer_modifier_pressed)
 {
-    if (is_layer_modifier_pressed)
-    {
-        _quant_layer_mod_pressed[layer_index]++;
-        _last_pressed_layer_index = layer_index;
-    }
+    if (!key_helper_is_layer_modifier_keycode(layer_keycode))
+        return;
+
+    //The right variants all have 11(0xB) for their upper nibble. The left are 10(0xA).
+    bool is_right_mod = layer_keycode & RIGHT_LAYER_MOD_BITMASK;
+    uint8_t layer_index = key_helper_get_layer_index_from_layer_keycode(layer_keycode);
+    volatile struct layer_mod_state_container_s * mod_container = &_layer_mod_state[layer_index];
+    if (is_right_mod)
+        mod_container->is_right_variant_pressed = is_layer_modifier_pressed;
     else
-    {
-        _quant_layer_mod_pressed[layer_index] = imax(_quant_layer_mod_pressed[layer_index]-1, 0);
-        if (!IS_LAYER_STICKY[layer_index])
-            _last_pressed_layer_index = 0;
-    }
+        mod_container->is_left_variant_pressed = is_layer_modifier_pressed;
+
+    if (is_layer_modifier_pressed)
+        _last_pressed_layer_index = layer_index;
+
+    if (!is_layer_modifier_pressed && !IS_LAYER_STICKY[layer_index])
+        _last_pressed_layer_index = 0;
 }
 
 bool keyboard_state_modifier_collection_contains_keycode(struct modifier_collection_t modifier_collection,
