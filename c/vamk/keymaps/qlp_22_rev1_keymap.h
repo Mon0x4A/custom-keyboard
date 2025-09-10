@@ -40,6 +40,12 @@ static const uint8_t COLS[COLUMN_COUNT] =
     COL_6_PIN, COL_7_PIN, COL_8_PIN, COL_9_PIN, COL_10_PIN, COL_11_PIN
 };
 
+static const uint16_t DELAY_TIMER_OVERRIDES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
+{
+    { 150, 150, 0, 0, 0, 0, 0, 0, 0, 0, 150, 150 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+};
+
     /// Keymaps
     ///================
     static const struct keycode_definition_t NULL_KEYCODE_ARRAY[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
@@ -51,86 +57,86 @@ static const uint8_t COLS[COLUMN_COUNT] =
     //TODO are these child layers not just the same as the base keycode layers?!
     static const struct keycode_definition_t L0_CHILD_BASE_LAYER[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM2,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}                },
-        { {HID_KEY_CONTROL_LEFT,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_CONTROL_RIGHT,0} },
+        { {KC_LM2_L,0},             {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1_L,0}, {KC_LM3_L,0}, {KC_LM4_L,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_LM4_R,0}, {KC_LM3_R,0}, {KC_LM1_R,0}, {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2_R,0}              },
+        { {HID_KEY_CONTROL_LEFT,0}, {KC_NULL,0},              {KC_NULL,0},  {KC_NULL,0},  {KC_NULL,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},  {KC_NULL,0},  {KC_NULL,0},  {KC_NULL,0},             {HID_KEY_CONTROL_RIGHT,0} },
     };
 
     static const struct keycode_definition_t L1_CHILD_BASE_LAYER[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM2,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM5,0},  {KC_LM6,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM6,0},  {KC_LM5,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}                },
+        { {KC_LM2_L,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1_L,0},  {KC_LM5_L,0},  {KC_LM6_L,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM6_R,0},  {KC_LM5_R,0},  {KC_LM1_R,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2_R,0}                },
         { {HID_KEY_CONTROL_LEFT,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_CONTROL_RIGHT,0} },
     };
 
     static const struct keycode_definition_t L0_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM2,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}                },
+        { {KC_LM2_L,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1_L,0},  {KC_LM3_L,0},  {KC_LM4_L,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4_R,0},  {KC_LM3_R,0},  {KC_LM1_R,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2_R,0}                },
         { {HID_KEY_CONTROL_LEFT,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_CONTROL_RIGHT,0} },
     };
 
     static const struct keycode_definition_t L1_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM2,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM5,0},  {KC_LM6,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM6,0},  {KC_LM5,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}            },
+        { {KC_LM2_L,0},               {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1_L,0},  {KC_LM5_L,0},  {KC_LM6_L,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM6_R,0},  {KC_LM5_R,0},  {KC_LM1_R,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2_R,0}            },
         { {HID_KEY_ALT_LEFT,0},     {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_ALT_RIGHT,0} },
     };
 
     static const struct keycode_definition_t L2_BASE_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_LM2,0},           {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1,0},  {KC_LM3,0},  {KC_LM4,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4,0},  {KC_LM3,0},  {KC_LM1,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2,0}            },
+        { {KC_LM2_L,0},           {HID_KEY_SHIFT_RIGHT,0},  {KC_LM1_L,0},  {KC_LM3_L,0},  {KC_LM4_L,0},  {KC_NULL,0}, {KC_NULL,0}, {KC_LM4_R,0},  {KC_LM3_R,0},  {KC_LM1_R,0},  {HID_KEY_SHIFT_RIGHT,0}, {KC_LM2_R,0}            },
         { {HID_KEY_GUI_LEFT,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},             {HID_KEY_GUI_RIGHT,0} },
     };
 
     static const struct keycode_definition_t L1_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {HID_KEY_SPACE,0},  {KC_NULL,0},    {KC_REPEAT,0},   {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0},            {KC_NULL,0},            {KC_NULL,0},          {KC_REPEAT,0},           {KC_NULL,0},     {HID_KEY_BACKSPACE,0} },
+        { {HID_KEY_SPACE,0},  {KC_REPEAT,0},    {KC_REPEAT,0},   {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0},            {KC_NULL,0},            {KC_NULL,0},          {KC_REPEAT,0},           {KC_REPEAT,0},     {HID_KEY_BACKSPACE,0} },
         { {HID_KEY_ESCAPE,0}, {HID_KEY_F2,0}, {HID_KEY_F5,0},  {HID_KEY_F8,0}, {HID_KEY_F11,0}, {KC_NULL,0}, {HID_KEY_ARROW_LEFT,0}, {HID_KEY_ARROW_DOWN,0}, {HID_KEY_ARROW_UP,0}, {HID_KEY_ARROW_RIGHT,0}, {HID_KEY_TAB,0}, {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L5_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {HID_KEY_SPACE,0},  {KC_NULL,0},    {KC_REPEAT,0},   {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0} },
+        { {HID_KEY_SPACE,0},  {KC_REPEAT,0},    {KC_REPEAT,0},   {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0},              {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_REPEAT,0}, {HID_KEY_BACKSPACE,0} },
         { {HID_KEY_ESCAPE,0}, {HID_KEY_F2,0}, {HID_KEY_F6,0},  {HID_KEY_F9,0}, {HID_KEY_F12,0}, {KC_NULL,0}, {HID_KEY_PRINT_SCREEN,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0},   {KC_NULL,0}, {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L6_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {HID_KEY_SPACE,0},  {KC_NULL,0},    {KC_REPEAT,0},   {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0},      {KC_NULL,0},           {KC_NULL,0},         {KC_REPEAT,0},   {KC_NULL,0},        {HID_KEY_BACKSPACE,0} },
+        { {HID_KEY_SPACE,0},  {KC_REPEAT,0},    {KC_REPEAT,0},   {KC_NULL,0},    {KC_NULL,0},     {KC_NULL,0}, {KC_NULL,0},      {KC_NULL,0},           {KC_NULL,0},         {KC_REPEAT,0},   {KC_REPEAT,0},        {HID_KEY_BACKSPACE,0} },
         { {HID_KEY_ESCAPE,0}, {HID_KEY_F1,0}, {HID_KEY_F4,0},  {HID_KEY_F7,0}, {HID_KEY_F10,0}, {KC_NULL,0}, {HID_KEY_HOME,0}, {HID_KEY_PAGE_DOWN,0}, {HID_KEY_PAGE_UP,0}, {HID_KEY_END,0}, {HID_KEY_DELETE,0}, {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L0_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0} },
-        { {HID_KEY_ESCAPE,0}, {'a',1},     {'s',1},         {'d',1},     {'f',1},     {'g',1},     {'h',1},     {'j',1},     {'k',1},     {'l',1},       {';',1},     {HID_KEY_ENTER,0}     },
+        { {HID_KEY_SPACE,0},  {KC_REPEAT,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_REPEAT,0}, {HID_KEY_BACKSPACE,0} },
+        { {HID_KEY_ESCAPE,0}, {'a',1},     {'r',1},         {'s',1},     {'t',1},     {'g',1},     {'m',1},     {'n',1},     {'e',1},     {'i',1},       {'o',1},     {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L3_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0} },
-        { {HID_KEY_ESCAPE,0}, {'z',1},     {'x',1},         {'c',1},     {'v',1},     {'b',1},     {'n',1},     {'m',1},     {',',1},     {'.',1},       {'/',1},     {HID_KEY_ENTER,0}     },
+        { {HID_KEY_SPACE,0},  {KC_REPEAT,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_REPEAT,0}, {HID_KEY_BACKSPACE,0} },
+        { {HID_KEY_ESCAPE,0}, {'z',1},     {'x',1},         {'c',1},     {'d',1},     {'v',1},     {'k',1},     {'h',1},     {',',1},     {'.',1},       {'/',1},     {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L4_TAP_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {HID_KEY_SPACE,0},  {KC_NULL,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_NULL,0}, {HID_KEY_BACKSPACE,0} },
-        { {HID_KEY_ESCAPE,0}, {'q',1},     {'w',1},         {'e',1},     {'r',1},     {'t',1},     {'y',1},     {'u',1},     {'i',1},     {'o',1},       {'p',1},     {HID_KEY_ENTER,0}     },
+        { {HID_KEY_SPACE,0},  {KC_REPEAT,0}, {KC_REPEAT,0},   {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_REPEAT,0}, {KC_REPEAT,0}, {HID_KEY_BACKSPACE,0} },
+        { {HID_KEY_ESCAPE,0}, {'q',1},     {'w',1},         {'f',1},     {'p',1},     {'b',1},     {'j',1},     {'l',1},     {'u',1},     {'y',1},       {';',1},     {HID_KEY_ENTER,0}     },
     };
 
     static const struct keycode_definition_t L0_HOLD_DELAY_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
 
-        { {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}},
+        { {KC_LM1_L,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_LM1_R,0}},
         { {KC_NULL,0}, {'@',1},     {'$',1},     {'4',1},     {'5',1},     {'6',1},     {'-',1},     {'_',1},     {'{',1},     {'}',1},     {'\'',1},    {KC_NULL,0}},
     };
 
     static const struct keycode_definition_t L3_HOLD_DELAY_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}},
+        { {KC_LM1_L,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_LM1_R,0}},
         { {KC_NULL,0}, {'<',1},     {'>',1},     {'7',1},     {'8',1},     {'9',1},     {'+',1},     {'!',1},     {'[',1},     {']',1},     {'\\',1},    {KC_NULL,0}},
     };
 
     static const struct keycode_definition_t L4_HOLD_DELAY_KEYCODES[KEY_DEFINITION_ROW_COUNT][KEY_DEFINITION_COL_COUNT] =
     {
-        { {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}},
+        { {KC_LM1_L,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_NULL,0}, {KC_LM1_R,0}},
         { {KC_NULL,0}, {'`',1},     {'0',1},     {'1',1},     {'2',1},     {'3',1},     {'&',1},     {'*',1},     {'(',1},     {')',1},     {'=',1},     {KC_NULL,0}},
     };
 #endif
