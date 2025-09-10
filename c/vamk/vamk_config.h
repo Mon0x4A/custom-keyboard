@@ -19,15 +19,15 @@
 
 #define ENABLE_LED_DEVICE_STATUS_INDICATOR 1
 
-#define IS_SPLIT_KEYBOARD 1
-#define IS_UNIFIED_KEYBOARD 0
+#define IS_SPLIT_KEYBOARD 0
+#define IS_UNIFIED_KEYBOARD 1
 
 #if IS_SPLIT_KEYBOARD && IS_UNIFIED_KEYBOARD || !(IS_SPLIT_KEYBOARD || IS_UNIFIED_KEYBOARD)
 #error "Must define either split OR unified configuration"
 #endif
 
-#define CONTROLLER_IS_LEFT_SIDE 1
-#define CONTROLLER_IS_RIGHT_SIDE 0
+#define CONTROLLER_IS_LEFT_SIDE 0
+#define CONTROLLER_IS_RIGHT_SIDE 1
 #if (CONTROLLER_IS_LEFT_SIDE && CONTROLLER_IS_RIGHT_SIDE) || !(CONTROLLER_IS_LEFT_SIDE || CONTROLLER_IS_RIGHT_SIDE)
 #error "Controller must be on one (and only one) side in a split configuration"
 #endif
@@ -81,7 +81,7 @@
 
 /// KM Switch Config
 //==================
-#define KM_SWITCH_ENABLED 1
+#define KM_SWITCH_ENABLED 0
 #define KM_SWITCH_SELECT_PIN 28
 #define KM_SWITCH_SUSPEND_PIN 27
 #endif

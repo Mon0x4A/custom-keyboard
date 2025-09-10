@@ -11,7 +11,8 @@
 //#include "qlp_22_rev1_keymap.h"
 //#include "seok_38_rev0_keymap_m.h"
 //#include "mskp_qlp_rev0_keymap.h"
-#include "mskp_lpk20_rev0_keymap.h"
+//#include "mskp_lpk20_rev0_keymap.h"
+#include "handwire_dactyl_lpk20_rev0_keymap.h"
 
 ///Constants
 #define LAYER_COUNT 6

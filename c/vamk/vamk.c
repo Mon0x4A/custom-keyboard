@@ -27,7 +27,9 @@
 #include "vamk_switch_state.h"
 #include "vamk_display_state.h"
 #include "vamk_key_state.h"
-#include "vamk_peripheral_switch_state.h"
+#if IS_SPLIT_KEYBOARD
+    #include "vamk_peripheral_switch_state.h"
+#endif
 
 ///Static Variables
 
