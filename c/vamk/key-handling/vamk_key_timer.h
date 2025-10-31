@@ -20,4 +20,6 @@ void key_timer_set_key_down_callback(key_timer_key_down_event_callback_params_t 
 void key_timer_set_key_up_callback(key_timer_key_up_event_callback_params_t key_up_callback_ptr);
 void key_timer_set_key_delay_callback(key_timer_key_delay_event_callback_params_t key_delay_callback_ptr);
 
+bool key_timer_is_key_down(struct key_event_location_t key_location);
+
 #endif

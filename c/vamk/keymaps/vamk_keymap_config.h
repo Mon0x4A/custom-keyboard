@@ -15,7 +15,7 @@
 #include "handwire_dactyl_lpk20_rev0_keymap.h"
 
 ///Constants
-#define LAYER_COUNT 6
+#define LAYER_COUNT 7
 #define MAX_LAYER_COUNT 10
 
 //TODO This needs to be moved to each of the keymap files

@@ -15,7 +15,7 @@ struct key_down_event_t
     struct modifier_collection_t modifiers_at_key_down;
     uint8_t layer_index_at_key_down;
     alarm_id_t current_delay_event_timer_id;
-    volatile bool has_been_released:1;
+    volatile bool is_key_down:1;
     volatile bool is_valid:1;
 };
 
@@ -92,7 +92,7 @@ static int64_t key_delay_callback(alarm_id_t alarm_id, void *callback_params_key
 
     if ((key_down_event_ptr->current_delay_event_timer_id) == alarm_id
         && key_down_event_ptr->is_valid
-        && !key_down_event_ptr->has_been_released)
+        && key_down_event_ptr->is_key_down)
     {
         try_invoke_key_delay_callback(*key_event_location_ptr);
     }
@@ -129,7 +129,7 @@ void key_timer_mark_key_down(struct key_event_location_t key_location, uint8_t l
     alarm_id_t event_id = add_alarm_in_ms(timer_duration, key_delay_callback, (void*)alarm_callback_key_location_ptr, false);
 
     key_down_event_ptr->current_delay_event_timer_id = event_id;
-    key_down_event_ptr->has_been_released = false;
+    key_down_event_ptr->is_key_down = true;
     key_down_event_ptr->is_valid = true;
 
     try_invoke_key_down_callback(key_location);
@@ -165,4 +165,17 @@ void key_timer_set_key_up_callback(key_timer_key_up_event_callback_params_t key_
 void key_timer_set_key_delay_callback(key_timer_key_delay_event_callback_params_t key_delay_callback_ptr)
 {
     _key_delay_callback = key_delay_callback_ptr;
+}
+
+bool key_timer_is_key_down(struct key_event_location_t key_location)
+{
+    switch (key_location.key_event_source)
+    {
+        case CONTROLLER_IDENTIFIER:
+            return _key_down_event_controller[key_location.row][key_location.column].is_key_down;
+        case PERIPHERAL_IDENTIFIER:
+            return _key_down_event_peripheral[key_location.row][key_location.column].is_key_down;
+        default:
+            hard_assert(false);
+    }
 }

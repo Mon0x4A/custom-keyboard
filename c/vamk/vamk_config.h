@@ -11,7 +11,7 @@
 
 #define HID_REPORT_KEYCODE_ARRAY_LENGTH 6
 
-#define SWITCH_POLLING_INTERVAL_MS 15
+#define SWITCH_POLLING_INTERVAL_MS 1
 
 #define SWITCH_TESTING_MODE 0
 #define ENABLE_SERIAL_LOGGING 1
@@ -26,8 +26,8 @@
 #error "Must define either split OR unified configuration"
 #endif
 
-#define CONTROLLER_IS_LEFT_SIDE 0
-#define CONTROLLER_IS_RIGHT_SIDE 1
+#define CONTROLLER_IS_LEFT_SIDE 1
+#define CONTROLLER_IS_RIGHT_SIDE 0
 #if (CONTROLLER_IS_LEFT_SIDE && CONTROLLER_IS_RIGHT_SIDE) || !(CONTROLLER_IS_LEFT_SIDE || CONTROLLER_IS_RIGHT_SIDE)
 #error "Controller must be on one (and only one) side in a split configuration"
 #endif
