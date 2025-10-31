@@ -26,6 +26,11 @@ _baseLength = 80;
 _baseWidth = 51.25;
 _baseDepth = _homeIndexDepth;
 
+_baseWallThickness = 3;
+_baseCutoutLength = _baseLength - (_baseWallThickness*2);
+_baseCutoutWidth = _baseWidth - (_baseWallThickness*2);
+_baseCutoutDepth = _baseDepth;
+
 /// MAIN START ///
 keyboard();
 /// MAIN END ///
@@ -43,10 +48,19 @@ module keyboard()
 
 module keyboardBase()
 {
-    union()
+    difference()
     {
-        //cube([_baseLength, _baseWidth, _baseDepth]);
         roundedCube(size = [_baseLength, _baseWidth, _baseDepth], radius=_roundingRadius, apply_to="zmax");
+        translate([_baseWallThickness, _baseWallThickness, -_baseWallThickness])
+        cube([_baseCutoutLength, _baseCutoutWidth, _baseCutoutDepth]);
+    }
+
+    translate([-6, -20, 0])
+    {
+        import("cases/lpk20_mk1/io_ctrl_board_secondary_Mk2_rev0-Edge_Cuts.svg");
+        linear_extrude(2)
+        import("cases/lpk20_mk1/io_ctrl_board_secondary_Mk2_rev0-User_2.svg");
+        import("cases/lpk20_mk1/io_ctrl_board_secondary_Mk2_rev0-User_3.svg");
     }
 }
 
